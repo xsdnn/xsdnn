@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+// TODO: Сделать медиану, дисперсию ошибки.
 
 class RegressionCallback : public Callback
 {
