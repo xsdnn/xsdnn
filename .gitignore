@@ -66,3 +66,4 @@ neuralnetwork/x64/Debug/neuralnetwork.vcxproj.FileListAbsolute.txt
 neuralnetwork/Производительность.pyperf
 neuralnetwork/x64/Debug/espD4CC.tmp
 neuralnetwork/x64/Debug/neuralnetwork.Build.CppClean.log
+neuralnetwork/enc_temp_folder/
