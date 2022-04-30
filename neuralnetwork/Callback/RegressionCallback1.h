@@ -57,8 +57,16 @@ public:
 		const Matrix& x,
 		const IntegerVector& y)
 	{
+		if (RESIZE_BATCH_LOSS) batch_loss.resize(m_nbatch); RESIZE_BATCH_LOSS = 0;
+
 		const Scalar loss = net->get_output()->loss();
 
+		batch_loss[m_batch_id] = loss;
+
+		if ((m_epoch_id - 1 == prev_epoch)) show_mean_result();
+
 		std::cout << "[Epoch = " << m_epoch_id << ", batch = " << m_batch_id << "] Loss = " << loss << std::endl;
+
+		if (m_epoch_id == m_nepoch - 1 && m_batch_id == m_nbatch - 1) show_mean_result();
 	}
 };
