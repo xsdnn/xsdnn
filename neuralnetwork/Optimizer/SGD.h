@@ -16,7 +16,7 @@ public:
 	/// которые потом пользователь может изменить.
 	/// 
 
-	SGD(const Scalar& lrate = Scalar(0.0001), const Scalar& decay = Scalar(0)) :
+	SGD(const Scalar& lrate = Scalar(0.01), const Scalar& decay = Scalar(0)) :
 		m_lrate(lrate), m_decay(decay) {}
 
 	void update(ConstAlignedMapVec& dvec, AlignedMapVec& vec)
