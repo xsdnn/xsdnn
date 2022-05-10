@@ -28,9 +28,10 @@
 
 # include "Output.h"
 # include "Output/RegressionMSE.h"
+# include "Output/BinaryClassEntropy.h"
 
 
 
 # include "Callback.h"
 # include "Callback/VerboseCallback.h"
-# include "Callback/RegressionCallback1.h"
+# include "Callback/RegressorCallback.h"
