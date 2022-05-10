@@ -15,9 +15,6 @@
 class RegressionMSE : public Output
 {
 private:
-	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-
 	Matrix m_din; // Производная от входных данных этого слоя
 
 public:
