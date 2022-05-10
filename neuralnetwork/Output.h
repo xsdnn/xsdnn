@@ -26,14 +26,14 @@ public:
     /// Например, задача классификации - {0, 1}
     /// </summary>
     /// <param name="target"> - собственно таргет</param>
-    virtual void check_target_data(const Matrix& target) {}
+    virtual void check_target_data(const Matrix& target) const {}
 
     /// <summary>
     /// Отдельный блок проверки для многоклассовой классификации.
     /// Может не подойти для регрессии поэтому сразу вызовем исключение 
     /// </summary>
     /// <param name="target"> - собственно таргет</param>
-    virtual void check_target_data(IntegerVector& target)
+    virtual void check_target_data(IntegerVector& target) const
     {
         throw std::invalid_argument("[class Output]: This output type cannot take class labels as target data");
     }
