@@ -1,8 +1,6 @@
 ﻿#pragma once
 # include <cmath>
 
-// TODO: Сделать медиану, дисперсию ошибки.
-
 class CustomCallbackRegressor : public Callback
 {
 private:
