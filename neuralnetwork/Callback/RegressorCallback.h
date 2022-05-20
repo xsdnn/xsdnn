@@ -1,5 +1,10 @@
 ﻿#pragma once
 # include <cmath>
+# include <Eigen/Core>
+# include <iostream>
+# include "../Callback.h"
+# include "../Config.h"
+# include "../NeuralNetwork.h"
 
 class CustomCallbackRegressor : public Callback
 {
