@@ -9,6 +9,16 @@
 class CustomClassificationCallback : public Callback
 {
 private:
+	typedef std::vector<Scalar> Vector;
+	int prev_epoch = 0;
+
+	Vector batch_loss;
+	Vector accuracy_score_vector;
+	Vector precision_score_vector;
+	Vector recall_score_vector;
+	Vector f1_score_vector;
+	bool RESIZE_VECTOR = true;
+
 	Matrix y_predict_transform(const Matrix& y_pred)
 	{
 		Matrix y_pred_sign;
@@ -16,7 +26,7 @@ private:
 		y_pred_sign.array() = (y_pred.array() > Scalar(0.5)).select(ONES, Scalar(0));
 		return y_pred_sign;
 	}
-	void accuracy_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
+	const Scalar accuracy_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
 	{
 		Scalar coincidence = 0;
 		for (int i = 0; i < nelem; i++)
@@ -25,6 +35,7 @@ private:
 		}
 		const Scalar accuracy = coincidence / static_cast<Scalar>(nelem);
 		std::cout << "---------------------------------------------- accuracy = " << accuracy << std::endl;
+		return accuracy;
 	}
 
 	const Scalar precision_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
@@ -61,11 +72,101 @@ private:
 		return recall;
 	}
 
-	void f1_score(const Scalar& precision, const Scalar& recall)
+	const Scalar f1_score(const Scalar& precision, const Scalar& recall)
 	{
 		const Scalar f1 = ((1 + b_koef * b_koef) * precision * recall) / ((b_koef * b_koef) * precision + recall + 0.000001);
 		std::cout << "---------------------------------------------- f1-score = " << f1 << std::endl;
+		return f1;
 	}
+
+
+	inline Scalar mean_vector(Vector& vector)
+	{
+		Scalar sum = 0;
+		for (int i = 0; i < m_nbatch; i++)
+		{
+			sum += vector[i];
+		}
+		return sum / m_nbatch;
+	}
+
+	inline Scalar median_vector(Vector& vector)
+	{
+		static const int ind = m_nbatch / 2;
+		std::nth_element(vector.begin(), vector.begin() + ind, vector.end());
+		return Scalar(vector[ind]);
+	}
+
+	inline Scalar variance_vector(Vector& vector, const Scalar& mean)
+	{
+		Scalar var = 0;
+
+		for (int i = 0; i < m_nbatch; i++)
+		{
+			var += (vector[i] - mean) * (vector[i] - mean);
+		}
+
+		var /= m_nbatch;
+		return var;
+	}
+
+	inline void show_epoch_result()
+	{
+		Scalar mean;
+		Scalar median;
+		Scalar variance;
+
+		mean = mean_vector(batch_loss);
+		median = median_vector(batch_loss);
+		variance = variance_vector(batch_loss, mean);
+
+		std::cout << "------------------------------------------------------------------ mean loss = " << mean << std::endl;
+		std::cout << "------------------------------------------------------------------ median loss = " << median << std::endl;
+		std::cout << "------------------------------------------------------------------ st. dev. loss = " << sqrt(variance) << std::endl << std::endl;
+
+
+
+		mean = mean_vector(accuracy_score_vector);
+		median = median_vector(accuracy_score_vector);
+		variance = variance_vector(accuracy_score_vector, mean);
+
+		std::cout << "------------------------------------------------------------------ mean accuracy = " << mean << std::endl;
+		std::cout << "------------------------------------------------------------------ median accuracy = " << median << std::endl;
+		std::cout << "------------------------------------------------------------------ st. dev. accuracy = " << sqrt(variance) << std::endl << std::endl;
+
+
+
+		mean = mean_vector(precision_score_vector);
+		median = median_vector(precision_score_vector);
+		variance = variance_vector(precision_score_vector, mean);
+
+		std::cout << "------------------------------------------------------------------ mean precision = " << mean << std::endl;
+		std::cout << "------------------------------------------------------------------ median precision = " << median << std::endl;
+		std::cout << "------------------------------------------------------------------ st. dev. precision = " << sqrt(variance) << std::endl << std::endl;
+
+
+
+		mean = mean_vector(recall_score_vector);
+		median = median_vector(recall_score_vector);
+		variance = variance_vector(recall_score_vector, mean);
+
+		std::cout << "------------------------------------------------------------------ mean recall = " << mean << std::endl;
+		std::cout << "------------------------------------------------------------------ median recall = " << median << std::endl;
+		std::cout << "------------------------------------------------------------------ st. dev. recall = " << sqrt(variance) << std::endl << std::endl;
+
+
+
+		mean = mean_vector(f1_score_vector);
+		median = median_vector(f1_score_vector);
+		variance = variance_vector(f1_score_vector, mean);
+
+		std::cout << "------------------------------------------------------------------ mean f1 = " << mean << std::endl;
+		std::cout << "------------------------------------------------------------------ median f1 = " << median << std::endl;
+		std::cout << "------------------------------------------------------------------ st. dev. f1 = " << sqrt(variance) << std::endl << std::endl;
+
+		prev_epoch++;
+	}
+
 
 public:
 	const Scalar b_koef = 1;
@@ -74,25 +175,38 @@ public:
 		const Matrix& x,
 		const Matrix& y)
 	{
+		// resize on first iteration only
+		if (RESIZE_VECTOR) 
+		{
+			batch_loss.resize(m_nbatch);
+			accuracy_score_vector.resize(m_nbatch);
+			precision_score_vector.resize(m_nbatch);
+			recall_score_vector.resize(m_nbatch);
+			f1_score_vector.resize(m_nbatch);
+			RESIZE_VECTOR = 0;
+		}
+
+
 		const Scalar loss = net->get_output()->loss();
 		const Matrix net_output = net->get_last_hidden_layer();
 		Matrix y_pred = y_predict_transform(net_output);
 		const Scalar* target_data = y.data();
 		const Scalar* predict_data = y_pred.data();
 		const int nelem = y.size();
+
 		std::cout << "[Epoch = " << m_epoch_id << ", batch = " << m_batch_id << "] Loss = " << loss << std::endl;
-		accuracy_score(target_data, predict_data, nelem);
+
+		const Scalar accuracy = accuracy_score(target_data, predict_data, nelem);
 		const Scalar precision = precision_score(target_data, predict_data, nelem);
 		const Scalar recall = recall_score(target_data, predict_data, nelem);
-		f1_score(precision, recall);
-	}
+		const Scalar f1 = f1_score(precision, recall);
 
-	void post_trained_batch(const NeuralNetwork* net,
-		const Matrix& x,
-		const IntegerVector& y)
-	{
-		const Scalar loss = net->get_output()->loss();
+		batch_loss[m_batch_id] = loss;
+		accuracy_score_vector[m_batch_id] = accuracy;
+		precision_score_vector[m_batch_id] = precision;
+		recall_score_vector[m_batch_id] = recall;
+		f1_score_vector[m_batch_id] = f1;
 
-		std::cout << "[Epoch = " << m_epoch_id << ", batch = " << m_batch_id << "] Loss = " << loss << std::endl;
+		if ((m_epoch_id - 1 == prev_epoch)) show_epoch_result();
 	}
 };
