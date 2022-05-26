@@ -24,7 +24,7 @@ private:
 			sum += batch_loss[i];
 		}
 
-		return sum / batch_loss.size();
+		return sum / m_nbatch;
 	}
 
 	inline Scalar median_batch_loss()
