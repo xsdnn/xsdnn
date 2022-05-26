@@ -227,6 +227,17 @@ public:
 	}
 
 	/// <summary>
+	/// Получить последний скрытый слой для подсчета метрик классификации. 
+	/// Используется в ClassificationCallback
+	/// </summary>
+	/// <returns></returns>
+	const Matrix get_last_hidden_layer() const
+	{
+		const int nlayers = count_layers();
+		return m_layers[nlayers - 1]->output();
+	}
+
+	/// <summary>
 	/// Добавить слой в сетку
 	/// </summary>
 	/// <param name="layer"> - указатель на слой</param>
