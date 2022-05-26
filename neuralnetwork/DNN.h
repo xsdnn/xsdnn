@@ -35,3 +35,4 @@
 # include "Callback.h"
 # include "Callback/VerboseCallback.h"
 # include "Callback/RegressorCallback.h"
+# include "Callback/ClassificationCallback.h"
