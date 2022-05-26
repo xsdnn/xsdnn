@@ -52,7 +52,7 @@ private:
 	{
 		Scalar mean;
 		mean = mean_batch_loss();
-		std::cout << "Epoch '" << m_epoch_id - 1 << "' is Done! --------------------------- Mean Loss = " << mean << std::endl;
+		std::cout << "---------------------------------------------- Mean Loss = " << mean << std::endl;
 
 		Scalar median;
 		median = median_batch_loss();
