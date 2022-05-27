@@ -26,17 +26,18 @@ protected:
     Matrix m_z;      // Значения нейронов до активации
     Matrix m_a;      // Значения нейронов после активации
     Matrix m_din;    // Проивзодная значений нейронов после backprop
+    
 
 public:
-    FullyConnected(const int in_size, const int out_size) :
-        Layer(in_size, out_size) {}
+    FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
+        Layer(in_size, out_size, bias_true_false) {}
 
     void init(const Scalar& mu, const Scalar& sigma, RNG& rng)
     {
         init();
 
         internal::set_normal_random(m_weight.data(), m_weight.size(), rng, mu, sigma);
-        internal::set_normal_random(m_bias.data(), m_bias.size(), rng, mu, sigma);
+        if (BIAS_ACTIVATE)  { internal::set_normal_random(m_bias.data(), m_bias.size(), rng, mu, sigma); }
 
         //std::cout << "Weights " << std::endl << m_weight << std::endl;
         //std::cout << "Bias " << std::endl << m_bias << std::endl;
@@ -45,9 +46,12 @@ public:
     void init()
     {
         m_weight.resize(this->m_in_size, this->m_out_size);
-        m_bias.resize(this->m_out_size);
         m_dw.resize(this->m_in_size, this->m_out_size);
-        m_db.resize(this->m_out_size);
+        if (BIAS_ACTIVATE)
+        {
+            m_bias.resize(this->m_out_size);
+            m_db.resize(this->m_out_size);
+        }
     }
 
     /// <summary>
@@ -63,8 +67,7 @@ public:
 
         m_z.resize(this->m_out_size, ncols);
         m_z.noalias() = m_weight.transpose() * prev_layer_data;
-        m_z.colwise() += m_bias;
-
+        if (BIAS_ACTIVATE) { m_z.colwise() += m_bias; }
         m_a.resize(this->m_out_size, ncols);
         Activation::activate(m_z, m_a);
     }
@@ -96,7 +99,7 @@ public:
         Matrix& dLz = m_z;
         Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
         m_dw.noalias() = prev_layer_data * dLz.transpose() / ncols;
-        m_db.noalias() = dLz.rowwise().mean();
+        if (BIAS_ACTIVATE) { m_db.noalias() = dLz.rowwise().mean(); }
         m_din.resize(this->m_in_size, ncols);
         m_din.noalias() = m_weight * dLz;
     }
@@ -115,12 +118,13 @@ public:
     void update(Optimizer& opt)
     {
         ConstAlignedMapVec dw(m_dw.data(), m_dw.size());
-        ConstAlignedMapVec db(m_db.data(), m_db.size());
         AlignedMapVec      w(m_weight.data(), m_weight.size());
+        ConstAlignedMapVec db(m_db.data(), m_db.size());
         AlignedMapVec      b(m_bias.data(), m_bias.size());
-
+    
         opt.update(dw, w);
-        opt.update(db, b);
+        if (BIAS_ACTIVATE) { opt.update(db, b); }
+        
     }
 
     /// <summary>
@@ -129,11 +133,21 @@ public:
     /// <returns>param - вектор параметров весов и смещения</returns>
     std::vector<Scalar> get_parametrs() const
     {
-        std::vector<Scalar> res(m_weight.size() + m_bias.size()); // указали кол-во ячеек в этом векторе
-        // просто копируем в этот массив все содержимое
-        std::copy(m_weight.data(), m_weight.data() + m_weight.size(), res.begin()); // все аргументы передаются в виде указателей. Откуда начинаем, где заканчиваем, куда начинаем ложить.
-        std::copy(m_bias.data(), m_bias.data() + m_bias.size(), res.begin() + m_weight.size());
-        return res;
+        if (BIAS_ACTIVATE)
+        {
+            std::vector<Scalar> res(m_weight.size() + m_bias.size()); // указали кол-во ячеек в этом векторе
+            // просто копируем в этот массив все содержимое
+            std::copy(m_weight.data(), m_weight.data() + m_weight.size(), res.begin()); // все аргументы передаются в виде указателей. Откуда начинаем, где заканчиваем, куда начинаем ложить.
+            std::copy(m_bias.data(), m_bias.data() + m_bias.size(), res.begin() + m_weight.size());
+            return res;
+        }
+        else
+        {
+            std::vector<Scalar> res(m_weight.size());
+            std::copy(m_weight.data(), m_weight.data() + m_weight.size(), res.begin());
+            return res;
+        }
+        
     }
 
     /// <summary>
@@ -142,16 +156,29 @@ public:
     /// <param name="param"> - вектор значений параметров весов и смещений</param>
     void set_parametrs(const std::vector<Scalar>& param)
     {
-        // сделаем проверку на равенство длин массивов
-        // static_cast<int> - приведение длины массива к интовому типу данных
-        if (static_cast<int>(param.size()) != (m_weight.size() + m_bias.size()))
+        if (BIAS_ACTIVATE)
         {
-            throw std::invalid_argument("[class FullyConnected]: Parameter size does not match. Check parameter size!");
-        }
+            // сделаем проверку на равенство длин массивов
+            // static_cast<int> - приведение длины массива к интовому типу данных
+            if (static_cast<int>(param.size()) != (m_weight.size() + m_bias.size()))
+            {
+                throw std::invalid_argument("[class FullyConnected]: Parameter size does not match. Check parameter size!");
+            }
 
-        // если размеры сходятся, то копируем переданные значения в наши массивы
-        std::copy(param.begin(), param.begin() + m_weight.size(), m_weight.data());
-        std::copy(param.begin() + m_weight.size(), param.end(), m_bias.data());
+            // если размеры сходятся, то копируем переданные значения в наши массивы
+            std::copy(param.begin(), param.begin() + m_weight.size(), m_weight.data());
+            std::copy(param.begin() + m_weight.size(), param.end(), m_bias.data());
+        }
+        else
+        {
+            if (static_cast<int>(param.size()) != (m_weight.size()))
+            {
+                throw std::invalid_argument("[class FullyConnected]: Parameter size does not match. Check parameter size!");
+            }
+
+            // если размеры сходятся, то копируем переданные значения в наши массивы
+            std::copy(param.begin(), param.begin() + m_weight.size(), m_weight.data());
+        }
     }
 
     /// <summary>
@@ -160,11 +187,21 @@ public:
     /// <returns></returns>
     std::vector<Scalar> get_derivatives() const
     {
-        std::vector<Scalar> res(m_dw.size() + m_db.size());
+        if (BIAS_ACTIVATE)
+        {
+            std::vector<Scalar> res(m_dw.size() + m_db.size());
 
-        std::copy(m_dw.data(), m_dw.data() + m_dw.size(), res.begin());
-        std::copy(m_db.data(), m_db.data() + m_db.size(), res.begin() + m_dw.size());
-        return res;
+            std::copy(m_dw.data(), m_dw.data() + m_dw.size(), res.begin());
+            std::copy(m_db.data(), m_db.data() + m_db.size(), res.begin() + m_dw.size());
+            return res;
+        }
+        else
+        {
+            std::vector<Scalar> res(m_dw.size());
+            std::copy(m_dw.data(), m_dw.data() + m_dw.size(), res.begin());
+            return res;
+        }
+
     }
 
     std::string layer_type() const { return "FullyConnected"; }
