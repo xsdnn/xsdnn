@@ -90,26 +90,6 @@ private:
 		return sum / m_nbatch;
 	}
 
-	inline Scalar median_vector(Vector& vector)
-	{
-		static const int ind = m_nbatch / 2;
-		std::nth_element(vector.begin(), vector.begin() + ind, vector.end());
-		return Scalar(vector[ind]);
-	}
-
-	inline Scalar variance_vector(Vector& vector, const Scalar& mean)
-	{
-		Scalar var = 0;
-
-		for (int i = 0; i < m_nbatch; i++)
-		{
-			var += (vector[i] - mean) * (vector[i] - mean);
-		}
-
-		var /= m_nbatch;
-		return var;
-	}
-
 	inline void show_epoch_result()
 	{
 		Scalar mean;
@@ -117,53 +97,23 @@ private:
 		Scalar variance;
 
 		mean = mean_vector(batch_loss);
-		median = median_vector(batch_loss);
-		variance = variance_vector(batch_loss, mean);
-
 		std::cout << "------------------------------------------------------------------ mean loss = " << mean << std::endl;
-		std::cout << "------------------------------------------------------------------ median loss = " << median << std::endl;
-		std::cout << "------------------------------------------------------------------ st. dev. loss = " << sqrt(variance) << std::endl << std::endl;
-
 
 
 		mean = mean_vector(accuracy_score_vector);
-		median = median_vector(accuracy_score_vector);
-		variance = variance_vector(accuracy_score_vector, mean);
-
 		std::cout << "------------------------------------------------------------------ mean accuracy = " << mean << std::endl;
-		std::cout << "------------------------------------------------------------------ median accuracy = " << median << std::endl;
-		std::cout << "------------------------------------------------------------------ st. dev. accuracy = " << sqrt(variance) << std::endl << std::endl;
-
 
 
 		mean = mean_vector(precision_score_vector);
-		median = median_vector(precision_score_vector);
-		variance = variance_vector(precision_score_vector, mean);
-
 		std::cout << "------------------------------------------------------------------ mean precision = " << mean << std::endl;
-		std::cout << "------------------------------------------------------------------ median precision = " << median << std::endl;
-		std::cout << "------------------------------------------------------------------ st. dev. precision = " << sqrt(variance) << std::endl << std::endl;
-
 
 
 		mean = mean_vector(recall_score_vector);
-		median = median_vector(recall_score_vector);
-		variance = variance_vector(recall_score_vector, mean);
-
 		std::cout << "------------------------------------------------------------------ mean recall = " << mean << std::endl;
-		std::cout << "------------------------------------------------------------------ median recall = " << median << std::endl;
-		std::cout << "------------------------------------------------------------------ st. dev. recall = " << sqrt(variance) << std::endl << std::endl;
-
 
 
 		mean = mean_vector(f1_score_vector);
-		median = median_vector(f1_score_vector);
-		variance = variance_vector(f1_score_vector, mean);
-
 		std::cout << "------------------------------------------------------------------ mean f1 = " << mean << std::endl;
-		std::cout << "------------------------------------------------------------------ median f1 = " << median << std::endl;
-		std::cout << "------------------------------------------------------------------ st. dev. f1 = " << sqrt(variance) << std::endl << std::endl;
-
 		prev_epoch++;
 	}
 
