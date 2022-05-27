@@ -13,6 +13,8 @@
 
 # include "Activation/ReLU.h"
 # include "Activation/Sigmoid.h"
+# include "Activation/Softmax.h"
+# include "Activation/Identity.h"
 
 
 
@@ -23,7 +25,6 @@
 
 # include "Optimizer.h"
 # include "Optimizer/SGD.h"
-
 
 
 # include "Output.h"
