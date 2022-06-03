@@ -105,6 +105,10 @@ namespace internal
 
 void accuracy_precision_recall_f1_calculate(const Matrix& y_true, const Matrix& y_pred)
 {
+  if ((y_true.cols() != y_pred.cols()) || (y_true.rows() != y_pred.rows()))
+  {
+    throw std::invalid_argument("[void accuracy_precision_recall_f1_calculate]: Input data have incorrect dimension");
+  }
   const int sample_size = y_true.size();
   const Scalar* real = y_true.data();
   const Scalar* predict = y_pred.data();
