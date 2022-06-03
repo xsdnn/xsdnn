@@ -1,24 +1,25 @@
 # include "../DNN.h"
 # include <iostream>
 # include <vector>
-# include <cmath>
+# include <ctime>
+
 typedef Eigen::MatrixXd Matrix;
 typedef Eigen::VectorXd Vector;
 
 int main()
 {
   // generate train and test data
-  Matrix train_data = Eigen::MatrixXd::Random(1, 1000) * 3.1415f;
+  Matrix train_data = Eigen::MatrixXd::Random(1, 20000) * 3.1415f;
   Matrix train_target = train_data.array().sin();
-  Matrix test_data = Eigen::MatrixXd::Random(1, 5) * 3.1415f;
+  Matrix test_data = Eigen::MatrixXd::Random(1, 1000) * 6.2832f;
   Matrix test_target = test_data.array().sin();
 
   // define NeuralNetwork class
   NeuralNetwork net;
 
   // define layer's
-	Layer* l1 = new FullyConnected<Sigmoid>(1, 10);
-	Layer* l2 = new FullyConnected<Sigmoid>(10, 10);
+	Layer* l1 = new FullyConnected<ReLU>(1, 10);
+	Layer* l2 = new FullyConnected<ReLU>(10, 10);
 	Layer* l3 = new FullyConnected<Identity>(10, 1);
 
   // add layer's
@@ -40,14 +41,18 @@ int main()
 
   std::cout << "Net init - start training" << std::endl;
   // start learning net with batch_size = 250, nums epoch = 5000 and random seed = 123
-	net.fit(opt, train_data, train_target, 250, 5000, 123);
-  std::cout << "Training completed" << std::endl;
+  unsigned int start_time = clock();
+	net.fit(opt, train_data, train_target, 10, 25, 123);
+  unsigned int end_time = clock();
+
+  std::cout << "Training completed, elapsed time = " << (end_time - start_time) / 1000000.0 << " сек." << std::endl;
 
   // find max error (MAE) on test choice
-  Matrix error = (net.predict(test_data) - test_target).array().cwiseAbs();
-  std::cout << "Max Error MAE = " << error.maxCoeff() << std::endl;
-  std::cout << "Min Error MAE = " << error.minCoeff() << std::endl;
-  std::cout << "NeuralNetwork output = " << std::endl << net.predict(test_data) << std::endl;
-  std::cout << "Real output = " << std::endl << test_target << std::endl;
+  Matrix predict = net.predict(test_data);
+
+  MSE_calculate(test_target, predict);
+  MAE_calculate(test_target, predict);
+  R_calculate(test_target, predict);
+  MAPE_calculate(test_target, predict);
   return 0;
 }
