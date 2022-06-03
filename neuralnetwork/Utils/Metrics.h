@@ -16,3 +16,9 @@ void MSE_calculate(Matrix& target_data, Matrix& net_output, bool sqrt = false)
   std::cout << "MSE Error = " << MSE << std::endl;
   return;
 }
+
+void MAE_calculate(Matrix& target_data, Matrix& net_output)
+{
+  Scalar MAE = (target_data - net_output).array().cwiseAbs().sum() / target_data.cols();
+  std::cout << "MAE Error = " << MAE << std::endl;
+}
