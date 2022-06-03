@@ -5,11 +5,22 @@
 # include "../Config.h"
 # include <Eigen/Core>
 # include <cmath>
+# include <stdexcept>
 
 typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 
+//##############################################################################
+//#                               REGRESSOR                                    #
+//##############################################################################
+
 void MSE_calculate(Matrix& target_data, Matrix& net_output, bool sqrt = false)
 {
+
+  if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows()))
+  {
+    throw std::invalid_argument("[void MSE_calculate]: Input data have incorrect dimension");
+  }
+
   const int target_cols = target_data.cols();
   Scalar MSE = (target_data - net_output).squaredNorm() / target_cols;
   if (sqrt) { std::cout << "RMSE Error = " << std::sqrt(MSE) << std::endl; return; }
@@ -19,12 +30,24 @@ void MSE_calculate(Matrix& target_data, Matrix& net_output, bool sqrt = false)
 
 void MAE_calculate(Matrix& target_data, Matrix& net_output)
 {
+
+  if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows()))
+  {
+    throw std::invalid_argument("[void MAE_calculate]: Input data have incorrect dimension");
+  }
+
   Scalar MAE = (target_data - net_output).array().cwiseAbs().sum() / target_data.cols();
   std::cout << "MAE Error = " << MAE << std::endl;
 }
 
 void R_calculate(Matrix& target_data, Matrix& net_output)
 {
+
+  if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows()))
+  {
+    throw std::invalid_argument("[void R_calculate]: Input data have incorrect dimension");
+  }
+
   Scalar MSE = (target_data - net_output).squaredNorm();
   Matrix target_data_mean = target_data.rowwise().mean();
 
@@ -36,3 +59,21 @@ void R_calculate(Matrix& target_data, Matrix& net_output)
   std::cout << "R^2 = " << (1 - (MSE / r_coef)) << std::endl;
   return;
 }
+
+void MAPE_calculate(Matrix& target_data, Matrix& net_output)
+{
+
+  if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows()))
+  {
+    throw std::invalid_argument("[void MAPE_calculate]: Input data have incorrect dimension");
+  }
+
+  Scalar MAPE = ((target_data - net_output).array().cwiseAbs().sum() / target_data.cwiseAbs().array().sum()) / target_data.cols();
+  std::cout << "MAPE Error = " << MAPE * 100.0 << "%" << std::endl;
+}
+
+
+
+//##############################################################################
+//#                               CLASSIFICATOR                                #
+//##############################################################################
