@@ -80,7 +80,7 @@ void MAPE_calculate(Matrix& target_data, Matrix& net_output)
 
 namespace internal
 {
-  Matrix build_confusion_matrix(const Scalar* real, const Scalar* predict, const int& sample_size)
+  Matrix static build_confusion_matrix(const Scalar* real, const Scalar* predict, const int& sample_size)
   {
     int tp = 0;
     int tn = 0;
@@ -101,4 +101,22 @@ namespace internal
           fp, tp;
     return CM;
   }
+}
+
+void accuracy_precision_recall_f1_calculate(const Matrix& y_true, const Matrix& y_pred)
+{
+  const int sample_size = y_true.size();
+  const Scalar* real = y_true.data();
+  const Scalar* predict = y_pred.data();
+  Matrix CM = internal::build_confusion_matrix(real, predict, sample_size);
+
+  Scalar accuracy = CM.diagonal().sum() / CM.sum();
+  Scalar precision = ((CM.diagonal().array()) / (CM.rowwise().sum().array())).mean();
+  Scalar recall = ((CM.diagonal().array().transpose()) / (CM.colwise().sum().array())).mean();
+  Scalar f1_score = 2 * (precision * recall) / (precision + recall);
+
+  std::cout << "accuracy = " << accuracy << std::endl;
+  std::cout << "precision = " << precision << std::endl;
+  std::cout << "recall = " << recall << std::endl;
+  std::cout << "f1_score = " << f1_score << std::endl;
 }
