@@ -24,17 +24,16 @@ class NeuralNetwork
 {
 private:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef Eigen::RowVectorXi IntegerVector;
 	typedef std::map<std::string, int> Meta;
 
 
-	RNG m_default_rng; // дефолтный генератор
-	RNG& m_rng; // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
+	RNG m_default_rng;                  // дефолтный генератор
+	RNG& m_rng;                         // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
 
-	std::vector<Layer*> m_layers; // указатели на созданные пользователем слои сетки
-	Output* m_output; // указатель на выходной слой
-	Callback m_default_callback; // дефолтный вывод на печать
-	Callback* m_callback; // пользовательский вывод на печать, иначе дефолт
+	std::vector<Layer*> m_layers;       // указатели на созданные пользователем слои сетки
+	Output* m_output;                   // указатель на выходной слой
+	Callback m_default_callback;        // дефолтный вывод на печать
+	Callback* m_callback;               // пользовательский вывод на печать, иначе дефолт
 
 	/// <summary>
 	/// Проверка всех слоев на соотвествие вход текущего == выход предыдущего
@@ -182,7 +181,7 @@ public:
 	NeuralNetwork() :
 		m_default_rng(1),
 		m_rng(m_default_rng),
-		m_output(NULL),
+		m_output(nullptr),
 		m_default_callback(),
 		m_callback(&m_default_callback)
 	{}
@@ -191,10 +190,10 @@ public:
 	/// Конструктор при передаче другого генератора
 	/// 
 
-	NeuralNetwork(RNG& rng) :
+	explicit NeuralNetwork(RNG& rng) :
 		m_default_rng(1),
 		m_rng(rng),
-		m_output(NULL),
+		m_output(nullptr),
 		m_default_callback(),
 		m_callback(&m_default_callback)
 	{}
@@ -211,17 +210,14 @@ public:
 			delete m_layers[i];
 		}
 
-		if (m_output)
-		{
-			delete m_output;
-		}
+        delete m_output;
 	}
 
 	/// <summary>
 	/// Подсчет кол-ва слоев
 	/// </summary>
 	/// <returns></returns>
-	int count_layers() const
+	unsigned long count_layers() const
 	{
 		return m_layers.size();
 	}
@@ -231,9 +227,9 @@ public:
 	/// Используется в ClassificationCallback
 	/// </summary>
 	/// <returns></returns>
-	const Matrix get_last_hidden_layer() const
+	Matrix get_last_hidden_layer() const
 	{
-		const int nlayers = count_layers();
+		const unsigned long nlayers = count_layers();
 		return m_layers[nlayers - 1]->output();
 	}
 
@@ -300,7 +296,7 @@ public:
 			m_rng.seed(seed);
 		}
 
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		for (int i = 0; i < nlayer; ++i)
 		{
@@ -333,7 +329,7 @@ public:
 		typedef Eigen::Matrix<typename PlainObjectY::Scalar, PlainObjectY::RowsAtCompileTime, PlainObjectY::ColsAtCompileTime>
 			YType;
 
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 0) { return false; }
 
@@ -379,9 +375,9 @@ public:
 
 	Matrix predict(const Matrix& x)
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 0) { return Matrix(); }
+		if (nlayer <= 0) { return {}; }
 
 		this->forward(x);
 
@@ -395,7 +391,7 @@ public:
 	/// <returns></returns>
 	std::vector < std::vector<Scalar> > get_parameters() const
 	{
-		int nlayer = count_layers();
+		unsigned long nlayer = count_layers();
 		std::vector < std::vector<Scalar> > res;
 		res.reserve(nlayer); // зарезервировали место для большей оптимизации
 
@@ -413,7 +409,7 @@ public:
 	/// <param name="param"> - матрица параметров</param>
 	void set_parameters(const std::vector < std::vector<Scalar> >& param)
 	{
-		int nlayer = count_layers();
+		unsigned long nlayer = count_layers();
 
 		if (static_cast<int>(param.size()) != nlayer)
 		{
@@ -433,7 +429,7 @@ public:
 	/// <returns></returns>
 	std::vector < std::vector<Scalar> > get_derivatives() const
 	{
-		int nlayer = count_layers();
+		unsigned long nlayer = count_layers();
 		std::vector < std::vector<Scalar> > res;
 		res.reserve(nlayer);
 

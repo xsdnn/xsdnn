@@ -11,7 +11,7 @@ private:
     const unsigned long m_max; // 2^31 - 1
     long m_rand;
 
-    inline long next_long_rand(long seed)
+    inline long next_long_rand(long seed) const
     {
         unsigned long lo, hi;
         lo = m_a * (long)(seed & 0xFFFF);
@@ -36,13 +36,13 @@ private:
     }
 
 public:
-    RNG(unsigned long init_seed) :
+    explicit RNG(unsigned long init_seed) :
         m_a(16807),
         m_max(2147483647L),
         m_rand(init_seed ? (init_seed & m_max) : 1)
     {}
 
-    ~RNG() {}
+    ~RNG() = default;
 
     void seed(unsigned long seed)
     {

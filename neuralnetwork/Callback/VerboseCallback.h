@@ -12,7 +12,7 @@ class VerboseCallback : public Callback
 public:
 	void post_trained_batch(const NeuralNetwork* net,
 		const Matrix& x,
-		const Matrix& y)
+		const Matrix& y) override
 	{
 		const Scalar loss = net->get_output()->loss();
 
@@ -21,7 +21,7 @@ public:
 
 	void post_trained_batch(const NeuralNetwork* net,
 		const Matrix& x,
-		const IntegerVector& y)
+		const IntegerVector& y) override
 	{
 		const Scalar loss = net->get_output()->loss();
 

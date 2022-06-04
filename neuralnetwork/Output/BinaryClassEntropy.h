@@ -17,9 +17,9 @@ private:
 	Matrix m_din;			// производные по выходному слою
 
 public:
-	void check_target_data(const Matrix& target) const
+	void check_target_data(const Matrix& target) const override
 	{
-		const int nelem = target.size();
+		const long nelem = target.size();
 		const Scalar* target_data = target.data();
 
 		for (int i = 0; i < nelem; i++)
@@ -31,9 +31,9 @@ public:
 		}
 	}
 
-	void check_target_data(IntegerVector& target) const
+	void check_target_data(IntegerVector& target) const override
 	{
-		const int nelem = target.size();
+		const long nelem = target.size();
 
 		for (int i = 0; i < nelem; i++)
 		{
@@ -44,10 +44,10 @@ public:
 		}
 	}
 
-	void evaluate(const Matrix& prev_layer_data, const Matrix& target)
+	void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
 	{
-		const int ncols = prev_layer_data.cols();
-		const int nrows = prev_layer_data.rows();
+		const long ncols = prev_layer_data.cols();
+		const long nrows = prev_layer_data.rows();
 
 		if ((target.cols() != ncols) || (target.rows() != nrows))
 		{
@@ -68,16 +68,16 @@ public:
 	}
 
 
-	void evaluate(const Matrix& prev_layer_data, const IntegerVector& target)
+	void evaluate(const Matrix& prev_layer_data, const IntegerVector& target) override
 	{
-		const int nrows = target.rows();
+		const long nrows = target.rows();
 
 		if (nrows != 1)
 		{
 			throw std::invalid_argument("[class BinaryClassEntropy] Target rows != 1. Check input.");
 		}
 
-		const int ncols = prev_layer_data.cols();
+		const long ncols = prev_layer_data.cols();
 
 		if (target.size() != ncols)
 		{
@@ -89,21 +89,21 @@ public:
 			-prev_layer_data.array().cwiseInverse());
 	}
 
-	const Matrix& backprop_data() const
+	const Matrix& backprop_data() const override
 	{
 		return m_din;
 	}
 
-	Scalar loss() const
+	Scalar loss() const override
 	{
 		//	Зная m_din, подставим его в лосс и выразим ошибку.
 		//	Получим ->
 		//	L = E( log(|m_din|) ) / N
 
-		return Scalar(m_din.array().abs().log().sum()) / m_din.cols();
+		return Scalar(m_din.array().abs().log().sum()) / static_cast<Scalar>(m_din.cols());
 	}
 
-	std::string output_type() const
+	std::string output_type() const override
 	{
 		return "BinaryClassEntropy";
 	}

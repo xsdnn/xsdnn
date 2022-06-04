@@ -26,7 +26,7 @@ public:
 	Callback() :
 		m_nbatch(0), m_batch_id(0), m_nepoch(0), m_epoch_id(0) {}
 
-	virtual ~Callback() {}
+	virtual ~Callback() = default;
 
 	// Перед тренировкой батча
 	virtual void pre_trained_batch(const NeuralNetwork* net, const Matrix& x,

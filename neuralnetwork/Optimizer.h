@@ -12,7 +12,7 @@ protected:
 	typedef Vector::AlignedMapType AlignedMapVec;
 
 public:
-	virtual ~Optimizer() {}
+	virtual ~Optimizer() = default;
 
 
 	///

@@ -32,7 +32,7 @@ public:
     FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
         Layer(in_size, out_size, bias_true_false) {}
 
-    void init(const Scalar& mu, const Scalar& sigma, RNG& rng)
+    void init(const Scalar& mu, const Scalar& sigma, RNG& rng) override
     {
         init();
 
@@ -43,7 +43,7 @@ public:
         //std::cout << "Bias " << std::endl << m_bias << std::endl;
     }
 
-    void init()
+    void init() override
     {
         m_weight.resize(this->m_in_size, this->m_out_size);
         m_dw.resize(this->m_in_size, this->m_out_size);
@@ -61,9 +61,9 @@ public:
     /// Активируем.
     /// </summary>
     /// <param name="prev_layer_data"> - матрица значений нейронов предыдущего слоя</param>
-    void forward(const Matrix& prev_layer_data)
+    void forward(const Matrix& prev_layer_data) override
     {
-        const int ncols = prev_layer_data.cols();
+        const long ncols = prev_layer_data.cols();
 
         m_z.resize(this->m_out_size, ncols);
         m_z.noalias() = m_weight.transpose() * prev_layer_data;
@@ -76,7 +76,7 @@ public:
     /// Возврат значений нейронов после активации
     /// </summary>
     /// <returns></returns>
-    const Matrix& output() { return m_a; }
+    const Matrix& output() override { return m_a; }
 
     /// <summary>
     /// Получаем производные этого слоя.
@@ -92,9 +92,9 @@ public:
     /// <param name="prev_layer_data"> - значения нейронов предыдущего слоя</param>
     /// <param name="next_layer_data"> - значения нейронов следующего слоя</param>
     void backprop(const Matrix& prev_layer_data,
-        const Matrix& next_layer_data)
+        const Matrix& next_layer_data) override
     {
-        const int ncols = prev_layer_data.cols();
+        const long ncols = prev_layer_data.cols();
 
         Matrix& dLz = m_z;
         Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
@@ -108,14 +108,14 @@ public:
     /// Получить производную нейронов этого слоя
     /// </summary>
     /// <returns>ссылка на информацию</returns>
-    const Matrix& backprop_data() const { return m_din; }
+    const Matrix& backprop_data() const override { return m_din; }
 
 
     /// <summary>
     /// Обновление весов и смещений используя переданный алгоритм оптимизации (см. Optimizer)
     /// </summary>
     /// <param name="opt"> - объект класса Optimizer</param>
-    void update(Optimizer& opt)
+    void update(Optimizer& opt) override
     {
         ConstAlignedMapVec dw(m_dw.data(), m_dw.size());
         AlignedMapVec      w(m_weight.data(), m_weight.size());
@@ -131,7 +131,7 @@ public:
     /// Получить параметры одного слоя
     /// </summary>
     /// <returns>param - вектор параметров весов и смещения</returns>
-    std::vector<Scalar> get_parametrs() const
+    std::vector<Scalar> get_parametrs() const override
     {
         if (BIAS_ACTIVATE)
         {
@@ -154,7 +154,7 @@ public:
     /// Установить пользовательские параметры для одного слоя
     /// </summary>
     /// <param name="param"> - вектор значений параметров весов и смещений</param>
-    void set_parametrs(const std::vector<Scalar>& param)
+    void set_parametrs(const std::vector<Scalar>& param) override
     {
         if (BIAS_ACTIVATE)
         {
@@ -185,7 +185,7 @@ public:
     /// Получить производные весов и смщения одного слоя
     /// </summary>
     /// <returns></returns>
-    std::vector<Scalar> get_derivatives() const
+    std::vector<Scalar> get_derivatives() const override
     {
         if (BIAS_ACTIVATE)
         {
@@ -204,11 +204,11 @@ public:
 
     }
 
-    std::string layer_type() const { return "FullyConnected"; }
+    std::string layer_type() const override { return "FullyConnected"; }
 
-    std::string activation_type() const { return Activation::return_type(); }
+    std::string activation_type() const override { return Activation::return_type(); }
 
-    void fill_meta_info(Meta& map, int index) const
+    void fill_meta_info(Meta& map, int index) const override
     {
         std::string ind = std::to_string(index);
 

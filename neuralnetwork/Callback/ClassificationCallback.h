@@ -19,26 +19,26 @@ private:
 	Vector f1_score_vector;
 	bool RESIZE_VECTOR = true;
 
-	Matrix y_predict_transform(const Matrix& y_pred)
+	static Matrix y_predict_transform(const Matrix& y_pred)
 	{
 		Matrix y_pred_sign;
 		Eigen::MatrixXd ONES = Eigen::MatrixXd::Ones(y_pred.rows(), y_pred.cols());
 		y_pred_sign.array() = (y_pred.array() > Scalar(0.5)).select(ONES, Scalar(0));
 		return y_pred_sign;
 	}
-	const Scalar accuracy_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
+	static Scalar accuracy_score(const Scalar* target_data, const Scalar* predict_data, const long& nelem)
 	{
 		Scalar coincidence = 0;
 		for (int i = 0; i < nelem; i++)
 		{
 			if (target_data[i] == predict_data[i]) { coincidence++; }
 		}
-		const Scalar accuracy = coincidence / static_cast<Scalar>(nelem);
+		Scalar accuracy = coincidence / static_cast<Scalar>(nelem);
 		std::cout << "---------------------------------------------- accuracy = " << accuracy << std::endl;
 		return accuracy;
 	}
 
-	const Scalar precision_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
+	static Scalar precision_score(const Scalar* target_data, const Scalar* predict_data, const long& nelem)
 	{
 		int TP = 0;
 		int FP = 0;
@@ -50,12 +50,12 @@ private:
 			if ((target_data[i] != predict_data[i]) && (predict_data[i] == 1)) { FP++; }
 		}
 
-		const Scalar precision = TP / (TP + FP + 0.000001);
+		Scalar precision = TP / (TP + FP + 0.000001);
 		std::cout << "---------------------------------------------- precision = " << precision << std::endl;
 		return precision;
 	}
 
-	const Scalar recall_score(const Scalar* target_data, const Scalar* predict_data, const int& nelem)
+	static Scalar recall_score(const Scalar* target_data, const Scalar* predict_data, const long& nelem)
 	{
 		int TP = 0;
 		int FN = 0;
@@ -67,14 +67,14 @@ private:
 			if ((target_data[i] != predict_data[i]) && (predict_data[i] == 0)) { FN++; }
 		}
 
-		const Scalar recall = TP / (TP + FN + 0.000001);
+		Scalar recall = TP / (TP + FN + 0.000001);
 		std::cout << "---------------------------------------------- recall = " << recall << std::endl;
 		return recall;
 	}
 
-	const Scalar f1_score(const Scalar& precision, const Scalar& recall)
+	Scalar f1_score(const Scalar& precision, const Scalar& recall) const
 	{
-		const Scalar f1 = ((1 + b_koef * b_koef) * precision * recall) / ((b_koef * b_koef) * precision + recall + 0.000001);
+		Scalar f1 = ((1 + b_koef * b_koef) * precision * recall) / ((b_koef * b_koef) * precision + recall + 0.000001);
 		std::cout << "---------------------------------------------- f1-score = " << f1 << std::endl;
 		return f1;
 	}
@@ -121,7 +121,7 @@ public:
 
 	void post_trained_batch(const NeuralNetwork* net,
 		const Matrix& x,
-		const Matrix& y)
+		const Matrix& y) override
 	{
 		// resize on first iteration only
 		if (RESIZE_VECTOR) 
@@ -131,7 +131,7 @@ public:
 			precision_score_vector.resize(m_nbatch);
 			recall_score_vector.resize(m_nbatch);
 			f1_score_vector.resize(m_nbatch);
-			RESIZE_VECTOR = 0;
+			RESIZE_VECTOR = false;
 		}
 
 
@@ -140,7 +140,7 @@ public:
 		Matrix y_pred = y_predict_transform(net_output);
 		const Scalar* target_data = y.data();
 		const Scalar* predict_data = y_pred.data();
-		const int nelem = y.size();
+		const long nelem = y.size();
 
 		std::cout << "[Epoch = " << m_epoch_id << ", batch = " << m_batch_id << "] Loss = " << loss << std::endl;
 

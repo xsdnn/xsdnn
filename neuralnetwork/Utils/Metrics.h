@@ -21,11 +21,9 @@ void MSE_calculate(Matrix& target_data, Matrix& net_output, bool sqrt = false)
     throw std::invalid_argument("[void MSE_calculate]: Input data have incorrect dimension");
   }
 
-  const int target_cols = target_data.cols();
-  Scalar MSE = (target_data - net_output).squaredNorm() / target_cols;
+  Scalar MSE = (target_data - net_output).squaredNorm() / static_cast<Scalar>(target_data.cols());
   if (sqrt) { std::cout << "RMSE Error = " << std::sqrt(MSE) << std::endl; return; }
   std::cout << "MSE Error = " << MSE << std::endl;
-  return;
 }
 
 void MAE_calculate(Matrix& target_data, Matrix& net_output)
@@ -36,7 +34,7 @@ void MAE_calculate(Matrix& target_data, Matrix& net_output)
     throw std::invalid_argument("[void MAE_calculate]: Input data have incorrect dimension");
   }
 
-  Scalar MAE = (target_data - net_output).array().cwiseAbs().sum() / target_data.cols();
+  Scalar MAE = (target_data - net_output).array().cwiseAbs().sum() / static_cast<Scalar>(target_data.cols());
   std::cout << "MAE Error = " << MAE << std::endl;
 }
 
@@ -57,7 +55,6 @@ void R_calculate(Matrix& target_data, Matrix& net_output)
   }
   Scalar r_coef = target_data.squaredNorm();
   std::cout << "R^2 = " << (1 - (MSE / r_coef)) << std::endl;
-  return;
 }
 
 void MAPE_calculate(Matrix& target_data, Matrix& net_output)
@@ -68,7 +65,7 @@ void MAPE_calculate(Matrix& target_data, Matrix& net_output)
     throw std::invalid_argument("[void MAPE_calculate]: Input data have incorrect dimension");
   }
 
-  Scalar MAPE = ((target_data - net_output).array().cwiseAbs().sum() / target_data.cwiseAbs().array().sum()) / target_data.cols();
+  Scalar MAPE = ((target_data - net_output).array().cwiseAbs().sum() / target_data.cwiseAbs().array().sum()) / static_cast<Scalar>(target_data.cols());
   std::cout << "MAPE Error = " << MAPE * 100.0 << "%" << std::endl;
 }
 
@@ -80,7 +77,7 @@ void MAPE_calculate(Matrix& target_data, Matrix& net_output)
 
 namespace internal
 {
-  Matrix static build_confusion_matrix(const Scalar* real, const Scalar* predict, const int& sample_size)
+  Matrix static build_confusion_matrix(const Scalar* real, const Scalar* predict, const long& sample_size)
   {
     int tp = 0;
     int tn = 0;
@@ -102,14 +99,18 @@ namespace internal
     return CM;
   }
 }
-
+/// Подсчет основных метрик классификации. Строится confusion matrix и по правилам вычисляются нужные метрики
+/// \param y_true матрица ответов
+/// \param y_pred матрица предсказаний, выданная сеткой
 void accuracy_precision_recall_f1_calculate(const Matrix& y_true, const Matrix& y_pred)
 {
+  
   if ((y_true.cols() != y_pred.cols()) || (y_true.rows() != y_pred.rows()))
   {
     throw std::invalid_argument("[void accuracy_precision_recall_f1_calculate]: Input data have incorrect dimension");
   }
-  const int sample_size = y_true.size();
+
+  const long sample_size = y_true.size();
   const Scalar* real = y_true.data();
   const Scalar* predict = y_pred.data();
   Matrix CM = internal::build_confusion_matrix(real, predict, sample_size);

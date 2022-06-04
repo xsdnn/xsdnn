@@ -23,7 +23,7 @@ public:
 	Layer(const int in_size, const int out_size, bool bias_true_false) :
 		m_in_size(in_size), m_out_size(out_size), BIAS_ACTIVATE(bias_true_false) {}
 
-	virtual ~Layer() {}
+	virtual ~Layer() = default;
 
 
 	/// <summary>
