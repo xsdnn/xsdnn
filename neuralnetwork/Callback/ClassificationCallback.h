@@ -93,8 +93,6 @@ private:
 	inline void show_epoch_result()
 	{
 		Scalar mean;
-		Scalar median;
-		Scalar variance;
 
 		mean = mean_vector(batch_loss);
 		std::cout << "------------------------------------------------------------------ mean loss = " << mean << std::endl;

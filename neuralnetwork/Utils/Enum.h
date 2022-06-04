@@ -24,7 +24,6 @@ namespace internal
 		if (type == "FullyConnected") return FULLYCONNECTED;
 
 		throw std::invalid_argument("[function layer_id]: unknown type of layer");
-		return -1;
 	}
 
 	enum ACTIVATION_FUNC_ENUM
@@ -44,7 +43,6 @@ namespace internal
 		if (type == "Sigmoid") return SIGMOID;
 
 		throw std::invalid_argument("[function activation_id]: unknown type of activation func");
-		return -1;
 	}
 
 	enum OUTPUT_ENUM
@@ -62,6 +60,5 @@ namespace internal
 		if (type == "RegressionMSE") return REGRESSIONMSE;
 
 		throw std::invalid_argument("[function output_id]: unknown type of output layer");
-		return -1;
 	}
 }
