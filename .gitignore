@@ -70,3 +70,8 @@ neuralnetwork/enc_temp_folder/
 neuralnetwork/x64/Debug/test_classification_1.obj.enc
 .idea/
 .cmake-build-debug/
+cmake-build-debug/.cmake/api/v1/query/
+
+cmake-build-debug/Testing/Temporary/LastTest.log
+
+cmake-build-debug/
