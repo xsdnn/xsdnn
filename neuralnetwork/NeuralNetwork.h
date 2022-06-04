@@ -40,7 +40,7 @@ private:
 	/// </summary>
 	void check_unit_sizes() const
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 1) { return; }
 
@@ -60,7 +60,7 @@ private:
 	/// Убедитесь, что их длина равна длине входного слоя сетки</param>
 	void forward(const Matrix& input)
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 0) { return; }
 
@@ -77,7 +77,7 @@ private:
 
 		// Начинаем толкать данные по всей сетке
 
-		for (int i = 1; i < nlayer; ++i)
+		for (unsigned long i = 1; i < nlayer; ++i)
 		{
 			m_layers[i]->forward(m_layers[i - 1]->output());
 		}
@@ -96,7 +96,7 @@ private:
 	template <typename TargetType>
 	void backprop(const Matrix& input, const TargetType& target)
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 0) { return; }
 
@@ -123,7 +123,7 @@ private:
 
 		// Теперь пробегаемся по всем слоям и вычисляем градиенты
 
-		for (int i = nlayer - 2; i > 0; --i)
+		for (unsigned long i = nlayer - 2; i > 0; --i)
 		{
 			m_layers[i]->backprop(m_layers[i - 1]->output(),
 				m_layers[i + 1]->backprop_data());
@@ -142,11 +142,11 @@ private:
 	/// <param name="opt"> - собственно оптимайзер</param>
 	void update(Optimizer& opt)
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 0) { return; }
 
-		for (int i = 0; i < nlayer; ++i)
+		for (unsigned long i = 0; i < nlayer; ++i)
 		{
 			m_layers[i]->update(opt);
 		}
@@ -158,7 +158,7 @@ private:
 	/// <returns></returns>
 	Meta get_meta_info() const
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 		Meta map;
 		map.insert(std::make_pair("Nlayers", nlayer));
 
@@ -203,7 +203,7 @@ public:
 	/// 
 	~NeuralNetwork()
 	{
-		const int nlayer = count_layers();
+		const unsigned long nlayer = count_layers();
 
 		for (int i = 0; i < nlayer; ++i)
 		{
