@@ -69,6 +69,14 @@ void MAPE_calculate(Matrix& target_data, Matrix& net_output)
   std::cout << "MAPE Error = " << MAPE * 100.0 << "%" << std::endl;
 }
 
+void regressor_metrics_calculate(Matrix& target_data, Matrix& net_output)
+{
+    MSE_calculate(target_data, net_output);
+    MAE_calculate(target_data, net_output);
+    R_calculate(target_data, net_output);
+    MAPE_calculate(target_data, net_output);
+}
+
 
 
 //##############################################################################

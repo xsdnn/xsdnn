@@ -11,7 +11,7 @@
  *
  * This header should only be used with old compilers.
  */
-
+/// @cond
 #ifndef MNIST_READER_HPP
 #define MNIST_READER_HPP
 
@@ -177,3 +177,4 @@ MNIST_dataset<Pixel, Label> read_dataset() {
 } //end of namespace mnist
 
 #endif
+/// @endcond

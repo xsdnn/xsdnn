@@ -4,14 +4,13 @@
 # include "../RNG.h"
 # include "../Config.h"
 
-///
-/// Здесь собраны утилиты для случайных зависимостей.
-/// 
-
-
 
 namespace internal
 {
+    /// Рандомизация массива
+    /// \param arr массив
+    /// \param n размер массива
+    /// \param rng генератор
     inline void shuffle(int* arr, const int n, RNG& rng)
     {
         for (int i = n - 1; i > 0; i--)
@@ -24,6 +23,18 @@ namespace internal
         }
     }
 
+    /// Генерация перетасованных батчей
+    /// \tparam DerivedX
+    /// \tparam DerivedY
+    /// \tparam XType тип данных на выборке
+    /// \tparam YType тип данных на целевой переменной
+    /// \param x обучающая выборка
+    /// \param y целевая переменная
+    /// \param batch_size размер батча
+    /// \param rng генератор
+    /// \param x_batches полученные батчи для выборки
+    /// \param y_batches полученные батчи для целевой переменной
+    /// \return
     template <typename DerivedX, typename DerivedY, typename XType, typename YType>
     inline int create_shuffled_batches(
         const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y,
@@ -72,6 +83,12 @@ namespace internal
         return nbatch;
     }
 
+    /// Генерация нормального распределения через алгоритм __Бокса-Мюллера__
+    /// \param arr массив
+    /// \param n размер массива
+    /// \param rng генератор
+    /// \param mu мат.ожидание
+    /// \param sigma дисперсия
     inline void set_normal_random(
         Scalar* arr,
         const int n,

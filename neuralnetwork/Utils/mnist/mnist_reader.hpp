@@ -24,6 +24,7 @@
 
 namespace mnist {
 
+/// @cond
 /*!
  * \brief Represents a complete mnist dataset
  * \tparam Container The container to use
@@ -65,6 +66,7 @@ struct MNIST_dataset {
         }
     }
 };
+/// @endcond
 
 /*!
  * \brief Read a MNIST image file inside the given flat container (ETL)
