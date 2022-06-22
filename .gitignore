@@ -75,3 +75,5 @@ cmake-build-debug/.cmake/api/v1/query/
 cmake-build-debug/Testing/Temporary/LastTest.log
 
 cmake-build-debug/
+
+Doxygen/
