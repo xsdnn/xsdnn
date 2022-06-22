@@ -17,6 +17,8 @@ private:
 	Matrix m_din;			// производные по выходному слою
 
 public:
+    /// Проверка входных данных на соотвествие значений. 1 или 0.
+    /// \param target целевая переменная
 	void check_target_data(const Matrix& target) const override
 	{
 		const long nelem = target.size();
@@ -31,19 +33,9 @@ public:
 		}
 	}
 
-	void check_target_data(IntegerVector& target) const override
-	{
-		const long nelem = target.size();
-
-		for (int i = 0; i < nelem; i++)
-		{
-			if (target[i] != Scalar(1) && target[i] != Scalar(0))
-			{
-				throw std::invalid_argument("[class BinaryClassEntropy]: target data is not 1 and 0. Check input param!");
-			}
-		}
-	}
-
+    /// Проверка входных данных на соотвествие размерам
+    /// \param prev_layer_data последний скрытый слой сети
+    /// \param target целевая переменная
 	void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
 	{
 		const long ncols = prev_layer_data.cols();
@@ -67,33 +59,15 @@ public:
 			-prev_layer_data.array().cwiseInverse());
 	}
 
-
-	void evaluate(const Matrix& prev_layer_data, const IntegerVector& target) override
-	{
-		const long nrows = target.rows();
-
-		if (nrows != 1)
-		{
-			throw std::invalid_argument("[class BinaryClassEntropy] Target rows != 1. Check input.");
-		}
-
-		const long ncols = prev_layer_data.cols();
-
-		if (target.size() != ncols)
-		{
-			throw std::invalid_argument("[class BinaryClassEntropy]: Target data have incorrect dim. Check input data");
-		}
-
-		m_din.resize(1, ncols);
-		m_din.array() = (target.array() == Scalar(0)).select((Scalar(1) - prev_layer_data.array()).cwiseInverse(),
-			-prev_layer_data.array().cwiseInverse());
-	}
-
+    ///
+    /// \return Вектор направления спуска (антиградиент).
 	const Matrix& backprop_data() const override
 	{
 		return m_din;
 	}
 
+    ///
+    /// \return Ошибку на обучающей выборке
 	Scalar loss() const override
 	{
 		//	Зная m_din, подставим его в лосс и выразим ошибку.
@@ -103,6 +77,8 @@ public:
 		return Scalar(m_din.array().abs().log().sum()) / static_cast<Scalar>(m_din.cols());
 	}
 
+    ///
+    /// \return Тип выходного слоя.
 	std::string output_type() const override
 	{
 		return "BinaryClassEntropy";
