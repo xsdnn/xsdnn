@@ -30,6 +30,7 @@
 # include "Output.h"
 # include "Output/RegressionMSE.h"
 # include "Output/BinaryClassEntropy.h"
+# include "Output/MultiClassEntropy.h"
 
 
 
@@ -39,7 +40,8 @@
 # include "Callback/ClassificationCallback.h"
 
 # include "Utils/Metrics.h"
-# include "Utils/Backend-datasets.h"
+# include "Utils/DataLoader.h"
+# include "Utils/InOut.h"
 
 # include "Utils/mnist/mnist_reader.hpp"
 # include "Utils/mnist/mnist_reader_common.hpp"
