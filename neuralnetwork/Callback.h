@@ -6,11 +6,13 @@
 
 class NeuralNetwork;
 
-/*
-Базовый класс для отправки пользователю сообщений о тренировке сетки.
-Будет предусмотрена возможность вывода на экран основных тренировочных характеристик сетки.
+/*!
+	\brief Родительский класс вывода информации на экран
+    \author shuffle-true
+	\version 1.0
+	\date Март 2022 года
+	\warning Не следует изменять исходный код этого класса
 */
-
 class Callback
 {
 protected:
@@ -28,14 +30,15 @@ public:
 
 	virtual ~Callback() = default;
 
-	// Перед тренировкой батча
+    /*!
+     *
+     */
 	virtual void pre_trained_batch(const NeuralNetwork* net, const Matrix& x,
 		const Matrix& y) {}
 
 	virtual void pre_trained_batch(const NeuralNetwork* net, const Matrix& x,
 		const IntegerVector& y) {}
 
-	// После тренировки батча
 	virtual void post_trained_batch(const NeuralNetwork* net, const Matrix& x,
 		const Matrix& y) {}
 
