@@ -8,11 +8,17 @@
 # include "Optimizer.h"
 
 
+/*!
+	\brief Родительский класс слоев
+    \author shuffle-true
+	\version 1.0
+	\date Март 2022 года
+	\warning Не следует изменять исходный код этого класса
+*/
 class Layer
 {
 protected:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
 	typedef std::map<std::string, int> Meta;
 
 	const int m_in_size;
