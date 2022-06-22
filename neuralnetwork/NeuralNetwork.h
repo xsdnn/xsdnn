@@ -11,9 +11,10 @@
 # include "Output.h"
 # include "Callback.h"
 # include "Utils/Enum.h"
-
+# include "Utils/InOut.h"
 
 # include <iostream>
+# include <iomanip>
 ///
 /// Этот модуль описывает интерфейс нейронной сети, которая будет использоваться пользователем
 /// 
@@ -347,8 +348,6 @@ public:
 
 		const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
-		std::cout << "Batch init successfully!" << std::endl;
-
 		// Передаем параметры в callback для дальнейшего отслеживания обучения
 
 		m_callback->m_nbatch = nbatch;
@@ -440,4 +439,36 @@ public:
 
 		return res;
 	}
+
+    friend std::ostream& operator << (std::ostream& output, NeuralNetwork& obj)
+    {
+        output << "Neural Network consists of elements" << std::endl;
+        output << std::setw(14) << "" << "Layer" << std::setw(8) << "" << "Activation" << std::endl;
+        const unsigned long nlayer = obj.count_layers();
+        if (nlayer == 0) return output;
+        for (unsigned long i = 0; i < nlayer; i++)
+        {
+            output << std::setw(10) << "" << obj.m_layers[i]->layer_type()
+            << std::setw(5) << "" << obj.m_layers[i]->activation_type()
+            << std::setw(5) << "" << "Input neuron = " << obj.m_layers[i]->in_size()
+            << std::setw(5) << "" << "Output neuron = " << obj.m_layers[i]->out_size() << std::endl;
+        }
+        return output;
+    }
+
+    void export_net(std::string folder, std::string filename) const
+    {
+        internal::create_directory(folder);
+
+        std::vector <std::vector<Scalar>> params = this->get_parameters();
+        Meta meta = this->get_meta_info();
+
+        std::string directory_map = "../xsDNN-models/" + folder + "/" + filename;
+        std::string directory_vector = "../xsDNN-models/" + folder;
+
+        internal::write_map(directory_map, meta);
+        internal::write_vector(directory_vector, filename, params);
+
+        std::cout << "NeuralNetwork saved" << std::endl;
+    }
 };
