@@ -1,0 +1,35 @@
+\hypertarget{_random_8h}{}\doxysection{Файл /home/shuffle/xs\+DNN/xs\+DNN-\/include/neuralnetwork/\+Utils/\+Random.h}
+\label{_random_8h}\index{/home/shuffle/xsDNN/xsDNN-\/include/neuralnetwork/Utils/Random.h@{/home/shuffle/xsDNN/xsDNN-\/include/neuralnetwork/Utils/Random.h}}
+{\ttfamily \#include $<$Eigen/\+Core$>$}\newline
+{\ttfamily \#include \char`\"{}../\+RNG.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../\+Config.\+h\char`\"{}}\newline
+Граф включаемых заголовочных файлов для Random.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=307pt]{_random_8h__incl}
+\end{center}
+\end{figure}
+Граф файлов, в которые включается этот файл\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{_random_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Пространства имен}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceinternal}{internal}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Функции}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceinternal_a1b8021e30d34fc051ac96750c5e4ea41}{internal\+::shuffle}} (int $\ast$arr, const int n, RNG \&rng)
+\item 
+{\footnotesize template$<$typename DerivedX , typename DerivedY , typename XType , typename YType $>$ }\\int \mbox{\hyperlink{namespaceinternal_a18cfbdb7ba8d1ae1092a2c8ce4c8d077}{internal\+::create\+\_\+shuffled\+\_\+batches}} (const Eigen\+::\+Matrix\+Base$<$ DerivedX $>$ \&x, const Eigen\+::\+Matrix\+Base$<$ DerivedY $>$ \&y, int batch\+\_\+size, RNG \&rng, std\+::vector$<$ XType $>$ \&x\+\_\+batches, std\+::vector$<$ YType $>$ \&y\+\_\+batches)
+\item 
+void \mbox{\hyperlink{namespaceinternal_ad23ce3155423fa432a24bfffc51793a6}{internal\+::set\+\_\+normal\+\_\+random}} (Scalar $\ast$arr, const int n, RNG \&rng, const Scalar \&mu=Scalar(0), const Scalar \&sigma=Scalar(1))
+\end{DoxyCompactItemize}

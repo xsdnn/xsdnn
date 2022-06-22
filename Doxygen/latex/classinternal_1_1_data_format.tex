@@ -1,0 +1,36 @@
+\hypertarget{classinternal_1_1_data_format}{}\doxysection{Шаблон класса internal\+::Data\+Format$<$ Image\+Format, Label\+Format $>$}
+\label{classinternal_1_1_data_format}\index{internal::DataFormat$<$ ImageFormat, LabelFormat $>$@{internal::DataFormat$<$ ImageFormat, LabelFormat $>$}}
+
+
+{\ttfamily \#include $<$Data\+Loader.\+h$>$}
+
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classinternal_1_1_data_format_aab0710ed509962e2fa8a723125fad6f9}\label{classinternal_1_1_data_format_aab0710ed509962e2fa8a723125fad6f9}} 
+{\bfseries Data\+Format} (std\+::string dataset\+\_\+name)
+\item 
+\mbox{\Hypertarget{classinternal_1_1_data_format_a8fd83c004c2ddba5ba824fc715b1824c}\label{classinternal_1_1_data_format_a8fd83c004c2ddba5ba824fc715b1824c}} 
+void {\bfseries check\+\_\+dataset\+\_\+name} ()
+\item 
+\mbox{\Hypertarget{classinternal_1_1_data_format_acf46fbc17e99b3526bf742ba6242bf9b}\label{classinternal_1_1_data_format_acf46fbc17e99b3526bf742ba6242bf9b}} 
+void {\bfseries load\+\_\+data} (Matrix \&train\+\_\+data, Matrix \&train\+\_\+label, Matrix \&test\+\_\+data, Matrix \&test\+\_\+label)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Подробное описание}
+\subsubsection*{template$<$typename Image\+Format, typename Label\+Format$>$\newline
+class internal\+::\+Data\+Format$<$ Image\+Format, Label\+Format $>$}
+
+Класс отвечает за подгрузку данных и их обработку, заполняет структуру \mbox{\hyperlink{struct_data_loader}{Data\+Loader}}. 
+\begin{DoxyTemplParams}{Параметры шаблона}
+{\em Image\+Format} & тип первоначальных данных для выборки -\/ например, для изображения \\
+\hline
+{\em Label\+Format} & тип первоначальных данных для меток \\
+\hline
+\end{DoxyTemplParams}
+
+
+Объявления и описания членов класса находятся в файле\+:\begin{DoxyCompactItemize}
+\item 
+/home/shuffle/xs\+DNN/xs\+DNN-\/include/neuralnetwork/\+Utils/Data\+Loader.\+h\end{DoxyCompactItemize}

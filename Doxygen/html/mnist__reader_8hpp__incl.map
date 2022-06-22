@@ -1,0 +1,10 @@
+<map id="/home/shuffle/xsDNN/xsDNN&#45;include/neuralnetwork/Utils/mnist/mnist_reader.hpp" name="/home/shuffle/xsDNN/xsDNN&#45;include/neuralnetwork/Utils/mnist/mnist_reader.hpp">
+<area shape="rect" id="node1" title="Contains functions to read the MNIST dataset." alt="" coords="211,5,433,61"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,109,79,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="103,109,183,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="207,109,266,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="291,109,353,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="378,109,445,136"/>
+<area shape="rect" id="node7" title=" " alt="" coords="469,109,546,136"/>
+<area shape="rect" id="node8" href="$mnist__reader__common_8hpp.html" title="Contains common functions to read the MNIST dataset." alt="" coords="570,109,770,136"/>
+</map>

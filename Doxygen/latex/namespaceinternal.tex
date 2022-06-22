@@ -1,0 +1,278 @@
+\hypertarget{namespaceinternal}{}\doxysection{Пространство имен internal}
+\label{namespaceinternal}\index{internal@{internal}}
+\doxysubsection*{Перечисления}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespaceinternal_a17d1c6853385e58f806748015a2ad03f}{LAYER\+\_\+\+TYPE\+\_\+\+ENUM}} \{ \mbox{\hyperlink{namespaceinternal_a17d1c6853385e58f806748015a2ad03fadf6ba8294220872c1b04b17f43136716}{FULLYCONNECTED}} = 0
+ \}
+\begin{DoxyCompactList}\small\item\em ID слоя \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eab}{ACTIVATION\+\_\+\+FUNC\+\_\+\+ENUM}} \{ \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba9544d50c065b101d713dca7cffb2e9e1}{RELU}} = 0
+, \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba4bd840f2b352b2f8144f4bba33d18e4e}{SIGMOID}}
+, \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eabad64825016900e252957c32c9c0851eec}{IDENTITY}}
+, \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eabafbe869f0d87088abb0aefb6b5a506b71}{SOFTMAX}}
+ \}
+\begin{DoxyCompactList}\small\item\em ID функции активации \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{namespaceinternal_aa41d8740c2de155ef01df2d288fef445}{OUTPUT\+\_\+\+ENUM}} \{ \mbox{\hyperlink{namespaceinternal_aa41d8740c2de155ef01df2d288fef445af183fae882f18e3a50fe2961b943dec9}{REGRESSIONMSE}} = 0
+, \mbox{\hyperlink{namespaceinternal_aa41d8740c2de155ef01df2d288fef445ad3b8fb340c189068f1a5ca0ce629e300}{BINARYCLASSENTROPY}}
+ \}
+\begin{DoxyCompactList}\small\item\em ID выходного слоя \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Функции}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespaceinternal_aad429a1768927e66f1e6c2b64d946027}{layer\+\_\+id}} (const std\+::string \&type)
+\item 
+int \mbox{\hyperlink{namespaceinternal_aa764f1c79d0e36a83afe70d46d3cef7d}{activation\+\_\+id}} (const std\+::string \&type)
+\item 
+int \mbox{\hyperlink{namespaceinternal_a868a36cb50dad3821255259ca79db479}{output\+\_\+id}} (const std\+::string \&type)
+\item 
+void \mbox{\hyperlink{namespaceinternal_aa4548c561725c1d1addf33716b619167}{create\+\_\+directory}} (const std\+::string \&directory\+\_\+name)
+\item 
+void \mbox{\hyperlink{namespaceinternal_ad3ce06b33fd4f205474a7c055b590737}{write\+\_\+one\+\_\+vector}} (const std\+::vector$<$ Scalar $>$ \&vec, std\+::string \&filename)
+\item 
+void \mbox{\hyperlink{namespaceinternal_aba1a0c067292e01ba5d405c7d843edf1}{write\+\_\+vector}} (std\+::string \&folder, const std\+::string \&filename, std\+::vector$<$ std\+::vector$<$ Scalar $>$ $>$ \&params)
+\item 
+void \mbox{\hyperlink{namespaceinternal_af85d8e89869ef65d35459eb528791af1}{write\+\_\+map}} (const std\+::string \&filename, const std\+::map$<$ std\+::string, int $>$ \&map)
+\item 
+void \mbox{\hyperlink{namespaceinternal_a1b8021e30d34fc051ac96750c5e4ea41}{shuffle}} (int $\ast$arr, const int n, RNG \&rng)
+\item 
+{\footnotesize template$<$typename DerivedX , typename DerivedY , typename XType , typename YType $>$ }\\int \mbox{\hyperlink{namespaceinternal_a18cfbdb7ba8d1ae1092a2c8ce4c8d077}{create\+\_\+shuffled\+\_\+batches}} (const Eigen\+::\+Matrix\+Base$<$ DerivedX $>$ \&x, const Eigen\+::\+Matrix\+Base$<$ DerivedY $>$ \&y, int batch\+\_\+size, RNG \&rng, std\+::vector$<$ XType $>$ \&x\+\_\+batches, std\+::vector$<$ YType $>$ \&y\+\_\+batches)
+\item 
+void \mbox{\hyperlink{namespaceinternal_ad23ce3155423fa432a24bfffc51793a6}{set\+\_\+normal\+\_\+random}} (Scalar $\ast$arr, const int n, RNG \&rng, const Scalar \&mu=Scalar(0), const Scalar \&sigma=Scalar(1))
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Подробное описание}
+Этот файл служит как вспомогательная утилита для определения типа слоя, его функции активации и выходного слоя сетки. Все представлено ввиде enum перечисления, что позволит масштабировать эту систему до нужных размеров. 
+
+\doxysubsection{Перечисления}
+\mbox{\Hypertarget{namespaceinternal_af22b4eec9ac692a7334ea550be120eab}\label{namespaceinternal_af22b4eec9ac692a7334ea550be120eab}} 
+\index{internal@{internal}!ACTIVATION\_FUNC\_ENUM@{ACTIVATION\_FUNC\_ENUM}}
+\index{ACTIVATION\_FUNC\_ENUM@{ACTIVATION\_FUNC\_ENUM}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{ACTIVATION\_FUNC\_ENUM}{ACTIVATION\_FUNC\_ENUM}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceinternal_af22b4eec9ac692a7334ea550be120eab}{internal\+::\+ACTIVATION\+\_\+\+FUNC\+\_\+\+ENUM}}}
+
+
+
+ID функции активации 
+
+\begin{DoxyEnumFields}{Элементы перечислений}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RELU@{RELU}!internal@{internal}}\index{internal@{internal}!RELU@{RELU}}}\mbox{\Hypertarget{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba9544d50c065b101d713dca7cffb2e9e1}\label{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba9544d50c065b101d713dca7cffb2e9e1}} 
+RELU&\mbox{\hyperlink{class_re_l_u}{Re\+LU}}. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SIGMOID@{SIGMOID}!internal@{internal}}\index{internal@{internal}!SIGMOID@{SIGMOID}}}\mbox{\Hypertarget{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba4bd840f2b352b2f8144f4bba33d18e4e}\label{namespaceinternal_af22b4eec9ac692a7334ea550be120eaba4bd840f2b352b2f8144f4bba33d18e4e}} 
+SIGMOID&\mbox{\hyperlink{class_sigmoid}{Sigmoid}}. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{IDENTITY@{IDENTITY}!internal@{internal}}\index{internal@{internal}!IDENTITY@{IDENTITY}}}\mbox{\Hypertarget{namespaceinternal_af22b4eec9ac692a7334ea550be120eabad64825016900e252957c32c9c0851eec}\label{namespaceinternal_af22b4eec9ac692a7334ea550be120eabad64825016900e252957c32c9c0851eec}} 
+IDENTITY&\mbox{\hyperlink{class_identity}{Identity}}. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOFTMAX@{SOFTMAX}!internal@{internal}}\index{internal@{internal}!SOFTMAX@{SOFTMAX}}}\mbox{\Hypertarget{namespaceinternal_af22b4eec9ac692a7334ea550be120eabafbe869f0d87088abb0aefb6b5a506b71}\label{namespaceinternal_af22b4eec9ac692a7334ea550be120eabafbe869f0d87088abb0aefb6b5a506b71}} 
+SOFTMAX&\mbox{\hyperlink{class_softmax}{Softmax}}. \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespaceinternal_a17d1c6853385e58f806748015a2ad03f}\label{namespaceinternal_a17d1c6853385e58f806748015a2ad03f}} 
+\index{internal@{internal}!LAYER\_TYPE\_ENUM@{LAYER\_TYPE\_ENUM}}
+\index{LAYER\_TYPE\_ENUM@{LAYER\_TYPE\_ENUM}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{LAYER\_TYPE\_ENUM}{LAYER\_TYPE\_ENUM}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceinternal_a17d1c6853385e58f806748015a2ad03f}{internal\+::\+LAYER\+\_\+\+TYPE\+\_\+\+ENUM}}}
+
+
+
+ID слоя 
+
+\begin{DoxyEnumFields}{Элементы перечислений}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FULLYCONNECTED@{FULLYCONNECTED}!internal@{internal}}\index{internal@{internal}!FULLYCONNECTED@{FULLYCONNECTED}}}\mbox{\Hypertarget{namespaceinternal_a17d1c6853385e58f806748015a2ad03fadf6ba8294220872c1b04b17f43136716}\label{namespaceinternal_a17d1c6853385e58f806748015a2ad03fadf6ba8294220872c1b04b17f43136716}} 
+FULLYCONNECTED&Полносвязный \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespaceinternal_aa41d8740c2de155ef01df2d288fef445}\label{namespaceinternal_aa41d8740c2de155ef01df2d288fef445}} 
+\index{internal@{internal}!OUTPUT\_ENUM@{OUTPUT\_ENUM}}
+\index{OUTPUT\_ENUM@{OUTPUT\_ENUM}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{OUTPUT\_ENUM}{OUTPUT\_ENUM}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceinternal_aa41d8740c2de155ef01df2d288fef445}{internal\+::\+OUTPUT\+\_\+\+ENUM}}}
+
+
+
+ID выходного слоя 
+
+\begin{DoxyEnumFields}{Элементы перечислений}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{REGRESSIONMSE@{REGRESSIONMSE}!internal@{internal}}\index{internal@{internal}!REGRESSIONMSE@{REGRESSIONMSE}}}\mbox{\Hypertarget{namespaceinternal_aa41d8740c2de155ef01df2d288fef445af183fae882f18e3a50fe2961b943dec9}\label{namespaceinternal_aa41d8740c2de155ef01df2d288fef445af183fae882f18e3a50fe2961b943dec9}} 
+REGRESSIONMSE&Регрессия -\/ критерий MSE. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BINARYCLASSENTROPY@{BINARYCLASSENTROPY}!internal@{internal}}\index{internal@{internal}!BINARYCLASSENTROPY@{BINARYCLASSENTROPY}}}\mbox{\Hypertarget{namespaceinternal_aa41d8740c2de155ef01df2d288fef445ad3b8fb340c189068f1a5ca0ce629e300}\label{namespaceinternal_aa41d8740c2de155ef01df2d288fef445ad3b8fb340c189068f1a5ca0ce629e300}} 
+BINARYCLASSENTROPY&Бинарная классификация \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Функции}
+\mbox{\Hypertarget{namespaceinternal_aa764f1c79d0e36a83afe70d46d3cef7d}\label{namespaceinternal_aa764f1c79d0e36a83afe70d46d3cef7d}} 
+\index{internal@{internal}!activation\_id@{activation\_id}}
+\index{activation\_id@{activation\_id}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{activation\_id()}{activation\_id()}}
+{\footnotesize\ttfamily int internal\+::activation\+\_\+id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Аргументы}
+{\em type} & тип функции активации \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+ID функции активации 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceinternal_aa4548c561725c1d1addf33716b619167}\label{namespaceinternal_aa4548c561725c1d1addf33716b619167}} 
+\index{internal@{internal}!create\_directory@{create\_directory}}
+\index{create\_directory@{create\_directory}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{create\_directory()}{create\_directory()}}
+{\footnotesize\ttfamily void internal\+::create\+\_\+directory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{directory\+\_\+name }\end{DoxyParamCaption})}
+
+Создание директории при сохранении сетки 
+\begin{DoxyParams}{Аргументы}
+{\em directory\+\_\+name} & название директории \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceinternal_a18cfbdb7ba8d1ae1092a2c8ce4c8d077}\label{namespaceinternal_a18cfbdb7ba8d1ae1092a2c8ce4c8d077}} 
+\index{internal@{internal}!create\_shuffled\_batches@{create\_shuffled\_batches}}
+\index{create\_shuffled\_batches@{create\_shuffled\_batches}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{create\_shuffled\_batches()}{create\_shuffled\_batches()}}
+{\footnotesize\ttfamily template$<$typename DerivedX , typename DerivedY , typename XType , typename YType $>$ \\
+int internal\+::create\+\_\+shuffled\+\_\+batches (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Matrix\+Base$<$ DerivedX $>$ \&}]{x,  }\item[{const Eigen\+::\+Matrix\+Base$<$ DerivedY $>$ \&}]{y,  }\item[{int}]{batch\+\_\+size,  }\item[{RNG \&}]{rng,  }\item[{std\+::vector$<$ XType $>$ \&}]{x\+\_\+batches,  }\item[{std\+::vector$<$ YType $>$ \&}]{y\+\_\+batches }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Генерация перетасованных батчей 
+\begin{DoxyTemplParams}{Параметры шаблона}
+{\em DerivedX} & \\
+\hline
+{\em DerivedY} & \\
+\hline
+{\em XType} & тип данных на выборке \\
+\hline
+{\em YType} & тип данных на целевой переменной \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Аргументы}
+{\em x} & обучающая выборка \\
+\hline
+{\em y} & целевая переменная \\
+\hline
+{\em batch\+\_\+size} & размер батча \\
+\hline
+{\em rng} & генератор \\
+\hline
+{\em x\+\_\+batches} & полученные батчи для выборки \\
+\hline
+{\em y\+\_\+batches} & полученные батчи для целевой переменной \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceinternal_aad429a1768927e66f1e6c2b64d946027}\label{namespaceinternal_aad429a1768927e66f1e6c2b64d946027}} 
+\index{internal@{internal}!layer\_id@{layer\_id}}
+\index{layer\_id@{layer\_id}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{layer\_id()}{layer\_id()}}
+{\footnotesize\ttfamily int internal\+::layer\+\_\+id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Аргументы}
+{\em type} & тип слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+ID слоя 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceinternal_a868a36cb50dad3821255259ca79db479}\label{namespaceinternal_a868a36cb50dad3821255259ca79db479}} 
+\index{internal@{internal}!output\_id@{output\_id}}
+\index{output\_id@{output\_id}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{output\_id()}{output\_id()}}
+{\footnotesize\ttfamily int internal\+::output\+\_\+id (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Аргументы}
+{\em type} & тип выходного слоя \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Возвращает}
+ID выходного слоя 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceinternal_ad23ce3155423fa432a24bfffc51793a6}\label{namespaceinternal_ad23ce3155423fa432a24bfffc51793a6}} 
+\index{internal@{internal}!set\_normal\_random@{set\_normal\_random}}
+\index{set\_normal\_random@{set\_normal\_random}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{set\_normal\_random()}{set\_normal\_random()}}
+{\footnotesize\ttfamily void internal\+::set\+\_\+normal\+\_\+random (\begin{DoxyParamCaption}\item[{Scalar $\ast$}]{arr,  }\item[{const int}]{n,  }\item[{RNG \&}]{rng,  }\item[{const Scalar \&}]{mu = {\ttfamily Scalar(0)},  }\item[{const Scalar \&}]{sigma = {\ttfamily Scalar(1)} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Генерация нормального распределения через алгоритм {\bfseries{Бокса-\/Мюллера}} 
+\begin{DoxyParams}{Аргументы}
+{\em arr} & массив \\
+\hline
+{\em n} & размер массива \\
+\hline
+{\em rng} & генератор \\
+\hline
+{\em mu} & мат.\+ожидание \\
+\hline
+{\em sigma} & дисперсия \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceinternal_a1b8021e30d34fc051ac96750c5e4ea41}\label{namespaceinternal_a1b8021e30d34fc051ac96750c5e4ea41}} 
+\index{internal@{internal}!shuffle@{shuffle}}
+\index{shuffle@{shuffle}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{shuffle()}{shuffle()}}
+{\footnotesize\ttfamily void internal\+::shuffle (\begin{DoxyParamCaption}\item[{int $\ast$}]{arr,  }\item[{const int}]{n,  }\item[{RNG \&}]{rng }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Рандомизация массива 
+\begin{DoxyParams}{Аргументы}
+{\em arr} & массив \\
+\hline
+{\em n} & размер массива \\
+\hline
+{\em rng} & генератор \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceinternal_af85d8e89869ef65d35459eb528791af1}\label{namespaceinternal_af85d8e89869ef65d35459eb528791af1}} 
+\index{internal@{internal}!write\_map@{write\_map}}
+\index{write\_map@{write\_map}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{write\_map()}{write\_map()}}
+{\footnotesize\ttfamily void internal\+::write\+\_\+map (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename,  }\item[{const std\+::map$<$ std\+::string, int $>$ \&}]{map }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Запись файла с информацией о слоях в сети 
+\begin{DoxyParams}{Аргументы}
+{\em filename} & название файла с сеткой \\
+\hline
+{\em map} & словарь, в которой хранится информация о слое \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceinternal_ad3ce06b33fd4f205474a7c055b590737}\label{namespaceinternal_ad3ce06b33fd4f205474a7c055b590737}} 
+\index{internal@{internal}!write\_one\_vector@{write\_one\_vector}}
+\index{write\_one\_vector@{write\_one\_vector}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{write\_one\_vector()}{write\_one\_vector()}}
+{\footnotesize\ttfamily void internal\+::write\+\_\+one\+\_\+vector (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ Scalar $>$ \&}]{vec,  }\item[{std\+::string \&}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Запись 1-\/D вектора в файл 
+\begin{DoxyParams}{Аргументы}
+{\em vec} & вектор \\
+\hline
+{\em filename} & название файла \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceinternal_aba1a0c067292e01ba5d405c7d843edf1}\label{namespaceinternal_aba1a0c067292e01ba5d405c7d843edf1}} 
+\index{internal@{internal}!write\_vector@{write\_vector}}
+\index{write\_vector@{write\_vector}!internal@{internal}}
+\doxysubsubsection{\texorpdfstring{write\_vector()}{write\_vector()}}
+{\footnotesize\ttfamily void internal\+::write\+\_\+vector (\begin{DoxyParamCaption}\item[{std\+::string \&}]{folder,  }\item[{const std\+::string \&}]{filename,  }\item[{std\+::vector$<$ std\+::vector$<$ Scalar $>$ $>$ \&}]{params }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Запись n векторо в файл. n -\/ кол-\/во слоев в сети. 
+\begin{DoxyParams}{Аргументы}
+{\em folder} & директория сохранения \\
+\hline
+{\em filename} & название файла с сеткой \\
+\hline
+{\em params} & 2-\/D вектор параметров \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>xsDNN: Класс Layer</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="graph.jpg"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">xsDNN
+   &#160;<span id="projectnumber">0.0.0</span>
+   </div>
+   <div id="projectbrief">Мини-библиотека глубинного обучения C++</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Открытые члены</a> &#124;
+<a href="#pro-types">Защищенные типы</a> &#124;
+<a href="#pro-attribs">Защищенные данные</a> &#124;
+<a href="class_layer-members.html">Полный список членов класса</a>  </div>
+  <div class="headertitle">
+<div class="title">Класс Layer<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Родительский класс, не несущий никакой смысловой нагрузки  
+ <a href="class_layer.html#details">Подробнее...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_layer_8h_source.html">Layer.h</a>&gt;</code></p>
+<div class="dynheader">
+Граф наследования:Layer:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_layer__inherit__graph.png" border="0" usemap="#a_layer_inherit__map" alt="Inheritance graph"/></div>
+<map name="a_layer_inherit__map" id="a_layer_inherit__map">
+<area shape="rect" title="Родительский класс, не несущий никакой смысловой нагрузки" alt="" coords="85,5,144,32"/>
+<area shape="rect" href="class_fully_connected.html" title=" " alt="" coords="5,80,224,107"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">см. легенду</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Открытые члены</h2></td></tr>
+<tr class="memitem:a300b140ae3c0878520924ed89a7639c2"><td class="memItemLeft" align="right" valign="top"><a id="a300b140ae3c0878520924ed89a7639c2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Layer</b> (const int <a class="el" href="class_layer.html#af2aa113e9b7938188d8da55b6950d0e5">in_size</a>, const int <a class="el" href="class_layer.html#a10515e993c8de900ad32fa1884b5915f">out_size</a>, bool bias_true_false)</td></tr>
+<tr class="separator:a300b140ae3c0878520924ed89a7639c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2aa113e9b7938188d8da55b6950d0e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#af2aa113e9b7938188d8da55b6950d0e5">in_size</a> () const</td></tr>
+<tr class="memdesc:af2aa113e9b7938188d8da55b6950d0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">None  <a href="class_layer.html#af2aa113e9b7938188d8da55b6950d0e5">Подробнее...</a><br /></td></tr>
+<tr class="separator:af2aa113e9b7938188d8da55b6950d0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10515e993c8de900ad32fa1884b5915f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a10515e993c8de900ad32fa1884b5915f">out_size</a> () const</td></tr>
+<tr class="memdesc:a10515e993c8de900ad32fa1884b5915f"><td class="mdescLeft">&#160;</td><td class="mdescRight">None  <a href="class_layer.html#a10515e993c8de900ad32fa1884b5915f">Подробнее...</a><br /></td></tr>
+<tr class="separator:a10515e993c8de900ad32fa1884b5915f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ba40c0f8cb37c1758a8811fbdc70f53"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a5ba40c0f8cb37c1758a8811fbdc70f53">init</a> (const Scalar &amp;mu, const Scalar &amp;sigma, <a class="el" href="class_r_n_g.html">RNG</a> &amp;rng)=0</td></tr>
+<tr class="memdesc:a5ba40c0f8cb37c1758a8811fbdc70f53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Метод инициалиазации слоя.  <a href="class_layer.html#a5ba40c0f8cb37c1758a8811fbdc70f53">Подробнее...</a><br /></td></tr>
+<tr class="separator:a5ba40c0f8cb37c1758a8811fbdc70f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad87780b777d48e388a8f8ecf9a33b33f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ad87780b777d48e388a8f8ecf9a33b33f">init</a> ()=0</td></tr>
+<tr class="memdesc:ad87780b777d48e388a8f8ecf9a33b33f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Инициализация слоя без входных параметров, будет использоваться при чтении сетки из файла  <a href="class_layer.html#ad87780b777d48e388a8f8ecf9a33b33f">Подробнее...</a><br /></td></tr>
+<tr class="separator:ad87780b777d48e388a8f8ecf9a33b33f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf80e0fa5901464a56afaaea5f3f745"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#adbf80e0fa5901464a56afaaea5f3f745">forward</a> (const Matrix &amp;prev_layer_data)=0</td></tr>
+<tr class="memdesc:adbf80e0fa5901464a56afaaea5f3f745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Метод прохода вперед по сетке.  <a href="class_layer.html#adbf80e0fa5901464a56afaaea5f3f745">Подробнее...</a><br /></td></tr>
+<tr class="separator:adbf80e0fa5901464a56afaaea5f3f745"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96c6836c87e9d1f2c3f94f8243cc0718"><td class="memItemLeft" align="right" valign="top">virtual const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a96c6836c87e9d1f2c3f94f8243cc0718">output</a> ()=0</td></tr>
+<tr class="memdesc:a96c6836c87e9d1f2c3f94f8243cc0718"><td class="mdescLeft">&#160;</td><td class="mdescRight">None  <a href="class_layer.html#a96c6836c87e9d1f2c3f94f8243cc0718">Подробнее...</a><br /></td></tr>
+<tr class="separator:a96c6836c87e9d1f2c3f94f8243cc0718"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a301b6101fc12b9b1578c72d93dfa029f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a301b6101fc12b9b1578c72d93dfa029f">backprop</a> (const Matrix &amp;prev_layer_data, const Matrix &amp;next_layer_data)=0</td></tr>
+<tr class="memdesc:a301b6101fc12b9b1578c72d93dfa029f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Реализация метода обратного распространения ошибки.  <a href="class_layer.html#a301b6101fc12b9b1578c72d93dfa029f">Подробнее...</a><br /></td></tr>
+<tr class="separator:a301b6101fc12b9b1578c72d93dfa029f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae30d9b11691bf94f234d105e2006d069"><td class="memItemLeft" align="right" valign="top">virtual const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#ae30d9b11691bf94f234d105e2006d069">backprop_data</a> () const =0</td></tr>
+<tr class="memdesc:ae30d9b11691bf94f234d105e2006d069"><td class="mdescLeft">&#160;</td><td class="mdescRight">None  <a href="class_layer.html#ae30d9b11691bf94f234d105e2006d069">Подробнее...</a><br /></td></tr>
+<tr class="separator:ae30d9b11691bf94f234d105e2006d069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a305f7f9f92b9d60e6dca10accb7f062f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a305f7f9f92b9d60e6dca10accb7f062f">update</a> (<a class="el" href="class_optimizer.html">Optimizer</a> &amp;opt)=0</td></tr>
+<tr class="memdesc:a305f7f9f92b9d60e6dca10accb7f062f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Обновление параметров сетки после обратного распространения  <a href="class_layer.html#a305f7f9f92b9d60e6dca10accb7f062f">Подробнее...</a><br /></td></tr>
+<tr class="separator:a305f7f9f92b9d60e6dca10accb7f062f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73fbf2397be94051a856a6933002b6f5"><td class="memItemLeft" align="right" valign="top"><a id="a73fbf2397be94051a856a6933002b6f5"></a>
+virtual std::vector&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_parametrs</b> () const =0</td></tr>
+<tr class="separator:a73fbf2397be94051a856a6933002b6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7def8a1c0831976a6dfb16e7fef023b"><td class="memItemLeft" align="right" valign="top"><a id="ab7def8a1c0831976a6dfb16e7fef023b"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_parametrs</b> (const std::vector&lt; Scalar &gt; &amp;param)</td></tr>
+<tr class="separator:ab7def8a1c0831976a6dfb16e7fef023b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa14d02ef134230071b608ff819b03b00"><td class="memItemLeft" align="right" valign="top"><a id="aa14d02ef134230071b608ff819b03b00"></a>
+virtual std::vector&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_derivatives</b> () const =0</td></tr>
+<tr class="separator:aa14d02ef134230071b608ff819b03b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fa6d927dc2c64e3745930947d186b3c"><td class="memItemLeft" align="right" valign="top"><a id="a7fa6d927dc2c64e3745930947d186b3c"></a>
+virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>layer_type</b> () const =0</td></tr>
+<tr class="separator:a7fa6d927dc2c64e3745930947d186b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d888555b318ed3e2f2dcae4b31f1d42"><td class="memItemLeft" align="right" valign="top"><a id="a3d888555b318ed3e2f2dcae4b31f1d42"></a>
+virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>activation_type</b> () const =0</td></tr>
+<tr class="separator:a3d888555b318ed3e2f2dcae4b31f1d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714439c64a0adeae5bd1ba21cf5e6504"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_layer.html#a714439c64a0adeae5bd1ba21cf5e6504">fill_meta_info</a> (Meta &amp;map, int index) const =0</td></tr>
+<tr class="memdesc:a714439c64a0adeae5bd1ba21cf5e6504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Метод нужен для заполнения основной информации о слое - тип слоя, входные и выходные значения кол-ва нейронов и т.д. Нужен для импорта сетки в файл  <a href="class_layer.html#a714439c64a0adeae5bd1ba21cf5e6504">Подробнее...</a><br /></td></tr>
+<tr class="separator:a714439c64a0adeae5bd1ba21cf5e6504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
+Защищенные типы</h2></td></tr>
+<tr class="memitem:a61511b61a2f92879d8003cf91d1a914b"><td class="memItemLeft" align="right" valign="top"><a id="a61511b61a2f92879d8003cf91d1a914b"></a>
+typedef Eigen::Matrix&lt; Scalar, Eigen::Dynamic, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Matrix</b></td></tr>
+<tr class="separator:a61511b61a2f92879d8003cf91d1a914b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a299cd71106cf80b547b6423e887be032"><td class="memItemLeft" align="right" valign="top"><a id="a299cd71106cf80b547b6423e887be032"></a>
+typedef Eigen::Matrix&lt; Scalar, Eigen::Dynamic, 1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Vector</b></td></tr>
+<tr class="separator:a299cd71106cf80b547b6423e887be032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa9c3dfcbefa5dd778fa5a8cafb651d"><td class="memItemLeft" align="right" valign="top"><a id="a6fa9c3dfcbefa5dd778fa5a8cafb651d"></a>
+typedef std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Meta</b></td></tr>
+<tr class="separator:a6fa9c3dfcbefa5dd778fa5a8cafb651d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Защищенные данные</h2></td></tr>
+<tr class="memitem:a95a2bf495f2984a2f4875d1d7572804e"><td class="memItemLeft" align="right" valign="top"><a id="a95a2bf495f2984a2f4875d1d7572804e"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>m_in_size</b></td></tr>
+<tr class="separator:a95a2bf495f2984a2f4875d1d7572804e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9b7e1eaab63885d6c5e718c84934c8"><td class="memItemLeft" align="right" valign="top"><a id="a5a9b7e1eaab63885d6c5e718c84934c8"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>m_out_size</b></td></tr>
+<tr class="separator:a5a9b7e1eaab63885d6c5e718c84934c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2902ec078eaefa2cbb722c2f921e4009"><td class="memItemLeft" align="right" valign="top"><a id="a2902ec078eaefa2cbb722c2f921e4009"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>BIAS_ACTIVATE</b></td></tr>
+<tr class="separator:a2902ec078eaefa2cbb722c2f921e4009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Подробное описание</h2>
+<div class="textblock"><p>Родительский класс, не несущий никакой смысловой нагрузки </p>
+<p>Данный класс имеет только одну простую цель: проиллюстрировать то, как Doxygen документирует наследование </p>
+</div><h2 class="groupheader">Методы</h2>
+<a id="a301b6101fc12b9b1578c72d93dfa029f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a301b6101fc12b9b1578c72d93dfa029f">&#9670;&nbsp;</a></span>backprop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::backprop </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>prev_layer_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>next_layer_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Реализация метода обратного распространения ошибки. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prev_layer_data</td><td>- значения нейронов предыдущего слоя, которые также являются входными значениями этого слоя.</td></tr>
+    <tr><td class="paramname">next_layer_data</td><td>- значения нейронов следующего слоя, которые также являются выходными значениями этого слоя. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#a41796b96e30579ff95bb431a790a0278">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ae30d9b11691bf94f234d105e2006d069"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae30d9b11691bf94f234d105e2006d069">&#9670;&nbsp;</a></span>backprop_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const Matrix&amp; Layer::backprop_data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>None </p>
+<dl class="section return"><dt>Возвращает</dt><dd>Возвращает next_layer_data в <a class="el" href="class_layer.html#a301b6101fc12b9b1578c72d93dfa029f" title="Реализация метода обратного распространения ошибки.">Layer::backprop()</a> </dd></dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#ac086387a0d735269ff18d129520cdd73">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a714439c64a0adeae5bd1ba21cf5e6504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a714439c64a0adeae5bd1ba21cf5e6504">&#9670;&nbsp;</a></span>fill_meta_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::fill_meta_info </td>
+          <td>(</td>
+          <td class="paramtype">Meta &amp;&#160;</td>
+          <td class="paramname"><em>map</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Метод нужен для заполнения основной информации о слое - тип слоя, входные и выходные значения кол-ва нейронов и т.д. Нужен для импорта сетки в файл </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">map</td><td>- словарь</td></tr>
+    <tr><td class="paramname">index</td><td>- индекс слоя в модели</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#af0eb3a46ee512b93d8c594288647cbe9">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="adbf80e0fa5901464a56afaaea5f3f745"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbf80e0fa5901464a56afaaea5f3f745">&#9670;&nbsp;</a></span>forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::forward </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>prev_layer_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Метод прохода вперед по сетке. </p>
+<p>Будет инициализировано n слоев, у каждого слоя есть такой метод, они будут поочередно вызываться из каждого слоя и таким образом, мы получим полный проход по всей сетке.</p>
+<p>Реализация метода сильно отличается у каждого типа слоев</p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prev_layer_data</td><td>- предыдущий слой, значения его нейронов</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#a353890c868d804fdd4413391e47ddbf2">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="af2aa113e9b7938188d8da55b6950d0e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2aa113e9b7938188d8da55b6950d0e5">&#9670;&nbsp;</a></span>in_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Layer::in_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>None </p>
+<dl class="section return"><dt>Возвращает</dt><dd>Кол-во входящих нейронов</dd></dl>
+
+</div>
+</div>
+<a id="ad87780b777d48e388a8f8ecf9a33b33f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad87780b777d48e388a8f8ecf9a33b33f">&#9670;&nbsp;</a></span>init() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Инициализация слоя без входных параметров, будет использоваться при чтении сетки из файла </p>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#ac3b2e13ebb5e01f40264ae2f284acfdb">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a5ba40c0f8cb37c1758a8811fbdc70f53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ba40c0f8cb37c1758a8811fbdc70f53">&#9670;&nbsp;</a></span>init() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::init </td>
+          <td>(</td>
+          <td class="paramtype">const Scalar &amp;&#160;</td>
+          <td class="paramname"><em>mu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Scalar &amp;&#160;</td>
+          <td class="paramname"><em>sigma</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_r_n_g.html">RNG</a> &amp;&#160;</td>
+          <td class="paramname"><em>rng</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Метод инициалиазации слоя. </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mu</td><td>- мат.ожидание начальных весов</td></tr>
+    <tr><td class="paramname">sigma</td><td>- дисперсия начальных весов</td></tr>
+    <tr><td class="paramname">rng</td><td>- собственно генератор</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#a826a01dff0b93b28a1a2461b835805b0">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a10515e993c8de900ad32fa1884b5915f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10515e993c8de900ad32fa1884b5915f">&#9670;&nbsp;</a></span>out_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Layer::out_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>None </p>
+<dl class="section return"><dt>Возвращает</dt><dd>Кол-во выходящих нейронов</dd></dl>
+
+</div>
+</div>
+<a id="a96c6836c87e9d1f2c3f94f8243cc0718"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96c6836c87e9d1f2c3f94f8243cc0718">&#9670;&nbsp;</a></span>output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const Matrix&amp; Layer::output </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>None </p>
+<dl class="section return"><dt>Возвращает</dt><dd>Значения нейронов в слою после функции активации. Использование метода разрешено только после метода <a class="el" href="class_layer.html#adbf80e0fa5901464a56afaaea5f3f745" title="Метод прохода вперед по сетке.">Layer::forward()</a>!</dd></dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#ad48e07203091863a70eeab8067e9a874">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a305f7f9f92b9d60e6dca10accb7f062f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a305f7f9f92b9d60e6dca10accb7f062f">&#9670;&nbsp;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Layer::update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_optimizer.html">Optimizer</a> &amp;&#160;</td>
+          <td class="paramname"><em>opt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Обновление параметров сетки после обратного распространения </p>
+<dl class="params"><dt>Аргументы</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">opt</td><td>- алгоритм оптимизации градиента</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Замещается в <a class="el" href="class_fully_connected.html#af2902ec5488f74f16a655a91bb0a4387">FullyConnected&lt; Activation &gt;</a>.</p>
+
+</div>
+</div>
+<hr/>Объявления и описания членов класса находятся в файле:<ul>
+<li>/home/shuffle/xsDNN/xsDNN-include/neuralnetwork/<a class="el" href="_layer_8h_source.html">Layer.h</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

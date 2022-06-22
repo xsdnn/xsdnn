@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>xsDNN: Класс Optimizer</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="graph.jpg"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">xsDNN
+   &#160;<span id="projectnumber">0.0.0</span>
+   </div>
+   <div id="projectbrief">Мини-библиотека глубинного обучения C++</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Открытые члены</a> &#124;
+<a href="#pro-types">Защищенные типы</a> &#124;
+<a href="class_optimizer-members.html">Полный список членов класса</a>  </div>
+  <div class="headertitle">
+<div class="title">Класс Optimizer<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Граф наследования:Optimizer:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_optimizer__inherit__graph.png" border="0" usemap="#a_optimizer_inherit__map" alt="Inheritance graph"/></div>
+<map name="a_optimizer_inherit__map" id="a_optimizer_inherit__map">
+<area shape="rect" title=" " alt="" coords="5,5,92,32"/>
+<area shape="rect" href="class_s_g_d.html" title=" " alt="" coords="23,80,74,107"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">см. легенду</a>]</span></center></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Открытые члены</h2></td></tr>
+<tr class="memitem:aa65d38318c6da9ed15f7e56c9c4fc78e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_optimizer.html#aa65d38318c6da9ed15f7e56c9c4fc78e">reset</a> ()</td></tr>
+<tr class="separator:aa65d38318c6da9ed15f7e56c9c4fc78e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ecd63b215b255a2c9758d014e3cc7ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_optimizer.html#a8ecd63b215b255a2c9758d014e3cc7ae">update</a> (ConstAlignedMapVec &amp;dvec, AlignedMapVec &amp;vec)=0</td></tr>
+<tr class="separator:a8ecd63b215b255a2c9758d014e3cc7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
+Защищенные типы</h2></td></tr>
+<tr class="memitem:afc838f6ac7fdddb09bbb95032477bc66"><td class="memItemLeft" align="right" valign="top"><a id="afc838f6ac7fdddb09bbb95032477bc66"></a>
+typedef Eigen::Matrix&lt; Scalar, Eigen::Dynamic, 1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Vector</b></td></tr>
+<tr class="separator:afc838f6ac7fdddb09bbb95032477bc66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed7a151976c70842045b5a825e648c07"><td class="memItemLeft" align="right" valign="top"><a id="aed7a151976c70842045b5a825e648c07"></a>
+typedef Vector::ConstAlignedMapType&#160;</td><td class="memItemRight" valign="bottom"><b>ConstAlignedMapVec</b></td></tr>
+<tr class="separator:aed7a151976c70842045b5a825e648c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a008217325d5d27934b1a9aace340235e"><td class="memItemLeft" align="right" valign="top"><a id="a008217325d5d27934b1a9aace340235e"></a>
+typedef Vector::AlignedMapType&#160;</td><td class="memItemRight" valign="bottom"><b>AlignedMapVec</b></td></tr>
+<tr class="separator:a008217325d5d27934b1a9aace340235e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Методы</h2>
+<a id="aa65d38318c6da9ed15f7e56c9c4fc78e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa65d38318c6da9ed15f7e56c9c4fc78e">&#9670;&nbsp;</a></span>reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Optimizer::reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Сброс информации о текущем оптимайзере </p>
+
+</div>
+</div>
+<a id="a8ecd63b215b255a2c9758d014e3cc7ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ecd63b215b255a2c9758d014e3cc7ae">&#9670;&nbsp;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Optimizer::update </td>
+          <td>(</td>
+          <td class="paramtype">ConstAlignedMapVec &amp;&#160;</td>
+          <td class="paramname"><em>dvec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">AlignedMapVec &amp;&#160;</td>
+          <td class="paramname"><em>vec</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Собственно метод, отвечающий за обновление весов в сетке </p>
+
+<p>Замещается в <a class="el" href="class_s_g_d.html#a0f825311969e0031e0b78c804df61e21">SGD</a>.</p>
+
+</div>
+</div>
+<hr/>Объявления и описания членов класса находятся в файле:<ul>
+<li>/home/shuffle/xsDNN/xsDNN-include/neuralnetwork/<a class="el" href="_optimizer_8h_source.html">Optimizer.h</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
