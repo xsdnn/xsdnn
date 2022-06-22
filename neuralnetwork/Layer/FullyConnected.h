@@ -12,7 +12,7 @@
 template <typename Activation>
 class FullyConnected : public Layer
 {
-protected:
+private:
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
     typedef Vector::ConstAlignedMapType ConstAlignedMapVec;
@@ -29,6 +29,10 @@ protected:
     
 
 public:
+    /// Конструктор полносвязного слоя
+    /// \param in_size кол-во нейронов на вход.
+    /// \param out_size кол-во нейронов на выход.
+    /// \param bias_true_false включить / выключить смещения весов. По умолч. включены = true.
     FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
         Layer(in_size, out_size, bias_true_false) {}
 
@@ -54,13 +58,11 @@ public:
         }
     }
 
-    /// <summary>
     /// Описание того, как толкаются данные по сетке внутри одного слоя.
     /// Сначала получаем значения нейронов просто перемножая веса и предыдущие значения нейронов.
-    /// Добавляем к этому смещение.
+    /// Добавляем к этому смещение, если необходимо.
     /// Активируем.
-    /// </summary>
-    /// <param name="prev_layer_data"> - матрица значений нейронов предыдущего слоя</param>
+    /// \param prev_layer_data матрица значений нейронов предыдущего слоя
     void forward(const Matrix& prev_layer_data) override
     {
         const long ncols = prev_layer_data.cols();
@@ -72,25 +74,18 @@ public:
         Activation::activate(m_z, m_a);
     }
 
-    /// <summary>
-    /// Возврат значений нейронов после активации
-    /// </summary>
-    /// <returns></returns>
+    ///
+    /// \return Значения нейронов после активации
     const Matrix& output() override { return m_a; }
 
-    /// <summary>
     /// Получаем производные этого слоя.
-    /// 
     /// Нужно получить производные по 3 вещам.
-    /// 
     /// 1. Производные весов - считаем Якобиан и умножаем на предыдущий слой
     /// 2. Производные смещения - среднее по строкам производных весов
     /// 3. Производные текущих значений нейронов - текущий вес на Якобиан.
-    /// 
     /// Предыдущий / следующий слой считается слева направо.
-    /// </summary>
-    /// <param name="prev_layer_data"> - значения нейронов предыдущего слоя</param>
-    /// <param name="next_layer_data"> - значения нейронов следующего слоя</param>
+    /// \param prev_layer_data значения нейронов предыдущего слоя
+    /// \param next_layer_data значения нейронов следующего слоя
     void backprop(const Matrix& prev_layer_data,
         const Matrix& next_layer_data) override
     {
@@ -104,17 +99,13 @@ public:
         m_din.noalias() = m_weight * dLz;
     }
 
-    /// <summary>
-    /// Получить производную нейронов этого слоя
-    /// </summary>
-    /// <returns>ссылка на информацию</returns>
+    ///
+    /// \return Вектор направления спуска (антиградиент)
     const Matrix& backprop_data() const override { return m_din; }
 
 
-    /// <summary>
     /// Обновление весов и смещений используя переданный алгоритм оптимизации (см. Optimizer)
-    /// </summary>
-    /// <param name="opt"> - объект класса Optimizer</param>
+    /// \param opt оптимайзер. Объект класса, унаследованного от Optimizer.
     void update(Optimizer& opt) override
     {
         ConstAlignedMapVec dw(m_dw.data(), m_dw.size());
@@ -127,10 +118,8 @@ public:
         
     }
 
-    /// <summary>
-    /// Получить параметры одного слоя
-    /// </summary>
-    /// <returns>param - вектор параметров весов и смещения</returns>
+    ///
+    /// \return Параметры слоя. Со смещением или без взависимости от условия.
     std::vector<Scalar> get_parametrs() const override
     {
         if (BIAS_ACTIVATE)
@@ -150,10 +139,8 @@ public:
         
     }
 
-    /// <summary>
-    /// Установить пользовательские параметры для одного слоя
-    /// </summary>
-    /// <param name="param"> - вектор значений параметров весов и смещений</param>
+    /// Установить параметры сетки. Используется при загрузки сети из файла.
+    /// \param param 1-D вектор параметров.
     void set_parametrs(const std::vector<Scalar>& param) override
     {
         if (BIAS_ACTIVATE)
@@ -181,10 +168,8 @@ public:
         }
     }
 
-    /// <summary>
-    /// Получить производные весов и смщения одного слоя
-    /// </summary>
-    /// <returns></returns>
+    ///
+    /// \return Производные весов и смещений (если необходимо).
     std::vector<Scalar> get_derivatives() const override
     {
         if (BIAS_ACTIVATE)
@@ -204,10 +189,17 @@ public:
 
     }
 
+    ///
+    /// \return Название слоя.
     std::string layer_type() const override { return "FullyConnected"; }
 
+    ///
+    /// \return Название функции активации. Activation::return_type()
     std::string activation_type() const override { return Activation::return_type(); }
 
+    /// Формирование словаря с полным описанием слоя для выгрузки/загрузки сети
+    /// \param map словарь
+    /// \param index индекс слоя в общей сети.
     void fill_meta_info(Meta& map, int index) const override
     {
         std::string ind = std::to_string(index);
