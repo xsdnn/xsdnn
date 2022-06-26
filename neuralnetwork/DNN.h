@@ -36,8 +36,6 @@
 
 # include "Callback.h"
 # include "Callback/VerboseCallback.h"
-# include "Callback/RegressorCallback.h"
-# include "Callback/ClassificationCallback.h"
 
 # include "Utils/Metrics.h"
 # include "Utils/DataLoader.h"
@@ -47,3 +45,8 @@
 # include "Utils/mnist/mnist_reader_common.hpp"
 # include "Utils/mnist/mnist_reader_less.hpp"
 # include "Utils/mnist/mnist_utils.hpp"
+
+
+# include "Distribution/Normal.h"
+# include "Distribution/Uniform.h"
+# include "Distribution/Exponential.h"
