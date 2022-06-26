@@ -8,8 +8,9 @@
 # include "../Utils/Random.h"
 # include "../Utils/Enum.h"
 
+# include <iostream>
 
-template <typename Activation>
+template <typename Activation, typename Distribution>
 class FullyConnected : public Layer
 {
 private:
@@ -36,12 +37,12 @@ public:
     FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
         Layer(in_size, out_size, bias_true_false) {}
 
-    void init(const Scalar& mu, const Scalar& sigma, RNG& rng) override
+    void init(const std::vector<Scalar>& params, RNG& rng) override
     {
         init();
 
-        internal::set_normal_random(m_weight.data(), m_weight.size(), rng, mu, sigma);
-        if (BIAS_ACTIVATE)  { internal::set_normal_random(m_bias.data(), m_bias.size(), rng, mu, sigma); }
+        Distribution::set_random_data(m_weight.data(), m_weight.size(), rng, params);
+        if (BIAS_ACTIVATE)  { Distribution::set_random_data(m_bias.data(), m_bias.size(), rng, params); }
 
         //std::cout << "Weights " << std::endl << m_weight << std::endl;
         //std::cout << "Bias " << std::endl << m_bias << std::endl;
@@ -197,6 +198,8 @@ public:
     /// \return Название функции активации. Activation::return_type()
     std::string activation_type() const override { return Activation::return_type(); }
 
+    std::string distribution_type() const override { return Distribution::return_type(); }
+
     /// Формирование словаря с полным описанием слоя для выгрузки/загрузки сети
     /// \param map словарь
     /// \param index индекс слоя в общей сети.
@@ -206,6 +209,7 @@ public:
 
         map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
         map.insert(std::make_pair("Activation " + ind, internal::activation_id(activation_type())));
+        map.insert(std::make_pair("Distribution " + ind, internal::distribution_id(distribution_type())));
         map.insert(std::make_pair("in_size " + ind, in_size()));
         map.insert(std::make_pair("out_size " + ind, out_size()));
     }
