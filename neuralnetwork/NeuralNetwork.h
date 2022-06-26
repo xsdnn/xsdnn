@@ -288,7 +288,7 @@ public:
 	/// <param name="mu"> - мат. ожидание нормального распределения.</param>
 	/// <param name="sigma"> - дисперсия нормального распределения.</param>
 	/// <param name="seed"> - сид для рандома.</param>
-	void init(const Scalar& mu = Scalar(0), const Scalar& sigma = Scalar(0.01), int seed = -1)
+	void init(int seed = -1, const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
 	{
 		check_unit_sizes();
 
@@ -299,9 +299,40 @@ public:
 
 		const unsigned long nlayer = count_layers();
 
+        if (params.empty())
+        {
+            for (int i = 0; i < nlayer; i++)
+            {
+                if (m_layers[i]->distribution_type() == "Uniform")
+                {
+                    const std::vector<Scalar> uniform_params = {0.0, 1.0};
+                    m_layers[i]->init(uniform_params, m_rng);
+                }
+
+                if (m_layers[i]->distribution_type() == "Exponential")
+                {
+                    const std::vector<Scalar> exponential_params = {1.0};
+                    m_layers[i]->init(exponential_params, m_rng);
+                }
+
+                if (m_layers[i]->distribution_type() == "Normal")
+                {
+                    const std::vector<Scalar> normal_params = {0.0, 1};
+                    m_layers[i]->init(normal_params, m_rng);
+                }
+
+                // TODO: add some other distribution
+            }
+
+            return;
+        }
+
+        if (params.size() != nlayer) throw std::length_error("[class NeuralNetwork] Distribution parameters vector size "
+                                                             "does not match count layers. Check input data.");
+
 		for (int i = 0; i < nlayer; ++i)
 		{
-			m_layers[i]->init(mu, sigma, m_rng);
+			m_layers[i]->init(params[i], m_rng);
 		}
 	}
 
@@ -322,7 +353,6 @@ public:
 		const Eigen::MatrixBase<DerivedY>& y,
 		int batch_size, int epoch, int seed = -1)
 	{
-
 		typedef typename Eigen::MatrixBase<DerivedX>::PlainObject PlainObjectX;
 		typedef typename Eigen::MatrixBase<DerivedY>::PlainObject PlainObjectY;
 		typedef Eigen::Matrix<typename PlainObjectX::Scalar, PlainObjectX::RowsAtCompileTime, PlainObjectX::ColsAtCompileTime>
