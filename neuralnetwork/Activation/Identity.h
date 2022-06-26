@@ -19,6 +19,7 @@ public:
     ///     A = Z;
     ///
     /// }
+    /// \endcode
     /// \param Z значения нейронов до активации
     /// \param A значения нейронов после активации
 	static inline void activate(const Matrix& Z, Matrix& A)
