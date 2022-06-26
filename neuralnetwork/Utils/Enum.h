@@ -47,6 +47,26 @@ namespace internal
 		throw std::invalid_argument("[function activation_id]: unknown type of activation func");
 	}
 
+    /// ID распределения при генерации весов
+    enum DISTRIBUTION_ENUM
+    {
+        UNIFORM = 0,            ///< Равномерное
+        EXPONENTIAL,            ///< Экспоненциальное
+        NORMAL                  ///< Нормальное
+    };
+
+    ///
+    /// \param type тип распределения
+    /// \return ID распределения
+    inline int distribution_id(const std::string& type)
+    {
+        if (type == "Uniform") return UNIFORM;
+        if (type == "Exponential") return EXPONENTIAL;
+        if (type == "Normal") return NORMAL;
+
+        throw std::invalid_argument("[function distribution_id]: unknown type of distribution");
+    }
+
     /// ID выходного слоя
 	enum OUTPUT_ENUM
 	{
