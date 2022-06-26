@@ -15,7 +15,7 @@ namespace internal
     {
         for (int i = n - 1; i > 0; i--)
         {
-            const int j = int(rng.rand() * (i + 1));
+            const int j = int(rng.rand() * (i + 1) / RAND_MAX);
 
             const int tmp = arr[i];
             arr[i] = arr[j];
@@ -96,6 +96,7 @@ namespace internal
         const Scalar& mu = Scalar(0),
         const Scalar& sigma = Scalar(1))
     {
+
         const double two_pi = 6.283185307179586476925286766559;
 
         for (int i = 0; i < n - 1; i += 2)
@@ -111,6 +112,27 @@ namespace internal
             const double t1 = sigma * std::sqrt(-2 * std::log(rng.rand()));
             const double t2 = two_pi * rng.rand();
             arr[n - 1] = t1 * std::cos(t2) + mu;
+        }
+    }
+
+    /// Генерация массива из равномерного распределения
+    /// \param arr массив
+    /// \param n размер массива
+    /// \param rng генератор натуральный чисел в диапазоне от 0 до RAND_MAX
+    /// \param a левая граница распределения
+    /// \param b правая граница распределения
+    inline void set_uniform_random(
+            Scalar* arr,
+            const int n,
+            RNG& rng,
+            const Scalar& a = Scalar(0),
+            const Scalar& b = Scalar(1))
+    {
+        const Scalar coefficent_ = (b - a);
+
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = a + rng.rand() * coefficent_;
         }
     }
 }
