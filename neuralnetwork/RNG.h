@@ -36,7 +36,7 @@ private:
     }
 
 public:
-    explicit RNG(unsigned long init_seed) :
+    explicit RNG(unsigned long init_seed, const bool divide_m_max = true) :
         m_a(16807),
         m_max(2147483647L),
         m_rand(init_seed ? (init_seed & m_max) : 1)
@@ -52,6 +52,6 @@ public:
     Scalar rand()
     {
         m_rand = next_long_rand(m_rand);
-        return Scalar(m_rand) / Scalar(m_max);
+        return Scalar (m_rand);
     }
 };
