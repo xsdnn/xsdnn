@@ -50,13 +50,10 @@ public:
 		return m_out_size;
 	}
 
-	/// <summary>
-	/// Метод инициалиазации слоя.
-	/// </summary>
-	/// <param name="mu"> - мат.ожидание начальных весов</param>
-	/// <param name="sigma"> - дисперсия начальных весов</param>
-	/// <param name="rng"> - собственно генератор</param>
-	virtual void init(const Scalar& mu, const Scalar& sigma, RNG& rng) = 0;
+    /// Инициализация слоя
+    /// \param params вектор параметров для конкретного распределения
+    /// \param rng ГСЧ
+	virtual void init(const std::vector<Scalar>& params, RNG& rng) = 0;
 
 	/// <summary>
 	/// Инициализация слоя без входных параметров, 
@@ -115,6 +112,8 @@ public:
 	virtual std::string layer_type() const = 0;
 
 	virtual std::string activation_type() const = 0;
+
+    virtual std::string distribution_type() const = 0;
 
 	/// <summary>
 	/// Метод нужен для заполнения основной информации о слое - 
