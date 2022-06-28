@@ -26,6 +26,10 @@ private:
                                                         " Check input data.");
         if (params[0] == params[1]) throw std::invalid_argument("[class Uniform] Uniform distribution have 2 difference "
                                                                 "params. Check input data");
+
+        if (params[0] > params[1]) throw std::invalid_argument("[class Uniform] Uniform distribution have 2 difference "
+                                                                "params. First need equal then second."
+                                                                "Check input data.");
     }
 public:
     /// Заполнить массив случайными числами из равномерного распределения на интервале [a, b]
