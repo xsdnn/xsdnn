@@ -12,6 +12,7 @@
 # include "Callback.h"
 # include "Utils/Enum.h"
 # include "Utils/InOut.h"
+# include "Utils/CrLayer.h"
 
 # include <iostream>
 # include <iomanip>
@@ -19,7 +20,6 @@
 /// Этот модуль описывает интерфейс нейронной сети, которая будет использоваться пользователем
 /// 
 
-// TODO: доделать до конца сохранение и чтение сетки из файла
 
 class NeuralNetwork
 {
@@ -221,17 +221,6 @@ public:
 	unsigned long count_layers() const
 	{
 		return m_layers.size();
-	}
-
-	/// <summary>
-	/// Получить последний скрытый слой для подсчета метрик классификации. 
-	/// Используется в ClassificationCallback
-	/// </summary>
-	/// <returns></returns>
-	Matrix get_last_hidden_layer() const
-	{
-		const unsigned long nlayers = count_layers();
-		return m_layers[nlayers - 1]->output();
 	}
 
 	/// <summary>
@@ -473,20 +462,26 @@ public:
     friend std::ostream& operator << (std::ostream& output, NeuralNetwork& obj)
     {
         output << "Neural Network consists of elements" << std::endl;
-        output << std::setw(14) << "" << "Layer" << std::setw(8) << "" << "Activation" << std::endl;
+        output << std::setw(14) << "" << "Layer" << std::setw(8) << "" << "Activation"
+                << std::setw(8) << "" << "Distribution" <<std::endl;
+
         const unsigned long nlayer = obj.count_layers();
         if (nlayer == 0) return output;
         for (unsigned long i = 0; i < nlayer; i++)
         {
             output << std::setw(10) << "" << obj.m_layers[i]->layer_type()
             << std::setw(5) << "" << obj.m_layers[i]->activation_type()
-            << std::setw(5) << "" << "Input neuron = " << obj.m_layers[i]->in_size()
-            << std::setw(5) << "" << "Output neuron = " << obj.m_layers[i]->out_size() << std::endl;
+            << std::setw(11) << "" << obj.m_layers[i]->distribution_type()
+            << std::setw(7) << "" << "Input neuron = " << obj.m_layers[i]->in_size()
+            << std::setw(7) << "" << "Output neuron = " << obj.m_layers[i]->out_size() << std::endl;
         }
         return output;
     }
 
-    void export_net(std::string folder, std::string filename) const
+    /// Сохранение сети
+    /// \param folder название папки
+    /// \param filename название файла модели. В одной папке может быть несколько моделей.
+    void export_net(const std::string& folder, const std::string& filename) const
     {
         internal::create_directory(folder);
 
@@ -500,5 +495,32 @@ public:
         internal::write_vector(directory_vector, filename, params);
 
         std::cout << "NeuralNetwork saved" << std::endl;
+    }
+
+
+    /// Чтение и загрузка сети.
+    /// \param folder папка с моделью
+    /// \param filename название модели
+    void read_net(const std::string& folder, const std::string& filename)
+    {
+        Meta map;
+        std::string model_directory = folder + "/" + filename;
+
+        internal::read_map(model_directory, map);
+
+        int nlayer = map.find("Nlayers")->second;
+        std::vector< std::vector<Scalar> > params = internal::read_parameter(folder, filename, nlayer);
+
+        m_layers.clear();
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            m_layers.push_back(internal::create_layer(map, i));
+        }
+
+        this->set_parameters(params);
+        this->set_output(internal::create_output(map));
+
+        std::cout << "Net loaded successful" << std::endl;
     }
 };
