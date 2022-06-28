@@ -67,6 +67,53 @@ namespace internal
         }
     }
 
+    /// Чтение параметров для одного слоя
+    /// \param filename название файла
+    /// \return вектор параметров для одного слоя
+    inline std::vector<Scalar> read_vector(const std::string& filename)
+    {
+
+        std::ifstream ifs(filename.c_str(), std::ios::in | std::ifstream::binary);
+        if (ifs.fail())
+            throw std::runtime_error("Error while opening file");
+
+        std::vector<char> buffer;
+        std::istreambuf_iterator<char> iter(ifs);
+        std::istreambuf_iterator<char> end;
+        std::copy(iter, end, std::back_inserter(buffer));
+        std::vector<Scalar> vec(buffer.size() / sizeof(Scalar));
+        std::copy(&buffer[0], &buffer[0] + buffer.size(), reinterpret_cast<char*>(&vec[0]));
+        return vec;
+    }
+
+    /// Чтение параметров сети из бинарного файла модели
+    /// \param folder папка с моделью
+    /// \param filename название файла с моделью
+    /// \param nlayer кол-во слоев в сети
+    /// \return матрицу параметров
+    inline std::vector< std::vector<Scalar> > read_parameter(
+            const std::string& folder,
+            const std::string& filename,
+            const int& nlayer
+            )
+    {
+        std::vector< std::vector<Scalar> > params;
+        params.reserve(nlayer);
+
+        std::string folder_ = folder;
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            folder_.append("/");
+            folder_.append(filename);
+            folder_.append(std::to_string(i));
+            params.push_back(read_vector(folder_));
+            folder_ = folder;
+        }
+
+        return params;
+    }
+
     /// Запись файла с информацией о слоях в сети
     /// \param filename название файла с сеткой
     /// \param map словарь, в которой хранится информация о слое
@@ -82,6 +129,32 @@ namespace internal
         for (std::map<std::string, int>::const_iterator it = map.begin(); it != map.end(); it++)
         {
             ofs << it->first << "=" << it->second << std::endl;
+        }
+    }
+
+    /// Заполнение словаря с параметрами сетки
+    /// \param filename название сетки
+    /// \param map словарь
+    inline void read_map(const std::string& filename, std::map<std::string, int>& map)
+    {
+        std::ifstream ifs(filename.c_str(), std::ios::in);
+
+        if (ifs.fail())
+            throw std::invalid_argument("[inline void read_map] Error when opening file.");
+
+        map.clear();
+        std::string buffer;
+
+        while (std::getline(ifs, buffer))
+        {
+            unsigned long sep = buffer.find('=');
+
+            if (sep == std::string::npos)
+                throw std::invalid_argument("[inline void read_map] Error when reading file.");
+
+            std::string key = buffer.substr(0, sep);
+            std::string value = buffer.substr(sep + 1, buffer.length() - sep - 1);
+            map[key] = std::stoi(value);
         }
     }
 }
