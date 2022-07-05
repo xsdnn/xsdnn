@@ -57,15 +57,15 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new FullyConnected<Identity, Uniform>(in_size, out_size);
+                            layer = new FullyConnected<activate::Identity, init::Uniform>(in_size, out_size);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new FullyConnected<Identity, Exponential>(in_size, out_size);
+                            layer = new FullyConnected<activate::Identity, init::Exponential>(in_size, out_size);
                             break;
 
                         case NORMAL:
-                            layer = new FullyConnected<Identity, Normal>(in_size, out_size);
+                            layer = new FullyConnected<activate::Identity, init::Normal>(in_size, out_size);
                             break;
 
                         default:
@@ -79,15 +79,15 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new FullyConnected<ReLU, Uniform>(in_size, out_size);
+                            layer = new FullyConnected<activate::ReLU, init::Uniform>(in_size, out_size);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new FullyConnected<ReLU, Exponential>(in_size, out_size);
+                            layer = new FullyConnected<activate::ReLU, init::Exponential>(in_size, out_size);
                             break;
 
                         case NORMAL:
-                            layer = new FullyConnected<ReLU, Normal>(in_size, out_size);
+                            layer = new FullyConnected<activate::ReLU, init::Normal>(in_size, out_size);
                             break;
 
                         default:
@@ -101,15 +101,15 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new FullyConnected<Sigmoid, Uniform>(in_size, out_size);
+                            layer = new FullyConnected<activate::Sigmoid, init::Uniform>(in_size, out_size);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new FullyConnected<Sigmoid, Exponential>(in_size, out_size);
+                            layer = new FullyConnected<activate::Sigmoid, init::Exponential>(in_size, out_size);
                             break;
 
                         case NORMAL:
-                            layer = new FullyConnected<Sigmoid, Normal>(in_size, out_size);
+                            layer = new FullyConnected<activate::Sigmoid, init::Normal>(in_size, out_size);
                             break;
 
                         default:
@@ -122,15 +122,15 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new FullyConnected<Softmax, Uniform>(in_size, out_size);
+                            layer = new FullyConnected<activate::Softmax, init::Uniform>(in_size, out_size);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new FullyConnected<Softmax, Exponential>(in_size, out_size);
+                            layer = new FullyConnected<activate::Softmax, init::Exponential>(in_size, out_size);
                             break;
 
                         case NORMAL:
-                            layer = new FullyConnected<Softmax, Normal>(in_size, out_size);
+                            layer = new FullyConnected<activate::Softmax, init::Normal>(in_size, out_size);
                             break;
 
                         default:
