@@ -35,7 +35,7 @@ public:
     /// \param out_size кол-во нейронов на выход.
     /// \param bias_true_false включить / выключить смещения весов. По умолч. включены = true.
     FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
-        Layer(in_size, out_size, bias_true_false) {}
+        Layer(in_size, out_size, bias_true_false, "undefined") {}
 
     void init(const std::vector<Scalar>& params, RNG& rng) override
     {
@@ -138,6 +138,16 @@ public:
             return res;
         }
         
+    }
+
+    void train() override
+    {
+        workflow = "train";
+    }
+
+    void eval() override
+    {
+        workflow = "eval";
     }
 
     /// Установить параметры сетки. Используется при загрузки сети из файла.
