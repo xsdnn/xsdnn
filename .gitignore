@@ -77,3 +77,5 @@ cmake-build-debug/Testing/Temporary/LastTest.log
 cmake-build-debug/
 
 Doxygen/
+
+xsDNN-models/
