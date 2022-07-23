@@ -25,5 +25,5 @@ public:
 	/// Собственно метод, отвечающий за обновление весов в сетке
 	/// 
 
-	virtual void update(ConstAlignedMapVec& dvec, AlignedMapVec& vec) = 0;
+	virtual void update(AlignedMapVec& dvec, AlignedMapVec& vec) = 0;
 };
