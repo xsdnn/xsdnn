@@ -109,10 +109,10 @@ public:
     /// \param opt оптимайзер. Объект класса, унаследованного от Optimizer.
     void update(Optimizer& opt) override
     {
-        ConstAlignedMapVec dw(m_dw.data(), m_dw.size());
-        AlignedMapVec      w(m_weight.data(), m_weight.size());
-        ConstAlignedMapVec db(m_db.data(), m_db.size());
-        AlignedMapVec      b(m_bias.data(), m_bias.size());
+        AlignedMapVec       dw(m_dw.data(), m_dw.size());
+        AlignedMapVec       w(m_weight.data(), m_weight.size());
+        AlignedMapVec       db(m_db.data(), m_db.size());
+        AlignedMapVec       b(m_bias.data(), m_bias.size());
     
         opt.update(dw, w);
         if (BIAS_ACTIVATE) { opt.update(db, b); }
