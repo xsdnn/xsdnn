@@ -38,14 +38,7 @@
 # include "Callback/VerboseCallback.h"
 
 # include "Utils/Metrics.h"
-# include "Utils/DataLoader.h"
 # include "Utils/InOut.h"
-
-# include "Utils/mnist/mnist_reader.hpp"
-# include "Utils/mnist/mnist_reader_common.hpp"
-# include "Utils/mnist/mnist_reader_less.hpp"
-# include "Utils/mnist/mnist_utils.hpp"
-
 
 # include "Distribution/Normal.h"
 # include "Distribution/Uniform.h"
