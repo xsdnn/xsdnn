@@ -20,6 +20,11 @@
 /// Этот модуль описывает интерфейс нейронной сети, которая будет использоваться пользователем
 /// 
 
+// TODO: подумать, требуется ли в этой библиотеки метод перевода сети в тренировочный и отладочный режимы?...
+// Эти режимы нужны для того, чтобы понять когда переключать некоторые слои в режимы обучения и тестирования, например,
+// это могут быть слои: Dropout, BatchNorm...
+//
+// Если получится, что по другому эту возможность реализовать нельзя, то определить как будет реализована эта возможность.
 
 class NeuralNetwork
 {
@@ -53,6 +58,21 @@ private:
 			}
 		}
 	}
+
+    void check_unit_workflow() const
+    {
+        const unsigned long nlayer = count_layers();
+
+        if (nlayer <= 0) { return; }
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            if (m_layers[i]->get_workflow() == "undefined")
+            {
+                throw std::invalid_argument("[class NeuralNetwork]: Model must be on train or eval workflow. Set model process.");
+            }
+        }
+    }
 
 	/// <summary>
 	/// Проход по всей сетке.
@@ -325,6 +345,32 @@ public:
 		}
 	}
 
+    /// Установить рабочий процесс - тренировка
+    void train()
+    {
+        const unsigned long nlayer = count_layers();
+
+        if (nlayer <= 0) { return; }
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            m_layers[i]->train();
+        }
+    }
+
+    /// Установить рабочий процесс - тестирование
+    void eval()
+    {
+        const unsigned long nlayer = count_layers();
+
+        if (nlayer <= 0) { return; }
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            m_layers[i]->eval();
+        }
+    }
+
 	/// <summary>
 	/// Начать обучение сетки
 	/// </summary>
@@ -348,6 +394,8 @@ public:
 			XType;
 		typedef Eigen::Matrix<typename PlainObjectY::Scalar, PlainObjectY::RowsAtCompileTime, PlainObjectY::ColsAtCompileTime>
 			YType;
+
+        check_unit_workflow();
 
 		const unsigned long nlayer = count_layers();
 
@@ -396,6 +444,14 @@ public:
 		const unsigned long nlayer = count_layers();
 
 		if (nlayer <= 0) { return {}; }
+
+        for (int i = 0; i < nlayer; i++)
+        {
+            if (m_layers[i]->get_workflow() != "eval")
+            {
+                throw std::invalid_argument("[class NeuralNetwork]: Model must be on eval workflow while predict. Set model process.");
+            }
+        }
 
 		this->forward(x);
 
