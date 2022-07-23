@@ -3,6 +3,7 @@
 # include <Eigen/Core>
 # include <vector>
 # include <map>
+# include <string>
 # include "RNG.h"
 # include "Config.h"
 # include "Optimizer.h"
@@ -21,13 +22,15 @@ protected:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 	typedef std::map<std::string, int> Meta;
 
-	const int m_in_size;
-	const int m_out_size;
-	bool      BIAS_ACTIVATE;
+	const int        m_in_size;
+	const int        m_out_size;
+	bool             BIAS_ACTIVATE;
+    std::string      workflow;
+
 
 public:
-	Layer(const int in_size, const int out_size, bool bias_true_false) :
-		m_in_size(in_size), m_out_size(out_size), BIAS_ACTIVATE(bias_true_false) {}
+	Layer(const int in_size, const int out_size, bool bias_true_false, std::string init_workflow) :
+		m_in_size(in_size), m_out_size(out_size), BIAS_ACTIVATE(bias_true_false), workflow(init_workflow) {}
 
 	virtual ~Layer() = default;
 
@@ -50,6 +53,12 @@ public:
 		return m_out_size;
 	}
 
+    /// Получить текущий процесс
+    std::string get_workflow() const
+    {
+        return workflow;
+    }
+
     /// Инициализация слоя
     /// \param params вектор параметров для конкретного распределения
     /// \param rng ГСЧ
@@ -68,7 +77,7 @@ public:
 	/// они будут поочередно вызываться из каждого слоя и таким образом, 
 	/// мы получим полный проход по всей сетке.
 	/// 
-	/// Реализация метода сильно отличается у каждого типа слоев
+	/// Реализация метода отличается у каждого типа слоев
 	/// </summary>
 	/// <param name="prev_layer_data"> - предыдущий слой, значения его нейронов</param>
 	virtual void forward(const Matrix& prev_layer_data) = 0;
@@ -102,6 +111,12 @@ public:
 	/// </summary>
 	/// <param name="opt"> - алгоритм оптимизации градиента</param>
 	virtual void update(Optimizer& opt) = 0;
+
+    /// Установить рабочий процесс - тренировка
+    virtual void train() = 0;
+
+    /// Установить рабочий процесс - тестирование
+    virtual void eval() = 0;
 
 	virtual std::vector<Scalar> get_parametrs() const = 0;
 
