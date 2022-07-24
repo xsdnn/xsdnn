@@ -24,13 +24,12 @@ protected:
 
 	const int        m_in_size;
 	const int        m_out_size;
-	bool             BIAS_ACTIVATE;
     std::string      workflow;
 
 
 public:
-	Layer(const int in_size, const int out_size, bool bias_true_false, std::string init_workflow) :
-		m_in_size(in_size), m_out_size(out_size), BIAS_ACTIVATE(bias_true_false), workflow(init_workflow) {}
+	Layer(const int in_size, const int out_size, std::string init_workflow) :
+		m_in_size(in_size), m_out_size(out_size), workflow(init_workflow) {}
 
 	virtual ~Layer() = default;
 
