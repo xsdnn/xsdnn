@@ -20,13 +20,15 @@ private:
     typedef Vector::AlignedMapType AlignedMapVec;
     typedef std::map<std::string, int> Meta;
 
-    Matrix m_weight; // Веса модели
-    Vector m_bias;   // Смещение весов
-    Matrix m_dw;     // Производная весов
-    Vector m_db;     // Производная смещения
-    Matrix m_z;      // Значения нейронов до активации
-    Matrix m_a;      // Значения нейронов после активации
-    Matrix m_din;    // Проивзодная значений нейронов после backprop
+    Matrix m_weight; ///< Веса модели
+    Vector m_bias;   ///< Смещение весов
+    Matrix m_dw;     ///< Производная весов
+    Vector m_db;     ///< Производная смещения
+    Matrix m_z;      ///< Значения нейронов до активации
+    Matrix m_a;      ///< Значения нейронов после активации
+    Matrix m_din;    ///< Проивзодная значений нейронов после backprop
+
+    bool BIAS_ACTIVATE;     ///< Применять смещение?
     
 
 public:
@@ -34,8 +36,8 @@ public:
     /// \param in_size кол-во нейронов на вход.
     /// \param out_size кол-во нейронов на выход.
     /// \param bias_true_false включить / выключить смещения весов. По умолч. включены = true.
-    FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
-        Layer(in_size, out_size, bias_true_false, "undefined") {}
+    explicit FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
+        Layer(in_size, out_size, "undefined"), BIAS_ACTIVATE(bias_true_false) {}
 
     void init(const std::vector<Scalar>& params, RNG& rng) override
     {
