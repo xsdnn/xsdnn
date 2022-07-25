@@ -135,4 +135,69 @@ namespace internal
             arr[i] = a + rng.rand() * coefficent_;
         }
     }
+
+    inline Scalar set_uniform_random(
+                RNG& rng,
+                const Scalar& a = Scalar(0),
+                const Scalar& b = Scalar(1))
+    {
+        return a + rng.rand() * (b - a) / RAND_MAX;
+    }
+
+
+    // TODO: реализовать класс для подсчета распределения
+
+    class bernoulli
+    {
+    private:
+        RNG    rng_;
+        Scalar  p_value_;
+        long    array_size_;
+
+    public:
+        explicit bernoulli() : rng_(42), p_value_(-1.0), array_size_(-1) {}
+
+        void set_rng(RNG& rng)
+        {
+            rng_.set_m_rand(rng.get_m_rand());
+        }
+
+        void set_param(const Scalar& p_value, const long& array_size)
+        {
+            if (p_value_ != -1.0 && array_size_ != -1) return;
+
+            this->p_value_ = p_value;
+            this->array_size_ = array_size;
+        }
+
+        inline void operator () (Scalar* arr)
+        {
+            for (long i = 0; i < array_size_; i++)
+            {
+                arr[i] = static_cast<Scalar>(set_uniform_random(rng_) <= 1 - p_value_);
+            }
+        }
+
+        inline int operator () ()
+        {
+            return static_cast<int>(set_uniform_random(rng_) <= p_value_);
+        }
+
+        Scalar p() const
+        {
+            return p_value_;
+        }
+    };
+
+//    inline void bernoulli(
+//            Scalar* arr,
+//            const long n,
+//            const Scalar& p_value,
+//            RNG& rng)
+//    {
+//        for (long i = 0; i < n; i++)
+//        {
+//            arr[i] = static_cast<Scalar>(set_uniform_random(rng) <= p_value);
+//        }
+//    }
 }
