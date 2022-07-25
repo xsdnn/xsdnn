@@ -79,7 +79,7 @@ public:
 
     ///
     /// \return Значения нейронов после активации
-    const Matrix& output() override { return m_a; }
+    const Matrix& output() const override { return m_a; }
 
     /// Получаем производные этого слоя.
     /// Нужно получить производные по 3 вещам.
