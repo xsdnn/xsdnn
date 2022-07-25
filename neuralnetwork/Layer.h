@@ -86,7 +86,7 @@ public:
 	/// </summary>
 	/// <returns>Значения нейронов в слою после функции активации. Использование 
 	/// метода разрешено только после метода Layer::forward()!</returns>
-	virtual const Matrix& output() = 0;
+	virtual const Matrix& output() const = 0;
 
 	/// <summary>
 	/// Реализация метода обратного распространения ошибки.
