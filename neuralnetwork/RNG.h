@@ -44,6 +44,16 @@ public:
 
     ~RNG() = default;
 
+    long get_m_rand() const
+    {
+        return m_rand;
+    }
+
+    void set_m_rand(long m_rand_)
+    {
+        this->m_rand = m_rand_;
+    }
+
     void seed(unsigned long seed)
     {
         m_rand = (seed ? (seed & m_max) : 1);
