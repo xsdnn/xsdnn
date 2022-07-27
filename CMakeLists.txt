@@ -10,6 +10,8 @@ add_executable(distribute-test internal-test/distributing-generate-test.cpp)
 add_executable(save_load_net internal-test/save_load_net_test.cpp)
 add_executable(new_layer_test internal-test/new_layer_test.cpp)
 add_executable(bernoulli_test internal-test/bernoulli_test.cpp)
+add_executable(determenistic_test internal-test/determenistic_rng_test.cpp)
+add_executable(some_test internal-test/some_test.cpp)
 
 
 
