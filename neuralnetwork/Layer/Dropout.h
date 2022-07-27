@@ -12,17 +12,18 @@
 class Dropout : public Layer
 {
 private:
-
-    Matrix              m_z;                ///< значения входных нейронов
     Matrix              m_a;                ///< значения выходных нейронов
     Matrix              m_din;              ///< вектор градиента по этому слою
     Matrix              mask_;              ///< маска, содержащая распределение Бернулли для отключения нейронов
-    Scalar              dropout_rate_;      ///< вероятность отключения
-    Scalar              scale_;             ///< коэффицент масштабирования || 1 / (1 - dropout_rate) ||
-    internal::bernoulli bernoulli;
+    Scalar              dropout_rate_;      ///< вероятность отключения нейронов (p)
+    Scalar              scale_;             ///< коэффицент масштабирования \f$ \frac{1}{1 - p} \f$
+    internal::bernoulli bernoulli;          ///< заполнение маски слоя из распределения Бернулли
 
 public:
-    explicit Dropout(const int& in_size, const Scalar& dropout_rate) :
+     /// Конструктор Dropout слоя
+     /// \param in_size кол-во нейронов на вход - выход
+     /// \param dropout_rate вероятность __отключения__ нейрона
+     Dropout(const int& in_size, const Scalar& dropout_rate) :
             Layer(in_size, in_size, "undefined"),
             dropout_rate_(dropout_rate),
             scale_(Scalar(1.0) / ( Scalar(1.0) - dropout_rate_)) {}
@@ -30,15 +31,18 @@ public:
     void init(const std::vector<Scalar>& params, RNG& rng_) override
     {
         init();
-        bernoulli.set_rng(rng_);
     }
 
     void init() override
     {
-        m_z.resize(this->m_in_size, 1);
         m_a.resize(this->m_out_size, 1 );
     }
 
+    /// Проход вперед по слою
+    ///
+    /// 1. Значения нейронов предыдущего слоя поэлементно домножаются на маску распределения Бернулли
+    /// 2. Получшиеся значения нормируются с коэффицентом || 1 / (1 - p) ||
+    /// \param prev_layer_data значения нейронов предыдущего слоя
     void forward(const Matrix& prev_layer_data) override
     {
         const long ncols = prev_layer_data.cols();
@@ -50,14 +54,10 @@ public:
             mask_.resize(this->m_out_size, ncols);
             m_a.resize(this->m_out_size, ncols);
 
-            for (int i = 0; i < ncols; i++)
-            {
-                bernoulli(mask_.col(i).data());
-            }
-            // assert(mask_.size() == prev_layer_data.size());
+            for (int i = 0; i < ncols; i++) bernoulli(mask_.col(i).data());
+
             m_a = prev_layer_data.cwiseProduct(mask_);
             m_a = m_a * scale_;
-            // assert(m_a.size() == prev_layer_data.size());
         }
         else
         {
@@ -65,8 +65,17 @@ public:
         }
     }
 
+    ///
+    /// \return значения нейронов после прямого прохода
     const Matrix& output() const override { return m_a; }
 
+    /// Обратный проход по слою
+    ///
+    /// \image html dropout_back_derivative.png
+    ///
+    /// Положение предыдущего - следующего слоя равносильно прямому проходу
+    /// \param prev_layer_data выходы нейронов предыдущего слоя
+    /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix& prev_layer_data,
                   const Matrix& next_layer_data) override
     {
@@ -75,20 +84,23 @@ public:
         m_din = next_layer_data.cwiseProduct(mask_) * scale_;
     }
 
-
+     ///
+     /// \return Вектор направления спуска (антиградиент)
     const Matrix& backprop_data() const override { return m_din;};
 
+     /// В этом слое не участвуют алгоритмы оптимизации
+     /// \param opt объект класса Optimizer
     void update(Optimizer& opt) override {}
 
     void train() override { workflow = "train"; }
 
     void eval() override { workflow = "eval"; }
 
-    std::vector<Scalar> get_parametrs() const override { return {}; }
+    std::vector<Scalar> get_parametrs() const override { return std::vector<Scalar>();; }
 
     void set_parametrs(const std::vector<Scalar>& param) override {};
 
-    std::vector<Scalar> get_derivatives() const override { return {}; };
+    std::vector<Scalar> get_derivatives() const override { return std::vector<Scalar>();; };
 
     std::string layer_type() const override { return "Dropout"; };
 
@@ -96,8 +108,28 @@ public:
 
     std::string distribution_type() const override { return "undefined"; };
 
-    void fill_meta_info(Meta& map, int index) const override {};
+    void fill_meta_info(Meta& map, int index) const override
+    {
+        std::string ind = std::to_string(index);
 
+        map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
+        map.insert(std::make_pair("in_size " + ind, this->m_in_size));
+        map.insert(std::make_pair("dropout_rate " + ind, this->dropout_rate_));
+    };
+
+    friend std::ostream& operator << (std::ostream& out, Dropout& obj)
+    {
+        out << std::string(30, ':')
+            << "Dropout Layer Information"
+            << std::string(30, ':') << std::endl << std::endl;
+
+
+        out << "In size: " << obj.m_in_size << " " << std::endl
+            << "Dropout rate: " << obj.dropout_rate_ << " " << std::endl
+            << "Workflow: "  << obj.workflow << std::endl << std::endl;
+
+        return out;
+    }
 };
 
 #endif //XSDNN_INCLUDE_DROPOUT_H
