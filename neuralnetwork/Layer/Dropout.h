@@ -7,7 +7,6 @@
 
 # include <Eigen/Core>
 # include <vector>
-# include <stdexcept>
 
 class Dropout : public Layer
 {
@@ -16,7 +15,7 @@ private:
     Matrix              m_din;              ///< вектор градиента по этому слою
     Matrix              mask_;              ///< маска, содержащая распределение Бернулли для отключения нейронов
     Scalar              dropout_rate_;      ///< вероятность отключения нейронов (p)
-    Scalar              scale_;             ///< коэффицент масштабирования \f$ \frac{1}{1 - p} \f$
+    Scalar              scale_;             ///< коэффицент масштабирования || 1 / (1 - p) ||
     internal::bernoulli bernoulli;          ///< заполнение маски слоя из распределения Бернулли
 
 public:
@@ -41,7 +40,7 @@ public:
     /// Проход вперед по слою
     ///
     /// 1. Значения нейронов предыдущего слоя поэлементно домножаются на маску распределения Бернулли
-    /// 2. Получшиеся значения нормируются с коэффицентом || 1 / (1 - p) ||
+    /// 2. Получвшиеся значения нормируются с коэффицентом || 1 / (1 - p) ||
     /// \param prev_layer_data значения нейронов предыдущего слоя
     void forward(const Matrix& prev_layer_data) override
     {
@@ -61,6 +60,7 @@ public:
         }
         else
         {
+            m_a.resize(this->m_out_size, ncols);
             m_a = prev_layer_data;
         }
     }
@@ -96,11 +96,11 @@ public:
 
     void eval() override { workflow = "eval"; }
 
-    std::vector<Scalar> get_parametrs() const override { return std::vector<Scalar>();; }
+    std::vector<Scalar> get_parametrs() const override { return std::vector<Scalar>(); }
 
     void set_parametrs(const std::vector<Scalar>& param) override {};
 
-    std::vector<Scalar> get_derivatives() const override { return std::vector<Scalar>();; };
+    std::vector<Scalar> get_derivatives() const override { return std::vector<Scalar>(); };
 
     std::string layer_type() const override { return "Dropout"; };
 
