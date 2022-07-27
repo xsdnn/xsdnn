@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 # include <Eigen/Core>
+# include <random>
 # include "../RNG.h"
 # include "../Config.h"
 
@@ -145,22 +146,21 @@ namespace internal
     }
 
 
-    // TODO: реализовать класс для подсчета распределения
-
     class bernoulli
     {
     private:
-        RNG    rng_;
-        Scalar  p_value_;
-        long    array_size_;
+        RNG                 rng_;
+        Scalar              p_value_;
+        long                array_size_;
+        std::random_device  rd;
 
     public:
         explicit bernoulli() : rng_(42), p_value_(-1.0), array_size_(-1) {}
 
-        void set_rng(RNG& rng)
-        {
-            rng_.set_m_rand(rng.get_m_rand());
-        }
+//        void set_rng(RNG& rng)
+//        {
+//            rng_.set_m_rand(rng.get_m_rand());
+//        }
 
         void set_param(const Scalar& p_value, const long& array_size)
         {
@@ -172,6 +172,8 @@ namespace internal
 
         inline void operator () (Scalar* arr)
         {
+            // non-determenistic random generator for dropout mask
+            rng_.seed(rd());
             for (long i = 0; i < array_size_; i++)
             {
                 arr[i] = static_cast<Scalar>(set_uniform_random(rng_) <= 1 - p_value_);
