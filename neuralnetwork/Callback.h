@@ -17,7 +17,6 @@ class Callback
 {
 protected:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef Eigen::RowVectorXi IntegerVector;
 
 public:
 	int m_nbatch;	// Кол-во батчей
@@ -36,14 +35,8 @@ public:
 	virtual void pre_trained_batch(const NeuralNetwork* net, const Matrix& x,
 		const Matrix& y) {}
 
-	virtual void pre_trained_batch(const NeuralNetwork* net, const Matrix& x,
-		const IntegerVector& y) {}
-
 	virtual void post_trained_batch(const NeuralNetwork* net, const Matrix& x,
 		const Matrix& y) {}
-
-	virtual void post_trained_batch(const NeuralNetwork* net, const Matrix& x,
-		const IntegerVector& y) {}
 };
 
 
