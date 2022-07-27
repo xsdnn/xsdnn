@@ -4,8 +4,6 @@
 
 // https://habr.com/ru/post/263993/
 
-// TODO: Обернуть активации в пространство имен init
-
 #ifndef XSDNN_INCLUDE_EXPONENTIAL_H
 #define XSDNN_INCLUDE_EXPONENTIAL_H
 
