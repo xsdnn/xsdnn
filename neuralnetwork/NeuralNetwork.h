@@ -29,12 +29,12 @@ private:
 
 
 	RNG                 m_default_rng;                  // дефолтный генератор
-	RNG&                m_rng;                         // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
+	RNG&                m_rng;                          // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
 
-	std::vector<Layer*> m_layers;       // указатели на созданные пользователем слои сетки
-	Output*             m_output;                   // указатель на выходной слой
-	Callback            m_default_callback;        // дефолтный вывод на печать
-	Callback*           m_callback;               // пользовательский вывод на печать, иначе дефолт
+	std::vector<Layer*> m_layers;                       // указатели на созданные пользователем слои сетки
+	Output*             m_output;                       // указатель на выходной слой
+	Callback            m_default_callback;             // дефолтный вывод на печать
+	Callback*           m_callback;                     // пользовательский вывод на печать, иначе дефолт
 
 	/// <summary>
 	/// Проверка всех слоев на соотвествие вход текущего == выход предыдущего
@@ -367,29 +367,18 @@ public:
     }
 
 	/// <summary>
-	/// Начать обучение сетки
+	/// Начать обучение сети
 	/// </summary>
-	/// <typeparam name="DerivedX"></typeparam>
-	/// <typeparam name="DerivedY"></typeparam>
-	/// <param name="opt"> - оптимизатор</param>
-	/// <param name="x"> - вектор для обучения</param>
-	/// <param name="y"> - таргет</param>
+	/// <param name="opt"> - оптимизатор: объект класса Optimizer</param>
+	/// <param name="x"> - данные для обучения</param>
+	/// <param name="y"> - метки, таргет, лейблы и т.д.</param>
 	/// <param name="batch_size"> - размер батча</param>
 	/// <param name="epoch"> - кол-во эпох при обучении сетки</param>
-	/// <param name="seed"> - сид для генерации случайных чисел</param>
-	/// <returns>True если все прошло хорошо</returns>
-	template <typename DerivedX, typename DerivedY>
-	bool fit(Optimizer& opt, const Eigen::MatrixBase<DerivedX>& x,
-		const Eigen::MatrixBase<DerivedY>& y,
+	/// <param name="seed"> - сид для ГСЧ</param>
+	/// <returns>True</returns>
+	bool fit(Optimizer& opt, const Matrix& x, const Matrix& y,
 		int batch_size, int epoch, int seed = -1)
 	{
-		typedef typename Eigen::MatrixBase<DerivedX>::PlainObject PlainObjectX;
-		typedef typename Eigen::MatrixBase<DerivedY>::PlainObject PlainObjectY;
-		typedef Eigen::Matrix<typename PlainObjectX::Scalar, PlainObjectX::RowsAtCompileTime, PlainObjectX::ColsAtCompileTime>
-			XType;
-		typedef Eigen::Matrix<typename PlainObjectY::Scalar, PlainObjectY::RowsAtCompileTime, PlainObjectY::ColsAtCompileTime>
-			YType;
-
         check_unit_workflow();
 
 		const unsigned long nlayer = count_layers();
@@ -405,8 +394,8 @@ public:
 		}
 
 		// начинаем генерить батчи
-		std::vector<XType> x_batches;
-		std::vector<YType> y_batches;
+		std::vector<Matrix> x_batches;
+		std::vector<Matrix> y_batches;
 
 		const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
