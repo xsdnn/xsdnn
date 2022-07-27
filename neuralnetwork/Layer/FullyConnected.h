@@ -86,9 +86,9 @@ public:
     /// 1. Производные весов - считаем Якобиан и умножаем на предыдущий слой
     /// 2. Производные смещения - среднее по строкам производных весов
     /// 3. Производные текущих значений нейронов - текущий вес на Якобиан.
-    /// Предыдущий / следующий слой считается слева направо.
+    /// Положение предыдущего - следующего слоя равносильно прямому проходу
     /// \param prev_layer_data значения нейронов предыдущего слоя
-    /// \param next_layer_data значения нейронов следующего слоя
+    /// \param next_layer_data вектор градиента следующего слоя (слева - направо)
     void backprop(const Matrix& prev_layer_data,
         const Matrix& next_layer_data) override
     {
@@ -224,5 +224,41 @@ public:
         map.insert(std::make_pair("Distribution " + ind, internal::distribution_id(distribution_type())));
         map.insert(std::make_pair("in_size " + ind, in_size()));
         map.insert(std::make_pair("out_size " + ind, out_size()));
+    }
+
+    friend std::ostream& operator << (std::ostream& out, FullyConnected& obj)
+    {
+        out << std::string(25, ':')
+        << "Fully Connected Layer Information"
+        << std::string(25, ':') << std::endl << std::endl;
+
+        out << "InOut Info" << std::string(10, '-') << ">" << std::endl;
+
+        out << "In size: " << obj.m_in_size << " " << std::endl
+        << "Out size: " << obj.m_out_size << " " << std::endl
+        << "Workflow: "  << obj.workflow << std::endl << std::endl;
+
+        out << "Activation" << std::string(10, '-') << ">" << obj.activation_type() << std::endl;
+
+        out << "Distribution" << std::string(10, '-') << ">" << obj.distribution_type() << std::endl << std::endl;
+
+        out << "Parameters" << std::string(10, '-') << ">" << std::endl;
+
+        out << "1. Weight's" << std::endl;
+
+        out << obj.m_weight << std::endl;
+
+        if (obj.BIAS_ACTIVATE)
+        {
+            out << "2. Bias" << std::endl;
+
+            out << obj.m_bias << std::endl;
+        }
+        else
+        {
+            out << "2. BIAS BLOCKED" << std::endl;
+        }
+
+        return out;
     }
 };
