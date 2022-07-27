@@ -138,5 +138,4 @@ public:
 	/// <param name="map"> - словарь</param>
 	/// <param name="index"> - индекс слоя в модели</param>
 	virtual void fill_meta_info(Meta& map, int index) const = 0;
-
 };
