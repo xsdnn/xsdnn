@@ -12,7 +12,8 @@ namespace internal
     /// ID слоя
 	enum LAYER_TYPE_ENUM
 	{
-		FULLYCONNECTED = 0 ///< Полносвязный
+		FULLYCONNECTED = 0, ///< Полносвязный
+		DROPOUT             ///< Dropout
 	};
 
 	///
@@ -21,6 +22,8 @@ namespace internal
 	inline int layer_id(const std::string& type)
 	{
 		if (type == "FullyConnected") return FULLYCONNECTED;
+        if (type == "Dropout") return DROPOUT;
+
 
 		throw std::invalid_argument("[function layer_id]: unknown type of layer");
 	}
