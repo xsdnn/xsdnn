@@ -15,6 +15,7 @@
 
 # include "../Layer.h"
 # include "../Layer/FullyConnected.h"
+# include "../Layer/Dropout.h"
 
 # include "../Activation/ReLU.h"
 # include "../Activation/Sigmoid.h"
@@ -142,7 +143,15 @@ namespace internal
                     throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
 
             }
-        } else
+        }
+        else if (layer_id == DROPOUT)
+        {
+            const int       in_size = map.find("in_size " + ind)->second;
+            const Scalar    drop_rate = map.find("dropout_rate " + ind)->second;
+
+            layer = new Dropout(in_size, drop_rate);
+        }
+        else
         {
             throw std::invalid_argument("[function create_layer]: Layer is not of a known type");
         }
