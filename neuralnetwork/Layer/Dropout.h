@@ -29,10 +29,7 @@ public:
             dropout_rate_(dropout_rate),
             scale_(Scalar(1.0) / ( Scalar(1.0) - dropout_rate_)) {}
 
-    void init(const std::vector<Scalar>& params, RNG& rng_) override
-    {
-        m_a.resize(this->m_out_size, 1 );
-    }
+    void init(const std::vector<Scalar>& params, RNG& rng_) override {}
 
     void init() override {}
 
