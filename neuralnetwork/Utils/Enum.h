@@ -11,7 +11,8 @@ namespace internal
 	enum LAYER_TYPE_ENUM
 	{
 		FULLYCONNECTED = 0, ///< Полносвязный
-		DROPOUT             ///< Dropout
+		DROPOUT,            ///< Dropout
+		BATCHNORM1D         ///< BatchNorm1D
 	};
 
 	///
@@ -21,6 +22,7 @@ namespace internal
 	{
 		if (type == "FullyConnected") return FULLYCONNECTED;
         if (type == "Dropout") return DROPOUT;
+        if (type == "BatchNorm1D") return BATCHNORM1D;
 
 
 		throw std::invalid_argument("[function layer_id]: unknown type of layer");
