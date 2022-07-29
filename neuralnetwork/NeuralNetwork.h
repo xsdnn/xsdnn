@@ -62,6 +62,58 @@ private:
         }
     }
 
+    /// Инициализация необходимых параметров сети
+    /// \param seed зерно генерации
+    /// \param params параметры распределений
+    void init(int seed,
+              const std::vector<std::vector<Scalar>>& params)
+    {
+        check_unit_sizes();
+
+        if (seed > 0)
+        {
+            m_rng.seed(seed);
+        }
+
+        const unsigned long nlayer = count_layers();
+
+        if (params.empty())
+        {
+            for (int i = 0; i < nlayer; i++)
+            {
+                if (m_layers[i]->distribution_type() == "Uniform")
+                {
+                    const std::vector<Scalar> uniform_params = {0.0, 1.0};
+                    m_layers[i]->init(uniform_params, m_rng);
+                }
+
+                if (m_layers[i]->distribution_type() == "Exponential")
+                {
+                    const std::vector<Scalar> exponential_params = {1.0};
+                    m_layers[i]->init(exponential_params,  m_rng);
+                }
+
+                if (m_layers[i]->distribution_type() == "Normal")
+                {
+                    const std::vector<Scalar> normal_params = {0.0, 1};
+                    m_layers[i]->init(normal_params, m_rng);
+                }
+
+                // TODO: add some other distribution
+            }
+
+            return;
+        }
+
+        if (params.size() != nlayer) throw std::length_error("[class NeuralNetwork] Distribution parameters vector size "
+                                                             "does not match count layers. Check input data.");
+
+        for (int i = 0; i < nlayer; ++i)
+        {
+            m_layers[i]->init(params[i], m_rng);
+        }
+    }
+
 	/// <summary>
 	/// Проход по всей сетке.
 	/// </summary>
@@ -277,61 +329,7 @@ public:
 	}
 
 
-	/// <summary>
-	/// Инициализация слоев сетки. Первая генерация весов сетки 
-	/// -
-	///  значения из нормального распределения.
-	/// </summary>
-	/// <param name="mu"> - мат. ожидание нормального распределения.</param>
-	/// <param name="sigma"> - дисперсия нормального распределения.</param>
-	/// <param name="seed"> - сид для рандома.</param>
-	void init(int seed = -1, const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
-	{
-		check_unit_sizes();
 
-		if (seed > 0)
-		{
-			m_rng.seed(seed);
-		}
-
-		const unsigned long nlayer = count_layers();
-
-        if (params.empty())
-        {
-            for (int i = 0; i < nlayer; i++)
-            {
-                if (m_layers[i]->distribution_type() == "Uniform")
-                {
-                    const std::vector<Scalar> uniform_params = {0.0, 1.0};
-                    m_layers[i]->init(uniform_params, m_rng);
-                }
-
-                if (m_layers[i]->distribution_type() == "Exponential")
-                {
-                    const std::vector<Scalar> exponential_params = {1.0};
-                    m_layers[i]->init(exponential_params, m_rng);
-                }
-
-                if (m_layers[i]->distribution_type() == "Normal")
-                {
-                    const std::vector<Scalar> normal_params = {0.0, 1};
-                    m_layers[i]->init(normal_params, m_rng);
-                }
-
-                // TODO: add some other distribution
-            }
-
-            return;
-        }
-
-        if (params.size() != nlayer) throw std::length_error("[class NeuralNetwork] Distribution parameters vector size "
-                                                             "does not match count layers. Check input data.");
-
-		for (int i = 0; i < nlayer; ++i)
-		{
-			m_layers[i]->init(params[i], m_rng);
-		}
-	}
 
     /// Установить рабочий процесс - тренировка
     void train()
@@ -359,20 +357,14 @@ public:
         }
     }
 
-	/// <summary>
-	/// Начать обучение сети
-	/// </summary>
-	/// <param name="opt"> - оптимизатор: объект класса Optimizer</param>
-	/// <param name="x"> - данные для обучения</param>
-	/// <param name="y"> - метки, таргет, лейблы и т.д.</param>
-	/// <param name="batch_size"> - размер батча</param>
-	/// <param name="epoch"> - кол-во эпох при обучении сетки</param>
-	/// <param name="seed"> - сид для ГСЧ</param>
-	/// <returns>True</returns>
+
 	bool fit(Optimizer& opt, const Matrix& x, const Matrix& y,
-		int batch_size, int epoch, int seed = -1)
+		     int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
+             const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
 	{
         check_unit_workflow();
+
+        this->init(init_seed, params);
 
 		const unsigned long nlayer = count_layers();
 
@@ -381,9 +373,9 @@ public:
 		// сбрасываем значения оптимизатора
 		opt.reset();
 
-		if (seed > 0)
+		if (batch_seed > 0)
 		{
-			m_rng.seed(seed);
+			m_rng.seed(batch_seed);
 		}
 
 		// начинаем генерить батчи
