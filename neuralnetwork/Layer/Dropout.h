@@ -31,13 +31,10 @@ public:
 
     void init(const std::vector<Scalar>& params, RNG& rng_) override
     {
-        init();
-    }
-
-    void init() override
-    {
         m_a.resize(this->m_out_size, 1 );
     }
+
+    void init() override {}
 
     /// Проход вперед по слою
     ///
