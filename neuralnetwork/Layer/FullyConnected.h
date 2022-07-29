@@ -10,18 +10,18 @@ template <typename Activation, typename Distribution>
 class FullyConnected : public Layer
 {
 private:
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-    typedef Vector::AlignedMapType AlignedMapVec;
+    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1>    Vector;
+    typedef Vector::AlignedMapType                      AlignedMapVec;
 
-    Matrix m_weight; ///< Веса модели
-    Vector m_bias;   ///< Смещение весов
-    Matrix m_dw;     ///< Производная весов
-    Vector m_db;     ///< Производная смещения
-    Matrix m_z;      ///< Значения нейронов до активации
-    Matrix m_a;      ///< Значения нейронов после активации
-    Matrix m_din;    ///< Проивзодная значений нейронов после backprop
+    Matrix m_weight;         ///< Веса модели
+    Vector m_bias;           ///< Смещение весов
+    Matrix m_dw;             ///< Производная весов
+    Vector m_db;             ///< Производная смещения
+    Matrix m_z;              ///< Значения нейронов до активации
+    Matrix m_a;              ///< Значения нейронов после активации
+    Matrix m_din;            ///< Проивзодная значений нейронов после backprop
 
-    bool BIAS_ACTIVATE;     ///< Применять смещение?
+    bool   BIAS_ACTIVATE;    ///< Применять смещение?
     
 
 public:
@@ -108,7 +108,7 @@ public:
         AlignedMapVec       w(m_weight.data(), m_weight.size());
         AlignedMapVec       db(m_db.data(), m_db.size());
         AlignedMapVec       b(m_bias.data(), m_bias.size());
-    
+
         opt.update(dw, w);
         if (BIAS_ACTIVATE) { opt.update(db, b); }
         
