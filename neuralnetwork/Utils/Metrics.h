@@ -2,12 +2,7 @@
 //#                         CALCULATE - METRICS                                #
 //##############################################################################
 
-# include "../Config.h"
-# include <Eigen/Core>
-# include <cmath>
-# include <stdexcept>
 
-typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 
 //##############################################################################
 //#                               REGRESSOR                                    #

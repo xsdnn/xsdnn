@@ -1,15 +1,14 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include <stdexcept>
-# include "../Config.h"
-# include "../Output.h"
 
 // TODO: сделать адекватное описание процессов
 
 /*!
- * Класс управления задачей регрессии - критерий MSE
- */
+\brief Класс функционала ошибки для регрессии (RegressionMSE)
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class RegressionMSE : public Output
 {
 private:

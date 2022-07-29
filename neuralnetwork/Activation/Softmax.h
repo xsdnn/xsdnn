@@ -1,20 +1,18 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include "../Config.h"
-
 namespace activate{
     /*!
-    * \details Класс функции активации - Softmax.
+	\brief Класс функции активации - Softmax
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Март 2022 года
     */
     class Softmax
     {
     private:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
         typedef Eigen::Array<Scalar, 1, Eigen::Dynamic> RowArray;
 
     public:
-
         /// __Алгоритм__:
         /// \code
         /// int softmax_forward(const Matrix& Z, Matrix& A){

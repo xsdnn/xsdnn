@@ -7,12 +7,17 @@
 #ifndef XSDNN_INCLUDE_NORMAL_H
 #define XSDNN_INCLUDE_NORMAL_H
 
-# include "../RNG.h"
 # include "Exponential.h"
 
 namespace init{
     static Scalar stairWidthNormal[257], stairHeightNormal[256];
 
+    /*!
+    \brief Класс генерации нормального (Normal) распределения
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Июнь 2022 года
+    */
     class Normal
     {
     private:

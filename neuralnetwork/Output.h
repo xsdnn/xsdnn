@@ -1,20 +1,13 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include <stdexcept>
-# include "Config.h"
-
-
-///
-/// Интерфейс выходного слоя сетки.
-/// 
-
-
+/*!
+\brief Родительский класс функционала ошибки
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class Output
 {
-protected:
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-
 public:
     virtual ~Output() = default;
 

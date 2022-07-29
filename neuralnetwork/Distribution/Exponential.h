@@ -10,6 +10,12 @@
 namespace init{
     static Scalar stairWidth[257], stairHeight[256];
 
+    /*!
+    \brief Класс генерации экспоненциального (Exponential) распределения
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Июнь 2022 года
+    */
     class Exponential
     {
     private:

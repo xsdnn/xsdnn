@@ -1,26 +1,19 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
+
 # include <map>
-# include <vector>
-# include <stdexcept>
-# include "Config.h"
 # include "RNG.h"
 # include "Utils/Random.h"
-# include "Layer.h"
-# include "Output.h"
 # include "Callback.h"
-# include "Utils/Enum.h"
 # include "Utils/InOut.h"
 # include "Utils/CrLayer.h"
 
-# include <iostream>
-# include <iomanip>
-///
-/// Этот модуль описывает интерфейс нейронной сети, которая будет использоваться пользователем
-/// 
-
-
+/*!
+\brief Класс нейросети
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class NeuralNetwork
 {
 private:

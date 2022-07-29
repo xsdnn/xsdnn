@@ -1,16 +1,11 @@
 ﻿#pragma once
 
-
-# include <Eigen/Core>
-# include <stdexcept>
-# include "../Config.h"
-# include "../Output.h"
-
-///
-///	Класс управления задачей бинарной классификации на критерии кросс-энтропии
-/// 
-
-
+/*!
+\brief Класс функционала ошибки для бинарной классификации (BinaryClassEntropy)
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Май 2022 года
+*/
 class BinaryClassEntropy : public Output
 {
 private:

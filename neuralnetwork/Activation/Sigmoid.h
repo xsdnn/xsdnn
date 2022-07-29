@@ -1,19 +1,16 @@
 #pragma once
 
-# include <Eigen/Core>
-# include "../Config.h"
 
 namespace activate{
     /*!
-    * \details Класс функции активации - Sigmoid.
+	\brief Класс функции активации - Sigmoid
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Март 2022 года
     */
     class Sigmoid
     {
-    private:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-
     public:
-
         /// __Алгоритм__:
         /// \code
         /// int sigmoid_forward(const Matrix& Z, Matrix& A){

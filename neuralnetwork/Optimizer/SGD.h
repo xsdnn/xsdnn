@@ -1,12 +1,11 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include "../Config.h"
-# include "../Optimizer.h"
-
 /*!
- * Класс управления стохастическим градиентным спуском.
- */
+\brief Класс стохастического градиентного спуска (SGD)
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Июль 2022 года
+*/
 class SGD : public Optimizer
 {
 private:

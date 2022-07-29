@@ -1,23 +1,14 @@
 ﻿#pragma once
-
-# include <Eigen/Core>
-# include "Config.h"
-
-
 class NeuralNetwork;
 
 /*!
-	\brief Родительский класс вывода информации на экран
-    \author shuffle-true
-	\version 1.0
-	\date Март 2022 года
-	\warning Не следует изменять исходный код этого класса
+\brief Родительский класс вывода информации на экран
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
 */
 class Callback
 {
-protected:
-	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-
 public:
 	int m_nbatch;	// Кол-во батчей
 	int m_batch_id; // Текущий батч [0, 1, 2, ..., m_nbatch - 1]

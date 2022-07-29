@@ -1,18 +1,15 @@
 #pragma once
 
-# include <Eigen/Core>
-# include <iostream>
-# include "../Callback.h"
-# include "../Config.h"
-# include "../NeuralNetwork.h"
 
 /*!
- * \details Класс отображения информации об обучении.
- */
+\brief Класс отображения информации при обучении (VerboseCallback)
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class VerboseCallback : public Callback
 {
 public:
-
     /// Вывод информации в консоль. [ Epoch = ..., batch = ... ] loss = ...
     /// \param net объекта класса сетки.
     /// \param x обучающая выборка.

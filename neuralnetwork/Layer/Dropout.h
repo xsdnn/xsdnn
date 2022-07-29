@@ -4,10 +4,12 @@
 
 #ifndef XSDNN_INCLUDE_DROPOUT_H
 #define XSDNN_INCLUDE_DROPOUT_H
-
-# include <Eigen/Core>
-# include <vector>
-
+/*!
+\brief Класс Dropout слоя
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Июль 2022 года
+*/
 class Dropout : public Layer
 {
 private:
@@ -55,8 +57,8 @@ public:
 
             for (int i = 0; i < ncols; i++) bernoulli(mask_.col(i).data());
 
-            m_a = prev_layer_data.cwiseProduct(mask_);
-            m_a = m_a * scale_;
+            m_a.noalias() = prev_layer_data.cwiseProduct(mask_);
+            m_a.noalias() = m_a * scale_;
         }
         else
         {
@@ -81,7 +83,7 @@ public:
     {
         const long ncols = prev_layer_data.cols();
         m_din.resize(this->m_out_size, ncols);
-        m_din = next_layer_data.cwiseProduct(mask_) * scale_;
+        m_din.noalias() = next_layer_data.cwiseProduct(mask_) * scale_;
     }
 
      ///

@@ -1,20 +1,12 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include <vector>
-# include <map>
-# include <string>
-# include "RNG.h"
-# include "Config.h"
 # include "Optimizer.h"
 
-
 /*!
-	\brief Родительский класс слоев
-    \author shuffle-true
-	\version 1.0
-	\date Март 2022 года
-	\warning Не следует изменять исходный код этого класса
+\brief Родительский класс слоя
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
 */
 class Layer
 {

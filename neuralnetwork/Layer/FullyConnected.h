@@ -1,24 +1,17 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include <vector>
-# include <stdexcept>
-# include "../Config.h"
-# include "../Layer.h"
-# include "../Utils/Random.h"
-# include "../Utils/Enum.h"
-
-# include <iostream>
-
+/*!
+\brief Класс FullyConnected слоя
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Июнь 2022 года
+*/
 template <typename Activation, typename Distribution>
 class FullyConnected : public Layer
 {
 private:
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-    typedef Vector::ConstAlignedMapType ConstAlignedMapVec;
     typedef Vector::AlignedMapType AlignedMapVec;
-    typedef std::map<std::string, int> Meta;
 
     Matrix m_weight; ///< Веса модели
     Vector m_bias;   ///< Смещение весов

@@ -1,14 +1,15 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
-# include "Config.h"
-
-
+/*!
+\brief Родительский класс оптимизаторов
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class Optimizer
 {
 protected:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-	typedef Vector::ConstAlignedMapType ConstAlignedMapVec;
 	typedef Vector::AlignedMapType AlignedMapVec;
 
 public:

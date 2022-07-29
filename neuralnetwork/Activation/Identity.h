@@ -1,18 +1,14 @@
 #pragma once
 
-# include <Eigen/Core>
-# include "../Config.h"
-
-
 namespace activate{
     /*!
-    * \details Класс функции активации - Identity.
+	\brief Класс функции активации - Identity
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Март 2022 года
     */
     class Identity
     {
-    private:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-
     public:
         /// __Алгоритм__:
         /// \code

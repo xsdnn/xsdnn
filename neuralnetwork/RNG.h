@@ -1,9 +1,13 @@
 #pragma once
 
-
 # include "Config.h"
 
-
+/*!
+\brief Класс ГСЧ
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Март 2022 года
+*/
 class RNG
 {
 private:
@@ -43,16 +47,6 @@ public:
     {}
 
     ~RNG() = default;
-
-    long get_m_rand() const
-    {
-        return m_rand;
-    }
-
-    void set_m_rand(long m_rand_)
-    {
-        this->m_rand = m_rand_;
-    }
 
     void seed(unsigned long seed)
     {

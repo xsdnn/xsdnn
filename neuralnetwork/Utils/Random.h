@@ -1,10 +1,7 @@
 ﻿#pragma once
 
-# include <Eigen/Core>
 # include <random>
-# include "../RNG.h"
 # include "../Config.h"
-
 
 namespace internal
 {
@@ -145,6 +142,7 @@ namespace internal
         return a + rng.rand() * (b - a) / RAND_MAX;
     }
 
+    // TODO: добавить адекватные комментарии ко многим частям кода и сделать небольшую ветку документации про слои
 
     class bernoulli
     {
@@ -156,11 +154,6 @@ namespace internal
 
     public:
         explicit bernoulli() : rng_(42), p_value_(-1.0), array_size_(-1) {}
-
-//        void set_rng(RNG& rng)
-//        {
-//            rng_.set_m_rand(rng.get_m_rand());
-//        }
 
         void set_param(const Scalar& p_value, const long& array_size)
         {

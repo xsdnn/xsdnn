@@ -7,12 +7,14 @@
 #ifndef XSDNN_INCLUDE_UNIFORM_H
 #define XSDNN_INCLUDE_UNIFORM_H
 
-# include <vector>
-# include <stdexcept>
-# include <string>
-# include "../RNG.h"
-
 namespace init{
+
+    /*!
+    \brief Класс генерации равномерного (Uniform) распределения
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+	\version 0.0
+	\date Июнь 2022 года
+    */
     class Uniform
     {
     private:
