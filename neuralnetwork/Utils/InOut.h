@@ -11,6 +11,8 @@
 # include <fstream>
 # include "../Config.h"
 
+# include <chrono>
+
 namespace fs = std::filesystem;
 
 namespace internal
@@ -158,6 +160,93 @@ namespace internal
             map[key] = std::stoi(value);
         }
     }
+    
+    class Timer
+    {
+    private:
+        std::chrono::high_resolution_clock::time_point t1, t2;
+
+    public:
+        explicit Timer() : t1(std::chrono::high_resolution_clock::now()) {}
+
+        Scalar elapced()
+        {
+            return std::chrono::duration_cast<std::chrono::duration<Scalar>>(
+
+                    std::chrono::high_resolution_clock::now() - t1
+
+                    ).count();
+        }
+
+        void restart() { t1 = std::chrono::high_resolution_clock::now(); }
+        void start() { t1 = std::chrono::high_resolution_clock::now(); }
+        void stop() { t2 = std::chrono::high_resolution_clock::now(); }
+
+        Scalar total() {
+            this->stop();
+            return std::chrono::duration_cast<std::chrono::duration<Scalar>>(
+
+                    t2 - t1
+
+            ).count();
+        }
+
+        ~Timer() {}
+    };
+
+    class ProgressBar
+    {
+    private:
+        typedef unsigned int    IntType;
+
+        IntType                 _num_total;            // размер всего тренировочного / тестового набора
+        IntType                 _num_succes;           // кол-во объектов, прошедших обучение сети
+        IntType                 _next_tic_count;
+        IntType                 _tic;
+
+
+        std::ostream&           out;
+
+        void display_update()
+        {
+            IntType update_needed = static_cast<IntType>(
+
+                    (static_cast<double>(_num_succes) / _num_total) * 50.0
+
+                    );
+
+            do {
+                out << "*" << std::flush;
+            } while (++_tic < update_needed);
+
+            _next_tic_count = static_cast<size_t>((_tic / 50.0) * _num_total);
+            if (_num_succes == _num_total) {
+                if (_tic < 51) out << '*';
+                out << std::endl;
+            }
+        }
+    public:
+        explicit ProgressBar(
+                IntType num_total,
+                std::ostream& os = std::cout
+                ) : out(os) { this->restart(num_total); }
+
+        void restart(IntType num_total)
+        {
+            _num_succes = _next_tic_count = _tic = 0;
+            _num_total                           = num_total;
+
+            out << "\n" << "0%   10   20   30   40   50   60   70   80   90   100%\n"
+                << ""   << "|----|----|----|----|----|----|----|----|----|----|"
+                << std::endl << "";
+        }
+
+        IntType operator += (IntType increment)
+        {
+            if ((_num_succes += increment) >= _next_tic_count) { this->display_update(); }
+            return _num_succes;
+        }
+    };
 }
 
 
