@@ -29,6 +29,8 @@ private:
 	Callback            m_default_callback;             // дефолтный вывод на печать
 	Callback*           m_callback;                     // пользовательский вывод на печать, иначе дефолт
 
+    Scalar              mean_loss;
+
 	/// <summary>
 	/// Проверка всех слоев на соотвествие вход текущего == выход предыдущего
 	/// </summary>
@@ -213,6 +215,14 @@ private:
 		}
 	}
 
+    void mean_loss_update()
+    {
+        mean_loss = mean_loss + this->get_output()->loss();
+    }
+
+    void mean_loss_reset() { mean_loss = 0.0; }
+
+
 	/// <summary>
 	/// Заполняем словарь для дальнейшего экспортирования сетки
 	/// </summary>
@@ -244,7 +254,8 @@ public:
 		m_rng(m_default_rng),
 		m_output(nullptr),
 		m_default_callback(),
-		m_callback(&m_default_callback)
+		m_callback(&m_default_callback),
+        mean_loss(0.0)
 	{}
 
 	///
@@ -256,7 +267,8 @@ public:
 		m_rng(rng),
 		m_output(nullptr),
 		m_default_callback(),
-		m_callback(&m_default_callback)
+		m_callback(&m_default_callback),
+        mean_loss(0.0)
 	{}
 
 	///
@@ -366,7 +378,8 @@ public:
 
         this->init(init_seed, params);
 
-		const unsigned long nlayer = count_layers();
+        const unsigned int  nsample = x.cols();             // кол-во объектов в выборке
+		const unsigned long nlayer  = count_layers();
 
 		if (nlayer <= 0) { return false; }
 
@@ -384,25 +397,31 @@ public:
 
 		const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
-		// Передаем параметры в callback для дальнейшего отслеживания обучения
+        internal::Timer t;
+        internal::ProgressBar disp(nsample);
 
-		m_callback->m_nbatch = nbatch;
-		m_callback->m_nepoch = epoch;
 
 		// Начинаем процесс обучения
 		for (int e = 0; e < epoch; ++e)
 		{
-			m_callback->m_epoch_id = e;
 
 			for (int i = 0; i < nbatch; ++i)
 			{
-				m_callback->m_batch_id = i;
-				m_callback->pre_trained_batch(this, x_batches[i], y_batches[i]);
 				this->forward(x_batches[i]);
 				this->backprop(x_batches[i], y_batches[i]);
 				this->update(opt);
-				m_callback->post_trained_batch(this, x_batches[i], y_batches[i]);
+                this->mean_loss_update();
+
+                // display update
+                disp += batch_size;
 			}
+
+            std::cout << "Epoch " << e + 1 << "/" << epoch << " completed. " << t.elapced() << "s elapsed." << std::endl;
+            std::cout << "Mean Loss per Epoch = " << mean_loss / nbatch << std::endl;
+
+            this->mean_loss_reset();
+            disp.restart(nsample);
+            t.restart();
 		}
 
 		return true;
