@@ -4,7 +4,6 @@
 # include <map>
 # include "RNG.h"
 # include "Utils/Random.h"
-# include "Callback.h"
 # include "Utils/InOut.h"
 # include "Utils/CrLayer.h"
 
@@ -26,8 +25,6 @@ private:
 
 	std::vector<Layer*> m_layers;                       // указатели на созданные пользователем слои сетки
 	Output*             m_output;                       // указатель на выходной слой
-	Callback            m_default_callback;             // дефолтный вывод на печать
-	Callback*           m_callback;                     // пользовательский вывод на печать, иначе дефолт
 
     Scalar              mean_loss;
 
@@ -253,8 +250,6 @@ public:
 		m_default_rng(1),
 		m_rng(m_default_rng),
 		m_output(nullptr),
-		m_default_callback(),
-		m_callback(&m_default_callback),
         mean_loss(0.0)
 	{}
 
@@ -266,8 +261,6 @@ public:
 		m_default_rng(1),
 		m_rng(rng),
 		m_output(nullptr),
-		m_default_callback(),
-		m_callback(&m_default_callback),
         mean_loss(0.0)
 	{}
 
@@ -322,25 +315,6 @@ public:
 	{
 		return m_output;
 	}
-
-	/// <summary>
-	/// Установить пользовательский вывод информации про обучение сетки.
-	/// </summary>
-	/// <param name="callback"> - ссылка на объект класса, который будет здесь работать.</param>
-	void set_callback(Callback& callback)
-	{
-		m_callback = &callback;
-	}
-
-	/// <summary>
-	/// Установить дефолтный вывод.
-	/// </summary>
-	void set_default_callback()
-	{
-		m_callback = &m_default_callback;
-	}
-
-
 
 
     /// Установить рабочий процесс - тренировка
