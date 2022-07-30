@@ -51,6 +51,7 @@ public:
 
     /// Инициализация слоя
     /// \param params вектор параметров для конкретного распределения
+    /// \param batch_size размер батча
     /// \param rng ГСЧ
 	virtual void init(const std::vector<Scalar>& params, RNG& rng) = 0;
 

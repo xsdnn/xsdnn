@@ -160,7 +160,7 @@ namespace internal
             map[key] = std::stoi(value);
         }
     }
-    
+
     class Timer
     {
     private:

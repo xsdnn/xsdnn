@@ -35,10 +35,6 @@
 # include "Output/MultiClassEntropy.h"
 
 
-
-# include "Callback.h"
-# include "Callback/VerboseCallback.h"
-
 # include "Utils/Metrics.h"
 # include "Utils/InOut.h"
 
