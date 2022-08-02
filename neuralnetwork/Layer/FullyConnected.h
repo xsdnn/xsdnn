@@ -1,12 +1,14 @@
 ﻿#pragma once
 
+// TODO: доделать параметры для сохранения (bias activate)
+
 /*!
 \brief Класс FullyConnected слоя
 \author __[shuffle-true](https://github.com/shuffle-true)__
 \version 0.0
 \date Июнь 2022 года
 */
-template <typename Activation, typename Distribution>
+template <typename Distribution, typename Activation>
 class FullyConnected : public Layer
 {
 private:
