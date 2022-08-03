@@ -11,7 +11,7 @@
 class Layer
 {
 protected:
-	typedef std::map<std::string, int> Meta;
+	typedef std::map<std::string, Scalar> Meta;
 
 	const int        m_in_size;
 	const int        m_out_size;
