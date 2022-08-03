@@ -32,6 +32,7 @@ namespace internal
 	enum ACTIVATION_FUNC_ENUM
 	{
 		RELU = 0,               ///< ReLU
+		LEAKYRELU,              ///< LeakyReLU
 		SIGMOID,                ///< Sigmoid
         IDENTITY,               ///< Identity
         SOFTMAX                 ///< Softmax
@@ -43,6 +44,7 @@ namespace internal
 	inline int activation_id(const std::string& type)
 	{
 		if (type == "ReLU") return RELU;
+        if (type == "LeakyReLU") return LEAKYRELU;
 		if (type == "Sigmoid") return SIGMOID;
         if (type == "Identity") return IDENTITY;
         if (type == "Softmax") return SOFTMAX;
