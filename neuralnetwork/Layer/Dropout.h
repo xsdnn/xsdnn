@@ -4,16 +4,21 @@
 
 #ifndef XSDNN_INCLUDE_DROPOUT_H
 #define XSDNN_INCLUDE_DROPOUT_H
+
+// TODO: добавить активацию слоя и реализовать методы forward / backprop
+
 /*!
 \brief Класс Dropout слоя
 \author __[shuffle-true](https://github.com/shuffle-true)__
 \version 0.0
 \date Июль 2022 года
 */
+template<typename Activation>
 class Dropout : public Layer
 {
 private:
-    Matrix              m_a;                ///< значения выходных нейронов
+    Matrix              m_z;                ///< значения выходных нейронов до активации
+    Matrix              m_a;                ///< значения выходных нейронов после активации
     Matrix              m_din;              ///< вектор градиента по этому слою
     Matrix              mask_;              ///< маска, содержащая распределение Бернулли для отключения нейронов
     Scalar              dropout_rate_;      ///< вероятность отключения нейронов (p)
@@ -47,17 +52,20 @@ public:
             bernoulli.set_param(this->dropout_rate_, this->m_out_size);
 
             mask_.resize(this->m_out_size, ncols);
+            m_z.resize(this->m_out_size, ncols);
             m_a.resize(this->m_out_size, ncols);
 
             for (int i = 0; i < ncols; i++) bernoulli(mask_.col(i).data());
 
-            m_a.noalias() = prev_layer_data.cwiseProduct(mask_);
-            m_a.noalias() = m_a * scale_;
+            m_z.noalias() = prev_layer_data.cwiseProduct(mask_);
+            m_z.noalias() = m_z * scale_;
+            Activation::activate(m_z, m_a);
         }
         else
         {
-            m_a.resize(this->m_out_size, ncols);
-            m_a = prev_layer_data;
+            m_z.resize(this->m_out_size, ncols);
+            m_z = prev_layer_data;
+            Activation::activate(m_z, m_a);
         }
     }
 
@@ -76,8 +84,11 @@ public:
                   const Matrix& next_layer_data) override
     {
         const long ncols = prev_layer_data.cols();
+        Matrix& dLz = m_z;
+        Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
         m_din.resize(this->m_out_size, ncols);
         m_din.noalias() = next_layer_data.cwiseProduct(mask_) * scale_;
+        m_din = m_din.array() * dLz.array();
     }
 
      ///
@@ -100,7 +111,7 @@ public:
 
     std::string layer_type() const override { return "Dropout"; };
 
-    std::string activation_type() const override { return "undefined"; };
+    std::string activation_type() const override { return Activation::return_type(); };
 
     std::string distribution_type() const override { return "undefined"; };
 
@@ -109,6 +120,7 @@ public:
         std::string ind = std::to_string(index);
 
         map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
+        map.insert(std::make_pair("Activation " + ind, internal::activation_id(activation_type())));
         map.insert(std::make_pair("in_size " + ind, this->m_in_size));
         map.insert(std::make_pair("dropout_rate " + ind, this->dropout_rate_));
     };
