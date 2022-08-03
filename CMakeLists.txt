@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(xsDNN_include)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fopenmp")
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(test_sinus internal-test/test_sinus_fit.cpp)
@@ -12,6 +14,8 @@ add_executable(new_layer_test internal-test/new_layer_test.cpp)
 add_executable(bernoulli_test internal-test/bernoulli_test.cpp)
 add_executable(determenistic_test internal-test/determenistic_rng_test.cpp)
 add_executable(some_test internal-test/some_test.cpp)
+add_executable(progress_bar internal-test/progress_bar_test.cpp)
+add_executable(dropout_test internal-test/dropout_layer_test.cpp)
 
 
 
