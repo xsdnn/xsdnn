@@ -120,7 +120,7 @@ namespace internal
     /// Запись файла с информацией о слоях в сети
     /// \param filename название файла с сеткой
     /// \param map словарь, в которой хранится информация о слое
-    inline void write_map(const std::string& filename, const std::map<std::string, int>& map)
+    inline void write_map(const std::string& filename, const std::map<std::string, Scalar>& map)
     {
         if (map.empty())
             return;
@@ -129,7 +129,7 @@ namespace internal
         if (ofs.fail())
             throw std::runtime_error("[void write_map] Error while opening file");
 
-        for (std::map<std::string, int>::const_iterator it = map.begin(); it != map.end(); it++)
+        for (std::map<std::string, Scalar>::const_iterator it = map.begin(); it != map.end(); it++)
         {
             ofs << it->first << "=" << it->second << std::endl;
         }
@@ -138,7 +138,7 @@ namespace internal
     /// Заполнение словаря с параметрами сетки
     /// \param filename название сетки
     /// \param map словарь
-    inline void read_map(const std::string& filename, std::map<std::string, int>& map)
+    inline void read_map(const std::string& filename, std::map<std::string, Scalar>& map)
     {
         std::ifstream ifs(filename.c_str(), std::ios::in);
 
@@ -219,7 +219,7 @@ namespace internal
                 out << "*" << std::flush;
             } while (++_tic < update_needed);
 
-            _next_tic_count = static_cast<size_t>((_tic / 50.0) * _num_total);
+            _next_tic_count = static_cast<IntType>((_tic / 50.0) * _num_total);
             if (_num_succes == _num_total) {
                 if (_tic < 51) out << '*';
                 out << std::endl;
