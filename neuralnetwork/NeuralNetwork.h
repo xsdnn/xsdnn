@@ -17,7 +17,7 @@ class NeuralNetwork
 {
 private:
 	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef std::map<std::string, int> Meta;
+	typedef std::map<std::string, Scalar> Meta;
 
 
 	RNG                 m_default_rng;                  // дефолтный генератор
@@ -394,8 +394,12 @@ public:
             std::cout << "Mean Loss per Epoch = " << mean_loss / nbatch << std::endl;
 
             this->mean_loss_reset();
-            disp.restart(nsample);
-            t.restart();
+
+            if (e != epoch - 1)
+            {
+                disp.restart(nsample);
+                t.restart();
+            }
 		}
 
 		return true;
