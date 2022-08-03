@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-// TODO: доделать параметры для сохранения (bias activate)
-
 /*!
 \brief Класс FullyConnected слоя
 \author __[shuffle-true](https://github.com/shuffle-true)__
@@ -31,8 +29,8 @@ public:
     /// \param in_size кол-во нейронов на вход.
     /// \param out_size кол-во нейронов на выход.
     /// \param bias_true_false включить / выключить смещения весов. По умолч. включены = true.
-    explicit FullyConnected(const int in_size, const int out_size, bool bias_true_false = true) :
-        Layer(in_size, out_size, "undefined"), BIAS_ACTIVATE(bias_true_false) {}
+    explicit FullyConnected(const int in_size, const int out_size, bool bias = true) :
+        Layer(in_size, out_size, "undefined"), BIAS_ACTIVATE(bias) {}
 
     void init(const std::vector<Scalar>& params, RNG& rng) override
     {
@@ -217,6 +215,7 @@ public:
         map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
         map.insert(std::make_pair("Activation " + ind, internal::activation_id(activation_type())));
         map.insert(std::make_pair("Distribution " + ind, internal::distribution_id(distribution_type())));
+        map.insert(std::make_pair("Bias FC " + ind, BIAS_ACTIVATE));
         map.insert(std::make_pair("in_size " + ind, in_size()));
         map.insert(std::make_pair("out_size " + ind, out_size()));
     }
