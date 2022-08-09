@@ -12,7 +12,7 @@ private:
 	Matrix m_din;			///< производные по выходному слою
 
 public:
-    /// Проверка входных данных на соотвествие значений. 1 или 0.
+    /// Проверка входных данных на соотвествие значений ---  1 || 0
     /// \param target целевая переменная
 	void check_target_data(const Matrix& target) const override
 	{
@@ -28,9 +28,7 @@ public:
 		}
 	}
 
-    // TODO: Сделать адекватное описание происходящего
-
-    /// Начало алгоритма обратного распространения
+    /// \image html binaryclassentropy_evaluate.png
     /// \param prev_layer_data последний скрытый слой сети
     /// \param target целевая переменная
 	void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
@@ -63,7 +61,7 @@ public:
 		return m_din;
 	}
 
-    ///
+    /// \image html binaryclassentropy_loss.png
     /// \return Ошибку на обучающей выборке
 	Scalar loss() const override
 	{

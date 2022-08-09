@@ -1,8 +1,4 @@
 ﻿#pragma once
-
-
-// TODO: сделать адекватное описание процессов
-
 /*!
 \brief Класс функционала ошибки для регрессии (RegressionMSE)
 \author __[shuffle-true](https://github.com/shuffle-true)__
@@ -15,7 +11,7 @@ private:
 	Matrix m_din; ///< Производная от входных данных этого слоя
 
 public:
-    /// Проверка входных данных на соотвествие размерам
+    /// \image html regressionmse_evaluate.png
     /// \param prev_layer_data последний скрытый слой сети
     /// \param target целевая переменная
 	void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
@@ -42,7 +38,7 @@ public:
 		return m_din;
 	}
 
-    ///
+    /// \image html regressionmse_loss.png
     /// \return Ошибку на обучающей выборке
 	Scalar loss() const override
 	{
