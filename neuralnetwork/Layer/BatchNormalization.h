@@ -7,6 +7,13 @@
 
 # include "../Utils/BatchNormUtil.h"
 
+/*!
+\brief Класс слоя пакетной нормализации (BatchNorm1D)
+\image html batchnorm_formula_info.png
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Август 2022 года
+*/
 template<typename Distribution, typename Activation>
 class BatchNorm1D : public Layer
 {
@@ -75,6 +82,11 @@ public:
         m_dg.resize(this->m_in_size);
     }
 
+    /// Прямой проход по слою
+    ///
+    /// \image html batchnorm_forward_bacward_pass.png
+    ///
+    /// \param prev_layer_data значения нейронов предыдущего слоя
     void forward(const Matrix& prev_layer_data) override
     {
         const long ncols = prev_layer_data.cols();
@@ -114,8 +126,17 @@ public:
         }
     }
 
+    ///
+    /// \return отнормированные значения нейронов
     const Matrix& output() const override { return m_a; }
 
+    /// Обратный проход по слою
+    ///
+    /// \image html batchnorm_forward_bacward_pass.png
+    ///
+    /// Положение предыдущего - следующего слоя равносильно прямому проходу
+    /// \param prev_layer_data выходы нейронов предыдущего слоя
+    /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix& prev_layer_data,
                   const Matrix& next_layer_data) override
     {
@@ -143,8 +164,12 @@ public:
         assert(m_db.rows() == this->m_in_size);
     }
 
+    ///
+    /// \return производная по нейронам
     const Matrix& backprop_data() const override { return m_din; }
 
+    /// Обновление параметров слоя -  векторов _gammas_ и _betas_
+    /// \param opt - объект класса Optimizer
     void update(Optimizer& opt) override
     {
         AlignedMapVec dg(m_dg.data(), m_dg.size());
@@ -266,11 +291,11 @@ public:
     {
         std::string ind = std::to_string(index);
 
-        map.insert(std::make_pair("Layer" + ind, internal::layer_id(layer_type())));
+        map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
         map.insert(std::make_pair("Distribution " + ind, internal::distribution_id(distribution_type())));
         map.insert(std::make_pair("in_size " + ind, this->in_size()));
         map.insert(std::make_pair("tolerance " + ind, this->eps));
-        // TODO: подумать что еще можно сохранять
+        map.insert(std::make_pair("momentum " + ind, this->moment));
     }
 };
 
