@@ -7,14 +7,12 @@
 
 # include "../Utils/BatchNormUtil.h"
 
-// TODO: implement batch normalization graph from https://clck.ru/sQxjL
-
-template<typename Distribution>
+template<typename Distribution, typename Activation>
 class BatchNorm1D : public Layer
 {
 private:
     typedef Eigen::VectorXd             Vector;
-    typedef Vector::AlignedMapType      AlignedMapRowVec;
+    typedef Vector::AlignedMapType      AlignedMapVec;
 
     Matrix      m_z;                    ///< equal      in_hat
     Matrix      m_a;                    ///< equal      gammas * in_hat + betas
@@ -28,6 +26,9 @@ private:
     Vector      m_dg;
     Vector      m_db;
 
+    Matrix      inmu;                   ///< in - mu
+    Vector      invvar;                 ///< 1. / (var + eps) ** 0.5
+
     Scalar      eps;
     Scalar      moment;
     Scalar      lmbd;                   ///< коэфф при скользящем среднем статистик
@@ -39,12 +40,10 @@ public:
     /// \param momentum momentum coefficient
     explicit BatchNorm1D(const int& in_size,
                 const Scalar&       tolerance = Scalar(0.0001),
-                const Scalar&       momentum  = Scalar(0.01),
-                const Scalar&       lambda    = Scalar(0.35)
+                const Scalar&       momentum  = Scalar(0.35)
                 ) : Layer(in_size, in_size, "undefined"),
                     eps(tolerance),
-                    moment(momentum),
-                    lmbd(lambda)
+                    moment(momentum)
                     {}
 
     void init(const std::vector<Scalar>& params, RNG& rng) override
@@ -82,19 +81,34 @@ public:
         m_z.resize(this->m_in_size, ncols);
         m_a.resize(this->m_in_size, ncols);
 
+        inmu.resize(this->m_in_size, ncols);
+        invvar.resize(this->m_in_size);
+
         if (workflow == "train")
         {
-            internal::compute_statistic_graph1D_train(prev_layer_data, m_z, m_mean, m_var, eps, lmbd);
-            m_a = m_z.array().colwise() * m_gammas.array();
-            m_a = m_a.array().colwise() + m_betas.array();
+            internal::compute_statistic_graph1D_train(prev_layer_data,
+                                                      m_z,
+
+                                                      m_mean,
+                                                      m_var,
+
+                                                      inmu,
+                                                      invvar,
+
+                                                      eps,
+                                                      moment);
+            m_z = m_z.array().colwise() * m_gammas.array();
+            m_z = m_z.array().colwise() + m_betas.array();
+            Activation::activate(m_z, m_a);
             assert(m_a.rows() == this->m_in_size);
             assert(m_a.cols() == ncols);
         }
         else
         {
             internal::compute_statistic_graph1D_eval(m_z, m_mean, m_var, eps);
-            m_a = m_z.array().colwise() * m_gammas.array();
-            m_a = m_a.array().colwise() + m_betas.array();
+            m_z = m_z.array().colwise() * m_gammas.array();
+            m_z = m_z.array().colwise() + m_betas.array();
+            Activation::activate(m_z, m_a);
             assert(m_a.rows() == this->m_in_size);
             assert(m_a.cols() == ncols);
         }
@@ -103,11 +117,44 @@ public:
     const Matrix& output() const override { return m_a; }
 
     void backprop(const Matrix& prev_layer_data,
-                  const Matrix& next_layer_data) override {}
+                  const Matrix& next_layer_data) override
+    {
+        Matrix& dLz = m_z;
+        Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
+
+        internal::compute_backward_graph1D(
+                next_layer_data,
+                dLz,
+                m_z,
+                m_gammas,
+
+                m_din,
+                m_dg,
+                m_db,
+
+                invvar,
+                inmu
+                );
+
+        assert(m_din.rows() == this->m_in_size);
+        assert(m_din.cols() == m_z.cols());
+
+        assert(m_dg.rows() == this->m_in_size);
+        assert(m_db.rows() == this->m_in_size);
+    }
 
     const Matrix& backprop_data() const override { return m_din; }
 
-    void update(Optimizer& opt) override {}
+    void update(Optimizer& opt) override
+    {
+        AlignedMapVec dg(m_dg.data(), m_dg.size());
+        AlignedMapVec g(m_gammas.data(), m_gammas.size());
+        AlignedMapVec db(m_db.data(), m_db.size());
+        AlignedMapVec b(m_betas.data(), m_betas.size());
+
+        opt.update(dg, g);
+        opt.update(db, b);
+    }
 
     /// Установить рабочий процесс - тренировка
     void train() override { workflow = "train"; }
