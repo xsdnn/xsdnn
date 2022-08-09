@@ -16,6 +16,7 @@
 # include "../Layer.h"
 # include "../Layer/FullyConnected.h"
 # include "../Layer/Dropout.h"
+# include "../Layer/BatchNormalization.h"
 
 # include "../Activation/ReLU.h"
 # include "../Activation/LeakyReLU.h"
@@ -196,6 +197,126 @@ namespace internal
 
                 default:
                     throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
+            }
+        }
+        else if (layer_id == BATCHNORM1D)
+        {
+            const int in_size       = static_cast<int>(map.find("in_size " + ind)->second);
+            const Scalar eps        = static_cast<Scalar>(map.find("tolerance " + ind)->second);
+            const Scalar momentum   = static_cast<Scalar>(map.find("momentum " + ind)->second);
+
+
+            switch (activation_id) {
+                case IDENTITY:
+
+                    switch (distribution_id) {
+                        case UNIFORM:
+                            layer = new BatchNorm1D<init::Uniform, activate::Identity>(in_size, eps, momentum);
+                            break;
+
+                        case EXPONENTIAL:
+                            layer = new BatchNorm1D<init::Exponential, activate::Identity>(in_size, eps, momentum);
+                            break;
+
+                        case NORMAL:
+                            layer = new BatchNorm1D<init::Normal, activate::Identity>(in_size, eps, momentum);
+                            break;
+
+                        default:
+                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                    }
+                    break;
+
+
+
+                case LEAKYRELU:
+
+                    switch (distribution_id) {
+                        case UNIFORM:
+                            layer = new BatchNorm1D<init::Uniform, activate::LeakyReLU>(in_size, eps, momentum);
+                            break;
+
+                        case EXPONENTIAL:
+                            layer = new BatchNorm1D<init::Exponential, activate::LeakyReLU>(in_size, eps, momentum);
+                            break;
+
+                        case NORMAL:
+                            layer = new BatchNorm1D<init::Normal, activate::LeakyReLU>(in_size, eps, momentum);
+                            break;
+
+                        default:
+                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                    }
+                    break;
+
+
+
+                case RELU:
+
+                    switch (distribution_id) {
+                        case UNIFORM:
+                            layer = new BatchNorm1D<init::Uniform, activate::ReLU>(in_size, eps, momentum);
+                            break;
+
+                        case EXPONENTIAL:
+                            layer = new BatchNorm1D<init::Exponential, activate::ReLU>(in_size, eps, momentum);
+                            break;
+
+                        case NORMAL:
+                            layer = new BatchNorm1D<init::Normal, activate::ReLU>(in_size, eps, momentum);
+                            break;
+
+                        default:
+                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                    }
+                    break;
+
+
+
+                case SIGMOID:
+
+                    switch (distribution_id) {
+                        case UNIFORM:
+                            layer = new BatchNorm1D<init::Uniform, activate::Sigmoid>(in_size, eps, momentum);
+                            break;
+
+                        case EXPONENTIAL:
+                            layer = new BatchNorm1D<init::Exponential, activate::Sigmoid>(in_size, eps, momentum);
+                            break;
+
+                        case NORMAL:
+                            layer = new BatchNorm1D<init::Normal, activate::Sigmoid>(in_size, eps, momentum);
+                            break;
+
+                        default:
+                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                    }
+                    break;
+
+
+                case SOFTMAX:
+
+                    switch (distribution_id) {
+                        case UNIFORM:
+                            layer = new BatchNorm1D<init::Uniform, activate::Softmax>(in_size, eps, momentum);
+                            break;
+
+                        case EXPONENTIAL:
+                            layer = new BatchNorm1D<init::Exponential, activate::Softmax>(in_size, eps, momentum);
+                            break;
+
+                        case NORMAL:
+                            layer = new BatchNorm1D<init::Normal, activate::Softmax>(in_size, eps, momentum);
+                            break;
+
+                        default:
+                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                    }
+                    break;
+
+                default:
+                    throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
+
             }
         }
         else
