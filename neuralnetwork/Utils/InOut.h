@@ -78,7 +78,7 @@ namespace internal
 
         std::ifstream ifs(filename.c_str(), std::ios::in | std::ifstream::binary);
         if (ifs.fail())
-            throw std::runtime_error("Error while opening file");
+            throw std::runtime_error("[inline read_vector] Error while opening file");
 
         std::vector<char> buffer;
         std::istreambuf_iterator<char> iter(ifs);
@@ -103,7 +103,7 @@ namespace internal
         std::vector< std::vector<Scalar> > params;
         params.reserve(nlayer);
 
-        std::string folder_ = folder;
+        std::string folder_ = "../xsDNN-models/" + folder;
 
         for (int i = 0; i < nlayer; i++)
         {
@@ -111,7 +111,7 @@ namespace internal
             folder_.append(filename);
             folder_.append(std::to_string(i));
             params.push_back(read_vector(folder_));
-            folder_ = folder;
+            folder_ = "../xsDNN-models/" + folder;
         }
 
         return params;
@@ -140,7 +140,7 @@ namespace internal
     /// \param map словарь
     inline void read_map(const std::string& filename, std::map<std::string, Scalar>& map)
     {
-        std::ifstream ifs(filename.c_str(), std::ios::in);
+        std::ifstream ifs(filename, std::ios::in);
 
         if (ifs.fail())
             throw std::invalid_argument("[inline void read_map] Error when opening file.");
