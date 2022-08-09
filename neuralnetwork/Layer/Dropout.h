@@ -5,8 +5,6 @@
 #ifndef XSDNN_INCLUDE_DROPOUT_H
 #define XSDNN_INCLUDE_DROPOUT_H
 
-// TODO: добавить активацию слоя и реализовать методы forward / backprop
-
 /*!
 \brief Класс Dropout слоя
 \author __[shuffle-true](https://github.com/shuffle-true)__
