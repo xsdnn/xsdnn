@@ -142,19 +142,26 @@ namespace internal
         return a + rng.rand() * (b - a) / RAND_MAX;
     }
 
-    // TODO: добавить адекватные комментарии ко многим частям кода и сделать небольшую ветку документации про слои
-
+    /*!
+    \brief Класс генерации распределения Бернулли
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+    \version 0.0
+    \date Июль 2022 года
+    */
     class bernoulli
     {
     private:
-        RNG                 rng_;
-        Scalar              p_value_;
-        long                array_size_;
-        std::random_device  rd;
+        RNG                 rng_;               ///< ГСЧ
+        Scalar              p_value_;           ///< вероятность __отключения__ нейрона
+        long                array_size_;        ///< размер колонки маски (экв. кол-во признаков у объекта)
+        std::random_device  rd;                 ///< движок для недетерменированной генерации зерна
 
     public:
         explicit bernoulli() : rng_(42), p_value_(-1.0), array_size_(-1) {}
 
+        /// Установить параметры генерации распределения
+        /// \param p_value вероятность __отключения__ нейрона
+        /// \param array_size размер колонки маски (экв. кол-во признаков у объекта)
         void set_param(const Scalar& p_value, const long& array_size)
         {
             if (p_value_ != -1.0 && array_size_ != -1) return;
@@ -163,6 +170,8 @@ namespace internal
             this->array_size_ = array_size;
         }
 
+        ///
+        /// \param arr указатель на массив маски
         inline void operator () (Scalar* arr)
         {
             // non-determenistic random generator for dropout mask
@@ -173,11 +182,15 @@ namespace internal
             }
         }
 
+        /// Использование метода не предусмотрено.
+        /// \return 1 || 0
         inline int operator () ()
         {
             return static_cast<int>(set_uniform_random(rng_) <= p_value_);
         }
 
+        ///
+        /// \return p_value_
         Scalar p() const
         {
             return p_value_;
