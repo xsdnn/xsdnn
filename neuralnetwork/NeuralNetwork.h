@@ -526,7 +526,7 @@ public:
     void read_net(const std::string& folder, const std::string& filename)
     {
         Meta map;
-        std::string model_directory = folder + "/" + filename;
+        std::string model_directory = "../xsDNN-models/" + folder + "/" + filename;
 
         internal::read_map(model_directory, map);
 
