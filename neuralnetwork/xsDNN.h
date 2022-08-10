@@ -38,6 +38,7 @@
 
 # include "Utils/Metrics.h"
 # include "Utils/InOut.h"
+# include "Utils/mnist_io.h"
 
 # include "Distribution/Normal.h"
 # include "Distribution/Uniform.h"
