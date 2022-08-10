@@ -5,7 +5,7 @@
 \version 0.0
 \date Март 2022 года
 */
-class RegressionMSE : public Output
+class MSELoss : public Output
 {
 private:
 	Matrix m_din; ///< Производная от входных данных этого слоя
