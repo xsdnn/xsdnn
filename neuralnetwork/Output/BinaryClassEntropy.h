@@ -6,7 +6,7 @@
 \version 0.0
 \date Май 2022 года
 */
-class BinaryClassEntropy : public Output
+class BinaryEntropyLoss : public Output
 {
 private:
 	Matrix m_din;			///< производные по выходному слою
@@ -78,5 +78,4 @@ public:
 	{
 		return "BinaryClassEntropy";
 	}
-
 };
