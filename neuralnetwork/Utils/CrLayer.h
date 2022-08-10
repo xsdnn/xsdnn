@@ -338,11 +338,15 @@ namespace internal
 
         switch (output_id) {
             case REGRESSIONMSE:
-                output = new RegressionMSE();
+                output = new MSELoss();
                 break;
 
             case BINARYCLASSENTROPY:
-                output = new BinaryClassEntropy();
+                output = new BinaryEntropyLoss();
+                break;
+
+            case MULTICLASSENTROPY:
+                output = new CrossEntropyLoss();
                 break;
 
             default:

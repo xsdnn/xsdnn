@@ -76,7 +76,8 @@ namespace internal
 	enum OUTPUT_ENUM
 	{
 		REGRESSIONMSE = 0,              ///< Регрессия - критерий MSE
-        BINARYCLASSENTROPY              ///< Бинарная классификация
+        BINARYCLASSENTROPY,             ///< Бинарная классификация
+        MULTICLASSENTROPY
 	};
 
 	///
@@ -86,6 +87,7 @@ namespace internal
 	{
 		if (type == "RegressionMSE") return REGRESSIONMSE;
         if (type == "BinaryClassEntropy") return BINARYCLASSENTROPY;
+        if (type == "MultiClassEntropy") return MULTICLASSENTROPY;
 
 		throw std::invalid_argument("[function output_id]: unknown type of output layer");
 	}
