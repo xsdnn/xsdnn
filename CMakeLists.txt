@@ -17,6 +17,6 @@ add_executable(some_test internal-test/some_test.cpp)
 add_executable(progress_bar internal-test/progress_bar_test.cpp)
 add_executable(dropout_test internal-test/dropout_layer_test.cpp)
 add_executable(bn1d_test internal-test/batchnorm1d_test.cpp)
-
+add_executable(mnist_example example/mnist/train.cpp)
 
 
