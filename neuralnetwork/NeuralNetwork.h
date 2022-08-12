@@ -46,21 +46,6 @@ private:
 		}
 	}
 
-    void check_unit_workflow() const
-    {
-        const unsigned long nlayer = count_layers();
-
-        if (nlayer <= 0) { return; }
-
-        for (int i = 0; i < nlayer; i++)
-        {
-            if (m_layers[i]->get_workflow() == "undefined")
-            {
-                throw std::invalid_argument("[class NeuralNetwork]: Model must be on train or eval workflow. Set model process.");
-            }
-        }
-    }
-
     /// Инициализация необходимых параметров сети
     /// \param seed зерно генерации
     /// \param params параметры распределений
@@ -348,8 +333,6 @@ public:
 		     int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
              const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
 	{
-        check_unit_workflow();
-
         this->init(init_seed, params);
 
         const unsigned int  nsample = x.cols();             // кол-во объектов в выборке
@@ -374,6 +357,7 @@ public:
         internal::Timer t;
         internal::ProgressBar disp(nsample);
 
+        this->train();
 
 		// Начинаем процесс обучения
 		for (int e = 0; e < epoch; ++e)
@@ -401,7 +385,7 @@ public:
                 t.restart();
             }
 		}
-
+        this->eval();
 		return true;
 	}
 
@@ -480,6 +464,12 @@ public:
 
 		return res;
 	}
+
+    friend NeuralNetwork& operator << (NeuralNetwork& net, Layer* layer)
+    {
+        net.add_layer(layer);
+        return net;
+    }
 
     friend std::ostream& operator << (std::ostream& output, NeuralNetwork& obj)
     {
