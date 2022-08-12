@@ -5,14 +5,20 @@
 #ifndef XSDNN_INCLUDE_MULTICLASSENTROPY_H
 #define XSDNN_INCLUDE_MULTICLASSENTROPY_H
 
-// TODO: Сделать описание происходящего
-
+/*!
+\brief Класс функционала ошибки для мультиклассовой классификации (MultiClassEntropy)
+\author __[shuffle-true](https://github.com/shuffle-true)__
+\version 0.0
+\date Август 2022 года
+*/
 class CrossEntropyLoss : public Output
 {
 private:
     Matrix m_din;           ///< Производная по этому слою
 
 public:
+    /// Проверка входных данных на соотвествие значений
+    /// \param target целевая переменная
     void check_target_data(const Matrix& target) const override
     {
         const long ncols = target.cols();       // eq. n sample's
@@ -39,6 +45,9 @@ public:
         }
     }
 
+    /// \image html multiclassentropy_evaluate.png
+    /// \param prev_layer_data последний скрытый слой сети
+    /// \param target целевая переменная
     void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
     {
         const long ncols = prev_layer_data.cols();
@@ -60,7 +69,7 @@ public:
         return m_din;
     }
 
-    ///
+    /// \image html multiclassentropy_loss.png
     /// \return Ошибку на обучающей выборке
     Scalar loss() const override
     {
