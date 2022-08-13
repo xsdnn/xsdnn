@@ -2,6 +2,7 @@
 
 
 # include <map>
+# include <tuple>
 # include "RNG.h"
 # include "Utils/Random.h"
 # include "Utils/InOut.h"
@@ -49,7 +50,7 @@ private:
     /// Инициализация необходимых параметров сети
     /// \param seed зерно генерации
     /// \param params параметры распределений
-    void init(int seed,
+    void Init(int seed,
               const std::vector<std::vector<Scalar>>& params)
     {
         check_unit_sizes();
@@ -103,7 +104,7 @@ private:
 	/// </summary>
 	/// <param name="input"> - входные данные. 
 	/// Убедитесь, что их длина равна длине входного слоя сетки</param>
-	void forward(const Matrix& input)
+	void Forward(const Matrix& input)
 	{
 		const unsigned long nlayer = count_layers();
 
@@ -138,8 +139,7 @@ private:
 	/// классификации и регрессии, а также для многоклассовой классификации</typeparam>
 	/// <param name="input"> - входные данные</param>
 	/// <param name="target"> - собственно таргет</param>
-	template <typename TargetType>
-	void backprop(const Matrix& input, const TargetType& target)
+	void Backprop(const Matrix& input, const Matrix& target)
 	{
 		const unsigned long nlayer = count_layers();
 
@@ -185,7 +185,7 @@ private:
 	/// Обновление весов модели
 	/// </summary>
 	/// <param name="opt"> - собственно оптимайзер</param>
-	void update(Optimizer& opt)
+	void Update(Optimizer& opt)
 	{
 		const unsigned long nlayer = count_layers();
 
@@ -333,12 +333,17 @@ public:
 		     int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
              const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
 	{
-        this->init(init_seed, params);
+        this->Init(init_seed, params);
 
         const unsigned int  nsample = x.cols();             // кол-во объектов в выборке
 		const unsigned long nlayer  = count_layers();
 
 		if (nlayer <= 0) { return false; }
+
+        if (batch_size <= 0)
+        {
+            throw std::invalid_argument("[class NeuralNetwork] Batch size must be greater than zero.");
+        }
 
 		// сбрасываем значения оптимизатора
 		opt.reset();
@@ -365,9 +370,9 @@ public:
 
 			for (int i = 0; i < nbatch; ++i)
 			{
-				this->forward(x_batches[i]);
-				this->backprop(x_batches[i], y_batches[i]);
-				this->update(opt);
+				this->Forward(x_batches[i]);
+				this->Backprop(x_batches[i], y_batches[i]);
+				this->Update(opt);
                 this->mean_loss_update();
 
                 // display update
@@ -403,7 +408,7 @@ public:
             }
         }
 
-		this->forward(x);
+		this->Forward(x);
 
 		return m_layers[nlayer - 1]->output();
 	}
@@ -464,6 +469,75 @@ public:
 
 		return res;
 	}
+
+    /// Инициализация слоев согласно условиям
+    /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
+    /// \param seed зерно ГСЧ
+    /// \param params вектор параметров распределений по слоям
+    void init(int seed,
+              const std::vector<std::vector<Scalar>>& params)
+    {
+        this->Init(seed, params);
+    }
+
+    /// Генерация батчей
+    /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
+    /// \param x данные
+    /// \param y метки
+    /// \param batch_size размер батча
+    /// \param batch_seed сид для генерации рандома
+    /// \return кортеж из 2 векторов и кол-во батчей в данных
+    auto generate_batch(const Matrix& x,
+                        const Matrix& y,
+                        const int batch_size,
+                        const int batch_seed)-> std::tuple<std::vector<Matrix>, std::vector<Matrix>, int>
+    {
+        std::cout << "\x1B[31m[class NeuralNetwork] {auto generate_batch}"
+                     "\n"
+                     "You used advanced xsDNN method. Be careful...\033[0m\t\t";
+
+        if (batch_size <= 0)
+        {
+            throw std::invalid_argument("[class NeuralNetwork] Batch size must be greater than zero.");
+        }
+
+        if (batch_seed > 0)
+        {
+            m_rng.seed(batch_seed);
+        }
+
+        std::vector<Matrix> x_batches;
+        std::vector<Matrix> y_batches;
+
+        const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
+
+        return {x_batches, y_batches, nbatch };
+    }
+
+    /// Проход вперед
+    /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
+    /// \param input входные данные (eq. train_data, test_data)
+    void forward(const Matrix& input)
+    {
+        this->Forward(input);
+    }
+
+    /// Обратный проход
+    /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
+    /// \param input входные данные (eq. train_data, test_data)
+    /// \param target метки классов / целевая переменная (eq. train_label, test_label)
+    void backprop(const Matrix& input, const Matrix& target)
+    {
+        this->Backprop(input, target);
+    }
+
+    /// Обновление параметров сети - итерация градиентного спуска
+    /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
+    /// \param opt оптимизатор - объект класса Optimizer.
+    void update(Optimizer& opt)
+    {
+        this->Update(opt);
+    }
 
     friend NeuralNetwork& operator << (NeuralNetwork& net, Layer* layer)
     {
