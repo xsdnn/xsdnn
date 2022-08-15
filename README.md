@@ -121,5 +121,3 @@ void calculate_mseloss(Matrix& label, Matrix& predict)
 ```
 
 Полный исходный код доступен __[здесь](https://github.com/shuffle-true/dl_new/tree/main/example/mnist)__.
-
-Теперь вы можете перейти к расширенному разделу \ref advanced.
