@@ -57,7 +57,8 @@ namespace internal
     {
         UNIFORM = 0,            ///< Равномерное
         EXPONENTIAL,            ///< Экспоненциальное
-        NORMAL                  ///< Нормальное
+        NORMAL,                 ///< Нормальное
+        CONSTANT                ///< Константное
     };
 
     ///
@@ -68,6 +69,7 @@ namespace internal
         if (type == "Uniform") return UNIFORM;
         if (type == "Exponential") return EXPONENTIAL;
         if (type == "Normal") return NORMAL;
+        if (type == "Constant") return CONSTANT;
 
         throw std::invalid_argument("[function distribution_id]: unknown type of distribution");
     }

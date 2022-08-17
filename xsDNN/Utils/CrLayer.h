@@ -27,6 +27,7 @@
 # include "../Distribution/Uniform.h"
 # include "../Distribution/Normal.h"
 # include "../Distribution/Exponential.h"
+# include "../Distribution/Constant.h"
 
 
 # include "../Output.h"
@@ -72,6 +73,10 @@ namespace internal
                             layer = new FullyConnected<init::Normal, activate::Identity>(in_size, out_size, bias);
                             break;
 
+                        case CONSTANT:
+                            layer = new FullyConnected<init::Constant, activate::Identity>(in_size, out_size, bias);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -92,6 +97,10 @@ namespace internal
 
                         case NORMAL:
                             layer = new FullyConnected<init::Normal, activate::LeakyReLU>(in_size, out_size, bias);
+                            break;
+
+                        case CONSTANT:
+                            layer = new FullyConnected<init::Constant, activate::LeakyReLU>(in_size, out_size, bias);
                             break;
 
                         default:
@@ -116,6 +125,10 @@ namespace internal
                             layer = new FullyConnected<init::Normal, activate::ReLU>(in_size, out_size, bias);
                             break;
 
+                        case CONSTANT:
+                            layer = new FullyConnected<init::Constant, activate::ReLU>(in_size, out_size, bias);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -138,6 +151,10 @@ namespace internal
                             layer = new FullyConnected<init::Normal, activate::Sigmoid>(in_size, out_size, bias);
                             break;
 
+                        case CONSTANT:
+                            layer = new FullyConnected<init::Constant, activate::Sigmoid>(in_size, out_size, bias);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -157,6 +174,10 @@ namespace internal
 
                         case NORMAL:
                             layer = new FullyConnected<init::Normal, activate::Softmax>(in_size, out_size, bias);
+                            break;
+
+                        case CONSTANT:
+                            layer = new FullyConnected<init::Constant, activate::Softmax>(in_size, out_size, bias);
                             break;
 
                         default:
@@ -222,6 +243,10 @@ namespace internal
                             layer = new BatchNorm1D<init::Normal, activate::Identity>(in_size, eps, momentum);
                             break;
 
+                        case CONSTANT:
+                            layer = new BatchNorm1D<init::Constant, activate::Identity>(in_size, eps, momentum);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -242,6 +267,10 @@ namespace internal
 
                         case NORMAL:
                             layer = new BatchNorm1D<init::Normal, activate::LeakyReLU>(in_size, eps, momentum);
+                            break;
+
+                        case CONSTANT:
+                            layer = new BatchNorm1D<init::Constant, activate::LeakyReLU>(in_size, eps, momentum);
                             break;
 
                         default:
@@ -266,6 +295,10 @@ namespace internal
                             layer = new BatchNorm1D<init::Normal, activate::ReLU>(in_size, eps, momentum);
                             break;
 
+                        case CONSTANT:
+                            layer = new BatchNorm1D<init::Constant, activate::ReLU>(in_size, eps, momentum);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -288,6 +321,10 @@ namespace internal
                             layer = new BatchNorm1D<init::Normal, activate::Sigmoid>(in_size, eps, momentum);
                             break;
 
+                        case CONSTANT:
+                            layer = new BatchNorm1D<init::Constant, activate::Sigmoid>(in_size, eps, momentum);
+                            break;
+
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
@@ -307,6 +344,10 @@ namespace internal
 
                         case NORMAL:
                             layer = new BatchNorm1D<init::Normal, activate::Softmax>(in_size, eps, momentum);
+                            break;
+
+                        case CONSTANT:
+                            layer = new BatchNorm1D<init::Constant, activate::Softmax>(in_size, eps, momentum);
                             break;
 
                         default:
