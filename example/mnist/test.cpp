@@ -1,4 +1,4 @@
-# include "../../neuralnetwork/xsDNN.h"
+# include "../../xsDNN/xsDNN.h"
 
 void calculate_mseloss(Matrix& label, Matrix& predict)
 {
@@ -39,13 +39,13 @@ void calculate_mseloss(Matrix& label, Matrix& predict)
 int main()
 {
     Matrix test_image, test_label;
-    dataset::parse_mnist_image("../datasets/mnist/t10k-images-idx3-ubyte",
+    dataset::parse_mnist_image("../../datasets/mnist/t10k-images-idx3-ubyte",
                                test_image,
                                0.0,
                                1.0,
                                0.0,
                                0.0);
-    dataset::parse_mnist_label("../datasets/mnist/t10k-labels-idx1-ubyte", test_label);
+    dataset::parse_mnist_label("../../datasets/mnist/t10k-labels-idx1-ubyte", test_label);
 
     NeuralNetwork net;
     net.read_net("example-mnist", "baseline");

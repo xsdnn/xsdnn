@@ -1,17 +1,17 @@
-# include "../../neuralnetwork/xsDNN.h"
+# include "../../xsDNN//xsDNN.h"
 
 int main()
 {
     Matrix train_image, train_label;
 
-    dataset::parse_mnist_image("../datasets/mnist/train-images-idx3-ubyte",
+    dataset::parse_mnist_image("../../datasets/mnist/train-images-idx3-ubyte",
                                train_image,
                                0,
                                1,
                                0,
                                0);
 
-    dataset::parse_mnist_label("../datasets/mnist/train-labels-idx1-ubyte", train_label);
+    dataset::parse_mnist_label("../../datasets/mnist/train-labels-idx1-ubyte", train_label);
 
     NeuralNetwork baseline;
 
