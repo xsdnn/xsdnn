@@ -34,7 +34,7 @@
         1 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
  */
 
-# include "../neuralnetwork/DNN.h"
+# include "../neuralnetwork/xsDNN.h"
 # include <random>
 # include <iostream>
 # include <iomanip>

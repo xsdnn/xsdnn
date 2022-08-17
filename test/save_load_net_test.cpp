@@ -35,7 +35,7 @@
  */
 
 # include <iostream>
-# include "../neuralnetwork/DNN.h"
+# include "../neuralnetwork/xsDNN.h"
 
 int main()
 {
@@ -46,15 +46,12 @@ int main()
 
     NeuralNetwork net;
 
-    Layer* l1 = new FullyConnected<activate::Sigmoid, init::Normal>(10, 350);
-    Layer* l2 = new FullyConnected<activate::ReLU, init::Normal>(350, 250);
-    Layer* l3 = new FullyConnected<activate::Sigmoid, init::Normal>(250, 100);
-    Layer* l4 = new FullyConnected<activate::Identity, init::Uniform>(100, 10);
+    Layer* l1 = new FullyConnected<init::Normal, activate::Sigmoid>(10, 350, false);
+    Layer* l2 = new FullyConnected<init::Normal, activate::ReLU>(350, 250, false);
+    Layer* l3 = new FullyConnected<init::Normal, activate::Sigmoid>(250, 100, false);
+    Layer* l4 = new FullyConnected<init::Uniform, activate::Identity>(100, 10, false);
 
     net.set_output(new RegressionMSE());
-
-    VerboseCallback call;
-    net.set_callback(call);
 
     std::vector< std::vector<Scalar> > distribution_params = {
             {0.0, 0.01},
@@ -68,14 +65,12 @@ int main()
     net.add_layer(l3);
     net.add_layer(l4);
 
-    net.init(42, distribution_params);
-
     SGD opt;
     opt.m_decay = 0.8;
     opt.m_lrate = 0.01;
 
     net.train();
-    net.fit(opt, train_data, train_label, 12, 3, 42);
+    net.fit(opt, train_data, train_label, 8, 3, 10, 42, distribution_params);
     net.eval();
 
     std::cout << net << std::endl;

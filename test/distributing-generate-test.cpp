@@ -2,7 +2,7 @@
 // Created by shuffle on 22.06.22.
 //
 
-# include "../neuralnetwork/DNN.h"
+# include "../neuralnetwork/xsDNN.h"
 
 /*
  * Тест 1.

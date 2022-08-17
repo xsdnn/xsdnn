@@ -6,6 +6,8 @@
 
 int main()
 {
+    system("figlet -c xsDNN");
+
     Matrix train_data(784, 1024); train_data.setRandom() * 3.14f;
     Matrix test_data(784, 512); test_data.setRandom() * 6.28f;
 
@@ -68,7 +70,7 @@ int main()
 
     SGD opt; opt.m_lrate = 0.001; opt.m_momentum = 0.75; opt.m_nesterov = true;
 
-    net.set_output(new RegressionMSE());
+    net.set_output(new MSELoss());
 
     net.train();
     net.fit(opt, train_data, train_label, 64, 5, 42, 10, init_params);
