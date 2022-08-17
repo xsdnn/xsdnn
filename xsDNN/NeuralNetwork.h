@@ -84,7 +84,11 @@ private:
                     m_layers[i]->init(normal_params, m_rng);
                 }
 
-                // TODO: add some other distribution
+                if (m_layers[i]->distribution_type() == "Constant")
+                {
+                    const std::vector<Scalar> constant_params = {0.0};
+                    m_layers[i]->init(constant_params, m_rng);
+                }
             }
 
             return;
