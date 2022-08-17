@@ -8,9 +8,8 @@
 
 # include "Config.h"
 
-
-
 # include "Activation/ReLU.h"
+# include "Activation/SELU.h"
 # include "Activation/LeakyReLU.h"
 # include "Activation/Sigmoid.h"
 # include "Activation/Softmax.h"
