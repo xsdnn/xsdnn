@@ -14,8 +14,6 @@ namespace activate{
     */
     class LeakyReLU{
     public:
-        constexpr static Scalar _negative_slope = 0.01;             ///< см. алгоритм
-
         /// __Алгоритм__:
         /// \code
         /// int leaky_relu_forward(const Matrix& Z, Matrix& A){
@@ -31,7 +29,7 @@ namespace activate{
         /// \param A значения нейронов после активации
         static inline void activate(const Matrix& Z, Matrix& A)
         {
-            A.array() = (Z.array() > Scalar(0)).select(Z, _negative_slope * Z);
+            A.array() = (Z.array() > Scalar(0)).select(Z, 0.01 * Z);
         }
 
 
@@ -56,7 +54,7 @@ namespace activate{
         static inline void apply_jacobian(const Matrix& Z, const Matrix& A,
                                           const Matrix& F, Matrix& G)
         {
-            G.array() = (A.array() > Scalar(0)).select(F, _negative_slope * A.array());
+            G.array() = (A.array() > Scalar(0)).select(F, 0.01 * A.array());
         }
 
         ///

@@ -10,7 +10,6 @@
 
 
 
-
 # include "Activation/ReLU.h"
 # include "Activation/LeakyReLU.h"
 # include "Activation/Sigmoid.h"
