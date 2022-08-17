@@ -3,10 +3,17 @@ project(xsDNN VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-option(MULTITHREADING   "Set to ON to on threading"             OFF)
+option(USE_NO_DTRMINIST "Set to OFF to determinist rng"          ON)
+option(MULTITHREADING   "Set to ON to on threading"              OFF)
 
-option(BUILD_TESTS      "Set to ON to build tests"              OFF)
+option(BUILD_TESTS      "Set to ON to build tests"              ON)
 option(BUILD_EXAMPLES   "Set to ON to build examples"           OFF)
+
+
+if(USE_NO_DTRMINIST)
+    add_compile_definitions(DNN_NO_DTRMINIST)
+endif(USE_NO_DTRMINIST)
+
 
 if(MULTITHREADING)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fopenmp")
