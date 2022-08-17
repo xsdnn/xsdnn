@@ -30,3 +30,4 @@
 # include "../xsDNN/xsDNN.h"
 
 # include "fully_connected_test.h"
+# include "dropout_test.h"
