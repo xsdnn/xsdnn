@@ -9,7 +9,6 @@
 # include "Config.h"
 
 # include "Activation/ReLU.h"
-# include "Activation/SELU.h"
 # include "Activation/LeakyReLU.h"
 # include "Activation/Sigmoid.h"
 # include "Activation/Softmax.h"
@@ -41,3 +40,4 @@
 # include "Distribution/Normal.h"
 # include "Distribution/Uniform.h"
 # include "Distribution/Exponential.h"
+# include "Distribution/Constant.h"
