@@ -136,6 +136,11 @@ public:
 
         return out;
     }
+
+    Matrix mask()
+    {
+        return mask_;
+    }
 };
 
 #endif //XSDNN_INCLUDE_DROPOUT_H
