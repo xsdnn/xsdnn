@@ -175,7 +175,12 @@ namespace internal
         inline void operator () (Scalar* arr)
         {
             // non-determenistic random generator for dropout mask
+            #if defined(DNN_NO_DTRMINIST)
             rng_.seed(rd());
+            #else
+            rng_.seed(42);
+            #endif
+
             for (long i = 0; i < array_size_; i++)
             {
                 arr[i] = static_cast<Scalar>(set_uniform_random(rng_) <= 1 - p_value_);
