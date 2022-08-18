@@ -1,7 +1,6 @@
 //
 // Created by shuffle on 17.08.22.
 //
-
 #ifndef XSDNN_DROPOUT_TEST_H
 #define XSDNN_DROPOUT_TEST_H
 
