@@ -2,8 +2,6 @@
 // Created by shuffle on 17.08.22.
 //
 
-// TODO: написать проверку градиента
-
 TEST(fullyconnected, init)
 {
     Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(10, 2, true);
@@ -26,6 +24,39 @@ TEST(fullyconnected, init_without_bias)
     std::vector<Scalar> fc_layer_params = fc_layer->get_parametrs();
 
     EXPECT_EQ(fc_layer_params.size(), 10 * 2);
+}
+
+TEST(fullyconnected, grad)
+{
+    const int in_size = 1000;
+    const int out_size = 500;
+
+    Matrix train_image(in_size, 1); train_image.setRandom(); train_image *= 3.14;
+    Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(in_size, out_size);
+
+    std::vector<Scalar> init_param = {0.0, 1.0 / (1000.0 + 500.0)};
+    RNG rng(1);
+    fc_layer->init(init_param, rng);
+
+    const int n = 100;
+    for (int i = 0; i < n; i++)
+    {
+        const int in_pos_   = static_cast<int>(internal::set_uniform_random(rng, 0, in_size));
+        const int out_pos_  = static_cast<int>(internal::set_uniform_random(rng, 0, out_size));
+
+        Scalar    num_grad  = numerical_gradient(fc_layer,
+                                                 train_image,
+                                                 in_pos_,
+                                                 out_pos_);
+
+        Scalar    ana_grad  = analytical_gradient(fc_layer,
+                                                  train_image,
+                                                  in_pos_,
+                                                  out_pos_,
+                                                  out_size);
+
+        EXPECT_NEAR(num_grad, ana_grad, sqrt_epsilon);
+    }
 }
 
 TEST(fullyconnected, save)
