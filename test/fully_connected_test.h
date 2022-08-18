@@ -28,6 +28,38 @@ TEST(fullyconnected, init_without_bias)
     EXPECT_EQ(fc_layer_params.size(), 10 * 2);
 }
 
+TEST(fullyconnected, save)
+{
+    std::string filename = "fullyconnected.save";
+    Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(1000, 1000, true);
+    std::vector<Scalar> init_params = {0.0, 1.0};
+    RNG rng(42);
+
+    fc_layer->init(init_params, rng);
+    std::vector<Scalar> write   = fc_layer->get_parametrs();
+    internal::write_one_vector(write, filename);
+
+    std::vector<Scalar> read = internal::read_vector(filename);
+
+    EXPECT_TRUE(is_near_container(write, read, Scalar(0.1)));
+}
+
+TEST(fullyconnected, save_no_bias)
+{
+    std::string filename = "fullyconnected.save_no_bias";
+    Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(1000, 1000, false);
+    std::vector<Scalar> init_params = {0.0, 1.0};
+    RNG rng(42);
+
+    fc_layer->init(init_params, rng);
+    std::vector<Scalar> write   = fc_layer->get_parametrs();
+    internal::write_one_vector(write, filename);
+
+    std::vector<Scalar> read = internal::read_vector(filename);
+
+    EXPECT_TRUE(is_near_container(write, read, Scalar(0.1)));
+}
+
 TEST(fullyconnected, forward)
 {
     Layer* fc_layer = new FullyConnected<init::Constant, activate::Identity>(3, 3, true);
