@@ -63,4 +63,8 @@ void generate_sinus_data(Matrix& train_image, Matrix& train_label, const Scalar&
     train_label = train_image.array().sin();
 }
 
+
+Scalar epsilon      = std::numeric_limits<Scalar>::epsilon();
+Scalar sqrt_epsilon = std::sqrt(std::numeric_limits<Scalar>::epsilon());
+
 #endif //XSDNN_HELPER_H
