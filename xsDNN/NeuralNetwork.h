@@ -114,7 +114,7 @@ private:
 
 		if (nlayer <= 0) { return; }
 
-		/// Проверим нулевой слой на соотвествие правилу вход данных == вход нулевого слоя
+		// Проверим нулевой слой на соотвествие правилу вход данных == вход нулевого слоя
 
 		if (input.rows() != m_layers[0]->in_size())
 		{
@@ -363,8 +363,10 @@ public:
 
 		const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
-        internal::Timer t;
-        internal::ProgressBar disp(nsample);
+#ifndef DNN_BE_QUIET
+            internal::Timer t;
+            internal::ProgressBar disp(nsample);
+#endif
 
         this->train();
 
@@ -380,19 +382,24 @@ public:
                 this->mean_loss_update();
 
                 // display update
+#ifndef DNN_BE_QUIET
                 disp += batch_size;
+#endif
 			}
 
+#ifndef DNN_BE_QUIET
             std::cout << "Epoch " << e + 1 << "/" << epoch << " completed. " << t.elapced() << "s elapsed." << std::endl;
             std::cout << "Mean Loss per Epoch = " << mean_loss / nbatch << std::endl;
-
+#endif
             this->mean_loss_reset();
 
+#ifndef DNN_BE_QUIET
             if (e != epoch - 1)
             {
                 disp.restart(nsample);
                 t.restart();
             }
+#endif
 		}
         this->eval();
 		return true;
