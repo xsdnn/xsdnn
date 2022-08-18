@@ -28,6 +28,7 @@
 #include <gtest/gtest.h>
 
 # include "../xsDNN/xsDNN.h"
+# include "helper.h"
 
 # include "fully_connected_test.h"
 # include "dropout_test.h"
