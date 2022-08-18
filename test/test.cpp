@@ -28,6 +28,7 @@
 #include <gtest/gtest.h>
 
 # include "../xsDNN/xsDNN.h"
+# include "../xsDNN/Utils/GradCheck.h"
 # include "helper.h"
 
 # include "fully_connected_test.h"
