@@ -11,7 +11,7 @@ TEST(dropout, determenistic)
     Dropout dp_layer = Dropout<activate::Identity>(784, 0.85);
     dp_layer.train();
 
-    Matrix in_data(784, 1);
+    Matrix in_data(784, 4);
     in_data.setOnes();
 
     const int n = 1000;
@@ -24,31 +24,13 @@ TEST(dropout, determenistic)
         dp_layer.forward(in_data);
         Matrix mask2 = dp_layer.mask();
 
-        Scalar* mask_arr    = mask.data();
-        Scalar* mask_arr2   = mask2.data();
-
-        std::vector<bool> tf_vector(mask.size());
-        for(int i = 0; i < mask.size(); i++)
-        {
-            if (mask_arr[i] == mask_arr2[i]) tf_vector[i] = true;
-            else tf_vector[i] = false;
-        }
-
-        bool tf_first = tf_vector[0];
-        bool flag     = false;
-
-        for (int i = 1; i < mask.size(); i++)
-        {
-            if (tf_first != tf_vector[i]) flag = true;
-        }
-
-        EXPECT_TRUE(flag);
+        EXPECT_TRUE(is_different_container(mask, mask2));
     }
 #else
     Dropout dp_layer = Dropout<activate::Identity>(784, 0.85);
     dp_layer.train();
 
-    Matrix in_data(784, 1);
+    Matrix in_data(784, 4);
     in_data.setOnes();
 
     const int n = 1000;
@@ -61,15 +43,28 @@ TEST(dropout, determenistic)
         dp_layer.forward(in_data);
         Matrix mask2 = dp_layer.mask();
 
-        Scalar* mask_arr    = mask.data();
-        Scalar* mask_arr2   = mask2.data();
-
-        for (int i = 0; i < mask.size(); i++)
-        {
-            EXPECT_DOUBLE_EQ(mask_arr[i], mask_arr2[i]);
-        }
+        EXPECT_TRUE(is_equal_container(mask, mask2));
     }
 #endif
+}
+
+TEST(dropout, fully_net)
+{
+    Matrix train_image(784, 16), train_label(784, 16);
+    generate_sinus_data(train_image, train_label, 3.14);
+
+    NeuralNetwork net;
+
+    using DP = Dropout<activate::Identity>;
+
+    net     << new DP(784, 0.3)
+            << new DP(784, 0.4);
+
+    Output* criterion = new MSELoss();
+    net.set_output(criterion);
+    SGD opt;
+
+    EXPECT_TRUE(net.fit(opt, train_image, train_label, 16, 5, 42));
 }
 
 
