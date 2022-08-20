@@ -6,6 +6,7 @@
 #define XSDNN_INCLUDE_BATCHNORMALIZATION_H
 
 # include "../Utils/BatchNormUtil.h"
+# include "../Utils/Math.h"
 
 /*!
 \brief Класс слоя пакетной нормализации (BatchNorm1D)
@@ -26,19 +27,22 @@ private:
     Vector      m_gammas;               ///< gamma для линейного отображения
     Vector      m_betas;                ///< beta для линейного отображения
 
+    Vector      mean_curr;              ///< матожидание для текущего батча
+    Vector      var_curr;               ///< дисперсия для текущего батча
+    Vector      m_stddev;               ///< стандартное отклонение
+
     Vector      m_mean;                 ///< скользящее среднее мат ожидания
     Vector      m_var;                  ///< скользящее среднее дисперсии
+
 
     Matrix      m_din;
     Vector      m_dg;
     Vector      m_db;
 
-    Matrix      inmu;                   ///< in - mu
-    Vector      invvar;                 ///< 1. / (var + eps) ** 0.5
-
     Scalar      eps;
     Scalar      moment;
-    Scalar      lmbd;                   ///< коэфф при скользящем среднем статистик
+
+    bool        affine_;                 ///< афинное преобразование m_a = m_gammas * m_z + m_betas
 
 public:
     ///
@@ -46,40 +50,40 @@ public:
     /// \param tolerance equal eps
     /// \param momentum momentum coefficient
     explicit BatchNorm1D(const int& in_size,
+                const bool&         affine = true,
                 const Scalar&       tolerance = Scalar(0.0001),
                 const Scalar&       momentum  = Scalar(0.35)
                 ) : Layer(in_size, in_size, "undefined"),
                     eps(tolerance),
-                    moment(momentum)
+                    moment(momentum),
+                    affine_(affine)
                     {}
 
-    void init(const std::vector<Scalar>& params, RNG& rng) override
-    {
+    void init(const std::vector<Scalar>& params, RNG& rng) override{
         init();
 
-        Distribution::set_random_data(m_gammas.data(), m_gammas.size(), rng, params);
-        Distribution::set_random_data(m_betas.data(), m_betas.size(), rng, params);
-
-        assert(m_gammas.size() == this->m_in_size);
-        assert(m_betas.size() == this->m_in_size);
-
-//        std::cout << m_gammas << std::endl;
-//        std::cout << m_betas << std::endl;
+        if (affine_){
+            Distribution::set_random_data(m_gammas.data(), m_gammas.size(), rng, params);
+            Distribution::set_random_data(m_betas.data(), m_betas.size(), rng, params);
+        }
     }
 
-    void init() override
-    {
-        m_gammas.resize(this->m_in_size);
-        m_betas.resize(this->m_in_size);
+    void init() override{
+        if (affine_){
+            m_gammas.resize(this->m_in_size);
+            m_betas.resize(this->m_in_size);
+            m_dg.resize(this->m_in_size);
+            m_db.resize(this->m_in_size);
+        }
+
+        mean_curr.resize(this->m_in_size);
+        var_curr.resize(this->m_in_size);
+        m_stddev.resize(this->m_in_size);
 
         m_mean.resize(this->m_in_size);
         m_var.resize(this->m_in_size);
-
         m_mean.setZero();
         m_var.setZero();
-
-        m_db.resize(this->m_in_size);
-        m_dg.resize(this->m_in_size);
     }
 
     /// Прямой проход по слою
@@ -87,43 +91,31 @@ public:
     /// \image html batchnorm_forward_bacward_pass.png
     ///
     /// \param prev_layer_data значения нейронов предыдущего слоя
-    void forward(const Matrix& prev_layer_data) override
-    {
+    void forward(const Matrix& prev_layer_data) override{
         const long ncols = prev_layer_data.cols();
         m_z.resize(this->m_in_size, ncols);
         m_a.resize(this->m_in_size, ncols);
 
-        inmu.resize(this->m_in_size, ncols);
-        invvar.resize(this->m_in_size);
+        Vector mean = (workflow == "train") ? mean_curr : m_mean;
+        Vector var  = (workflow == "train") ? var_curr  : m_var;
 
-        if (workflow == "train")
-        {
-            internal::compute_statistic_graph1D_train(prev_layer_data,
-                                                      m_z,
+        if (workflow == "train"){
+            internal::math::update_statistics(prev_layer_data, this->m_in_size, mean, var);
+        }
 
-                                                      m_mean,
-                                                      m_var,
+        m_stddev = (var.array() + eps).sqrt();
 
-                                                      inmu,
-                                                      invvar,
+        int index = 0;
+        for (auto col : prev_layer_data.colwise()){
+            m_z.col(index++) = (col.array() - mean.array()) / m_stddev.array();
+        }
 
-                                                      eps,
-                                                      moment);
+        if (affine_){
             m_z = m_z.array().colwise() * m_gammas.array();
             m_z = m_z.array().colwise() + m_betas.array();
-            Activation::activate(m_z, m_a);
-            assert(m_a.rows() == this->m_in_size);
-            assert(m_a.cols() == ncols);
         }
-        else
-        {
-            internal::compute_statistic_graph1D_eval(m_z, m_mean, m_var, eps);
-            m_z = m_z.array().colwise() * m_gammas.array();
-            m_z = m_z.array().colwise() + m_betas.array();
-            Activation::activate(m_z, m_a);
-            assert(m_a.rows() == this->m_in_size);
-            assert(m_a.cols() == ncols);
-        }
+
+        Activation::activate(m_z, m_a);
     }
 
     ///
@@ -138,24 +130,10 @@ public:
     /// \param prev_layer_data выходы нейронов предыдущего слоя
     /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix& prev_layer_data,
-                  const Matrix& next_layer_data) override
-    {
+                  const Matrix& next_layer_data) override{
         Matrix& dLz = m_z;
         Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
 
-        internal::compute_backward_graph1D(
-                next_layer_data,
-                dLz,
-                m_z,
-                m_gammas,
-
-                m_din,
-                m_dg,
-                m_db,
-
-                invvar,
-                inmu
-                );
 
         assert(m_din.rows() == this->m_in_size);
         assert(m_din.cols() == m_z.cols());
@@ -170,13 +148,13 @@ public:
 
     /// Обновление параметров слоя -  векторов _gammas_ и _betas_
     /// \param opt - объект класса Optimizer
-    void update(Optimizer& opt) override
-    {
+    void update(Optimizer& opt) override{
         AlignedMapVec dg(m_dg.data(), m_dg.size());
         AlignedMapVec g(m_gammas.data(), m_gammas.size());
         AlignedMapVec db(m_db.data(), m_db.size());
         AlignedMapVec b(m_betas.data(), m_betas.size());
 
+        // TODO: обновить через экспоненциальное сглаживание
         opt.update(dg, g);
         opt.update(db, b);
     }
@@ -189,8 +167,7 @@ public:
 
     /// Получить вектор гаммы, беты и среднего мат.ожидания и дисперсии по всем батчам
     /// \return m_gammas, m_betas, m_mean, m_var
-    std::vector<Scalar> get_parametrs() const override
-    {
+    std::vector<Scalar> get_parametrs() const override{
         std::vector<Scalar> res(m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size());
 
         std::copy(
@@ -222,8 +199,7 @@ public:
 
     /// Установить параметры слоя - гаммы, беты и среднего мат.ожидания и дисперсии по всем батчам
     /// \param param вектор всех параметров слоя
-    void set_parametrs(const std::vector<Scalar>& param) override
-    {
+    void set_parametrs(const std::vector<Scalar>& param) override{
         if (param.size() != m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size())
         {
             throw std::invalid_argument("[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
@@ -256,8 +232,7 @@ public:
 
     /// Получить производные по значениям нейрона, по гамме и бете
     /// \return m_din, m_dg, m_db
-    std::vector<Scalar> get_derivatives() const override
-    {
+    std::vector<Scalar> get_derivatives() const override{
         std::vector<Scalar> res(m_din.size() + m_dg.size() + m_db.size());
 
         std::copy(
@@ -287,8 +262,7 @@ public:
 
     std::string distribution_type() const override { return Distribution::return_type(); }
 
-    void fill_meta_info(Meta& map, int index) const override
-    {
+    void fill_meta_info(Meta& map, int index) const override{
         std::string ind = std::to_string(index);
 
         map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
@@ -296,6 +270,18 @@ public:
         map.insert(std::make_pair("in_size " + ind, this->in_size()));
         map.insert(std::make_pair("tolerance " + ind, this->eps));
         map.insert(std::make_pair("momentum " + ind, this->moment));
+    }
+
+    void set_gamma(Vector gamma){
+        m_gammas = gamma;
+    }
+
+    void set_beta(Vector beta){
+        m_betas = beta;
+    }
+
+    void set_stddev(Vector stddev){
+        m_stddev = stddev;
     }
 };
 
