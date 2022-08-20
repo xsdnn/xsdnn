@@ -8,8 +8,7 @@
 \version 0.0
 \date Март 2022 года
 */
-class Layer
-{
+class Layer{
 protected:
 	typedef std::map<std::string, Scalar> Meta;
 
@@ -29,8 +28,7 @@ public:
 	/// None
 	/// </summary>
 	/// <returns>Кол-во входящих нейронов</returns>
-	int in_size() const
-	{
+	int in_size() const{
 		return m_in_size;
 	}
 
@@ -38,14 +36,12 @@ public:
 	/// None
 	/// </summary>
 	/// <returns>Кол-во выходящих нейронов</returns>
-	int out_size() const
-	{
+	int out_size() const{
 		return m_out_size;
 	}
 
     /// Получить текущий процесс
-    std::string get_workflow() const
-    {
+    std::string get_workflow() const{
         return workflow;
     }
 
