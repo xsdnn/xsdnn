@@ -2,8 +2,7 @@
 // Created by shuffle on 17.08.22.
 //
 
-TEST(fullyconnected, init)
-{
+TEST(fullyconnected, init){
     Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(10, 2, true);
     std::vector<Scalar> init_params = {0.0, 0.0};
     RNG rng(1);
@@ -14,8 +13,7 @@ TEST(fullyconnected, init)
     EXPECT_EQ(fc_layer_params.size(), 10 * 2 + 2);
 }
 
-TEST(fullyconnected, init_without_bias)
-{
+TEST(fullyconnected, init_without_bias){
     Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(10, 2, false);
     std::vector<Scalar> init_params = {0.0, 0.0};
     RNG rng(1);
@@ -26,8 +24,7 @@ TEST(fullyconnected, init_without_bias)
     EXPECT_EQ(fc_layer_params.size(), 10 * 2);
 }
 
-TEST(fullyconnected, grad)
-{
+TEST(fullyconnected, grad){
     const int in_size = 1000;
     const int out_size = 500;
 
@@ -59,8 +56,7 @@ TEST(fullyconnected, grad)
     }
 }
 
-TEST(fullyconnected, save)
-{
+TEST(fullyconnected, save){
     std::string filename = "fullyconnected.save";
     Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(1000, 1000, true);
     std::vector<Scalar> init_params = {0.0, 1.0};
@@ -72,11 +68,10 @@ TEST(fullyconnected, save)
 
     std::vector<Scalar> read = internal::read_vector(filename);
 
-    EXPECT_TRUE(is_near_container(write, read, Scalar(0.1)));
+    EXPECT_TRUE(is_near_container(write, read, Scalar(1E-5)));
 }
 
-TEST(fullyconnected, save_no_bias)
-{
+TEST(fullyconnected, save_no_bias){
     std::string filename = "fullyconnected.save_no_bias";
     Layer* fc_layer = new FullyConnected<init::Normal, activate::Identity>(1000, 1000, false);
     std::vector<Scalar> init_params = {0.0, 1.0};
@@ -91,8 +86,7 @@ TEST(fullyconnected, save_no_bias)
     EXPECT_TRUE(is_near_container(write, read, Scalar(0.1)));
 }
 
-TEST(fullyconnected, forward)
-{
+TEST(fullyconnected, forward){
     Layer* fc_layer = new FullyConnected<init::Constant, activate::Identity>(3, 3, true);
     std::vector<Scalar> init_params = {1.0};
     RNG rng(1);
@@ -113,8 +107,7 @@ TEST(fullyconnected, forward)
     }
 }
 
-TEST(fullyconnected, forward_without_bias)
-{
+TEST(fullyconnected, forward_without_bias){
     Layer* fc_layer = new FullyConnected<init::Constant, activate::Identity>(3, 3, false);
     std::vector<Scalar> init_params = {1.0};
     RNG rng(1);

@@ -4,8 +4,7 @@
 #ifndef XSDNN_DROPOUT_TEST_H
 #define XSDNN_DROPOUT_TEST_H
 
-TEST(dropout, determenistic)
-{
+TEST(dropout, determenistic){
 #ifdef DNN_NO_DTRMINIST
     Dropout dp_layer = Dropout<activate::Identity>(784, 0.85);
     dp_layer.train();
