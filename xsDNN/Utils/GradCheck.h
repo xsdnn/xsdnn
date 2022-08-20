@@ -22,7 +22,7 @@ inline Scalar numerical_gradient(
         const int out_pos
         )
 {
-    Scalar h = std::sqrt(std::numeric_limits<Scalar>::epsilon());
+    Scalar h = std::sqrt(std::sqrt(std::numeric_limits<Scalar>::epsilon()));
     Scalar prev_in = in_data(in_pos, 0);
     in_data(in_pos, 0) = prev_in + h;
     layer->forward(in_data);
