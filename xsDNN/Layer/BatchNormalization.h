@@ -149,14 +149,18 @@ public:
     /// Обновление параметров слоя -  векторов _gammas_ и _betas_
     /// \param opt - объект класса Optimizer
     void update(Optimizer& opt) override{
-        AlignedMapVec dg(m_dg.data(), m_dg.size());
-        AlignedMapVec g(m_gammas.data(), m_gammas.size());
-        AlignedMapVec db(m_db.data(), m_db.size());
-        AlignedMapVec b(m_betas.data(), m_betas.size());
+        m_mean = moment * m_mean + (1 - moment) * mean_curr;
+        m_var  = moment * m_var  + (1 - moment) * var_curr;
 
-        // TODO: обновить через экспоненциальное сглаживание
-        opt.update(dg, g);
-        opt.update(db, b);
+        if (affine_){
+            AlignedMapVec dg(m_dg.data(), m_dg.size());
+            AlignedMapVec g(m_gammas.data(), m_gammas.size());
+            AlignedMapVec db(m_db.data(), m_db.size());
+            AlignedMapVec b(m_betas.data(), m_betas.size());
+
+            opt.update(dg, g);
+            opt.update(db, b);
+        }
     }
 
     /// Установить рабочий процесс - тренировка
