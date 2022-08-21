@@ -163,12 +163,14 @@ private:
 
 		if (nlayer == 1)
 		{
-			first_layer->backprop(input, last_layer->backprop_data());
+			first_layer->backprop(input,
+                                  last_layer->backprop_data());
 			return;
 		}
 
 		// Если это условие не выполнено, то вычисляем градиент для последнего скрытого слоя
-		last_layer->backprop(m_layers[nlayer - 2]->output(), m_output->backprop_data());
+		last_layer->backprop(m_layers[nlayer - 2]->output(),
+                             m_output->backprop_data());
 
 		// Теперь пробегаемся по всем слоям и вычисляем градиенты
 
@@ -180,9 +182,8 @@ private:
 
 		// Теперь вычисляем грады для нулевого - входного слоя сетки
 
-		first_layer->backprop(input, m_layers[1]->backprop_data());
-
-		// На этом backprop окончен
+		first_layer->backprop(input,
+                              m_layers[1]->backprop_data());
 	}
 
 	/// <summary>
