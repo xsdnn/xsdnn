@@ -83,12 +83,12 @@ public:
     /// \param prev_layer_data значения нейронов предыдущего слоя
     /// \param next_layer_data вектор градиента следующего слоя (слева - направо)
     void backprop(const Matrix& prev_layer_data,
-        const Matrix& next_layer_data) override
+                  const Matrix& next_layer_backprop_data) override
     {
         const long ncols = prev_layer_data.cols();
 
         Matrix& dLz = m_z;
-        Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
+        Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
         m_dw.noalias() = prev_layer_data * dLz.transpose() / ncols;
         if (BIAS_ACTIVATE) { m_db.noalias() = dLz.rowwise().mean(); }
         m_din.resize(this->m_in_size, ncols);
