@@ -48,11 +48,11 @@ inline Scalar analytical_gradient(
         )
 {
     const int in_size = in_data.rows();
-    Matrix next_layer_data(out_size, 1); next_layer_data.setZero();
-    next_layer_data(out_pos, 0) = Scalar(1.0);
+    Matrix next_layer_backprop_data(out_size, 1); next_layer_backprop_data.setZero();
+    next_layer_backprop_data(out_pos, 0) = Scalar(1.0);
     Matrix prev_layer_data(in_size, 1); prev_layer_data.setZero();
     layer->forward(in_data);
-    layer->backprop(prev_layer_data, next_layer_data);
+    layer->backprop(prev_layer_data, next_layer_backprop_data);
     return layer->backprop_data()(in_pos, 0);
 }
 

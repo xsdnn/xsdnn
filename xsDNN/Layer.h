@@ -76,6 +76,7 @@ public:
 	/// метода разрешено только после метода Layer::forward()!</returns>
 	virtual const Matrix& output() const = 0;
 
+    // TODO: обновить описание метода
 	/// <summary>
 	/// Реализация метода обратного распространения ошибки.
 	/// </summary>
@@ -84,7 +85,7 @@ public:
 	/// <param name="next_layer_data"> - значения нейронов следующего слоя, 
 	/// которые также являются выходными значениями этого слоя. </param>
 	virtual void backprop(const Matrix& prev_layer_data,
-		const Matrix& next_layer_data) = 0;
+                          const Matrix& next_layer_backprop_data) = 0;
 
 	/// <summary>
 	/// None
