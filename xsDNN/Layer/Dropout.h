@@ -79,13 +79,13 @@ public:
     /// \param prev_layer_data выходы нейронов предыдущего слоя
     /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix& prev_layer_data,
-                  const Matrix& next_layer_data) override
+                  const Matrix& next_layer_backprop_data) override
     {
         const long ncols = prev_layer_data.cols();
         Matrix& dLz = m_z;
-        Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
+        Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
         m_din.resize(this->m_out_size, ncols);
-        m_din.noalias() = next_layer_data.cwiseProduct(mask_) * scale_;
+        m_din.noalias() = next_layer_backprop_data.cwiseProduct(mask_) * scale_;
         m_din = m_din.array() * dLz.array();
     }
 
