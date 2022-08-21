@@ -130,16 +130,43 @@ public:
     /// \param prev_layer_data выходы нейронов предыдущего слоя
     /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix& prev_layer_data,
-                  const Matrix& next_layer_data) override{
-        Matrix& dLz = m_z;
-        Activation::apply_jacobian(m_z, m_a, next_layer_data, dLz);
+                  const Matrix& next_layer_backprop_data) override{
+        const int     ncols   = m_z.cols();
+        m_din.resize(this->m_in_size, ncols);
 
+        Matrix dLz;
+        Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
 
-        assert(m_din.rows() == this->m_in_size);
-        assert(m_din.cols() == m_z.cols());
+        // if Y = (X-mean(X))/(sqrt(var(X)+eps)), then
+        //
+        // dE(L)/dX =
+        //   (dL/dz - mean(dL/dz) - mean(dL/dz \cdot Y) \cdot Y)
+        //     ./ sqrt(var(X) + eps)
+        //
 
-        assert(m_dg.rows() == this->m_in_size);
-        assert(m_db.rows() == this->m_in_size);
+        Matrix dLz_dot_y; dLz_dot_y.resize(this->m_in_size, ncols);
+        dLz_dot_y = dLz.cwiseProduct(m_z);
+
+        Vector mean_dLz, mean_dLz_dot_y;
+        mean_dLz.resize(this->m_in_size);
+        mean_dLz_dot_y.resize(this->m_in_size);
+        mean_dLz = dLz.rowwise().mean();
+        mean_dLz_dot_y = dLz_dot_y.rowwise().mean();
+
+        int index = 0;
+        for (auto col : m_din.colwise()){
+            col = dLz.col(index) - mean_dLz - mean_dLz_dot_y.cwiseProduct(m_z.col(index));
+            index += 1;
+        }
+        index = 0;
+        for (auto row : m_din.rowwise()){
+            row.array() /= m_stddev[index++];
+        }
+
+        if (affine_){
+            m_dg = mean_dLz_dot_y;
+            m_db = mean_dLz;
+        }
     }
 
     ///
@@ -286,6 +313,10 @@ public:
 
     void set_stddev(Vector stddev){
         m_stddev = stddev;
+    }
+
+    void set_m_z(Matrix m_z_){
+        m_z = m_z_;
     }
 };
 
