@@ -5,7 +5,6 @@
 #ifndef XSDNN_INCLUDE_BATCHNORMALIZATION_H
 #define XSDNN_INCLUDE_BATCHNORMALIZATION_H
 
-# include "../Utils/BatchNormUtil.h"
 # include "../Utils/Math.h"
 
 /*!
@@ -199,30 +198,47 @@ public:
     /// Получить вектор гаммы, беты и среднего мат.ожидания и дисперсии по всем батчам
     /// \return m_gammas, m_betas, m_mean, m_var
     std::vector<Scalar> get_parametrs() const override{
-        std::vector<Scalar> res(m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size());
+        if (affine_){
+            std::vector<Scalar> res(m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size());
 
-        std::copy(
-                m_gammas.data(),
-                m_gammas.data() + m_gammas.size(),
-                res.begin()
-                );
+            std::copy(
+                    m_gammas.data(),
+                    m_gammas.data() + m_gammas.size(),
+                    res.begin()
+            );
 
-        std::copy(
-                m_betas.data(),
-                m_betas.data() + m_betas.size(),
-                res.begin() + m_gammas.size()
-                );
+            std::copy(
+                    m_betas.data(),
+                    m_betas.data() + m_betas.size(),
+                    res.begin() + m_gammas.size()
+            );
+
+            std::copy(
+                    m_mean.data(),
+                    m_mean.data() + m_mean.size(),
+                    res.begin() + m_gammas.size() + m_betas.size()
+            );
+
+            std::copy(
+                    m_var.data(),
+                    m_var.data() + m_var.size(),
+                    res.begin() + m_gammas.size() + m_betas.size() + m_mean.size()
+            );
+            return res;
+        }
+
+        std::vector<Scalar> res(m_mean.size() + m_var.size());
 
         std::copy(
                 m_mean.data(),
                 m_mean.data() + m_mean.size(),
-                res.begin() + m_gammas.size() + m_betas.size()
+                res.begin()
                 );
 
         std::copy(
                 m_var.data(),
                 m_var.data() + m_var.size(),
-                res.begin() + m_gammas.size() + m_betas.size() + m_mean.size()
+                res.begin() + m_mean.size()
                 );
 
         return res;
@@ -231,65 +247,93 @@ public:
     /// Установить параметры слоя - гаммы, беты и среднего мат.ожидания и дисперсии по всем батчам
     /// \param param вектор всех параметров слоя
     void set_parametrs(const std::vector<Scalar>& param) override{
-        if (param.size() != m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size())
-        {
-            throw std::invalid_argument("[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
+        if (affine_){
+            if (param.size() != m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size()){
+                throw std::invalid_argument("[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
+            }
+
+            std::copy(
+                    param.begin(),
+                    param.begin() + m_gammas.size(),
+                    m_gammas.data()
+            );
+
+            std::copy(
+                    param.begin() + m_gammas.size(),
+                    param.begin() + m_gammas.size() + m_betas.size(),
+                    m_betas.data()
+            );
+
+            std::copy(
+                    param.begin() + m_gammas.size() + m_betas.size(),
+                    param.begin() + m_gammas.size() + m_betas.size() + m_mean.size(),
+                    m_mean.data()
+            );
+
+            std::copy(
+                    param.begin() + m_gammas.size() + m_betas.size() + m_mean.size(),
+                    param.begin() + m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size(), // param.end()
+                    m_var.data()
+            );
         }
+        else{
+            if (param.size() != m_mean.size() + m_var.size()){
+                throw std::invalid_argument("[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
+            }
 
-        std::copy(
-                param.begin(),
-                param.begin() + m_gammas.size(),
-                m_gammas.data()
-                );
+            std::copy(
+                    param.begin(),
+                    param.begin() + m_mean.size(),
+                    m_mean.data()
+                    );
 
-        std::copy(
-                param.begin() + m_gammas.size(),
-                param.begin() + m_gammas.size() + m_betas.size(),
-                m_betas.data()
-                );
-
-        std::copy(
-                param.begin() + m_gammas.size() + m_betas.size(),
-                param.begin() + m_gammas.size() + m_betas.size() + m_mean.size(),
-                m_mean.data()
-                  );
-
-        std::copy(
-                param.begin() + m_gammas.size() + m_betas.size() + m_mean.size(),
-                param.begin() + m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size(), // param.end()
-                m_var.data()
-                );
+            std::copy(
+                    param.begin() + m_mean.size(),
+                    param.end(),
+                    m_var.data()
+                    );
+        }
     }
-
+    
     /// Получить производные по значениям нейрона, по гамме и бете
     /// \return m_din, m_dg, m_db
     std::vector<Scalar> get_derivatives() const override{
-        std::vector<Scalar> res(m_din.size() + m_dg.size() + m_db.size());
+        if (affine_){
+            std::vector<Scalar> res(m_din.size() + m_dg.size() + m_db.size());
+
+            std::copy(
+                    m_din.data(),
+                    m_din.data() + m_din.size(),
+                    res.begin()
+            );
+
+            std::copy(
+                    m_dg.data(),
+                    m_dg.data() + m_dg.size(),
+                    res.begin() + m_din.size()
+            );
+
+            std::copy(
+                    m_db.data(),
+                    m_db.data() + m_db.size(),
+                    res.begin() + m_din.size() + m_dg.size()
+            );
+            return res;
+        }
+
+        std::vector<Scalar> res(m_din.size());
 
         std::copy(
                 m_din.data(),
                 m_din.data() + m_din.size(),
                 res.begin()
                 );
-
-        std::copy(
-                m_dg.data(),
-                m_dg.data() + m_dg.size(),
-                res.begin() + m_din.size()
-                );
-
-        std::copy(
-                m_db.data(),
-                m_db.data() + m_db.size(),
-                res.begin() + m_din.size() + m_dg.size()
-                );
-
         return res;
     }
 
     std::string layer_type() const override { return "BatchNorm1D"; }
 
-    std::string activation_type() const override { return "undefined"; }
+    std::string activation_type() const override { return Activation::return_type(); }
 
     std::string distribution_type() const override { return Distribution::return_type(); }
 
@@ -298,6 +342,7 @@ public:
 
         map.insert(std::make_pair("Layer " + ind, internal::layer_id(layer_type())));
         map.insert(std::make_pair("Distribution " + ind, internal::distribution_id(distribution_type())));
+        map.insert(std::make_pair("Affine " + ind, this->affine_));
         map.insert(std::make_pair("in_size " + ind, this->in_size()));
         map.insert(std::make_pair("tolerance " + ind, this->eps));
         map.insert(std::make_pair("momentum " + ind, this->moment));
