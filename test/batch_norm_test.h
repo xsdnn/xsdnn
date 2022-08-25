@@ -245,7 +245,35 @@ TEST(batchnorm1d, grad){
     }
 }
 
-// TODO: написать проверку сохранения batchnorm слоя
+TEST(bathcnorm1d, save){
+    std::string filename = "batchnorm1d.save";
+    BatchNorm1D bn_layer = BatchNorm1D<init::Constant, activate::Identity>(3, false);
+    std::vector<Scalar> init_params = {0.0};
+    RNG rng(1); bn_layer.init(init_params, rng);
+
+    // check no affine param size
+    std::vector<Scalar> res = bn_layer.get_parametrs();
+    EXPECT_EQ(res.size(), 3 + 3);
+
+    internal::io::write_one_vector(res, filename);
+    std::vector<Scalar> read_vec = internal::io::read_vector(filename);
+    EXPECT_TRUE(is_near_container(res, read_vec, 1e-4));
+}
+
+TEST(batchnorm1d, save_with_affine){
+    std::string filename = "batchnorm1d.save_with_affine";
+    BatchNorm1D bn_layer = BatchNorm1D<init::Constant, activate::Identity>(3, true);
+    std::vector<Scalar> init_params = {0.0};
+    RNG rng(1); bn_layer.init(init_params, rng);
+
+    // check no affine param size
+    std::vector<Scalar> res = bn_layer.get_parametrs();
+    EXPECT_EQ(res.size(), 3 + 3 + 3 + 3);
+
+    internal::io::write_one_vector(res, filename);
+    std::vector<Scalar> read_vec = internal::io::read_vector(filename);
+    EXPECT_TRUE(is_near_container(res, read_vec, 1e-4));
+}
 
 TEST(batchnorm1d, fully_net){
     using BN = BatchNorm1D<init::Normal, activate::Identity>;
