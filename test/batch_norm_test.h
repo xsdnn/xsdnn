@@ -7,7 +7,7 @@
 
 # include "../xsDNN/Utils/Math.h"
 
-TEST(batchnorm, init){
+TEST(batchnorm1d, init){
     Layer* bn_layer = new BatchNorm1D<init::Normal, activate::Identity>(10);
     std::vector<Scalar> init_params = {0.0, 1.0 / 10.0};
     RNG rng(1);
@@ -19,7 +19,7 @@ TEST(batchnorm, init){
     std::cout << test;
 }
 
-TEST(batchnorm, forward){
+TEST(batchnorm1d, forward){
     BatchNorm1D bn_layer = BatchNorm1D<init::Constant, activate::Identity>(3, false);
     std::vector<Scalar> init_params = {0.0};
     RNG rng(1); bn_layer.init(init_params, rng);
@@ -45,9 +45,19 @@ TEST(batchnorm, forward){
     for (int i = 0; i < input_data.size(); i++){
         EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
     }
+
+    SGD opt;
+    bn_layer.update(opt);
+
+    output = bn_layer.output();
+    output_data   = output.data();
+
+    for (int i = 0; i < input_data.size(); i++){
+        EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
+    }
 }
 
-TEST(batchnorm, forward_affine){
+TEST(batchnorm1d, forward_affine){
     typedef Eigen::VectorXd Vector;
     Vector gamma(3), beta(3); gamma.setOnes(); beta.setZero();
 
@@ -77,9 +87,19 @@ TEST(batchnorm, forward_affine){
     for (int i = 0; i < input_data.size(); i++){
         EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
     }
+
+    SGD opt;
+    bn_layer.update(opt);
+
+    output = bn_layer.output();
+    output_data   = output.data();
+
+    for (int i = 0; i < input_data.size(); i++){
+        EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
+    }
 }
 
-TEST(batchnorm, grad){
+TEST(batchnorm1d, grad){
     const int nsamples  = 16;
     const int dim       = 2;
     BatchNorm1D bn_layer = BatchNorm1D<init::Constant, activate::Identity>(dim, false);
@@ -223,6 +243,26 @@ TEST(batchnorm, grad){
     for (int i = 0; i < expected_gradient.size(); i++){
         EXPECT_NEAR(expected[i], real[i], 1e-8);
     }
+}
+
+// TODO: написать проверку сохранения batchnorm слоя
+
+TEST(batchnorm1d, fully_net){
+    using BN = BatchNorm1D<init::Normal, activate::Identity>;
+    using FC = FullyConnected<init::Normal, activate::LeakyReLU>;
+
+    Matrix train_data(784, 160), train_label(10, 160);
+    generate_sinus_data(train_data, train_label, 3.14f);
+
+    NeuralNetwork net;
+    net     <<  new FC(784, 128)
+            <<  new BN(128)
+            <<  new FC(128, 784);
+    Output* criterion = new MSELoss();
+    net.set_output(criterion);
+
+    SGD opt; opt.m_lrate = 0.1;
+    net.fit(opt, train_data, train_label, 16, 5, 10);
 }
 
 #endif //XSDNN_BATCH_NORM_TEST_H

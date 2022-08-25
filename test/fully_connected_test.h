@@ -38,15 +38,15 @@ TEST(fullyconnected, grad){
     const int n = 100;
     for (int i = 0; i < n; i++)
     {
-        const int in_pos_   = static_cast<int>(internal::set_uniform_random(rng, 0, in_size));
-        const int out_pos_  = static_cast<int>(internal::set_uniform_random(rng, 0, out_size));
+        const int in_pos_   = static_cast<int>(internal::random::set_uniform_random(rng, 0, in_size));
+        const int out_pos_  = static_cast<int>(internal::random::set_uniform_random(rng, 0, out_size));
 
-        Scalar    num_grad  = numerical_gradient(fc_layer,
+        Scalar    num_grad  = internal::debug::numerical_gradient(fc_layer,
                                                  train_image,
                                                  in_pos_,
                                                  out_pos_);
 
-        Scalar    ana_grad  = analytical_gradient(fc_layer,
+        Scalar    ana_grad  = internal::debug::analytical_gradient(fc_layer,
                                                   train_image,
                                                   in_pos_,
                                                   out_pos_,
@@ -64,9 +64,9 @@ TEST(fullyconnected, save){
 
     fc_layer->init(init_params, rng);
     std::vector<Scalar> write   = fc_layer->get_parametrs();
-    internal::write_one_vector(write, filename);
+    internal::io::write_one_vector(write, filename);
 
-    std::vector<Scalar> read = internal::read_vector(filename);
+    std::vector<Scalar> read = internal::io::read_vector(filename);
 
     EXPECT_TRUE(is_near_container(write, read, Scalar(1E-5)));
 }
@@ -79,9 +79,9 @@ TEST(fullyconnected, save_no_bias){
 
     fc_layer->init(init_params, rng);
     std::vector<Scalar> write   = fc_layer->get_parametrs();
-    internal::write_one_vector(write, filename);
+    internal::io::write_one_vector(write, filename);
 
-    std::vector<Scalar> read = internal::read_vector(filename);
+    std::vector<Scalar> read = internal::io::read_vector(filename);
 
     EXPECT_TRUE(is_near_container(write, read, Scalar(0.1)));
 }

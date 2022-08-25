@@ -31,5 +31,9 @@
 # include "../xsDNN/Utils/GradCheck.h"
 # include "helper.h"
 
+using namespace internal::debug;
+
+# include "activation_test.h"
 # include "fully_connected_test.h"
 # include "dropout_test.h"
+# include "batch_norm_test.h"
