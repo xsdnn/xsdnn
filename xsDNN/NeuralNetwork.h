@@ -362,11 +362,11 @@ public:
 		std::vector<Matrix> x_batches;
 		std::vector<Matrix> y_batches;
 
-		const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
+		const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
 #ifndef DNN_BE_QUIET
-            internal::Timer t;
-            internal::ProgressBar disp(nsample);
+            internal::display::Timer t;
+            internal::display::ProgressBar disp(nsample);
 #endif
 
         this->train();
@@ -521,7 +521,7 @@ public:
         std::vector<Matrix> x_batches;
         std::vector<Matrix> y_batches;
 
-        const int nbatch = internal::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
+        const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
         return {x_batches, y_batches, nbatch };
     }
@@ -576,12 +576,21 @@ public:
         return output;
     }
 
+    /// Получить index-ый слой
+    /// \param index
+    /// \return
+    Layer* operator [] (const int& index){
+        if (index < 0 || index >= m_layers.size()){
+            return m_layers[index];
+        }
+    }
+
     /// Сохранение сети
     /// \param folder название папки
     /// \param filename название файла модели. В одной папке может быть несколько моделей.
     void export_net(const std::string& folder, const std::string& filename) const
     {
-        internal::create_directory(folder);
+        internal::io::create_directory(folder);
 
         std::vector <std::vector<Scalar>> params = this->get_parameters();
         Meta meta = this->get_meta_info();
@@ -589,8 +598,8 @@ public:
         std::string directory_map = "../xsDNN-models/" + folder + "/" + filename;
         std::string directory_vector = "../xsDNN-models/" + folder;
 
-        internal::write_map(directory_map, meta);
-        internal::write_vector(directory_vector, filename, params);
+        internal::io::write_map(directory_map, meta);
+        internal::io::write_vector(directory_vector, filename, params);
 
         std::cout << "NeuralNetwork saved" << std::endl;
     }
@@ -604,10 +613,10 @@ public:
         Meta map;
         std::string model_directory = "../xsDNN-models/" + folder + "/" + filename;
 
-        internal::read_map(model_directory, map);
+        internal::io::read_map(model_directory, map);
 
         int nlayer = map.find("Nlayers")->second;
-        std::vector< std::vector<Scalar> > params = internal::read_parameter(folder, filename, nlayer);
+        std::vector< std::vector<Scalar> > params = internal::io::read_parameter(folder, filename, nlayer);
 
         m_layers.clear();
 
