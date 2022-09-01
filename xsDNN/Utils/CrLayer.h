@@ -222,6 +222,7 @@ namespace internal
         }
         else if (layer_id == BATCHNORM1D)
         {
+            const int affine        = static_cast<int>(map.find("Affine " + ind)->second);
             const int in_size       = static_cast<int>(map.find("in_size " + ind)->second);
             const Scalar eps        = static_cast<Scalar>(map.find("tolerance " + ind)->second);
             const Scalar momentum   = static_cast<Scalar>(map.find("momentum " + ind)->second);
@@ -232,19 +233,19 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new BatchNorm1D<init::Uniform, activate::Identity>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Uniform, activate::Identity>(in_size, affine, eps, momentum);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Identity>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Identity>(in_size, affine, eps, momentum);
                             break;
 
                         case NORMAL:
-                            layer = new BatchNorm1D<init::Normal, activate::Identity>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Normal, activate::Identity>(in_size, affine, eps, momentum);
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::Identity>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::Identity>(in_size, affine, eps, momentum);
                             break;
 
                         default:
@@ -258,19 +259,19 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new BatchNorm1D<init::Uniform, activate::LeakyReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Uniform, activate::LeakyReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::LeakyReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::LeakyReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case NORMAL:
-                            layer = new BatchNorm1D<init::Normal, activate::LeakyReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Normal, activate::LeakyReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::LeakyReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::LeakyReLU>(in_size, affine, eps, momentum);
                             break;
 
                         default:
@@ -284,19 +285,19 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new BatchNorm1D<init::Uniform, activate::ReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Uniform, activate::ReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::ReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::ReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case NORMAL:
-                            layer = new BatchNorm1D<init::Normal, activate::ReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Normal, activate::ReLU>(in_size, affine, eps, momentum);
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::ReLU>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::ReLU>(in_size, affine, eps, momentum);
                             break;
 
                         default:
@@ -310,19 +311,19 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new BatchNorm1D<init::Uniform, activate::Sigmoid>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Uniform, activate::Sigmoid>(in_size, affine, eps, momentum);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Sigmoid>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Sigmoid>(in_size, affine, eps, momentum);
                             break;
 
                         case NORMAL:
-                            layer = new BatchNorm1D<init::Normal, activate::Sigmoid>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Normal, activate::Sigmoid>(in_size, affine, eps, momentum);
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::Sigmoid>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::Sigmoid>(in_size, affine, eps, momentum);
                             break;
 
                         default:
@@ -335,19 +336,19 @@ namespace internal
 
                     switch (distribution_id) {
                         case UNIFORM:
-                            layer = new BatchNorm1D<init::Uniform, activate::Softmax>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Uniform, activate::Softmax>(in_size, affine, eps, momentum);
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Softmax>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Softmax>(in_size, affine, eps, momentum);
                             break;
 
                         case NORMAL:
-                            layer = new BatchNorm1D<init::Normal, activate::Softmax>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Normal, activate::Softmax>(in_size, affine, eps, momentum);
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::Softmax>(in_size, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::Softmax>(in_size, affine, eps, momentum);
                             break;
 
                         default:
