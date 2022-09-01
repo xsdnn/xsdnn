@@ -79,3 +79,5 @@ cmake-build-debug/
 Doxygen/
 
 build/
+
+eigen/
