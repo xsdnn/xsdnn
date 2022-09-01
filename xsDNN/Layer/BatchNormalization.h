@@ -294,7 +294,7 @@ public:
                     );
         }
     }
-    
+
     /// Получить производные по значениям нейрона, по гамме и бете
     /// \return m_din, m_dg, m_db
     std::vector<Scalar> get_derivatives() const override{
