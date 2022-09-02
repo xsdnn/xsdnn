@@ -15,20 +15,23 @@
 
 namespace fs = std::filesystem;
 
+// FIXME: изменить алгоритм сохранения сетки в файл
+// 1. Убрать общую папку 'xsDNN-models' - возникают ошибки при глубине дерева каталога > 1
+
 namespace internal {
     namespace io {
         /// Создание директории при сохранении сетки
         /// \param directory_name название директории
         void create_directory(const std::string& directory_name)
         {
-            fs::current_path("../xsDNN-models");
+            fs::current_path("./");
             if (fs::create_directory(directory_name))
             {
-                std::cout << "Directory " << "'../xsDNN-models/" << directory_name << "' created successful" << std::endl;
+                std::cout << "Directory " << directory_name << "' created successful" << std::endl;
             }
             else
             {
-                std::cout << "Directory " << "'../xsDNN-models/" << directory_name << "' already established" << std::endl;
+                std::cout << "Directory " << directory_name << "' already established" << std::endl;
             }
         }
 
@@ -55,7 +58,7 @@ namespace internal {
         /// \param folder директория сохранения
         /// \param filename название файла с сеткой
         /// \param params 2-D вектор параметров
-        inline void write_vector(std::string& folder, const std::string& filename,
+        inline void write_vector(const std::string& folder, const std::string& filename,
                                  std::vector< std::vector<Scalar> >& params)
         {
             const unsigned long nlayer = params.size();
@@ -103,7 +106,7 @@ namespace internal {
             std::vector< std::vector<Scalar> > params;
             params.reserve(nlayer);
 
-            std::string folder_ = "../xsDNN-models/" + folder;
+            std::string folder_ = folder;
 
             for (int i = 0; i < nlayer; i++)
             {
@@ -111,7 +114,7 @@ namespace internal {
                 folder_.append(filename);
                 folder_.append(std::to_string(i));
                 params.push_back(read_vector(folder_));
-                folder_ = "../xsDNN-models/" + folder;
+                folder_ = folder;
             }
 
             return params;

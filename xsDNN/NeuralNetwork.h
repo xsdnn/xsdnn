@@ -595,11 +595,10 @@ public:
         std::vector <std::vector<Scalar>> params = this->get_parameters();
         Meta meta = this->get_meta_info();
 
-        std::string directory_map = "../xsDNN-models/" + folder + "/" + filename;
-        std::string directory_vector = "../xsDNN-models/" + folder;
+        std::string directory_map = folder + "/" + filename;
 
         internal::io::write_map(directory_map, meta);
-        internal::io::write_vector(directory_vector, filename, params);
+        internal::io::write_vector(folder, filename, params);
 
         std::cout << "NeuralNetwork saved" << std::endl;
     }
@@ -611,7 +610,7 @@ public:
     void read_net(const std::string& folder, const std::string& filename)
     {
         Meta map;
-        std::string model_directory = "../xsDNN-models/" + folder + "/" + filename;
+        std::string model_directory = folder + "/" + filename;
 
         internal::io::read_map(model_directory, map);
 
