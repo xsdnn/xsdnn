@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 option(USE_NO_DTRMINIST "Set to OFF to determinist rng"           ON)
 option(USE_QUIET        "Set to ON to off callback"              OFF)
-option(USE_BLAS         "Set to ON to on Eigen 3 BLAS"           OFF)
 option(MULTITHREADING   "Set to ON to on threading"              OFF)
 
 
@@ -27,10 +26,6 @@ endif(USE_NO_DTRMINIST)
 if(USE_QUIET)
     add_compile_definitions(DNN_BE_QUIET)
 endif(USE_QUIET)
-
-if(USE_BLAS)
-    add_compile_definitions(EIGEN_USE_BLAS)
-endif(USE_BLAS)
 
 
 if(MULTITHREADING)
