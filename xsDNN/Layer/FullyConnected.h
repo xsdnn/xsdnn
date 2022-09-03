@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿//
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
+//
 
 /*!
 \brief Класс FullyConnected слоя

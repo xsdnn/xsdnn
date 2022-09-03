@@ -1,4 +1,7 @@
-﻿#pragma once
+﻿//
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
+//
+
 /*!
 \brief Класс функционала ошибки для регрессии (RegressionMSE)
 \author __[shuffle-true](https://github.com/shuffle-true)__

@@ -1,5 +1,5 @@
 //
-// Created by shuffle on 10.08.22.
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
 #ifndef XSDNN_INCLUDE_MNIST_IO_H

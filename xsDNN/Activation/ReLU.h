@@ -1,5 +1,6 @@
-#pragma once
-
+//
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
+//
 namespace activate{
     /*!
     \brief Класс функции активации - ReLU

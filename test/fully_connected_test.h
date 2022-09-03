@@ -1,5 +1,5 @@
 //
-// Created by shuffle on 17.08.22.
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
 TEST(fullyconnected, init){

@@ -1,5 +1,5 @@
 //
-// Created by shuffle on 25.06.22.
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
 // https://habr.com/ru/post/263993/

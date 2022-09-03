@@ -30,5 +30,6 @@ int main()
 
     baseline.fit(opt, train_image, train_label, 16, 5, 42, 10, init_params);
 
+    // FIXME: починить сохранение сетки
     baseline.export_net("example-mnist", "baseline");
 }

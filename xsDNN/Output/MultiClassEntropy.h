@@ -1,5 +1,5 @@
 //
-// Created by shuffle on 22.06.22.
+// Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
 #ifndef XSDNN_INCLUDE_MULTICLASSENTROPY_H
