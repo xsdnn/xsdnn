@@ -7,6 +7,7 @@
 # include "Utils/Random.h"
 # include "Utils/InOut.h"
 # include "Utils/CrLayer.h"
+# include "Utils/variadic_table/include/VariadicTable.h"
 
 /*!
 \brief Класс нейросети
@@ -559,20 +560,31 @@ public:
 
     friend std::ostream& operator << (std::ostream& output, NeuralNetwork& obj)
     {
-        output << "Neural Network consists of elements" << std::endl;
-        output << std::setw(14) << "" << "Layer" << std::setw(8) << "" << "Activation"
-                << std::setw(8) << "" << "Distribution" <<std::endl;
-
         const unsigned long nlayer = obj.count_layers();
-        if (nlayer == 0) return output;
-        for (unsigned long i = 0; i < nlayer; i++)
-        {
-            output << std::setw(10) << "" << obj.m_layers[i]->layer_type()
-            << std::setw(5) << "" << obj.m_layers[i]->activation_type()
-            << std::setw(11) << "" << obj.m_layers[i]->distribution_type()
-            << std::setw(7) << "" << "Input neuron = " << obj.m_layers[i]->in_size()
-            << std::setw(7) << "" << "Output neuron = " << obj.m_layers[i]->out_size() << std::endl;
+        VariadicTable<std::string, std::string, std::string, std::string> vt({"Layer", "Size", "Activation", "Distribution"}, 20);
+        for (int i = 0; i < nlayer; i++){
+            if (obj[i]->layer_type() == "FullyConnected"){
+                vt.addRow("FullyConnected",
+                          "(" + std::to_string(obj[i]->in_size()) + "," + std::to_string(obj[i]->out_size()) + ")",
+                          obj[i]->activation_type(),
+                          obj[i]->distribution_type());
+            }
+
+            if (obj[i]->layer_type() == "BatchNorm1D"){
+                vt.addRow("BatchNorm1D",
+                          "(" + std::to_string(obj[i]->in_size()) + ")",
+                          obj[i]->activation_type(),
+                          obj[i]->distribution_type());
+            }
+
+            if (obj[i]->layer_type() == "Dropout") {
+                vt.addRow("Dropout",
+                          "(" + std::to_string(obj[i]->in_size()) + ")",
+                          obj[i]->activation_type(),
+                          obj[i]->distribution_type());
+            }
         }
+        vt.print(output);
         return output;
     }
 
@@ -580,9 +592,10 @@ public:
     /// \param index
     /// \return
     Layer* operator [] (const int& index){
-        if (index < 0 || index >= m_layers.size()){
+        if (index >= 0 || index < m_layers.size()){
             return m_layers[index];
         }
+        throw std::invalid_argument("[class NeuralNetwork] Net index out of range.");
     }
 
     /// Сохранение сети
