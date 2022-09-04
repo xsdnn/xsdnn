@@ -5,15 +5,8 @@
 # Установка
 
 ```bash
-git clone https://github.com/shuffle-true/dl_new.git
-
-### в директории xsDNN
-bash ./install.sh && source ~/.bashrc
+git clone https://github.com/shuffle-true/dl_new.git && cd dl_new && git submodule init && git submodule update && bash ./install.sh && source ~/.bashrc
 ```
-
-__Установка в одну строку.__
-
-`git clone https://github.com/shuffle-true/dl_new.git && cd dl_new && bash ./install.sh && source ~/.bashrc`
 
 #### Обучим простую сеть на MNISTе.
 
