@@ -11,6 +11,10 @@ git clone https://github.com/shuffle-true/dl_new.git
 bash ./install.sh && source ~/.bashrc
 ```
 
+__Установка в одну строку.__
+
+`git clone https://github.com/shuffle-true/dl_new.git && cd dl_new && bash ./install.sh && source ~/.bashrc`
+
 #### Обучим простую сеть на MNISTе.
 
 
