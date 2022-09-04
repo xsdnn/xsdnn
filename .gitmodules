@@ -1,0 +1,3 @@
+[submodule "xsDNN/Utils/variadic_table"]
+	path = xsDNN/Utils/variadic_table
+	url = https://github.com/friedmud/variadic_table
