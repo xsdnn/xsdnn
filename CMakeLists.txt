@@ -9,7 +9,7 @@ option(MULTITHREADING   "Set to ON to on threading"              OFF)
 
 
 
-option(BUILD_TESTS      "Set to ON to build tests"              ON)
+option(BUILD_TESTS      "Set to ON to build tests"              OFF)
 option(BUILD_EXAMPLES   "Set to ON to build examples"           OFF)
 
 set( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
