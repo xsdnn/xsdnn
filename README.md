@@ -2,6 +2,14 @@
 
 Библиотека в разработке. Документация доступна по __[ссылке](https://shuffle-true.github.io/xsDNN-page/)__
 
+# Установка
+
+```bash
+git clone https://github.com/shuffle-true/dl_new.git
+
+### в директории xsDNN
+bash ./install.sh && source ~/.bashrc
+```
 
 #### Обучим простую сеть на MNISTе.
 
