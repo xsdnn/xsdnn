@@ -5,7 +5,7 @@
 # Установка
 
 ```bash
-git clone https://github.com/shuffle-true/dl_new.git && cd dl_new && git submodule init && git submodule update && bash ./install.sh && source ~/.bashrc
+git clone https://github.com/shuffle-true/xsDNN.git && cd xsDNN && git submodule init && git submodule update && bash ./install.sh && source ~/.bashrc
 ```
 
 #### Обучим простую сеть на MNISTе.
