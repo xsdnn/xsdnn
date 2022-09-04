@@ -1,6 +1,10 @@
 //
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_RELU_H
+#define XSDNN_RELU_H
+
 namespace activate{
     /*!
     \brief Класс функции активации - ReLU
@@ -62,3 +66,5 @@ namespace activate{
         }
     };
 }
+
+#endif //XSDNN_RELU_H

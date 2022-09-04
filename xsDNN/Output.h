@@ -1,6 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_OUTPUT_H
+#define XSDNN_OUTPUT_H
 
 /*!
 \brief Родительский класс функционала ошибки
@@ -15,14 +18,14 @@ public:
 
     /// <summary>
     /// Здесь проверяем целевую переменную на соотвествие задачи.
-    /// 
+    ///
     /// Например, задача классификации - {0, 1}
     /// </summary>
     /// <param name="target"> - собственно таргет</param>
     virtual void check_target_data(const Matrix& target) const {}
 
     /// <summary>
-    /// Вычисление прямого и обратного распространения для 2 слоев - 
+    /// Вычисление прямого и обратного распространения для 2 слоев -
     /// перед выходным и таргетом
     /// </summary>
     /// <param name="prev_layer_data"> - слой перед таргетом</param>
@@ -44,3 +47,5 @@ public:
     /// <returns>Тип выходного слоя, нужно для записи модели в файл</returns>
     virtual std::string output_type() const = 0;
 };
+
+#endif //XSDNN_OUTPUT_H

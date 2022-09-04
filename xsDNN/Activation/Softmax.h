@@ -1,6 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_SOFTMAX_H
+#define XSDNN_SOFTMAX_H
 
 namespace activate{
     /*!
@@ -68,3 +71,5 @@ namespace activate{
         }
     };
 }
+
+#endif //XSDNN_SOFTMAX_H

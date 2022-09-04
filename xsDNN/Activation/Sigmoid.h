@@ -2,6 +2,9 @@
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_SIGMOID_H
+#define XSDNN_SIGMOID_H
+
 namespace activate{
     /*!
 	\brief Класс функции активации - Sigmoid
@@ -62,3 +65,5 @@ namespace activate{
         }
     };
 }
+
+#endif //XSDNN_SIGMOID_H

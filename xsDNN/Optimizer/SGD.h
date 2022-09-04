@@ -1,6 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_SGD_H
+#define XSDNN_SGD_H
 
 /*!
 \brief Класс стохастического градиентного спуска (SGD)
@@ -8,6 +11,7 @@
 \version 0.0
 \date Июль 2022 года
 */
+
 class SGD : public Optimizer
 {
 private:
@@ -15,10 +19,10 @@ private:
     std::map<const Scalar*, Vector> momentum_history;
 
 public:
-	Scalar m_lrate;     ///< длина шага.
-	Scalar m_decay;     ///< коэффицент линейной зависимости с производной.
-	Scalar m_momentum;  ///< импульс спуска
-	Scalar m_dampening; ///< сглаживание момента
+    Scalar m_lrate;     ///< длина шага.
+    Scalar m_decay;     ///< коэффицент линейной зависимости с производной.
+    Scalar m_momentum;  ///< импульс спуска
+    Scalar m_dampening; ///< сглаживание момента
     bool   m_nesterov;  ///< активация момента Нестерова
 
     ///
@@ -27,9 +31,9 @@ public:
     /// \param momentum momentum factor (default: 0)
     /// \param dampening dampening for momentum (default: 0)
     /// \param nesterov enables Nesterov momentum (default: false)
-	explicit SGD(const Scalar& lrate = Scalar(0.01), const Scalar& decay = Scalar(0),
-        const Scalar& momentum = Scalar(0.0), const bool& nesterov = false, const Scalar& dampening = Scalar(0.0)) :
-		m_lrate(lrate), m_decay(decay), m_momentum(momentum), m_dampening(dampening), m_nesterov(nesterov) {}
+    explicit SGD(const Scalar& lrate = Scalar(0.01), const Scalar& decay = Scalar(0),
+                 const Scalar& momentum = Scalar(0.0), const bool& nesterov = false, const Scalar& dampening = Scalar(0.0)) :
+            m_lrate(lrate), m_decay(decay), m_momentum(momentum), m_dampening(dampening), m_nesterov(nesterov) {}
 
     /// Сброс истории момента
     void reset() override
@@ -40,8 +44,8 @@ public:
     /// \image html sgd_implementation.jpg
     /// \param grad вектор производной (например веса или смещения)
     /// \param theta вектор значений (например веса или смещения)
-	void update(AlignedMapVec& grad, AlignedMapVec& theta) override
-	{
+    void update(AlignedMapVec& grad, AlignedMapVec& theta) override
+    {
         if (m_decay != 0) grad += m_decay * theta;
 
         if (m_momentum != 0)
@@ -67,5 +71,7 @@ public:
             }
         }
         theta.noalias() -= m_lrate * grad;
-	}
+    }
 };
+
+#endif //XSDNN_SGD_H

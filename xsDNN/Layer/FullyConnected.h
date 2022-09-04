@@ -1,6 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_FULLYCONNECTED_H
+#define XSDNN_FULLYCONNECTED_H
 
 /*!
 \brief Класс FullyConnected слоя
@@ -24,7 +27,7 @@ private:
     Matrix m_din;            ///< Проивзодная значений нейронов после backprop
 
     bool   BIAS_ACTIVATE;    ///< Применять смещение?
-    
+
 
 public:
     /// Конструктор полносвязного слоя
@@ -32,7 +35,7 @@ public:
     /// \param out_size кол-во нейронов на выход.
     /// \param bias_true_false включить / выключить смещения весов. По умолч. включены = true.
     explicit FullyConnected(const int in_size, const int out_size, bool bias = true) :
-        Layer(in_size, out_size, "undefined"), BIAS_ACTIVATE(bias) {}
+            Layer(in_size, out_size, "undefined"), BIAS_ACTIVATE(bias) {}
 
     void init(const std::vector<Scalar>& params, RNG& rng) override
     {
@@ -113,7 +116,7 @@ public:
 
         opt.update(dw, w);
         if (BIAS_ACTIVATE) { opt.update(db, b); }
-        
+
     }
 
     ///
@@ -134,7 +137,7 @@ public:
             std::copy(m_weight.data(), m_weight.data() + m_weight.size(), res.begin());
             return res;
         }
-        
+
     }
 
     void train() override
@@ -225,14 +228,14 @@ public:
     friend std::ostream& operator << (std::ostream& out, FullyConnected& obj)
     {
         out << std::string(25, ':')
-        << "Fully Connected Layer Information"
-        << std::string(25, ':') << std::endl << std::endl;
+            << "Fully Connected Layer Information"
+            << std::string(25, ':') << std::endl << std::endl;
 
         out << "InOut Info" << std::string(10, '-') << ">" << std::endl;
 
         out << "In size: " << obj.m_in_size << " " << std::endl
-        << "Out size: " << obj.m_out_size << " " << std::endl
-        << "Workflow: "  << obj.workflow << std::endl << std::endl;
+            << "Out size: " << obj.m_out_size << " " << std::endl
+            << "Workflow: "  << obj.workflow << std::endl << std::endl;
 
         out << "Activation" << std::string(10, '-') << ">" << obj.activation_type() << std::endl;
 
@@ -258,3 +261,5 @@ public:
         return out;
     }
 };
+
+#endif //XSDNN_FULLYCONNECTED_H

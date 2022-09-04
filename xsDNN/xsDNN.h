@@ -2,6 +2,9 @@
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_XSDNN_H
+#define XSDNN_XSDNN_H
+
 # include <Eigen/Core>
 
 # include "NeuralNetwork.h"
@@ -24,7 +27,6 @@
 # include "Layer/BatchNormalization.h"
 
 
-
 # include "Optimizer.h"
 # include "Optimizer/SGD.h"
 
@@ -43,3 +45,5 @@
 # include "Distribution/Uniform.h"
 # include "Distribution/Exponential.h"
 # include "Distribution/Constant.h"
+
+#endif //XSDNN_XSDNN_H

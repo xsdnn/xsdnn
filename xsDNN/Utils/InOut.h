@@ -4,6 +4,7 @@
 
 #ifndef XSDNN_INCLUDE_INOUT_H
 #define XSDNN_INCLUDE_INOUT_H
+
 # include <iostream>
 # include <filesystem>
 # include <iterator>

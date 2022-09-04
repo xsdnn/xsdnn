@@ -2,6 +2,9 @@
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_METRICS_H
+#define XSDNN_METRICS_H
+
 namespace metrics{
     void MSE_calculate(Matrix& target_data, Matrix& net_output, bool sqrt = false)
     {
@@ -71,33 +74,29 @@ namespace metrics{
 
 
 
-//##############################################################################
-//#                               CLASSIFICATOR                                #
-//##############################################################################
-
 namespace internal
 {
-  Matrix static build_confusion_matrix(const Scalar* real, const Scalar* predict, const long& sample_size)
-  {
-    int tp = 0;
-    int tn = 0;
-    int fp = 0;
-    int fn = 0;
-
-    for (int i = 0; i < sample_size; i++)
+    Matrix static build_confusion_matrix(const Scalar* real, const Scalar* predict, const long& sample_size)
     {
-      if ((real[i] == 0) && (predict[i] == 0)) tn++;
-      else if ((real[i] == 1) && (predict[i] == 1)) tp++;
-      else if ((real[i] == 0) && (predict[i] == 1)) fp++;
-      else if ((real[i] == 1) && (predict[i] == 0)) fn++;
-    }
+        int tp = 0;
+        int tn = 0;
+        int fp = 0;
+        int fn = 0;
 
-    // after calculate value we can build confusion matrix
-    Matrix CM(2,2);
-    CM << tn, fn,
-          fp, tp;
-    return CM;
-  }
+        for (int i = 0; i < sample_size; i++)
+        {
+            if ((real[i] == 0) && (predict[i] == 0)) tn++;
+            else if ((real[i] == 1) && (predict[i] == 1)) tp++;
+            else if ((real[i] == 0) && (predict[i] == 1)) fp++;
+            else if ((real[i] == 1) && (predict[i] == 0)) fn++;
+        }
+
+        // after calculate value we can build confusion matrix
+        Matrix CM(2,2);
+        CM << tn, fn,
+                fp, tp;
+        return CM;
+    }
 }
 
 namespace metrics{
@@ -129,3 +128,6 @@ namespace metrics{
     }
 }
 
+
+
+#endif //XSDNN_METRICS_H

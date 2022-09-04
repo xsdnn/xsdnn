@@ -2,6 +2,9 @@
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_RNG_H
+#define XSDNN_RNG_H
+
 # include "Config.h"
 
 /*!
@@ -43,9 +46,9 @@ private:
 
 public:
     explicit RNG(unsigned long init_seed, const bool divide_m_max = true) :
-        m_a(16807),
-        m_max(2147483647L),
-        m_rand(init_seed ? (init_seed & m_max) : 1)
+            m_a(16807),
+            m_max(2147483647L),
+            m_rand(init_seed ? (init_seed & m_max) : 1)
     {}
 
     ~RNG() = default;
@@ -61,3 +64,5 @@ public:
         return Scalar (m_rand);
     }
 };
+
+#endif //XSDNN_RNG_H

@@ -1,6 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
+
+#ifndef XSDNN_RANDOM_H
+#define XSDNN_RANDOM_H
 
 # include <random>
 
@@ -205,7 +208,4 @@ namespace internal {
     } // end namespace random
 } // end namespace internal
 
-namespace internal
-{
-
-}
+#endif //XSDNN_RANDOM_H

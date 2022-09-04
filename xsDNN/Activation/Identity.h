@@ -2,6 +2,9 @@
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_IDENTITY_H
+#define XSDNN_IDENTITY_H
+
 namespace activate{
     /*!
 	\brief Класс функции активации - Identity
@@ -57,3 +60,6 @@ namespace activate{
     };
 }
 
+
+
+#endif //XSDNN_IDENTITY_H

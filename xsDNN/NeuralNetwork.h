@@ -1,7 +1,9 @@
-﻿//
+//
 // Copyright (c) 2022 xsDNN Inc. All rights reserved.
 //
 
+#ifndef XSDNN_NEURALNETWORK_H
+#define XSDNN_NEURALNETWORK_H
 
 # include <map>
 # include <tuple>
@@ -20,35 +22,35 @@
 class NeuralNetwork
 {
 private:
-	typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-	typedef std::map<std::string, Scalar> Meta;
+    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+    typedef std::map<std::string, Scalar> Meta;
 
 
-	RNG                 m_default_rng;                  // дефолтный генератор
-	RNG&                m_rng;                          // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
+    RNG                 m_default_rng;                  // дефолтный генератор
+    RNG&                m_rng;                          // генератор, преданный пользователем (ссылка на генератор), иначе дефолт
 
-	std::vector<Layer*> m_layers;                       // указатели на созданные пользователем слои сетки
-	Output*             m_output;                       // указатель на выходной слой
+    std::vector<Layer*> m_layers;                       // указатели на созданные пользователем слои сетки
+    Output*             m_output;                       // указатель на выходной слой
 
     Scalar              mean_loss;
 
-	/// <summary>
-	/// Проверка всех слоев на соотвествие вход текущего == выход предыдущего
-	/// </summary>
-	void check_unit_sizes() const
-	{
-		const unsigned long nlayer = count_layers();
+    /// <summary>
+    /// Проверка всех слоев на соотвествие вход текущего == выход предыдущего
+    /// </summary>
+    void check_unit_sizes() const
+    {
+        const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 1) { return; }
+        if (nlayer <= 1) { return; }
 
-		for (int i = 1; i < nlayer; ++i)
-		{
-			if (m_layers[i]->in_size() != m_layers[i - 1]->out_size())
-			{
-				throw std::invalid_argument("[class NeuralNetwork]: Unit sizes do not match");
-			}
-		}
-	}
+        for (int i = 1; i < nlayer; ++i)
+        {
+            if (m_layers[i]->in_size() != m_layers[i - 1]->out_size())
+            {
+                throw std::invalid_argument("[class NeuralNetwork]: Unit sizes do not match");
+            }
+        }
+    }
 
     /// Инициализация необходимых параметров сети
     /// \param seed зерно генерации
@@ -106,104 +108,104 @@ private:
         }
     }
 
-	/// <summary>
-	/// Проход по всей сетке.
-	/// </summary>
-	/// <param name="input"> - входные данные. 
-	/// Убедитесь, что их длина равна длине входного слоя сетки</param>
-	void Forward(const Matrix& input)
-	{
-		const unsigned long nlayer = count_layers();
+    /// <summary>
+    /// Проход по всей сетке.
+    /// </summary>
+    /// <param name="input"> - входные данные.
+    /// Убедитесь, что их длина равна длине входного слоя сетки</param>
+    void Forward(const Matrix& input)
+    {
+        const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 0) { return; }
+        if (nlayer <= 0) { return; }
 
-		// Проверим нулевой слой на соотвествие правилу вход данных == вход нулевого слоя
+        // Проверим нулевой слой на соотвествие правилу вход данных == вход нулевого слоя
 
-		if (input.rows() != m_layers[0]->in_size())
-		{
-			throw std::invalid_argument("[class NeuralNetwork]: Input data have incorrect dimension");
-		}
+        if (input.rows() != m_layers[0]->in_size())
+        {
+            throw std::invalid_argument("[class NeuralNetwork]: Input data have incorrect dimension");
+        }
 
-		// Протолкнули данные в нулевой слой
+        // Протолкнули данные в нулевой слой
 
-		m_layers[0]->forward(input);
+        m_layers[0]->forward(input);
 
-		// Начинаем толкать данные по всей сетке
+        // Начинаем толкать данные по всей сетке
 
-		for (unsigned long i = 1; i < nlayer; ++i)
-		{
-			m_layers[i]->forward(m_layers[i - 1]->output());
-		}
+        for (unsigned long i = 1; i < nlayer; ++i)
+        {
+            m_layers[i]->forward(m_layers[i - 1]->output());
+        }
 
-		// На этом проход по всей сетке завершен
-	}
+        // На этом проход по всей сетке завершен
+    }
 
-	/// <summary>
-	/// Backprop для всей сетки. Просто идем из конца сетки в ее начало и вызываем
-	/// у каждого слоя метод обратного распространения
-	/// </summary>
-	/// <typeparam name="TargetType"> - тип таргета, отедльно для задач бинарной
-	/// классификации и регрессии, а также для многоклассовой классификации</typeparam>
-	/// <param name="input"> - входные данные</param>
-	/// <param name="target"> - собственно таргет</param>
-	void Backprop(const Matrix& input, const Matrix& target)
-	{
-		const unsigned long nlayer = count_layers();
+    /// <summary>
+    /// Backprop для всей сетки. Просто идем из конца сетки в ее начало и вызываем
+    /// у каждого слоя метод обратного распространения
+    /// </summary>
+    /// <typeparam name="TargetType"> - тип таргета, отедльно для задач бинарной
+    /// классификации и регрессии, а также для многоклассовой классификации</typeparam>
+    /// <param name="input"> - входные данные</param>
+    /// <param name="target"> - собственно таргет</param>
+    void Backprop(const Matrix& input, const Matrix& target)
+    {
+        const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 0) { return; }
+        if (nlayer <= 0) { return; }
 
-		// Создадим указатель на первый и последний (скрытый, но не выходной)
-		// слой сетки, это поможет в дальнейшем
+        // Создадим указатель на первый и последний (скрытый, но не выходной)
+        // слой сетки, это поможет в дальнейшем
 
-		Layer* first_layer = m_layers[0];
-		Layer* last_layer = m_layers[nlayer - 1];
+        Layer* first_layer = m_layers[0];
+        Layer* last_layer = m_layers[nlayer - 1];
 
-		// Начнем распространение с конца сетки
-		m_output->check_target_data(target);
-		m_output->evaluate(last_layer->output(), target);
+        // Начнем распространение с конца сетки
+        m_output->check_target_data(target);
+        m_output->evaluate(last_layer->output(), target);
 
-		// Если скрытый слой всего один, то 'prev_layer_data' будут выходными данными
+        // Если скрытый слой всего один, то 'prev_layer_data' будут выходными данными
 
-		if (nlayer == 1)
-		{
-			first_layer->backprop(input,
+        if (nlayer == 1)
+        {
+            first_layer->backprop(input,
                                   last_layer->backprop_data());
-			return;
-		}
+            return;
+        }
 
-		// Если это условие не выполнено, то вычисляем градиент для последнего скрытого слоя
-		last_layer->backprop(m_layers[nlayer - 2]->output(),
+        // Если это условие не выполнено, то вычисляем градиент для последнего скрытого слоя
+        last_layer->backprop(m_layers[nlayer - 2]->output(),
                              m_output->backprop_data());
 
-		// Теперь пробегаемся по всем слоям и вычисляем градиенты
+        // Теперь пробегаемся по всем слоям и вычисляем градиенты
 
-		for (unsigned long i = nlayer - 2; i > 0; --i)
-		{
-			m_layers[i]->backprop(m_layers[i - 1]->output(),
-				m_layers[i + 1]->backprop_data());
-		}
+        for (unsigned long i = nlayer - 2; i > 0; --i)
+        {
+            m_layers[i]->backprop(m_layers[i - 1]->output(),
+                                  m_layers[i + 1]->backprop_data());
+        }
 
-		// Теперь вычисляем грады для нулевого - входного слоя сетки
+        // Теперь вычисляем грады для нулевого - входного слоя сетки
 
-		first_layer->backprop(input,
+        first_layer->backprop(input,
                               m_layers[1]->backprop_data());
-	}
+    }
 
-	/// <summary>
-	/// Обновление весов модели
-	/// </summary>
-	/// <param name="opt"> - собственно оптимайзер</param>
-	void Update(Optimizer& opt)
-	{
-		const unsigned long nlayer = count_layers();
+    /// <summary>
+    /// Обновление весов модели
+    /// </summary>
+    /// <param name="opt"> - собственно оптимайзер</param>
+    void Update(Optimizer& opt)
+    {
+        const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 0) { return; }
+        if (nlayer <= 0) { return; }
 
-		for (unsigned long i = 0; i < nlayer; ++i)
-		{
-			m_layers[i]->update(opt);
-		}
-	}
+        for (unsigned long i = 0; i < nlayer; ++i)
+        {
+            m_layers[i]->update(opt);
+        }
+    }
 
     void mean_loss_update()
     {
@@ -213,101 +215,101 @@ private:
     void mean_loss_reset() { mean_loss = 0.0; }
 
 
-	/// <summary>
-	/// Заполняем словарь для дальнейшего экспортирования сетки
-	/// </summary>
-	/// <returns></returns>
-	Meta get_meta_info() const
-	{
-		const unsigned long nlayer = count_layers();
-		Meta map;
-		map.insert(std::make_pair("Nlayers", nlayer));
+    /// <summary>
+    /// Заполняем словарь для дальнейшего экспортирования сетки
+    /// </summary>
+    /// <returns></returns>
+    Meta get_meta_info() const
+    {
+        const unsigned long nlayer = count_layers();
+        Meta map;
+        map.insert(std::make_pair("Nlayers", nlayer));
 
-		// пробегаемся по всем слоям и вызываем метод сбора информации с одного слоя
-		for (int i = 0; i < nlayer; ++i)
-		{
-			m_layers[i]->fill_meta_info(map, i);
-		}
+        // пробегаемся по всем слоям и вызываем метод сбора информации с одного слоя
+        for (int i = 0; i < nlayer; ++i)
+        {
+            m_layers[i]->fill_meta_info(map, i);
+        }
 
-		// добавляем информацию о выходном слое
-		map.insert(std::make_pair("OutputLayer", internal::output_id(m_output->output_type())));
-		return map;
-	}
+        // добавляем информацию о выходном слое
+        map.insert(std::make_pair("OutputLayer", internal::output_id(m_output->output_type())));
+        return map;
+    }
 
 public:
-	///
-	/// Стандартный конструктор
-	/// 
+    ///
+    /// Стандартный конструктор
+    ///
 
-	NeuralNetwork() :
-		m_default_rng(1),
-		m_rng(m_default_rng),
-		m_output(nullptr),
-        mean_loss(0.0)
-	{}
+    NeuralNetwork() :
+            m_default_rng(1),
+            m_rng(m_default_rng),
+            m_output(nullptr),
+            mean_loss(0.0)
+    {}
 
-	///
-	/// Конструктор при передаче другого генератора
-	/// 
+    ///
+    /// Конструктор при передаче другого генератора
+    ///
 
-	explicit NeuralNetwork(RNG& rng) :
-		m_default_rng(1),
-		m_rng(rng),
-		m_output(nullptr),
-        mean_loss(0.0)
-	{}
+    explicit NeuralNetwork(RNG& rng) :
+            m_default_rng(1),
+            m_rng(rng),
+            m_output(nullptr),
+            mean_loss(0.0)
+    {}
 
-	///
-	/// Деструктор, удаляем из памяти все слои
-	/// 
-	~NeuralNetwork()
-	{
-		const unsigned long nlayer = count_layers();
+    ///
+    /// Деструктор, удаляем из памяти все слои
+    ///
+    ~NeuralNetwork()
+    {
+        const unsigned long nlayer = count_layers();
 
-		for (int i = 0; i < nlayer; ++i)
-		{
-			delete m_layers[i];
-		}
+        for (int i = 0; i < nlayer; ++i)
+        {
+            delete m_layers[i];
+        }
 
         delete m_output;
-	}
+    }
 
-	/// <summary>
-	/// Подсчет кол-ва слоев
-	/// </summary>
-	/// <returns></returns>
-	unsigned long count_layers() const
-	{
-		return m_layers.size();
-	}
+    /// <summary>
+    /// Подсчет кол-ва слоев
+    /// </summary>
+    /// <returns></returns>
+    unsigned long count_layers() const
+    {
+        return m_layers.size();
+    }
 
-	/// <summary>
-	/// Добавить слой в сетку
-	/// </summary>
-	/// <param name="layer"> - указатель на слой</param>
-	void add_layer(Layer* layer)
-	{
-		m_layers.push_back(layer);
-	}
+    /// <summary>
+    /// Добавить слой в сетку
+    /// </summary>
+    /// <param name="layer"> - указатель на слой</param>
+    void add_layer(Layer* layer)
+    {
+        m_layers.push_back(layer);
+    }
 
-	void set_output(Output* output)
-	{
-		if (m_output)
-		{
-			delete m_output;
-		}
+    void set_output(Output* output)
+    {
+        if (m_output)
+        {
+            delete m_output;
+        }
 
-		m_output = output;
-	}
+        m_output = output;
+    }
 
-	/// <summary>
-	/// None
-	/// </summary>
-	/// <returns>Получить выходной слой</returns>
-	const Output* get_output() const
-	{
-		return m_output;
-	}
+    /// <summary>
+    /// None
+    /// </summary>
+    /// <returns>Получить выходной слой</returns>
+    const Output* get_output() const
+    {
+        return m_output;
+    }
 
 
     /// Установить рабочий процесс - тренировка
@@ -337,59 +339,59 @@ public:
     }
 
 
-	bool fit(Optimizer& opt, const Matrix& x, const Matrix& y,
-		     int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
+    bool fit(Optimizer& opt, const Matrix& x, const Matrix& y,
+             int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
              const std::vector<std::vector<Scalar>>& params = std::vector<std::vector<Scalar>>())
-	{
+    {
         this->Init(init_seed, params);
 
         const unsigned int  nsample = x.cols();             // кол-во объектов в выборке
-		const unsigned long nlayer  = count_layers();
+        const unsigned long nlayer  = count_layers();
 
-		if (nlayer <= 0) { return false; }
+        if (nlayer <= 0) { return false; }
 
         if (batch_size <= 0)
         {
             throw std::invalid_argument("[class NeuralNetwork] Batch size must be greater than zero.");
         }
 
-		// сбрасываем значения оптимизатора
-		opt.reset();
+        // сбрасываем значения оптимизатора
+        opt.reset();
 
-		if (batch_seed > 0)
-		{
-			m_rng.seed(batch_seed);
-		}
+        if (batch_seed > 0)
+        {
+            m_rng.seed(batch_seed);
+        }
 
-		// начинаем генерить батчи
-		std::vector<Matrix> x_batches;
-		std::vector<Matrix> y_batches;
+        // начинаем генерить батчи
+        std::vector<Matrix> x_batches;
+        std::vector<Matrix> y_batches;
 
-		const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
+        const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
 #ifndef DNN_BE_QUIET
-            internal::display::Timer t;
-            internal::display::ProgressBar disp(nsample);
+        internal::display::Timer t;
+        internal::display::ProgressBar disp(nsample);
 #endif
 
         this->train();
 
-		// Начинаем процесс обучения
-		for (int e = 0; e < epoch; ++e)
-		{
+        // Начинаем процесс обучения
+        for (int e = 0; e < epoch; ++e)
+        {
 
-			for (int i = 0; i < nbatch; ++i)
-			{
-				this->Forward(x_batches[i]);
-				this->Backprop(x_batches[i], y_batches[i]);
-				this->Update(opt);
+            for (int i = 0; i < nbatch; ++i)
+            {
+                this->Forward(x_batches[i]);
+                this->Backprop(x_batches[i], y_batches[i]);
+                this->Update(opt);
                 this->mean_loss_update();
 
                 // display update
 #ifndef DNN_BE_QUIET
                 disp += batch_size;
 #endif
-			}
+            }
 
 #ifndef DNN_BE_QUIET
             std::cout << "Epoch " << e + 1 << "/" << epoch << " completed. " << t.elapced() << "s elapsed." << std::endl;
@@ -404,16 +406,16 @@ public:
                 t.restart();
             }
 #endif
-		}
+        }
         this->eval();
-		return true;
-	}
+        return true;
+    }
 
-	Matrix predict(const Matrix& x)
-	{
-		const unsigned long nlayer = count_layers();
+    Matrix predict(const Matrix& x)
+    {
+        const unsigned long nlayer = count_layers();
 
-		if (nlayer <= 0) { return {}; }
+        if (nlayer <= 0) { return {}; }
 
         for (int i = 0; i < nlayer; i++)
         {
@@ -423,67 +425,67 @@ public:
             }
         }
 
-		this->Forward(x);
+        this->Forward(x);
 
-		return m_layers[nlayer - 1]->output();
-	}
-
-
-	/// <summary>
-	/// Получить параметры сетки
-	/// </summary>
-	/// <returns></returns>
-	std::vector < std::vector<Scalar> > get_parameters() const
-	{
-		unsigned long nlayer = count_layers();
-		std::vector < std::vector<Scalar> > res;
-		res.reserve(nlayer); // зарезервировали место для большей оптимизации
-
-		for (int i = 0; i < nlayer; ++i)
-		{
-			res.push_back(m_layers[i]->get_parametrs());
-		}
-
-		return res;
-	}
-
-	/// <summary>
-	/// Установить пользовательские параметры сетки
-	/// </summary>
-	/// <param name="param"> - матрица параметров</param>
-	void set_parameters(const std::vector < std::vector<Scalar> >& param)
-	{
-		unsigned long nlayer = count_layers();
-
-		if (static_cast<int>(param.size()) != nlayer)
-		{
-			throw std::invalid_argument("[class Neural Network]: param size does not match. check input param!");
-		}
-
-		for (int i = 0; i < nlayer; ++i)
-		{
-			m_layers[i]->set_parametrs(param[i]);
-		}
-	}
+        return m_layers[nlayer - 1]->output();
+    }
 
 
-	/// <summary>
-	/// Получить производные всех слоев
-	/// </summary>
-	/// <returns></returns>
-	std::vector < std::vector<Scalar> > get_derivatives() const
-	{
-		unsigned long nlayer = count_layers();
-		std::vector < std::vector<Scalar> > res;
-		res.reserve(nlayer);
+    /// <summary>
+    /// Получить параметры сетки
+    /// </summary>
+    /// <returns></returns>
+    std::vector < std::vector<Scalar> > get_parameters() const
+    {
+        unsigned long nlayer = count_layers();
+        std::vector < std::vector<Scalar> > res;
+        res.reserve(nlayer); // зарезервировали место для большей оптимизации
 
-		for (int i = 0; i < nlayer; ++i)
-		{
-			res.push_back(m_layers[i]->get_derivatives());
-		}
+        for (int i = 0; i < nlayer; ++i)
+        {
+            res.push_back(m_layers[i]->get_parametrs());
+        }
 
-		return res;
-	}
+        return res;
+    }
+
+    /// <summary>
+    /// Установить пользовательские параметры сетки
+    /// </summary>
+    /// <param name="param"> - матрица параметров</param>
+    void set_parameters(const std::vector < std::vector<Scalar> >& param)
+    {
+        unsigned long nlayer = count_layers();
+
+        if (static_cast<int>(param.size()) != nlayer)
+        {
+            throw std::invalid_argument("[class Neural Network]: param size does not match. check input param!");
+        }
+
+        for (int i = 0; i < nlayer; ++i)
+        {
+            m_layers[i]->set_parametrs(param[i]);
+        }
+    }
+
+
+    /// <summary>
+    /// Получить производные всех слоев
+    /// </summary>
+    /// <returns></returns>
+    std::vector < std::vector<Scalar> > get_derivatives() const
+    {
+        unsigned long nlayer = count_layers();
+        std::vector < std::vector<Scalar> > res;
+        res.reserve(nlayer);
+
+        for (int i = 0; i < nlayer; ++i)
+        {
+            res.push_back(m_layers[i]->get_derivatives());
+        }
+
+        return res;
+    }
 
     /// Инициализация слоев согласно условиям
     /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
@@ -645,3 +647,6 @@ public:
         std::cout << "Net loaded successful" << std::endl;
     }
 };
+
+
+#endif //XSDNN_NEURALNETWORK_H
