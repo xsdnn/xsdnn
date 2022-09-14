@@ -18,12 +18,11 @@ namespace internal {
         /// \param out_pos позиция на выходе для подсчета производной
         /// \return производная по заданной точке
         inline Scalar numerical_gradient(
-                Layer* layer,
-                Matrix& in_data,
+                Layer *layer,
+                Matrix &in_data,
                 const int in_pos,
                 const int out_pos
-        )
-        {
+        ) {
             Scalar h = std::sqrt(std::sqrt(std::numeric_limits<Scalar>::epsilon()));
             Scalar prev_in = in_data(in_pos, 0);
             in_data(in_pos, 0) = prev_in + h;
@@ -42,17 +41,18 @@ namespace internal {
         /// \param out_pos позиция на выходе для подсчета производной
         /// \return производная по заданной точке
         inline Scalar analytical_gradient(
-                Layer* layer,
-                Matrix& in_data,
+                Layer *layer,
+                Matrix &in_data,
                 const int in_pos,
                 const int out_pos,
                 const int out_size
-        )
-        {
+        ) {
             const int in_size = in_data.rows();
-            Matrix next_layer_backprop_data(out_size, 1); next_layer_backprop_data.setZero();
+            Matrix next_layer_backprop_data(out_size, 1);
+            next_layer_backprop_data.setZero();
             next_layer_backprop_data(out_pos, 0) = Scalar(1.0);
-            Matrix prev_layer_data(in_size, 1); prev_layer_data.setZero();
+            Matrix prev_layer_data(in_size, 1);
+            prev_layer_data.setZero();
             layer->forward(in_data);
             layer->backprop(prev_layer_data, next_layer_backprop_data);
             return layer->backprop_data()(in_pos, 0);

@@ -11,24 +11,21 @@
 \version 0.0
 \date Май 2022 года
 */
-class BinaryEntropyLoss : public Output
-{
+class BinaryEntropyLoss : public Output {
 private:
-    Matrix m_din;			///< производные по выходному слою
+    Matrix m_din;            ///< производные по выходному слою
 
 public:
     /// Проверка входных данных на соотвествие значений ---  1 || 0
     /// \param target целевая переменная
-    void check_target_data(const Matrix& target) const override
-    {
+    void check_target_data(const Matrix &target) const override {
         const long nelem = target.size();
-        const Scalar* target_data = target.data();
+        const Scalar *target_data = target.data();
 
-        for (int i = 0; i < nelem; i++)
-        {
-            if (target_data[i] != Scalar(1) && target_data[i] != Scalar(0))
-            {
-                throw std::invalid_argument("[class BinaryClassEntropy]: target data is not 1 and 0. Check input param!");
+        for (int i = 0; i < nelem; i++) {
+            if (target_data[i] != Scalar(1) && target_data[i] != Scalar(0)) {
+                throw std::invalid_argument(
+                        "[class BinaryClassEntropy]: target data is not 1 and 0. Check input param!");
             }
         }
     }
@@ -36,13 +33,11 @@ public:
     /// \image html binaryclassentropy_evaluate.png
     /// \param prev_layer_data последний скрытый слой сети
     /// \param target целевая переменная
-    void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
-    {
+    void evaluate(const Matrix &prev_layer_data, const Matrix &target) override {
         const long ncols = prev_layer_data.cols();
         const long nrows = prev_layer_data.rows();
 
-        if ((target.cols() != ncols) || (target.rows() != nrows))
-        {
+        if ((target.cols() != ncols) || (target.rows() != nrows)) {
             throw std::invalid_argument("[class BinaryClassEntropy]: Target data have incorrect dim. Check input data");
         }
 
@@ -61,15 +56,13 @@ public:
 
     ///
     /// \return Вектор направления спуска (антиградиент).
-    const Matrix& backprop_data() const override
-    {
+    const Matrix &backprop_data() const override {
         return m_din;
     }
 
     /// \image html binaryclassentropy_loss.png
     /// \return Ошибку на обучающей выборке
-    Scalar loss() const override
-    {
+    Scalar loss() const override {
         //	Зная m_din, подставим его в лосс и выразим ошибку.
         //	Получим ->
         //	L = E( log(|m_din|) ) / N
@@ -79,8 +72,7 @@ public:
 
     ///
     /// \return Тип выходного слоя.
-    std::string output_type() const override
-    {
+    std::string output_type() const override {
         return "BinaryClassEntropy";
     }
 };

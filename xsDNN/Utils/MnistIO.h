@@ -5,8 +5,8 @@
 #ifndef XSDNN_INCLUDE_MNIST_IO_H
 #define XSDNN_INCLUDE_MNIST_IO_H
 
-namespace internal{
-    template <typename T>
+namespace internal {
+    template<typename T>
     T *reverse_endian(T *p) {
         std::reverse(reinterpret_cast<char *>(p),
                      reinterpret_cast<char *>(p) + sizeof(T));
@@ -18,15 +18,14 @@ namespace internal{
         return *reinterpret_cast<char *>(&x) != 0;
     }
 
-    struct mnist_header{
-            uint32_t magic_number;
-            uint32_t num_items;
-            uint32_t num_rows;
-            uint32_t num_cols;
-        };
+    struct mnist_header {
+        uint32_t magic_number;
+        uint32_t num_items;
+        uint32_t num_rows;
+        uint32_t num_cols;
+    };
 
-    inline void parse_mnist_header(std::ifstream& ifs, mnist_header& header)
-    {
+    inline void parse_mnist_header(std::ifstream &ifs, mnist_header &header) {
         ifs.read(reinterpret_cast<char *>(&header.magic_number), 4);
         ifs.read(reinterpret_cast<char *>(&header.num_items), 4);
         ifs.read(reinterpret_cast<char *>(&header.num_rows), 4);
@@ -44,16 +43,15 @@ namespace internal{
         if (ifs.fail() || ifs.bad()) throw std::invalid_argument("[inline void parse_mnist_label] file error");
     }
 
-    inline void parse_mnist_image(std::ifstream&        ifs,
-                                  const mnist_header&   header,
-                                  const int             width,
-                                  const int             height,
-                                  const Scalar&         scale_min,
-                                  const Scalar&         scale_max,
-                                  const int             x_padding,
-                                  const int             y_padding,
-                                  Eigen::VectorXd&      col)
-    {
+    inline void parse_mnist_image(std::ifstream &ifs,
+                                  const mnist_header &header,
+                                  const int width,
+                                  const int height,
+                                  const Scalar &scale_min,
+                                  const Scalar &scale_max,
+                                  const int x_padding,
+                                  const int y_padding,
+                                  Eigen::VectorXd &col) {
         typedef Eigen::Matrix<uint8_t, 1, Eigen::Dynamic> Vector;
 
         const int w = header.num_cols + 2 * x_padding;
@@ -64,32 +62,28 @@ namespace internal{
         ifs.read(reinterpret_cast<char *>(image_vec.data()), header.num_rows * header.num_cols);
 
         col.resize(w * h);
-        Scalar*        arr             = col.data();
-        unsigned char* image_vec_arr   = image_vec.data();
+        Scalar *arr = col.data();
+        unsigned char *image_vec_arr = image_vec.data();
 
         for (uint32_t y = 0; y < header.num_rows; y++)
-            for (uint32_t x = 0; x < header.num_cols; x++)
-            {
+            for (uint32_t x = 0; x < header.num_cols; x++) {
                 arr[w * (y + y_padding) + x + x_padding] =
-                        (image_vec_arr[y * header.num_cols + x] / Scalar (255)) *
+                        (image_vec_arr[y * header.num_cols + x] / Scalar(255)) *
                         (scale_max - scale_min) +
                         scale_min;
             }
     }
 }
 /// \details Подгрузка дата-сетов
-namespace dataset
-{
+namespace dataset {
     /// \brief Чтение меток дата-сета MNIST
     /// \warning параметр image_filename должен содержать полный путь до файла
     /// \param label_filename расположение файла метод (i.e. ../some/path/to/train-images-idx1-ubyte)
     /// \param label объект типа Matrix для заполнения
-    inline void parse_mnist_label(const std::string& label_filename, Matrix& label)
-    {
+    inline void parse_mnist_label(const std::string &label_filename, Matrix &label) {
         std::ifstream ifs(label_filename.c_str(), std::ios::in | std::ios::binary);
 
-        if (ifs.bad() || ifs.fail())
-        {
+        if (ifs.bad() || ifs.fail()) {
             throw std::invalid_argument("[inline void parse_mnist_label] Error while opening file");
         }
 
@@ -103,18 +97,16 @@ namespace dataset
             internal::reverse_endian(&num_items);
         }
 
-        if (magic_number != 0x00000801 || num_items <= 0)
-        {
+        if (magic_number != 0x00000801 || num_items <= 0) {
             throw std::invalid_argument("[inline void parse_mnist_label] MNIST label-file format unknown");
         }
 
         label.resize(10, num_items);
         label.setZero();
 
-        for (uint32_t i = 0; i < num_items; i++)
-        {
+        for (uint32_t i = 0; i < num_items; i++) {
             uint8_t label_;
-            Scalar* arr = label.col(i).data();
+            Scalar *arr = label.col(i).data();
 
             ifs.read(reinterpret_cast<char *>(&label_), 1);
 
@@ -133,28 +125,25 @@ namespace dataset
     /// \param scale_max максимальное значение масштабирования
     /// \param x_padding
     /// \param y_padding
-    inline void parse_mnist_image(const         std::string& image_filename,
-                                  Matrix&       images,
-                                  const Scalar& scale_min,
-                                  const Scalar& scale_max,
-                                  const int     x_padding,
-                                  const int     y_padding)
-    {
+    inline void parse_mnist_image(const std::string &image_filename,
+                                  Matrix &images,
+                                  const Scalar &scale_min,
+                                  const Scalar &scale_max,
+                                  const int x_padding,
+                                  const int y_padding) {
         // check param
-        if (scale_min >= scale_max)
-        {
-            throw std::invalid_argument("[inline void parse_mnist_image] \"scale max\" must be greater then \"scale min\"");
+        if (scale_min >= scale_max) {
+            throw std::invalid_argument(
+                    "[inline void parse_mnist_image] \"scale max\" must be greater then \"scale min\"");
         }
 
-        if (x_padding < 0 || y_padding < 0)
-        {
+        if (x_padding < 0 || y_padding < 0) {
             throw std::invalid_argument("[inline void parse_mnist_image] \"padding\" must be greater then zero");
         }
 
         std::ifstream ifs(image_filename, std::ios::in | std::ios::binary);
 
-        if (ifs.bad() || ifs.fail())
-        {
+        if (ifs.bad() || ifs.fail()) {
             throw std::invalid_argument("[inline void parse_mnist_label] Error while opening file");
         }
 
@@ -166,8 +155,7 @@ namespace dataset
 
         images.resize(w * h, header.num_items);
 
-        for (uint32_t i = 0; i < header.num_items; i++)
-        {
+        for (uint32_t i = 0; i < header.num_items; i++) {
             Eigen::VectorXd image;
 
             internal::parse_mnist_image(ifs,

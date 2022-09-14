@@ -13,13 +13,13 @@
 \version 0.0
 \date Март 2022 года
 */
-class Layer{
+class Layer {
 protected:
     typedef std::map<std::string, Scalar> Meta;
 
-    const int        m_in_size;
-    const int        m_out_size;
-    std::string      workflow;
+    const int m_in_size;
+    const int m_out_size;
+    std::string workflow;
 
 
 public:
@@ -33,7 +33,7 @@ public:
     /// None
     /// </summary>
     /// <returns>Кол-во входящих нейронов</returns>
-    int in_size() const{
+    int in_size() const {
         return m_in_size;
     }
 
@@ -41,12 +41,12 @@ public:
     /// None
     /// </summary>
     /// <returns>Кол-во выходящих нейронов</returns>
-    int out_size() const{
+    int out_size() const {
         return m_out_size;
     }
 
     /// Получить текущий процесс
-    std::string get_workflow() const{
+    std::string get_workflow() const {
         return workflow;
     }
 
@@ -54,7 +54,7 @@ public:
     /// \param params вектор параметров для конкретного распределения
     /// \param batch_size размер батча
     /// \param rng ГСЧ
-    virtual void init(const std::vector<Scalar>& params, RNG& rng) = 0;
+    virtual void init(const std::vector<Scalar> &params, RNG &rng) = 0;
 
     /// <summary>
     /// Инициализация слоя без входных параметров,
@@ -72,33 +72,33 @@ public:
     /// Реализация метода отличается у каждого типа слоев
     /// </summary>
     /// <param name="prev_layer_data"> - предыдущий слой, значения его нейронов</param>
-    virtual void forward(const Matrix& prev_layer_data) = 0;
+    virtual void forward(const Matrix &prev_layer_data) = 0;
 
     /// <summary>
     /// None
     /// </summary>
     /// <returns>Значения нейронов в слою после функции активации. Использование
     /// метода разрешено только после метода Layer::forward()!</returns>
-    virtual const Matrix& output() const = 0;
+    virtual const Matrix &output() const = 0;
 
     /// Обратный проход по сети
     /// \param prev_layer_data - output слоя слева
     /// \param next_layer_backprop_data - backprop_data слоя справа
-    virtual void backprop(const Matrix& prev_layer_data,
-                          const Matrix& next_layer_backprop_data) = 0;
+    virtual void backprop(const Matrix &prev_layer_data,
+                          const Matrix &next_layer_backprop_data) = 0;
 
     /// <summary>
     /// None
     /// </summary>
     /// <returns>Возвращает next_layer_data в Layer::backprop()
     /// </returns>
-    virtual const Matrix& backprop_data() const = 0;
+    virtual const Matrix &backprop_data() const = 0;
 
     /// <summary>
     /// Обновление параметров сетки после обратного распространения
     /// </summary>
     /// <param name="opt"> - алгоритм оптимизации градиента</param>
-    virtual void update(Optimizer& opt) = 0;
+    virtual void update(Optimizer &opt) = 0;
 
     /// Установить рабочий процесс - тренировка
     virtual void train() = 0;
@@ -108,7 +108,7 @@ public:
 
     virtual std::vector<Scalar> get_parametrs() const = 0;
 
-    virtual void set_parametrs(const std::vector<Scalar>& param) {};
+    virtual void set_parametrs(const std::vector<Scalar> &param) {};
 
     virtual std::vector<Scalar> get_derivatives() const = 0;
 
@@ -126,7 +126,7 @@ public:
     /// </summary>
     /// <param name="map"> - словарь</param>
     /// <param name="index"> - индекс слоя в модели</param>
-    virtual void fill_meta_info(Meta& map, int index) const = 0;
+    virtual void fill_meta_info(Meta &map, int index) const = 0;
 };
 
 #endif //XSDNN_LAYER_H

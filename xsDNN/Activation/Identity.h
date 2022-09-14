@@ -5,15 +5,14 @@
 #ifndef XSDNN_IDENTITY_H
 #define XSDNN_IDENTITY_H
 
-namespace activate{
+namespace activate {
     /*!
 	\brief Класс функции активации - Identity
     \author __[shuffle-true](https://github.com/shuffle-true)__
 	\version 0.0
 	\date Март 2022 года
     */
-    class Identity
-    {
+    class Identity {
     public:
         /// __Алгоритм__:
         /// \code
@@ -25,8 +24,7 @@ namespace activate{
         /// \endcode
         /// \param Z значения нейронов до активации
         /// \param A значения нейронов после активации
-        static inline void activate(const Matrix& Z, Matrix& A)
-        {
+        static inline void activate(const Matrix &Z, Matrix &A) {
             A.array() = Z.array();
         }
 
@@ -45,21 +43,18 @@ namespace activate{
         /// \param A нейроны слоя после активации.
         /// \param F нейроны следующего слоя.
         /// \param G значения, которые получаются после backprop.
-        static inline void apply_jacobian(const Matrix& Z, const Matrix& A,
-                                          const Matrix& F, Matrix& G)
-        {
+        static inline void apply_jacobian(const Matrix &Z, const Matrix &A,
+                                          const Matrix &F, Matrix &G) {
             G.array() = F.array();
         }
 
         ///
         /// \return Тип активации.
-        static std::string return_type()
-        {
+        static std::string return_type() {
             return "Identity";
         }
     };
 }
-
 
 
 #endif //XSDNN_IDENTITY_H

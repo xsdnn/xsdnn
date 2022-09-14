@@ -11,36 +11,34 @@
 \version 0.0
 \date Август 2022 года
 */
-class CrossEntropyLoss : public Output
-{
+class CrossEntropyLoss : public Output {
 private:
     Matrix m_din;           ///< Производная по этому слою
 
 public:
     /// Проверка входных данных на соотвествие значений
     /// \param target целевая переменная
-    void check_target_data(const Matrix& target) const override
-    {
+    void check_target_data(const Matrix &target) const override {
         const long ncols = target.cols();       // eq. n sample's
         const long nrows = target.rows();       // eq. n feature's
 
-        for (long i = 0; i < ncols; i++)
-        {
+        for (long i = 0; i < ncols; i++) {
             int n_one = 0;                      // count one in sample - must be 1 one in col
 
-            for (long j = 0; j < nrows; j++)
-            {
-                if (target(j, i) == Scalar(1)) { n_one++; continue; }
+            for (long j = 0; j < nrows; j++) {
+                if (target(j, i) == Scalar(1)) {
+                    n_one++;
+                    continue;
+                }
 
-                if (target(j, i) != Scalar(0))
-                {
+                if (target(j, i) != Scalar(0)) {
                     throw std::invalid_argument("[class CrossEntropyLoss] Target should only contain zero or one");
                 }
             }
 
-            if (n_one != 1)
-            {
-                throw std::invalid_argument("[class CrossEntropyLoss] Each column of target data should only contain one \"1\"");
+            if (n_one != 1) {
+                throw std::invalid_argument(
+                        "[class CrossEntropyLoss] Each column of target data should only contain one \"1\"");
             }
         }
     }
@@ -48,13 +46,11 @@ public:
     /// \image html multiclassentropy_evaluate.png
     /// \param prev_layer_data последний скрытый слой сети
     /// \param target целевая переменная
-    void evaluate(const Matrix& prev_layer_data, const Matrix& target) override
-    {
+    void evaluate(const Matrix &prev_layer_data, const Matrix &target) override {
         const long ncols = prev_layer_data.cols();
         const long nrows = prev_layer_data.rows();
 
-        if (ncols != target.cols() || nrows != target.rows())
-        {
+        if (ncols != target.cols() || nrows != target.rows()) {
             throw std::invalid_argument("[class CrossEntropyLoss] Target data have incorrect dimension");
         }
 
@@ -64,27 +60,23 @@ public:
 
     ///
     /// \return Вектор направления спуска (антиградиент).
-    const Matrix& backprop_data() const override
-    {
+    const Matrix &backprop_data() const override {
         return m_din;
     }
 
     /// \image html multiclassentropy_loss.png
     /// \return Ошибку на обучающей выборке
-    Scalar loss() const override
-    {
+    Scalar loss() const override {
         // L = -sum(log(phat) * y)
         // in = phat
         // d(L) / d(in) = -y / phat
         // m_din contains 0 if y = 0, and -1/phat if y = 1
         Scalar res = Scalar(0);
         const int nelem = m_din.size();
-        const Scalar* din_data = m_din.data();
+        const Scalar *din_data = m_din.data();
 
-        for (int i = 0; i < nelem; i++)
-        {
-            if (din_data[i] < Scalar(0))
-            {
+        for (int i = 0; i < nelem; i++) {
+            if (din_data[i] < Scalar(0)) {
                 res += std::log(-din_data[i]);
             }
         }
@@ -94,8 +86,7 @@ public:
 
     ///
     /// \return Тип выходного слоя.
-    std::string output_type() const override
-    {
+    std::string output_type() const override {
         return "MultiClassEntropy";
     }
 };

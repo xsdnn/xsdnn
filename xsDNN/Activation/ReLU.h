@@ -5,15 +5,14 @@
 #ifndef XSDNN_RELU_H
 #define XSDNN_RELU_H
 
-namespace activate{
+namespace activate {
     /*!
     \brief Класс функции активации - ReLU
     \author __[shuffle-true](https://github.com/shuffle-true)__
 	\version 0.0
 	\date Март 2022 года
     */
-    class ReLU
-    {
+    class ReLU {
     public:
 
         /// __Алгоритм__:
@@ -29,8 +28,7 @@ namespace activate{
         /// \endcode
         /// \param Z значения нейронов до активации
         /// \param A значения нейронов после активации
-        static inline void activate(const Matrix& Z, Matrix& A)
-        {
+        static inline void activate(const Matrix &Z, Matrix &A) {
             A.array() = Z.array().cwiseMax(Scalar(0));
         }
 
@@ -52,16 +50,14 @@ namespace activate{
         /// \param A нейроны слоя после активации.
         /// \param F нейроны следующего слоя.
         /// \param G значения, которые получаются после backprop.
-        static inline void apply_jacobian(const Matrix& Z, const Matrix& A,
-                                          const Matrix& F, Matrix& G)
-        {
+        static inline void apply_jacobian(const Matrix &Z, const Matrix &A,
+                                          const Matrix &F, Matrix &G) {
             G.array() = (A.array() > Scalar(0)).select(F, Scalar(0));
         }
 
         ///
         /// \return Тип активации.
-        static std::string return_type()
-        {
+        static std::string return_type() {
             return "ReLU";
         }
     };

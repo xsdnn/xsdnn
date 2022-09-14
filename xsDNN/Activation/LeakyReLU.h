@@ -5,14 +5,14 @@
 #ifndef XSDNN_INCLUDE_LEAKYRELU_H
 #define XSDNN_INCLUDE_LEAKYRELU_H
 
-namespace activate{
+namespace activate {
     /*!
     \brief Класс функции активации - LeakyReLU
     \author __[shuffle-true](https://github.com/shuffle-true)__
     \version 0.0
     \date Август 2022 года
     */
-    class LeakyReLU{
+    class LeakyReLU {
     public:
         /// __Алгоритм__:
         /// \code
@@ -27,8 +27,7 @@ namespace activate{
         /// \endcode
         /// \param Z значения нейронов до активации
         /// \param A значения нейронов после активации
-        static inline void activate(const Matrix& Z, Matrix& A)
-        {
+        static inline void activate(const Matrix &Z, Matrix &A) {
             A.array() = (Z.array() > Scalar(0)).select(Z, 0.01 * Z);
         }
 
@@ -51,16 +50,14 @@ namespace activate{
         /// \param A нейроны слоя после активации.
         /// \param F нейроны следующего слоя.
         /// \param G значения, которые получаются после backprop.
-        static inline void apply_jacobian(const Matrix& Z, const Matrix& A,
-                                          const Matrix& F, Matrix& G)
-        {
+        static inline void apply_jacobian(const Matrix &Z, const Matrix &A,
+                                          const Matrix &F, Matrix &G) {
             G.array() = (A.array() > Scalar(0)).select(F, 0.01 * A.array());
         }
 
         ///
         /// \return Тип активации.
-        static std::string return_type()
-        {
+        static std::string return_type() {
             return "LeakyReLU";
         }
     };

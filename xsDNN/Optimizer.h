@@ -11,8 +11,7 @@
 \version 0.0
 \date Март 2022 года
 */
-class Optimizer
-{
+class Optimizer {
 protected:
     typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
     typedef Vector::AlignedMapType AlignedMapVec;
@@ -31,7 +30,7 @@ public:
     /// Собственно метод, отвечающий за обновление весов в сетке
     ///
 
-    virtual void update(AlignedMapVec& dvec, AlignedMapVec& vec) = 0;
+    virtual void update(AlignedMapVec &dvec, AlignedMapVec &vec) = 0;
 };
 
 #endif //XSDNN_OPTIMIZER_H

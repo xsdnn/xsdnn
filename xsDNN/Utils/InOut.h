@@ -20,15 +20,11 @@ namespace internal {
     namespace io {
         /// Создание директории при сохранении сетки
         /// \param directory_name название директории
-        void create_directory(const std::string& directory_name)
-        {
+        void create_directory(const std::string &directory_name) {
             fs::current_path("./");
-            if (fs::create_directory(directory_name))
-            {
+            if (fs::create_directory(directory_name)) {
                 std::cout << "Directory " << directory_name << "' created successful" << std::endl;
-            }
-            else
-            {
+            } else {
                 std::cout << "Directory " << directory_name << "' already established" << std::endl;
             }
         }
@@ -36,18 +32,16 @@ namespace internal {
         /// Запись 1-D вектора в файл
         /// \param vec вектор
         /// \param filename название файла
-        inline void write_one_vector(const std::vector<Scalar>& vec, std::string& filename)
-        {
+        inline void write_one_vector(const std::vector<Scalar> &vec, std::string &filename) {
             // open or create file and write/rewrite into them
             std::ofstream ofs(filename.c_str(), std::ios::out | std::ios::binary);
-            if (ofs.fail())
-            {
+            if (ofs.fail()) {
                 throw std::runtime_error("[void write_one_vector] Error when opening file");
             }
 
             std::ostream_iterator<char> osi(ofs);
-            const char* begin_byte = reinterpret_cast<const char*>(&vec[0]);
-            const char* end_byte = begin_byte + vec.size() * sizeof(Scalar);
+            const char *begin_byte = reinterpret_cast<const char *>(&vec[0]);
+            const char *end_byte = begin_byte + vec.size() * sizeof(Scalar);
             std::copy(begin_byte, end_byte, osi);
             // std::cout << "File was successful wrote" << std::endl;
         }
@@ -56,13 +50,11 @@ namespace internal {
         /// \param folder директория сохранения
         /// \param filename название файла с сеткой
         /// \param params 2-D вектор параметров
-        inline void write_vector(const std::string& folder, const std::string& filename,
-                                 std::vector< std::vector<Scalar> >& params)
-        {
+        inline void write_vector(const std::string &folder, const std::string &filename,
+                                 std::vector<std::vector<Scalar> > &params) {
             const unsigned long nlayer = params.size();
             std::string folder_ = folder;
-            for (unsigned long i = 0; i < nlayer; i++)
-            {
+            for (unsigned long i = 0; i < nlayer; i++) {
                 folder_.append("/");
                 folder_.append(filename);
                 folder_.append(std::to_string(i));
@@ -74,8 +66,7 @@ namespace internal {
         /// Чтение параметров для одного слоя
         /// \param filename название файла
         /// \return вектор параметров для одного слоя
-        inline std::vector<Scalar> read_vector(const std::string& filename)
-        {
+        inline std::vector<Scalar> read_vector(const std::string &filename) {
 
             std::ifstream ifs(filename.c_str(), std::ios::in | std::ifstream::binary);
             if (ifs.fail())
@@ -86,7 +77,7 @@ namespace internal {
             std::istreambuf_iterator<char> end;
             std::copy(iter, end, std::back_inserter(buffer));
             std::vector<Scalar> vec(buffer.size() / sizeof(Scalar));
-            std::copy(&buffer[0], &buffer[0] + buffer.size(), reinterpret_cast<char*>(&vec[0]));
+            std::copy(&buffer[0], &buffer[0] + buffer.size(), reinterpret_cast<char *>(&vec[0]));
             return vec;
         }
 
@@ -95,19 +86,17 @@ namespace internal {
         /// \param filename название файла с моделью
         /// \param nlayer кол-во слоев в сети
         /// \return матрицу параметров
-        inline std::vector< std::vector<Scalar> > read_parameter(
-                const std::string& folder,
-                const std::string& filename,
-                const int& nlayer
-        )
-        {
-            std::vector< std::vector<Scalar> > params;
+        inline std::vector<std::vector<Scalar> > read_parameter(
+                const std::string &folder,
+                const std::string &filename,
+                const int &nlayer
+        ) {
+            std::vector<std::vector<Scalar> > params;
             params.reserve(nlayer);
 
             std::string folder_ = folder;
 
-            for (int i = 0; i < nlayer; i++)
-            {
+            for (int i = 0; i < nlayer; i++) {
                 folder_.append("/");
                 folder_.append(filename);
                 folder_.append(std::to_string(i));
@@ -121,8 +110,7 @@ namespace internal {
         /// Запись файла с информацией о слоях в сети
         /// \param filename название файла с сеткой
         /// \param map словарь, в которой хранится информация о слое
-        inline void write_map(const std::string& filename, const std::map<std::string, Scalar>& map)
-        {
+        inline void write_map(const std::string &filename, const std::map<std::string, Scalar> &map) {
             if (map.empty())
                 return;
 
@@ -130,8 +118,7 @@ namespace internal {
             if (ofs.fail())
                 throw std::runtime_error("[void write_map] Error while opening file");
 
-            for (std::map<std::string, Scalar>::const_iterator it = map.begin(); it != map.end(); it++)
-            {
+            for (std::map<std::string, Scalar>::const_iterator it = map.begin(); it != map.end(); it++) {
                 ofs << it->first << "=" << it->second << std::endl;
             }
         }
@@ -139,8 +126,7 @@ namespace internal {
         /// Заполнение словаря с параметрами сетки
         /// \param filename название сетки
         /// \param map словарь
-        inline void read_map(const std::string& filename, std::map<std::string, Scalar>& map)
-        {
+        inline void read_map(const std::string &filename, std::map<std::string, Scalar> &map) {
             std::ifstream ifs(filename, std::ios::in);
 
             if (ifs.fail())
@@ -149,8 +135,7 @@ namespace internal {
             map.clear();
             std::string buffer;
 
-            while (std::getline(ifs, buffer))
-            {
+            while (std::getline(ifs, buffer)) {
                 unsigned long sep = buffer.find('=');
 
                 if (sep == std::string::npos)
@@ -164,16 +149,14 @@ namespace internal {
     } // end namespace io
 
     namespace display {
-        class Timer
-        {
+        class Timer {
         private:
             std::chrono::high_resolution_clock::time_point t1, t2;
 
         public:
             explicit Timer() : t1(std::chrono::high_resolution_clock::now()) {}
 
-            Scalar elapced()
-            {
+            Scalar elapced() {
                 return std::chrono::duration_cast<std::chrono::duration<Scalar>>(
 
                         std::chrono::high_resolution_clock::now() - t1
@@ -182,7 +165,9 @@ namespace internal {
             }
 
             void restart() { t1 = std::chrono::high_resolution_clock::now(); }
+
             void start() { t1 = std::chrono::high_resolution_clock::now(); }
+
             void stop() { t2 = std::chrono::high_resolution_clock::now(); }
 
             Scalar total() {
@@ -197,21 +182,19 @@ namespace internal {
             ~Timer() {}
         };
 
-        class ProgressBar
-        {
+        class ProgressBar {
         private:
-            typedef unsigned int    IntType;
+            typedef unsigned int IntType;
 
-            IntType                 _num_total;            // размер всего тренировочного / тестового набора
-            IntType                 _num_succes;           // кол-во объектов, прошедших обучение сети
-            IntType                 _next_tic_count;
-            IntType                 _tic;
+            IntType _num_total;            // размер всего тренировочного / тестового набора
+            IntType _num_succes;           // кол-во объектов, прошедших обучение сети
+            IntType _next_tic_count;
+            IntType _tic;
 
 
-            std::ostream&           out;
+            std::ostream &out;
 
-            void display_update()
-            {
+            void display_update() {
                 IntType update_needed = static_cast<IntType>(
 
                         (static_cast<double>(_num_succes) / _num_total) * 50.0
@@ -228,24 +211,23 @@ namespace internal {
                     out << std::endl;
                 }
             }
+
         public:
             explicit ProgressBar(
                     IntType num_total,
-                    std::ostream& os = std::cout
+                    std::ostream &os = std::cout
             ) : out(os) { this->restart(num_total); }
 
-            void restart(IntType num_total)
-            {
+            void restart(IntType num_total) {
                 _num_succes = _next_tic_count = _tic = 0;
-                _num_total                           = num_total;
+                _num_total = num_total;
 
                 out << "\n" << "0%   10   20   30   40   50   60   70   80   90   100%\n"
-                    << ""   << "|----|----|----|----|----|----|----|----|----|----|"
+                    << "" << "|----|----|----|----|----|----|----|----|----|----|"
                     << std::endl << "";
             }
 
-            IntType operator += (IntType increment)
-            {
+            IntType operator+=(IntType increment) {
                 if ((_num_succes += increment) >= _next_tic_count) { this->display_update(); }
                 return _num_succes;
             }

@@ -20,7 +20,6 @@
 # include "Activation/Identity.h"
 
 
-
 # include "Layer.h"
 # include "Layer/FullyConnected.h"
 # include "Layer/Dropout.h"

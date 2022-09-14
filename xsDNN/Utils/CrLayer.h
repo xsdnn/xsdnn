@@ -36,26 +36,23 @@
 # include "../Output/RegressionMSE.h"
 
 
-namespace internal
-{
+namespace internal {
     /// Автоматическое создание слоя из Meta файла сетки.
     /// \param map словарь с информацией о сети
     /// \param index индекс слоя
     /// \return указатель на созданный и _инициализированный_ слой
-    inline Layer* create_layer(const std::map<std::string, Scalar>& map, const int& index)
-    {
+    inline Layer *create_layer(const std::map<std::string, Scalar> &map, const int &index) {
         std::string ind = std::to_string(index);
         const int layer_id = static_cast<int>(map.find("Layer " + ind)->second);
         const int activation_id = static_cast<int>(map.find("Activation " + ind)->second);
         const int distribution_id = static_cast<int>(map.find("Distribution " + ind)->second);
 
-        Layer* layer;
+        Layer *layer;
 
-        if (layer_id == FULLYCONNECTED)
-        {
-            const int in_size  = static_cast<int>(map.find("in_size " + ind)->second);
+        if (layer_id == FULLYCONNECTED) {
+            const int in_size = static_cast<int>(map.find("in_size " + ind)->second);
             const int out_size = static_cast<int>(map.find("out_size " + ind)->second);
-            const int bias     = static_cast<int>(map.find("Bias FC " + ind)->second);
+            const int bias = static_cast<int>(map.find("Bias FC " + ind)->second);
 
             switch (activation_id) {
                 case IDENTITY:
@@ -83,7 +80,6 @@ namespace internal
                     break;
 
 
-
                 case LEAKYRELU:
 
                     switch (distribution_id) {
@@ -109,7 +105,6 @@ namespace internal
                     break;
 
 
-
                 case RELU:
 
                     switch (distribution_id) {
@@ -133,7 +128,6 @@ namespace internal
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
-
 
 
                 case SIGMOID:
@@ -189,11 +183,9 @@ namespace internal
                     throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
 
             }
-        }
-        else if (layer_id == DROPOUT)
-        {
-            const int       in_size = static_cast<int>(map.find("in_size " + ind)->second);
-            const Scalar    drop_rate = map.find("dropout_rate " + ind)->second;
+        } else if (layer_id == DROPOUT) {
+            const int in_size = static_cast<int>(map.find("in_size " + ind)->second);
+            const Scalar drop_rate = map.find("dropout_rate " + ind)->second;
 
             switch (activation_id) {
                 case IDENTITY:
@@ -219,13 +211,11 @@ namespace internal
                 default:
                     throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
             }
-        }
-        else if (layer_id == BATCHNORM1D)
-        {
-            const int affine        = static_cast<int>(map.find("Affine " + ind)->second);
-            const int in_size       = static_cast<int>(map.find("in_size " + ind)->second);
-            const Scalar eps        = static_cast<Scalar>(map.find("tolerance " + ind)->second);
-            const Scalar momentum   = static_cast<Scalar>(map.find("momentum " + ind)->second);
+        } else if (layer_id == BATCHNORM1D) {
+            const int affine = static_cast<int>(map.find("Affine " + ind)->second);
+            const int in_size = static_cast<int>(map.find("in_size " + ind)->second);
+            const Scalar eps = static_cast<Scalar>(map.find("tolerance " + ind)->second);
+            const Scalar momentum = static_cast<Scalar>(map.find("momentum " + ind)->second);
 
 
             switch (activation_id) {
@@ -237,7 +227,8 @@ namespace internal
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Identity>(in_size, affine, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Identity>(in_size, affine, eps,
+                                                                                           momentum);
                             break;
 
                         case NORMAL:
@@ -254,7 +245,6 @@ namespace internal
                     break;
 
 
-
                 case LEAKYRELU:
 
                     switch (distribution_id) {
@@ -263,7 +253,8 @@ namespace internal
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::LeakyReLU>(in_size, affine, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::LeakyReLU>(in_size, affine, eps,
+                                                                                            momentum);
                             break;
 
                         case NORMAL:
@@ -271,14 +262,14 @@ namespace internal
                             break;
 
                         case CONSTANT:
-                            layer = new BatchNorm1D<init::Constant, activate::LeakyReLU>(in_size, affine, eps, momentum);
+                            layer = new BatchNorm1D<init::Constant, activate::LeakyReLU>(in_size, affine, eps,
+                                                                                         momentum);
                             break;
 
                         default:
                             throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
-
 
 
                 case RELU:
@@ -306,7 +297,6 @@ namespace internal
                     break;
 
 
-
                 case SIGMOID:
 
                     switch (distribution_id) {
@@ -315,7 +305,8 @@ namespace internal
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Sigmoid>(in_size, affine, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Sigmoid>(in_size, affine, eps,
+                                                                                          momentum);
                             break;
 
                         case NORMAL:
@@ -340,7 +331,8 @@ namespace internal
                             break;
 
                         case EXPONENTIAL:
-                            layer = new BatchNorm1D<init::Exponential, activate::Softmax>(in_size, affine, eps, momentum);
+                            layer = new BatchNorm1D<init::Exponential, activate::Softmax>(in_size, affine, eps,
+                                                                                          momentum);
                             break;
 
                         case NORMAL:
@@ -360,9 +352,7 @@ namespace internal
                     throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
 
             }
-        }
-        else
-        {
+        } else {
             throw std::invalid_argument("[function create_layer]: Layer is not of a known type");
         }
 
@@ -373,10 +363,9 @@ namespace internal
     /// Автоматическая установка выходного слоя из Meta файла сетки
     /// \param map словарь с информацией о сети.
     /// \return указатель на выходной слой
-    inline Output* create_output(const std::map<std::string, Scalar>& map)
-    {
+    inline Output *create_output(const std::map<std::string, Scalar> &map) {
         const int output_id = static_cast<int>(map.find("OutputLayer")->second);
-        Output* output;
+        Output *output;
 
         switch (output_id) {
             case REGRESSIONMSE:

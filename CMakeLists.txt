@@ -7,17 +7,14 @@ option(USE_NO_DTRMINIST "Set to OFF to determinist rng"           ON)
 option(USE_QUIET        "Set to ON to off callback"              OFF)
 option(MULTITHREADING   "Set to ON to on threading"              OFF)
 
-
-
 option(BUILD_TESTS      "Set to ON to build tests"              OFF)
 option(BUILD_EXAMPLES   "Set to ON to build examples"           OFF)
 
-set( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
-if( NOT EIGEN3_INCLUDE_DIR )
+if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
     message( FATAL_ERROR
             "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
 endif()
-include_directories( "${EIGEN3_INCLUDE_DIR}" )
+include_directories($ENV{EIGEN3_INCLUDE_DIR})
 
 if(USE_NO_DTRMINIST)
     add_compile_definitions(DNN_NO_DTRMINIST)
