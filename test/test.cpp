@@ -39,3 +39,5 @@ using namespace internal::debug;
 //# include "batch_norm_test.h"
 //
 //# include "nn.h"
+
+# include "core_conv_test.h"

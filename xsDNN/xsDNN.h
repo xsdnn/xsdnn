@@ -6,6 +6,7 @@
 #define XSDNN_XSDNN_H
 
 # include <Eigen/Core>
+# include "Core/Core.h"
 
 # include "NeuralNetwork.h"
 
