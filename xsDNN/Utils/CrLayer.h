@@ -75,7 +75,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -100,7 +100,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -125,7 +125,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -150,7 +150,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -175,12 +175,12 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
                 default:
-                    throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
+                    throw internal::except::xs_error("[function create_layer]: Activation is not of a known type");
 
             }
         } else if (layer_id == DROPOUT) {
@@ -209,7 +209,7 @@ namespace internal {
                     break;
 
                 default:
-                    throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
+                    throw internal::except::xs_error("[function create_layer]: Activation is not of a known type");
             }
         } else if (layer_id == BATCHNORM1D) {
             const int affine = static_cast<int>(map.find("Affine " + ind)->second);
@@ -240,7 +240,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -267,7 +267,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -292,7 +292,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -318,7 +318,7 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
@@ -344,16 +344,16 @@ namespace internal {
                             break;
 
                         default:
-                            throw std::invalid_argument("[function create_layer]: Distribution is not of a known type");
+                            throw internal::except::xs_error("[function create_layer]: Distribution is not of a known type");
                     }
                     break;
 
                 default:
-                    throw std::invalid_argument("[function create_layer]: Activation is not of a known type");
+                    throw internal::except::xs_error("[function create_layer]: Activation is not of a known type");
 
             }
         } else {
-            throw std::invalid_argument("[function create_layer]: Layer is not of a known type");
+            throw internal::except::xs_error("[function create_layer]: Layer is not of a known type");
         }
 
         layer->init();
@@ -381,7 +381,7 @@ namespace internal {
                 break;
 
             default:
-                throw std::invalid_argument("[function create_output]: Output is not of a known type");
+                throw internal::except::xs_error("[function create_output]: Output is not of a known type");
         }
 
         return output;

@@ -10,7 +10,7 @@ namespace init {
     private:
         static void check_distribution_param(const std::vector<Scalar> &params) {
             if (params.size() != 1)
-                throw std::length_error("[class Uniform] Uniform distribution have 2 params."
+                throw internal::except::xs_error("[class Uniform] Uniform distribution have 2 params."
                                         " Check input data.");
         }
 

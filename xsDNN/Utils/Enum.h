@@ -10,6 +10,8 @@
 /// Все представлено ввиде enum перечисления, что позволит масштабировать эту систему до нужных размеров.
 ///
 
+#include "Except.h"
+
 namespace internal {
     /// ID слоя
     enum LAYER_TYPE_ENUM {
@@ -27,7 +29,7 @@ namespace internal {
         if (type == "BatchNorm1D") return BATCHNORM1D;
 
 
-        throw std::invalid_argument("[function layer_id]: unknown type of layer");
+        throw internal::except::xs_error("[function layer_id]: unknown type of layer");
     }
 
     /// ID функции активации
@@ -49,7 +51,7 @@ namespace internal {
         if (type == "Identity") return IDENTITY;
         if (type == "Softmax") return SOFTMAX;
 
-        throw std::invalid_argument("[function activation_id]: unknown type of activation func");
+        throw internal::except::xs_error("[function activation_id]: unknown type of activation func");
     }
 
     /// ID распределения при генерации весов
@@ -69,7 +71,7 @@ namespace internal {
         if (type == "Normal") return NORMAL;
         if (type == "Constant") return CONSTANT;
 
-        throw std::invalid_argument("[function distribution_id]: unknown type of distribution");
+        throw internal::except::xs_error("[function distribution_id]: unknown type of distribution");
     }
 
     /// ID выходного слоя
@@ -87,7 +89,7 @@ namespace internal {
         if (type == "BinaryClassEntropy") return BINARYCLASSENTROPY;
         if (type == "MultiClassEntropy") return MULTICLASSENTROPY;
 
-        throw std::invalid_argument("[function output_id]: unknown type of output layer");
+        throw internal::except::xs_error("[function output_id]: unknown type of output layer");
     }
 }
 

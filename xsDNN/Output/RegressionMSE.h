@@ -25,7 +25,7 @@ public:
 
         // Проверяем соотвествие правилу вход == выход предыдущего
         if ((target.cols() != ncol) || (target.rows() != nrow)) {
-            throw std::invalid_argument("[class RegressionMSE]: Target data have incorrect dim. Check input data");
+            throw internal::except::xs_error("[class RegressionMSE]: Target data have incorrect dim. Check input data");
         }
 
         // собственно делаем расчет

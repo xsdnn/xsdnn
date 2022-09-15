@@ -11,6 +11,7 @@
 # include <vector>
 # include <fstream>
 # include "../Config.h"
+#include "Except.h"
 
 # include <chrono>
 
@@ -36,7 +37,7 @@ namespace internal {
             // open or create file and write/rewrite into them
             std::ofstream ofs(filename.c_str(), std::ios::out | std::ios::binary);
             if (ofs.fail()) {
-                throw std::runtime_error("[void write_one_vector] Error when opening file");
+                throw internal::except::xs_error("[void write_one_vector] Error when opening file");
             }
 
             std::ostream_iterator<char> osi(ofs);
@@ -70,7 +71,7 @@ namespace internal {
 
             std::ifstream ifs(filename.c_str(), std::ios::in | std::ifstream::binary);
             if (ifs.fail())
-                throw std::runtime_error("[inline read_vector] Error while opening file");
+                throw internal::except::xs_error("[inline read_vector] Error while opening file");
 
             std::vector<char> buffer;
             std::istreambuf_iterator<char> iter(ifs);
@@ -116,7 +117,7 @@ namespace internal {
 
             std::ofstream ofs(filename.c_str(), std::ios::out);
             if (ofs.fail())
-                throw std::runtime_error("[void write_map] Error while opening file");
+                throw internal::except::xs_error("[void write_map] Error while opening file");
 
             for (std::map<std::string, Scalar>::const_iterator it = map.begin(); it != map.end(); it++) {
                 ofs << it->first << "=" << it->second << std::endl;
@@ -130,7 +131,7 @@ namespace internal {
             std::ifstream ifs(filename, std::ios::in);
 
             if (ifs.fail())
-                throw std::invalid_argument("[inline void read_map] Error when opening file.");
+                throw internal::except::xs_error("[inline void read_map] Error when opening file.");
 
             map.clear();
             std::string buffer;
@@ -139,7 +140,7 @@ namespace internal {
                 unsigned long sep = buffer.find('=');
 
                 if (sep == std::string::npos)
-                    throw std::invalid_argument("[inline void read_map] Error when reading file.");
+                    throw internal::except::xs_error("[inline void read_map] Error when reading file.");
 
                 std::string key = buffer.substr(0, sep);
                 std::string value = buffer.substr(sep + 1, buffer.length() - sep - 1);

@@ -24,7 +24,7 @@ public:
 
         for (int i = 0; i < nelem; i++) {
             if (target_data[i] != Scalar(1) && target_data[i] != Scalar(0)) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class BinaryClassEntropy]: target data is not 1 and 0. Check input param!");
             }
         }
@@ -38,7 +38,7 @@ public:
         const long nrows = prev_layer_data.rows();
 
         if ((target.cols() != ncols) || (target.rows() != nrows)) {
-            throw std::invalid_argument("[class BinaryClassEntropy]: Target data have incorrect dim. Check input data");
+            throw internal::except::xs_error("[class BinaryClassEntropy]: Target data have incorrect dim. Check input data");
         }
 
         //	L = -y * log(in) - (1 - y) * log(1 - in)

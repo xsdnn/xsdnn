@@ -7,6 +7,8 @@
 #ifndef XSDNN_INCLUDE_UNIFORM_H
 #define XSDNN_INCLUDE_UNIFORM_H
 
+# include "../Utils/Except.h"
+
 namespace init {
 
     /*!
@@ -23,14 +25,14 @@ namespace init {
 
         static void check_distribution_param(const std::vector<Scalar> &params) {
             if (params.size() != 2)
-                throw std::length_error("[class Uniform] Uniform distribution have 2 params."
+                throw internal::except::xs_error("[class Uniform] Uniform distribution have 2 params."
                                         " Check input data.");
             if (params[0] == params[1])
-                throw std::invalid_argument("[class Uniform] Uniform distribution have 2 difference "
+                throw internal::except::xs_error("[class Uniform] Uniform distribution have 2 difference "
                                             "params. Check input data");
 
             if (params[0] > params[1])
-                throw std::invalid_argument("[class Uniform] Uniform distribution have 2 difference "
+                throw internal::except::xs_error("[class Uniform] Uniform distribution have 2 difference "
                                             "params. First need equal then second."
                                             "Check input data.");
         }

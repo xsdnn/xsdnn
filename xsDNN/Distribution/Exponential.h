@@ -7,6 +7,8 @@
 #ifndef XSDNN_INCLUDE_EXPONENTIAL_H
 #define XSDNN_INCLUDE_EXPONENTIAL_H
 
+#include "../Utils/Except.h"
+
 namespace init {
     static Scalar stairWidth[257], stairHeight[256];
 
@@ -52,11 +54,11 @@ namespace init {
 
         static void check_distribution_param(const std::vector<Scalar> &params) {
             if (params.size() != 1)
-                throw std::length_error("[class Exponential] Exponential distribution have 1 params."
+                throw internal::except::xs_error("[class Exponential] Exponential distribution have 1 params."
                                         " Check input data.");
 
             if (params[0] == 0)
-                throw std::invalid_argument("[class Exponential] Exponential distribution have 1 equal then "
+                throw internal::except::xs_error("[class Exponential] Exponential distribution have 1 equal then "
                                             "zero params. Check input data.");
 
         }

@@ -8,6 +8,7 @@
 #define XSDNN_INCLUDE_NORMAL_H
 
 # include "Exponential.h"
+# include "../Utils/Except.h"
 
 namespace init {
     static Scalar stairWidthNormal[257], stairHeightNormal[256];
@@ -71,11 +72,11 @@ namespace init {
 
         static void check_distribution_param(const std::vector<Scalar> &params) {
             if (params.size() != 2)
-                throw std::length_error("[class Normal] Normal distribution have 2 params."
+                throw internal::except::xs_error("[class Normal] Normal distribution have 2 params."
                                         " Check input data.");
 
             if (params[1] < 0)
-                throw std::invalid_argument("[class Normal] Variance must be equal than zero."
+                throw internal::except::xs_error("[class Normal] Variance must be equal than zero."
                                             " Check input data");
         }
 

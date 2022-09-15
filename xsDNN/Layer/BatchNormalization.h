@@ -6,6 +6,7 @@
 #define XSDNN_INCLUDE_BATCHNORMALIZATION_H
 
 # include "../Utils/Math.h"
+# include "../Utils/Except.h"
 
 /*!
 \brief Класс слоя пакетной нормализации (BatchNorm1D)
@@ -248,7 +249,7 @@ public:
     void set_parametrs(const std::vector<Scalar> &param) override {
         if (affine_) {
             if (param.size() != m_gammas.size() + m_betas.size() + m_mean.size() + m_var.size()) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
             }
 
@@ -277,7 +278,7 @@ public:
             );
         } else {
             if (param.size() != m_mean.size() + m_var.size()) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class BatchNorm1D]: Parameter size does not match. Check parameter size!");
             }
 

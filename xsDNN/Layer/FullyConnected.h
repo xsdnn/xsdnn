@@ -5,6 +5,8 @@
 #ifndef XSDNN_FULLYCONNECTED_H
 #define XSDNN_FULLYCONNECTED_H
 
+#include "../Utils/Except.h"
+
 /*!
 \brief Класс FullyConnected слоя
 \author __[shuffle-true](https://github.com/shuffle-true)__
@@ -145,7 +147,7 @@ public:
             // сделаем проверку на равенство длин массивов
             // static_cast<int> - приведение длины массива к интовому типу данных
             if (static_cast<int>(param.size()) != (m_weight.size() + m_bias.size())) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class FullyConnected]: Parameter size does not match. Check parameter size!");
             }
 
@@ -154,7 +156,7 @@ public:
             std::copy(param.begin() + m_weight.size(), param.end(), m_bias.data());
         } else {
             if (static_cast<int>(param.size()) != (m_weight.size())) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class FullyConnected]: Parameter size does not match. Check parameter size!");
             }
 

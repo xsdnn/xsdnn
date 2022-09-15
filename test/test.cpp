@@ -33,9 +33,9 @@
 
 using namespace internal::debug;
 
-# include "activation_test.h"
-# include "fully_connected_test.h"
-# include "dropout_test.h"
-# include "batch_norm_test.h"
-
-# include "nn.h"
+//# include "activation_test.h"
+//# include "fully_connected_test.h"
+//# include "dropout_test.h"
+//# include "batch_norm_test.h"
+//
+//# include "nn.h"

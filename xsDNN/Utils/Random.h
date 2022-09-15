@@ -6,6 +6,7 @@
 #define XSDNN_RANDOM_H
 
 # include <random>
+#include "Except.h"
 
 namespace internal {
     namespace random {
@@ -46,7 +47,7 @@ namespace internal {
             const int dimy = y.rows();
 
             if (y.cols() != nobs) {
-                throw std::invalid_argument("Input X and Y have different number of observations");
+                throw internal::except::xs_error("Input X and Y have different number of observations");
             }
 
             Eigen::VectorXi id = Eigen::VectorXi::LinSpaced(nobs, 0, nobs - 1);

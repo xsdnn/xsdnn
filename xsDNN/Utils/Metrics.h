@@ -9,7 +9,7 @@ namespace metrics {
     void MSE_calculate(Matrix &target_data, Matrix &net_output, bool sqrt = false) {
 
         if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows())) {
-            throw std::invalid_argument("[void MSE_calculate]: Input data have incorrect dimension");
+            throw internal::except::xs_error("[void MSE_calculate]: Input data have incorrect dimension");
         }
 
         Scalar MSE = (target_data - net_output).squaredNorm() / static_cast<Scalar>(target_data.cols());
@@ -23,7 +23,7 @@ namespace metrics {
     void MAE_calculate(Matrix &target_data, Matrix &net_output) {
 
         if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows())) {
-            throw std::invalid_argument("[void MAE_calculate]: Input data have incorrect dimension");
+            throw internal::except::xs_error("[void MAE_calculate]: Input data have incorrect dimension");
         }
 
         Scalar MAE = (target_data - net_output).array().cwiseAbs().sum() / static_cast<Scalar>(target_data.cols());
@@ -33,7 +33,7 @@ namespace metrics {
     void R_calculate(Matrix &target_data, Matrix &net_output) {
 
         if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows())) {
-            throw std::invalid_argument("[void R_calculate]: Input data have incorrect dimension");
+            throw internal::except::xs_error("[void R_calculate]: Input data have incorrect dimension");
         }
 
         Scalar MSE = (target_data - net_output).squaredNorm();
@@ -49,7 +49,7 @@ namespace metrics {
     void MAPE_calculate(Matrix &target_data, Matrix &net_output) {
 
         if ((target_data.cols() != net_output.cols()) || (target_data.rows() != net_output.rows())) {
-            throw std::invalid_argument("[void MAPE_calculate]: Input data have incorrect dimension");
+            throw internal::except::xs_error("[void MAPE_calculate]: Input data have incorrect dimension");
         }
 
         Scalar MAPE = ((target_data - net_output).array().cwiseAbs().sum() / target_data.cwiseAbs().array().sum()) /
@@ -95,7 +95,7 @@ namespace metrics {
     void accuracy_precision_recall_f1_calculate(const Matrix &y_true, const Matrix &y_pred) {
 
         if ((y_true.cols() != y_pred.cols()) || (y_true.rows() != y_pred.rows())) {
-            throw std::invalid_argument(
+            throw internal::except::xs_error(
                     "[void accuracy_precision_recall_f1_calculate]: Input data have incorrect dimension");
         }
 

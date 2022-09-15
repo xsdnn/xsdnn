@@ -39,8 +39,8 @@ namespace internal {
         }
 
         if (header.magic_number != 0x00000803 || header.num_items <= 0)
-            throw std::invalid_argument("[inline void parse_mnist_label] MNIST label-file format error");
-        if (ifs.fail() || ifs.bad()) throw std::invalid_argument("[inline void parse_mnist_label] file error");
+            throw internal::except::xs_error("[inline void parse_mnist_label] MNIST label-file format error");
+        if (ifs.fail() || ifs.bad()) throw internal::except::xs_error("[inline void parse_mnist_label] file error");
     }
 
     inline void parse_mnist_image(std::ifstream &ifs,
@@ -84,7 +84,7 @@ namespace dataset {
         std::ifstream ifs(label_filename.c_str(), std::ios::in | std::ios::binary);
 
         if (ifs.bad() || ifs.fail()) {
-            throw std::invalid_argument("[inline void parse_mnist_label] Error while opening file");
+            throw internal::except::xs_error("[inline void parse_mnist_label] Error while opening file");
         }
 
         uint32_t magic_number, num_items;
@@ -98,7 +98,7 @@ namespace dataset {
         }
 
         if (magic_number != 0x00000801 || num_items <= 0) {
-            throw std::invalid_argument("[inline void parse_mnist_label] MNIST label-file format unknown");
+            throw internal::except::xs_error("[inline void parse_mnist_label] MNIST label-file format unknown");
         }
 
         label.resize(10, num_items);
@@ -133,18 +133,18 @@ namespace dataset {
                                   const int y_padding) {
         // check param
         if (scale_min >= scale_max) {
-            throw std::invalid_argument(
+            throw internal::except::xs_error(
                     "[inline void parse_mnist_image] \"scale max\" must be greater then \"scale min\"");
         }
 
         if (x_padding < 0 || y_padding < 0) {
-            throw std::invalid_argument("[inline void parse_mnist_image] \"padding\" must be greater then zero");
+            throw internal::except::xs_error("[inline void parse_mnist_image] \"padding\" must be greater then zero");
         }
 
         std::ifstream ifs(image_filename, std::ios::in | std::ios::binary);
 
         if (ifs.bad() || ifs.fail()) {
-            throw std::invalid_argument("[inline void parse_mnist_label] Error while opening file");
+            throw internal::except::xs_error("[inline void parse_mnist_label] Error while opening file");
         }
 
         internal::mnist_header header;

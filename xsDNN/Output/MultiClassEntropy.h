@@ -32,12 +32,12 @@ public:
                 }
 
                 if (target(j, i) != Scalar(0)) {
-                    throw std::invalid_argument("[class CrossEntropyLoss] Target should only contain zero or one");
+                    throw internal::except::xs_error("[class CrossEntropyLoss] Target should only contain zero or one");
                 }
             }
 
             if (n_one != 1) {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class CrossEntropyLoss] Each column of target data should only contain one \"1\"");
             }
         }
@@ -51,7 +51,7 @@ public:
         const long nrows = prev_layer_data.rows();
 
         if (ncols != target.cols() || nrows != target.rows()) {
-            throw std::invalid_argument("[class CrossEntropyLoss] Target data have incorrect dimension");
+            throw internal::except::xs_error("[class CrossEntropyLoss] Target data have incorrect dimension");
         }
 
         m_din.resize(nrows, ncols);

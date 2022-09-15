@@ -43,7 +43,7 @@ private:
 
         for (int i = 1; i < nlayer; ++i) {
             if (m_layers[i]->in_size() != m_layers[i - 1]->out_size()) {
-                throw std::invalid_argument("[class NeuralNetwork]: Unit sizes do not match");
+                throw internal::except::xs_error("[class NeuralNetwork]: Unit sizes do not match");
             }
         }
     }
@@ -88,7 +88,7 @@ private:
         }
 
         if (params.size() != nlayer)
-            throw std::length_error("[class NeuralNetwork] Distribution parameters vector size "
+            throw internal::except::xs_error("[class NeuralNetwork] Distribution parameters vector size "
                                     "does not match count layers. Check input data.");
 
         for (int i = 0; i < nlayer; ++i) {
@@ -109,7 +109,7 @@ private:
         // Проверим нулевой слой на соотвествие правилу вход данных == вход нулевого слоя
 
         if (input.rows() != m_layers[0]->in_size()) {
-            throw std::invalid_argument("[class NeuralNetwork]: Input data have incorrect dimension");
+            throw internal::except::xs_error("[class NeuralNetwork]: Input data have incorrect dimension");
         }
 
         // Протолкнули данные в нулевой слой
@@ -314,7 +314,7 @@ public:
         if (nlayer <= 0) { return false; }
 
         if (batch_size <= 0) {
-            throw std::invalid_argument("[class NeuralNetwork] Batch size must be greater than zero.");
+            throw internal::except::xs_error("[class NeuralNetwork] Batch size must be greater than zero.");
         }
 
         // сбрасываем значения оптимизатора
@@ -377,7 +377,7 @@ public:
 
         for (int i = 0; i < nlayer; i++) {
             if (m_layers[i]->get_workflow() != "eval") {
-                throw std::invalid_argument(
+                throw internal::except::xs_error(
                         "[class NeuralNetwork]: Model must be on eval workflow while predict. Set model process.");
             }
         }
@@ -412,7 +412,7 @@ public:
         unsigned long nlayer = count_layers();
 
         if (static_cast<int>(param.size()) != nlayer) {
-            throw std::invalid_argument("[class Neural Network]: param size does not match. check input param!");
+            throw internal::except::xs_error("[class Neural Network]: param size does not match. check input param!");
         }
 
         for (int i = 0; i < nlayer; ++i) {
@@ -462,7 +462,7 @@ public:
                      "You used advanced xsDNN method. Be careful...\033[0m\t\t";
 
         if (batch_size <= 0) {
-            throw std::invalid_argument("[class NeuralNetwork] Batch size must be greater than zero.");
+            throw internal::except::xs_error("[class NeuralNetwork] Batch size must be greater than zero.");
         }
 
         if (batch_seed > 0) {
@@ -541,7 +541,7 @@ public:
         if (index >= 0 || index < m_layers.size()) {
             return m_layers[index];
         }
-        throw std::invalid_argument("[class NeuralNetwork] Net index out of range.");
+        throw internal::except::xs_error("[class NeuralNetwork] Net index out of range.");
     }
 
     /// Сохранение сети
