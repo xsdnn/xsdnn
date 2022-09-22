@@ -1,39 +1,17 @@
 # include "../../xsDNN/xsDNN.h"
 
-void calculate_mseloss(Matrix& label, Matrix& predict)
-{
-    const long ncols = predict.cols();
-    Matrix model_answer(1, ncols);
-    Matrix relabel(1, ncols);
-
-    for (int i = 0; i < ncols; i++)
-    {
-        Scalar max_elem = predict.col(i).maxCoeff();
-
-        for (int j = 0; j < 10; j++)
-        {
-            if (predict(j, i) == max_elem)
-            {
-                model_answer(0, i) = j;
-                break;
+void calculate_accuracy(const Matrix& target, const Matrix& predict) {
+    const int nobj = target.cols();
+    auto argmax_vec = internal::math::colargmax_vector(predict);
+    Scalar nom = 0;
+    for (int i = 0; i < nobj; i++) {
+        for (int j = 0; j < 10; j++) {
+            if (target(j, i) == Scalar(1)) {
+                if (j == argmax_vec[i]) nom++;
             }
         }
     }
-
-    for (int i = 0; i < ncols; i++)
-    {
-        for (int j = 0; j < 10; j++)
-        {
-            if (label(j, i) == 1)
-            {
-                relabel(0, i) = j;
-                break;
-            }
-        }
-    }
-
-    Scalar error = (relabel - model_answer).squaredNorm() / ncols;
-    std::cout << "RMSE Error = " << std::sqrt(error) << std::endl;
+    std::cout << "Accuracy = " << nom / nobj << "%" << std::endl;
 }
 
 int main()
@@ -53,5 +31,5 @@ int main()
     net.eval();
     Matrix predict = net.predict(test_image);
 
-    calculate_mseloss(test_label, predict);
+    calculate_accuracy(test_label, predict);
 }
