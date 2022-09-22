@@ -38,6 +38,43 @@ namespace internal {
             var.setZero();
             calc_varience(in, mu, var);
         }
+
+        /// Получить поколоночный argmax вектор. Каждый элемент arg - argmax в каждом столбце m
+        /// \param m матрица для поиска максимумов
+        /// \param arg вектор максимумов
+        inline void colargmax_vector(const Matrix& m,
+                                     std::vector<int>& arg) {
+            for (auto col : m.colwise()) {
+                auto max = col.maxCoeff();
+                int index = 0;
+                for (auto num : col) {
+                    if (num == max) {
+                        arg.push_back(index);
+                        break;
+                    }
+                    index++;
+                }
+            }
+        }
+
+        /// Получить поколоночный argmax вектор.
+        /// \param m матрица для поиска максимумов
+        /// \return вектор максимумов
+        inline std::vector<int> colargmax_vector(const Matrix& m) {
+            std::vector<int> arg;
+            for (auto col : m.colwise()) {
+                auto max = col.maxCoeff();
+                int index = 0;
+                for (auto num : col) {
+                    if (num == max) {
+                        arg.push_back(index);
+                        break;
+                    }
+                    index++;
+                }
+            }
+            return arg;
+        }
     } // end namespace math
 } // end namespace internal
 
