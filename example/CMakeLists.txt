@@ -5,3 +5,4 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(example_mnist_train      mnist/train.cpp)
 add_executable(example_mnist_test       mnist/test.cpp)
+add_executable(example_sinus            approximate_sin/main.cpp)
