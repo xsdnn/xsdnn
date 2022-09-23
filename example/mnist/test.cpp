@@ -11,7 +11,7 @@ void calculate_accuracy(const Matrix& target, const Matrix& predict) {
             }
         }
     }
-    std::cout << "Accuracy = " << nom / nobj << "%" << std::endl;
+    std::cout << "Accuracy = " << nom / nobj * 100 << "%" << std::endl;
 }
 
 int main()
@@ -26,7 +26,7 @@ int main()
     dataset::parse_mnist_label("../../datasets/mnist/t10k-labels-idx1-ubyte", test_label);
 
     NeuralNetwork net;
-    net.read_net("example-mnist", "baseline");
+    net.read_net("example-mnist", "uniform_dist");
 
     net.eval();
     Matrix predict = net.predict(test_image);

@@ -26,7 +26,7 @@ int main()
             {-6.0 / (128.0 + 10.0), 6.0 / (128.0 + 10.0)}
     };
 
-    SGD opt; opt.m_lrate = 0.01; opt.m_nesterov = true; opt.m_momentum = 0.63;
+    optim::SGD opt; opt.m_lrate = 0.01; opt.m_nesterov = true; opt.m_momentum = 0.63;
 
     baseline.fit(opt, train_image, train_label, 16, 5, 42, 10, init_params);
     baseline.export_net("example-mnist", "uniform_dist");
