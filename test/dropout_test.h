@@ -60,7 +60,7 @@ TEST(dropout, fully_net)
 
     Output* criterion = new MSELoss();
     net.set_output(criterion);
-    SGD opt;
+    optim::SGD opt;
 
     EXPECT_TRUE(net.fit(opt, train_image, train_label, 16, 5, 42));
 }

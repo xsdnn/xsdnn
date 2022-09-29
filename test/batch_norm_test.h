@@ -46,7 +46,7 @@ TEST(batchnorm1d, forward){
         EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
     }
 
-    SGD opt;
+    optim::SGD opt;
     bn_layer.update(opt);
 
     output = bn_layer.output();
@@ -88,7 +88,7 @@ TEST(batchnorm1d, forward_affine){
         EXPECT_NEAR(output_data[i], expected_data[i], 1e-4);
     }
 
-    SGD opt;
+    optim::SGD opt;
     bn_layer.update(opt);
 
     output = bn_layer.output();
@@ -289,7 +289,7 @@ TEST(batchnorm1d, fully_net){
     Output* criterion = new MSELoss();
     net.set_output(criterion);
 
-    SGD opt; opt.m_lrate = 0.1;
+    optim::SGD opt; opt.m_lrate = 0.1;
     net.fit(opt, train_data, train_label, 16, 5, 10);
 }
 

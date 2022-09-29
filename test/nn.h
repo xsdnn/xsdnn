@@ -13,7 +13,7 @@ TEST(nn, save){
     net << new FullyConnected<init::Normal, activate::ReLU>(784, 128)
         << new FullyConnected<init::Normal, activate::Sigmoid>(128, 784);
     Output* criterion = new MSELoss();
-    SGD opt;
+    optim::SGD opt;
 
     net.set_output(criterion);
     net.fit(opt, data, image, 10, 1);
