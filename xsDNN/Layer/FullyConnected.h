@@ -6,6 +6,7 @@
 #define XSDNN_FULLYCONNECTED_H
 
 #include "../Utils/Except.h"
+#include "../Core/FULLYCONNECTED/FullyConnectedCore.h"
 
 /*!
 \brief Класс FullyConnected слоя
@@ -63,13 +64,14 @@ public:
     /// Активируем.
     /// \param prev_layer_data матрица значений нейронов предыдущего слоя
     void forward(const Matrix &prev_layer_data) override {
-        const long ncols = prev_layer_data.cols();
 
-        m_z.resize(this->m_out_size, ncols);
-        m_z.noalias() = m_weight.transpose() * prev_layer_data;
-        if (BIAS_ACTIVATE) { m_z.colwise() += m_bias; }
-        m_a.resize(this->m_out_size, ncols);
-        Activation::activate(m_z, m_a);
+        internal::fc::computeForward<Activation>(
+                prev_layer_data,
+                m_weight,m_bias,
+                m_z,m_a,
+                BIAS_ACTIVATE,this->m_out_size
+                );
+
     }
 
     ///
@@ -86,14 +88,15 @@ public:
     /// \param next_layer_data вектор градиента следующего слоя (слева - направо)
     void backprop(const Matrix &prev_layer_data,
                   const Matrix &next_layer_backprop_data) override {
-        const long ncols = prev_layer_data.cols();
 
-        Matrix &dLz = m_z;
-        Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
-        m_dw.noalias() = prev_layer_data * dLz.transpose() / ncols;
-        if (BIAS_ACTIVATE) { m_db.noalias() = dLz.rowwise().mean(); }
-        m_din.resize(this->m_in_size, ncols);
-        m_din.noalias() = m_weight * dLz;
+        internal::fc::computeBackward<Activation>(
+                prev_layer_data, next_layer_backprop_data,
+                m_weight, m_dw,
+                m_db, m_din,
+                m_z, m_a,
+                BIAS_ACTIVATE, this->m_in_size
+                );
+
     }
 
     ///
