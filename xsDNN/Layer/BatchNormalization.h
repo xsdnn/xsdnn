@@ -5,7 +5,7 @@
 #ifndef XSDNN_INCLUDE_BATCHNORMALIZATION_H
 #define XSDNN_INCLUDE_BATCHNORMALIZATION_H
 
-# include "../Utils/Math.h"
+# include "../Core/BATCHNORM/BatchNorm1DCore.h"
 # include "../Utils/Except.h"
 
 /*!
@@ -90,30 +90,15 @@ public:
     ///
     /// \param prev_layer_data значения нейронов предыдущего слоя
     void forward(const Matrix &prev_layer_data) override {
-        const long ncols = prev_layer_data.cols();
-        m_z.resize(this->m_in_size, ncols);
-        m_a.resize(this->m_in_size, ncols);
 
-        Vector mean = (workflow == "train") ? mean_curr : m_mean;
-        Vector var = (workflow == "train") ? var_curr : m_var;
+        internal::bn1d::computeForward<Activation>(
+                prev_layer_data, m_z, m_a,
+                mean_curr, var_curr,
+                m_mean, m_var, m_stddev,
+                m_gammas, m_betas,
+                workflow, eps, affine_, this->m_in_size
+                );
 
-        if (workflow == "train") {
-            internal::math::update_statistics(prev_layer_data, this->m_in_size, mean, var);
-        }
-
-        m_stddev = (var.array() + eps).sqrt();
-
-        int index = 0;
-        for (auto col: prev_layer_data.colwise()) {
-            m_z.col(index++) = (col.array() - mean.array()) / m_stddev.array();
-        }
-
-        if (affine_) {
-            m_z = m_z.array().colwise() * m_gammas.array();
-            m_z = m_z.array().colwise() + m_betas.array();
-        }
-
-        Activation::activate(m_z, m_a);
     }
 
     ///
@@ -129,43 +114,14 @@ public:
     /// \param next_layer_data вектор градиента следующего слоя
     void backprop(const Matrix &prev_layer_data,
                   const Matrix &next_layer_backprop_data) override {
-        const int ncols = m_z.cols();
-        m_din.resize(this->m_in_size, ncols);
 
-        Matrix dLz;
-        Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
+        internal::bn1d::computeBackward<Activation>(
+                prev_layer_data, next_layer_backprop_data,
+                m_z, m_a,
+                m_din, m_dg, m_db,
+                m_stddev, affine_, this->m_in_size
+                );
 
-        // if Y = (X-mean(X))/(sqrt(var(X)+eps)), then
-        //
-        // dE(L)/dX =
-        //   (dL/dz - mean(dL/dz) - mean(dL/dz \cdot Y) \cdot Y)
-        //     ./ sqrt(var(X) + eps)
-        //
-
-        Matrix dLz_dot_y;
-        dLz_dot_y.resize(this->m_in_size, ncols);
-        dLz_dot_y = dLz.cwiseProduct(m_z);
-
-        Vector mean_dLz, mean_dLz_dot_y;
-        mean_dLz.resize(this->m_in_size);
-        mean_dLz_dot_y.resize(this->m_in_size);
-        mean_dLz = dLz.rowwise().mean();
-        mean_dLz_dot_y = dLz_dot_y.rowwise().mean();
-
-        int index = 0;
-        for (auto col: m_din.colwise()) {
-            col = dLz.col(index) - mean_dLz - mean_dLz_dot_y.cwiseProduct(m_z.col(index));
-            index += 1;
-        }
-        index = 0;
-        for (auto row: m_din.rowwise()) {
-            row.array() /= m_stddev[index++];
-        }
-
-        if (affine_) {
-            m_dg = mean_dLz_dot_y;
-            m_db = mean_dLz;
-        }
     }
 
     ///
