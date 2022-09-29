@@ -6,6 +6,8 @@
 
 int main() {
     Matrix train_data(2, 2048), test_data(2, 1024);
+    train_data.setRandom(); test_data.setRandom();
+
     Matrix train_label = train_data.array().sin();
     Matrix test_label = test_data.array().sin();
 
@@ -21,10 +23,10 @@ int main() {
             128,
             1,
             0.1,
-            0.1
+            0.5
             );
 
-    nn.fit(opt, train_data, train_label, 16, 5, 1);
+    nn.fit(opt, train_data, train_label, 16, 50, 1);
 
     Matrix predict = nn.predict(test_data);
 
