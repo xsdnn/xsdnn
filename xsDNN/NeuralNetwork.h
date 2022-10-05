@@ -4,6 +4,8 @@
 
 #ifndef XSDNN_NEURALNETWORK_H
 #define XSDNN_NEURALNETWORK_H
+// TODO: подумать, как собирать метаданные об обучении (ошибка, результаты по метрикам на тренировочном и валидационном
+//  наборах)
 
 # include <map>
 # include <tuple>

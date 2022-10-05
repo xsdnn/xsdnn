@@ -9,6 +9,8 @@
 #include <iostream>
 #include "../Utils/Except.h"
 
+// TODO: продумать логику ядра для рекуррентных сетей
+
 namespace core {
     enum class conv2d { direct, mec, im2col, fft };
     inline std::ostream& operator << (std::ostream& out, conv2d& obj) {
