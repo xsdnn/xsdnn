@@ -245,7 +245,7 @@ TEST(batchnorm1d, grad){
     }
 }
 
-TEST(bathcnorm1d, save){
+TEST(batchnorm1d, save){
     std::string filename = "batchnorm1d.save";
     BatchNorm1D bn_layer = BatchNorm1D<init::Constant, activate::Identity>(3, false);
     std::vector<Scalar> init_params = {0.0};

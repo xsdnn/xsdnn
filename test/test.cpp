@@ -31,13 +31,16 @@
 # include "../xsDNN/Utils/GradCheck.h"
 # include "helper.h"
 
-using namespace internal::debug;
+using namespace xsdnn::internal::debug;
+using namespace xsdnn;
 
-//# include "activation_test.h"
-//# include "fully_connected_test.h"
-//# include "dropout_test.h"
-//# include "batch_norm_test.h"
-//
-//# include "nn.h"
+
+# include "activation_test.h"
+# include "fully_connected_test.h"
+# include "dropout_test.h"
+# include "batch_norm_test.h"
+
+# include "nn.h"
 
 # include "core_conv_test.h"
+//# include "some_stupid_test.h"
