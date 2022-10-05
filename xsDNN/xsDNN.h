@@ -5,6 +5,11 @@
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
 
+/// \brief Library namespace
+namespace xsdnn {
+
+} // namespace xsdnn
+
 # include <Eigen/Core>
 # include <unsupported/Eigen/CXX11/Tensor>
 # include "Core/Core.h"
