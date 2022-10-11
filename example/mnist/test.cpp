@@ -1,4 +1,5 @@
 # include "../../xsDNN/xsDNN.h"
+using namespace xsdnn;
 
 void calculate_accuracy(const Matrix& target, const Matrix& predict) {
     const int nobj = target.cols();

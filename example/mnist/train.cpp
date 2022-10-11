@@ -1,4 +1,5 @@
 # include "../../xsDNN//xsDNN.h"
+using namespace xsdnn;
 
 int main()
 {
