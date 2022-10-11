@@ -15,6 +15,8 @@ if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
 endif()
 include_directories($ENV{EIGEN3_INCLUDE_DIR})
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
 if(USE_NO_DTRMINIST)
     add_compile_definitions(DNN_NO_DTRMINIST)
 endif(USE_NO_DTRMINIST)
