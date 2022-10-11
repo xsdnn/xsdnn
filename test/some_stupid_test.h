@@ -6,12 +6,10 @@
 #ifndef XSDNN_SOME_STUPID_TEST_H
 #define XSDNN_SOME_STUPID_TEST_H
 
-TEST(tensor, map) {
-    typedef Eigen::TensorMap<Eigen::Tensor<Scalar, 3, Eigen::ColMajor, Eigen::DenseIndex>, Eigen::Aligned>
-            Tensor;
-
-    Eigen::Tensor<Scalar, 3, Eigen::ColMajor, Eigen::DenseIndex> storage;
-    Tensor a(storage.data(), 2, 4, 2);
+TEST(tensor, type) {
+    xsTypes<Scalar>::Matrix m(2, 4);
+    m.setRandom();
+    std::cout << "Matrix -> \n" << m << "\n\n\n\n";
 }
 
 #endif //XSDNN_SOME_STUPID_TEST_H

@@ -21,9 +21,11 @@ int main()
     Output* criterion = new CrossEntropyLoss();
     baseline.set_output(criterion);
 
+    Scalar limit_1 = std::sqrt(6.0 / (784.0 + 128.0));
+    Scalar limit_2 = std::sqrt(6.0 / (128.0 + 10.0));
     std::vector< std::vector<Scalar> > init_params = {
-            {-6.0 / (784.0 + 128.0), 6.0 / (784.0 + 128.0)},
-            {-6.0 / (128.0 + 10.0), 6.0 / (128.0 + 10.0)}
+            {-limit_1, limit_2},
+            {-limit_2, limit_2}
     };
 
     optim::SGD opt; opt.m_lrate = 0.01; opt.m_nesterov = true; opt.m_momentum = 0.63;

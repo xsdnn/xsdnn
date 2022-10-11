@@ -4,6 +4,7 @@
 
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
+#define EIGEN_USE_THREADS
 
 /// \brief Library namespace
 namespace xsdnn {

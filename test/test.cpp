@@ -34,13 +34,13 @@
 using namespace xsdnn::internal::debug;
 using namespace xsdnn;
 
-
-# include "activation_test.h"
-# include "fully_connected_test.h"
-# include "dropout_test.h"
-# include "batch_norm_test.h"
-
-# include "nn.h"
-
-# include "core_conv_test.h"
+# include "tensor_types_test.h"
+//# include "activation_test.h"
+//# include "fully_connected_test.h"
+//# include "dropout_test.h"
+//# include "batch_norm_test.h"
+//
+//# include "nn.h"
+//
+//# include "core_conv_test.h"
 //# include "some_stupid_test.h"
