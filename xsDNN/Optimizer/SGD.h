@@ -45,7 +45,7 @@ namespace xsdnn {
             /// \image html sgd_implementation.jpg
             /// \param grad вектор производной (например веса или смещения)
             /// \param theta вектор значений (например веса или смещения)
-            void update(AlignedMapVec &grad, AlignedMapVec &theta) override {
+            void update(xsTypes::AlignedMapVec &grad, xsTypes::AlignedMapVec &theta) override {
                 if (m_decay != 0) grad += m_decay * theta;
 
                 if (m_momentum != 0) {
@@ -101,7 +101,7 @@ namespace xsdnn {
                     curr_iter_(0)
             {}
 
-            void update(AlignedMapVec &grad, AlignedMapVec &theta) {
+            void update(xsTypes::AlignedMapVec &grad, xsTypes::AlignedMapVec &theta) {
                 SGD::update(grad, theta);
                 curr_iter_ += 1;
 

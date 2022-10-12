@@ -17,21 +17,6 @@ namespace xsdnn {
     */
     template<typename Distribution, typename Activation>
     class FullyConnected : public Layer {
-    private:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-        typedef Vector::AlignedMapType AlignedMapVec;
-
-        Matrix m_weight;         ///< Веса модели
-        Vector m_bias;           ///< Смещение весов
-        Matrix m_dw;             ///< Производная весов
-        Vector m_db;             ///< Производная смещения
-        Matrix m_z;              ///< Значения нейронов до активации
-        Matrix m_a;              ///< Значения нейронов после активации
-        Matrix m_din;            ///< Проивзодная значений нейронов после backprop
-
-        bool BIAS_ACTIVATE;    ///< Применять смещение?
-
-
     public:
         /// Конструктор полносвязного слоя
         /// \param in_size кол-во нейронов на вход.
@@ -64,7 +49,7 @@ namespace xsdnn {
         /// Добавляем к этому смещение, если необходимо.
         /// Активируем.
         /// \param prev_layer_data матрица значений нейронов предыдущего слоя
-        void forward(const Matrix &prev_layer_data) override {
+        void forward(const xsTypes::Matrix &prev_layer_data) override {
 
             internal::fc::computeForward<Activation>(
                     prev_layer_data,
@@ -77,7 +62,7 @@ namespace xsdnn {
 
         ///
         /// \return Значения нейронов после активации
-        const Matrix &output() const override { return m_a; }
+        const xsTypes::Matrix &output() const override { return m_a; }
 
         /// Получаем производные этого слоя.
         /// Нужно получить производные по 3 вещам.
@@ -87,8 +72,8 @@ namespace xsdnn {
         /// Положение предыдущего - следующего слоя равносильно прямому проходу
         /// \param prev_layer_data значения нейронов предыдущего слоя
         /// \param next_layer_data вектор градиента следующего слоя (слева - направо)
-        void backprop(const Matrix &prev_layer_data,
-                      const Matrix &next_layer_backprop_data) override {
+        void backprop(const xsTypes::Matrix &prev_layer_data,
+                      const xsTypes::Matrix &next_layer_backprop_data) override {
 
             internal::fc::computeBackward<Activation>(
                     prev_layer_data, next_layer_backprop_data,
@@ -102,16 +87,16 @@ namespace xsdnn {
 
         ///
         /// \return Вектор направления спуска (антиградиент)
-        const Matrix &backprop_data() const override { return m_din; }
+        const xsTypes::Matrix &backprop_data() const override { return m_din; }
 
 
         /// Обновление весов и смещений используя переданный алгоритм оптимизации (см. Optimizer)
         /// \param opt оптимайзер. Объект класса, унаследованного от Optimizer.
         void update(Optimizer &opt) override {
-            AlignedMapVec dw(m_dw.data(), m_dw.size());
-            AlignedMapVec w(m_weight.data(), m_weight.size());
-            AlignedMapVec db(m_db.data(), m_db.size());
-            AlignedMapVec b(m_bias.data(), m_bias.size());
+            xsTypes::AlignedMapVec dw(m_dw.data(), m_dw.size());
+            xsTypes::AlignedMapVec w(m_weight.data(), m_weight.size());
+            xsTypes::AlignedMapVec db(m_db.data(), m_db.size());
+            xsTypes::AlignedMapVec b(m_bias.data(), m_bias.size());
 
             opt.update(dw, w);
             if (BIAS_ACTIVATE) { opt.update(db, b); }
@@ -241,6 +226,17 @@ namespace xsdnn {
 
             return out;
         }
+
+    private:
+        xsTypes::Matrix m_weight;         ///< Веса модели
+        xsTypes::Vector m_bias;           ///< Смещение весов
+        xsTypes::Matrix m_dw;             ///< Производная весов
+        xsTypes::Vector m_db;             ///< Производная смещения
+        xsTypes::Matrix m_z;              ///< Значения нейронов до активации
+        xsTypes::Matrix m_a;              ///< Значения нейронов после активации
+        xsTypes::Matrix m_din;            ///< Проивзодная значений нейронов после backprop
+
+        bool BIAS_ACTIVATE;    ///< Применять смещение?
     };
 } // namespace xsdnn
 

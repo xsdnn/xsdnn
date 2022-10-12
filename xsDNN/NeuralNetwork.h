@@ -24,7 +24,6 @@ namespace xsdnn {
 */
     class NeuralNetwork {
     private:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
         typedef std::map<std::string, Scalar> Meta;
 
 
@@ -104,7 +103,7 @@ namespace xsdnn {
         /// </summary>
         /// <param name="input"> - входные данные.
         /// Убедитесь, что их длина равна длине входного слоя сетки</param>
-        void Forward(const Matrix &input) {
+        void Forward(const xsTypes::Matrix &input) {
             const unsigned long nlayer = count_layers();
 
             if (nlayer <= 0) { return; }
@@ -136,7 +135,7 @@ namespace xsdnn {
         /// классификации и регрессии, а также для многоклассовой классификации</typeparam>
         /// <param name="input"> - входные данные</param>
         /// <param name="target"> - собственно таргет</param>
-        void Backprop(const Matrix &input, const Matrix &target) {
+        void Backprop(const xsTypes::Matrix &input, const xsTypes::Matrix &target) {
             const unsigned long nlayer = count_layers();
 
             if (nlayer <= 0) { return; }
@@ -305,8 +304,8 @@ namespace xsdnn {
             }
         }
 
-
-        bool fit(Optimizer &opt, const Matrix &x, const Matrix &y,
+        // TODO: подумать что тут должно быть вместо xsTypes::Matrix
+        bool fit(Optimizer &opt, const xsTypes::Matrix &x, const xsTypes::Matrix &y,
                  int batch_size, int epoch, int batch_seed = -1, int init_seed = -1,
                  const std::vector<std::vector<Scalar>> &params = std::vector<std::vector<Scalar>>()) {
             this->Init(init_seed, params);
@@ -328,8 +327,8 @@ namespace xsdnn {
             }
 
             // начинаем генерить батчи
-            std::vector<Matrix> x_batches;
-            std::vector<Matrix> y_batches;
+            std::vector<xsTypes::Matrix> x_batches;
+            std::vector<xsTypes::Matrix> y_batches;
 
             const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
@@ -373,7 +372,8 @@ namespace xsdnn {
             return true;
         }
 
-        Matrix predict(const Matrix &x) {
+        // TODO: сделать через TensorBase
+        xsTypes::Matrix predict(const xsTypes::Matrix &x) {
             const unsigned long nlayer = count_layers();
 
             if (nlayer <= 0) { return {}; }
@@ -456,10 +456,10 @@ namespace xsdnn {
         /// \param batch_size размер батча
         /// \param batch_seed сид для генерации рандома
         /// \return кортеж из 2 векторов и кол-во батчей в данных
-        auto generate_batch(const Matrix &x,
-                            const Matrix &y,
+        auto generate_batch(const xsTypes::Matrix &x,
+                            const xsTypes::Matrix &y,
                             const int batch_size,
-                            const int batch_seed) -> std::tuple<std::vector<Matrix>, std::vector<Matrix>, int> {
+                            const int batch_seed) -> std::tuple<std::vector<xsTypes::Matrix>, std::vector<xsTypes::Matrix>, int> {
             std::cout << "\x1B[31m[class NeuralNetwork] {auto generate_batch}"
                          "\n"
                          "You used advanced xsDNN method. Be careful...\033[0m\t\t";
@@ -472,8 +472,8 @@ namespace xsdnn {
                 m_rng.seed(batch_seed);
             }
 
-            std::vector<Matrix> x_batches;
-            std::vector<Matrix> y_batches;
+            std::vector<xsTypes::Matrix> x_batches;
+            std::vector<xsTypes::Matrix> y_batches;
 
             const int nbatch = internal::random::create_shuffled_batches(x, y, batch_size, m_rng, x_batches, y_batches);
 
@@ -483,7 +483,7 @@ namespace xsdnn {
         /// Проход вперед
         /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
         /// \param input входные данные (eq. train_data, test_data)
-        void forward(const Matrix &input) {
+        void forward(const xsTypes::Matrix &input) {
             this->Forward(input);
         }
 
@@ -491,7 +491,7 @@ namespace xsdnn {
         /// \warning Этот метод следует использовать с осторожностью. Многие проверки выключены.
         /// \param input входные данные (eq. train_data, test_data)
         /// \param target метки классов / целевая переменная (eq. train_label, test_label)
-        void backprop(const Matrix &input, const Matrix &target) {
+        void backprop(const xsTypes::Matrix &input, const xsTypes::Matrix &target) {
             this->Backprop(input, target);
         }
 

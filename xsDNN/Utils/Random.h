@@ -8,6 +8,8 @@
 # include <random>
 #include "Except.h"
 
+// TODO: MatrixBase --> TensorBase
+
 namespace xsdnn {
     namespace internal {
         namespace random {

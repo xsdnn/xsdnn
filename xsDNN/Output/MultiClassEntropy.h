@@ -13,13 +13,10 @@ namespace xsdnn {
     \date Август 2022 года
     */
     class CrossEntropyLoss : public Output {
-    private:
-        Matrix m_din;           ///< Производная по этому слою
-
     public:
         /// Проверка входных данных на соотвествие значений
         /// \param target целевая переменная
-        void check_target_data(const Matrix &target) const override {
+        void check_target_data(const xsTypes::Matrix &target) const override {
             const long ncols = target.cols();       // eq. n sample's
             const long nrows = target.rows();       // eq. n feature's
 
@@ -47,7 +44,7 @@ namespace xsdnn {
         /// \image html multiclassentropy_evaluate.png
         /// \param prev_layer_data последний скрытый слой сети
         /// \param target целевая переменная
-        void evaluate(const Matrix &prev_layer_data, const Matrix &target) override {
+        void evaluate(const xsTypes::Matrix &prev_layer_data, const xsTypes::Matrix &target) override {
             const long ncols = prev_layer_data.cols();
             const long nrows = prev_layer_data.rows();
 
@@ -61,7 +58,7 @@ namespace xsdnn {
 
         ///
         /// \return Вектор направления спуска (антиградиент).
-        const Matrix &backprop_data() const override {
+        const xsTypes::Matrix &backprop_data() const override {
             return m_din;
         }
 
@@ -90,6 +87,9 @@ namespace xsdnn {
         std::string output_type() const override {
             return "MultiClassEntropy";
         }
+
+    private:
+        xsTypes::Matrix m_din;           ///< Производная по этому слою
     };
 } // namespace xsdnn
 

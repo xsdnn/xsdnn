@@ -43,8 +43,6 @@ namespace xsdnn {
 # include "Output/BinaryClassEntropy.h"
 # include "Output/MultiClassEntropy.h"
 
-
-# include "Utils/Metrics.h"
 # include "Utils/InOut.h"
 # include "Utils/MnistIO.h"
 # include "Utils/Except.h"

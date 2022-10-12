@@ -16,7 +16,7 @@ exit(1);
 
 namespace xsdnn {
     typedef double Scalar;
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+//    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 } // namespace xsdnn
 
 // TODO: сделать ванильный рефакторинг всего кода
@@ -30,12 +30,13 @@ namespace xsdnn {
         typedef Eigen::Tensor<Scalar, 2, Eigen::ColMajor, Eigen::DenseIndex>
                 Matrix;
         typedef Eigen::Tensor<Scalar, 1, Eigen::ColMajor, Eigen::DenseIndex>
-                Vec;
-        // TODO: закоммить "define aligned map type's"
+                Vector;
+        typedef Eigen::TensorFixedSize<Scalar, Eigen::Sizes<1, 1>, Eigen::ColMajor, Eigen::DenseIndex>
+                TScalar;
         typedef Eigen::TensorMap<Tensor_4D, Eigen::Aligned> AlignedMapTensor4D;
         typedef Eigen::TensorMap<Tensor_3D, Eigen::Aligned> AlignedMapTensor3D;
         typedef Eigen::TensorMap<Matrix, Eigen::Aligned> AlignedMapMatrix;
-        typedef Eigen::TensorMap<Vec, Eigen::Aligned> AlignedMapVec;
+        typedef Eigen::TensorMap<Vector, Eigen::Aligned> AlignedMapVec;
     };
 } // namespace xsdnn
 

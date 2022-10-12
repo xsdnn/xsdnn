@@ -7,11 +7,11 @@
 
 namespace xsdnn {
     /*!
-\brief Родительский класс функционала ошибки
-\author __[shuffle-true](https://github.com/shuffle-true)__
-\version 0.0
-\date Март 2022 года
-*/
+    \brief Родительский класс функционала ошибки
+    \author __[shuffle-true](https://github.com/shuffle-true)__
+    \version 0.0
+    \date Март 2022 года
+    */
     class Output {
     public:
         virtual ~Output() = default;
@@ -22,7 +22,7 @@ namespace xsdnn {
         /// Например, задача классификации - {0, 1}
         /// </summary>
         /// <param name="target"> - собственно таргет</param>
-        virtual void check_target_data(const Matrix &target) const {}
+        virtual void check_target_data(const xsTypes::Matrix &target) const {}
 
         /// <summary>
         /// Вычисление прямого и обратного распространения для 2 слоев -
@@ -30,10 +30,10 @@ namespace xsdnn {
         /// </summary>
         /// <param name="prev_layer_data"> - слой перед таргетом</param>
         /// <param name="target"> - собственно таргет</param>
-        virtual void evaluate(const Matrix &prev_layer_data, const Matrix &target) = 0;
+        virtual void evaluate(const xsTypes::Matrix &prev_layer_data, const xsTypes::Matrix &target) = 0;
 
 
-        virtual const Matrix &backprop_data() const = 0;
+        virtual const xsTypes::Matrix &backprop_data() const = 0;
 
         /// <summary>
         /// None

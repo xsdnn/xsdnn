@@ -14,15 +14,6 @@ namespace xsdnn {
     */
     template<typename Activation>
     class Dropout : public Layer {
-    private:
-        Matrix m_z;                ///< значения выходных нейронов до активации
-        Matrix m_a;                ///< значения выходных нейронов после активации
-        Matrix m_din;              ///< вектор градиента по этому слою
-        Matrix mask_;              ///< маска, содержащая распределение Бернулли для отключения нейронов
-        Scalar dropout_rate_;      ///< вероятность отключения нейронов (p)
-        Scalar scale_;             ///< коэффицент масштабирования || 1 / (1 - p) ||
-        internal::random::bernoulli bernoulli;          ///< заполнение маски слоя из распределения Бернулли
-
     public:
         /// Конструктор Dropout слоя
         /// \param in_size кол-во нейронов на вход - выход
@@ -41,8 +32,8 @@ namespace xsdnn {
         /// 1. Значения нейронов предыдущего слоя поэлементно домножаются на маску распределения Бернулли
         /// 2. Получвшиеся значения нормируются с коэффицентом || 1 / (1 - p) ||
         /// \param prev_layer_data значения нейронов предыдущего слоя
-        void forward(const Matrix &prev_layer_data) override {
-            const long ncols = prev_layer_data.cols();
+        void forward(const xsTypes::Matrix &prev_layer_data) override {
+            const long ncols = prev_layer_data.dimension(1);
 
             if (workflow == "train") {
                 bernoulli.set_param(this->dropout_rate_, this->m_out_size);
@@ -65,7 +56,7 @@ namespace xsdnn {
 
         ///
         /// \return значения нейронов после прямого прохода
-        const Matrix &output() const override { return m_a; }
+        const xsTypes::Matrix &output() const override { return m_a; }
 
         /// Обратный проход по слою
         ///
@@ -74,10 +65,10 @@ namespace xsdnn {
         /// Положение предыдущего - следующего слоя равносильно прямому проходу
         /// \param prev_layer_data выходы нейронов предыдущего слоя
         /// \param next_layer_data вектор градиента следующего слоя
-        void backprop(const Matrix &prev_layer_data,
-                      const Matrix &next_layer_backprop_data) override {
+        void backprop(const xsTypes::Matrix &prev_layer_data,
+                      const xsTypes::Matrix &next_layer_backprop_data) override {
             const long ncols = prev_layer_data.cols();
-            Matrix &dLz = m_z;
+            xsTypes::Matrix &dLz = m_z;
             Activation::apply_jacobian(m_z, m_a, next_layer_backprop_data, dLz);
             m_din.resize(this->m_out_size, ncols);
             m_din.noalias() = next_layer_backprop_data.cwiseProduct(mask_) * scale_;
@@ -86,7 +77,7 @@ namespace xsdnn {
 
         ///
         /// \return Вектор направления спуска (антиградиент)
-        const Matrix &backprop_data() const override { return m_din; };
+        const xsTypes::Matrix &backprop_data() const override { return m_din; };
 
         /// В этом слое не участвуют алгоритмы оптимизации
         /// \param opt объект класса Optimizer
@@ -130,9 +121,19 @@ namespace xsdnn {
             return out;
         }
 
-        Matrix mask() {
+        xsTypes::Matrix mask() {
             return mask_;
         }
+
+    private:
+        xsTypes::Matrix m_z;                ///< значения выходных нейронов до активации
+        xsTypes::Matrix m_a;                ///< значения выходных нейронов после активации
+        xsTypes::Matrix m_din;              ///< вектор градиента по этому слою
+        xsTypes::Matrix mask_;              ///< маска, содержащая распределение Бернулли для отключения нейронов
+        Scalar dropout_rate_;      ///< вероятность отключения нейронов (p)
+        Scalar scale_;             ///< коэффицент масштабирования || 1 / (1 - p) ||
+        internal::random::bernoulli bernoulli;          ///< заполнение маски слоя из распределения Бернулли
+
     };
 } // namespace xsdnn
 

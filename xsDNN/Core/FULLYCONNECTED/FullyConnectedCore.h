@@ -10,8 +10,6 @@
 namespace xsdnn {
     namespace internal {
         namespace fc {
-            typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-
             /// Прямое распространение полносвязного слоя
             /// \tparam Activation функция активации
             /// \param prev_data выходы предыдущего слоя
@@ -22,11 +20,11 @@ namespace xsdnn {
             /// \param bias использовать смещение?
             /// \param out_size output dimension
             template<typename Activation>
-            inline void computeForward(const Matrix& prev_data,
-                                       Matrix& w,
-                                       Vector& b,
-                                       Matrix& z,
-                                       Matrix& a,
+            inline void computeForward(const xsTypes::Matrix& prev_data,
+                                       xsTypes::Matrix& w,
+                                       xsTypes::Vector& b,
+                                       xsTypes::Matrix& z,
+                                       xsTypes::Matrix& a,
                                        bool    bias,
                                        const int out_size) {
                 internal::fc::algorithm::compute_forward_direct<Activation>(prev_data,
@@ -51,14 +49,14 @@ namespace xsdnn {
             /// \param bias применять смещение?
             /// \param in_size входной размер текущего слоя
             template<typename Activation>
-            inline void computeBackward(const Matrix& prev_data,
-                                        const Matrix& next_grad,
-                                        Matrix& w,
-                                        Matrix& dw,
-                                        Vector& db,
-                                        Matrix& din,
-                                        Matrix& z,
-                                        Matrix& a,
+            inline void computeBackward(const xsTypes::Matrix& prev_data,
+                                        const xsTypes::Matrix& next_grad,
+                                        xsTypes::Matrix& w,
+                                        xsTypes::Matrix& dw,
+                                        xsTypes::Vector& db,
+                                        xsTypes::Matrix& din,
+                                        xsTypes::Matrix& z,
+                                        xsTypes::Matrix& a,
                                         bool    bias,
                                         const int in_size) {
                 internal::fc::algorithm::compute_backward_direct<Activation>(

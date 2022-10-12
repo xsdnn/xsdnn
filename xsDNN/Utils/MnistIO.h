@@ -81,7 +81,7 @@ namespace xsdnn {
         /// \warning параметр image_filename должен содержать полный путь до файла
         /// \param label_filename расположение файла метод (i.e. ../some/path/to/train-images-idx1-ubyte)
         /// \param label объект типа Matrix для заполнения
-        inline void parse_mnist_label(const std::string &label_filename, Matrix &label) {
+        inline void parse_mnist_label(const std::string &label_filename, xsTypes::Matrix &label) {
             std::ifstream ifs(label_filename.c_str(), std::ios::in | std::ios::binary);
 
             if (ifs.bad() || ifs.fail()) {
@@ -126,7 +126,7 @@ namespace xsdnn {
         /// \param x_padding
         /// \param y_padding
         inline void parse_mnist_image(const std::string &image_filename,
-                                      Matrix &images,
+                                      xsTypes::Matrix &images,
                                       const Scalar &scale_min,
                                       const Scalar &scale_max,
                                       const int x_padding,

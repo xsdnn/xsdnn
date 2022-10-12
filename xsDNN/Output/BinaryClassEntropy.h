@@ -13,13 +13,10 @@ namespace xsdnn {
 \date Май 2022 года
 */
     class BinaryEntropyLoss : public Output {
-    private:
-        Matrix m_din;            ///< производные по выходному слою
-
     public:
         /// Проверка входных данных на соотвествие значений ---  1 || 0
         /// \param target целевая переменная
-        void check_target_data(const Matrix &target) const override {
+        void check_target_data(const xsTypes::Matrix &target) const override {
             const long nelem = target.size();
             const Scalar *target_data = target.data();
 
@@ -34,7 +31,7 @@ namespace xsdnn {
         /// \image html binaryclassentropy_evaluate.png
         /// \param prev_layer_data последний скрытый слой сети
         /// \param target целевая переменная
-        void evaluate(const Matrix &prev_layer_data, const Matrix &target) override {
+        void evaluate(const xsTypes::Matrix &prev_layer_data, const xsTypes::Matrix &target) override {
             const long ncols = prev_layer_data.cols();
             const long nrows = prev_layer_data.rows();
 
@@ -57,7 +54,7 @@ namespace xsdnn {
 
         ///
         /// \return Вектор направления спуска (антиградиент).
-        const Matrix &backprop_data() const override {
+        const xsTypes::Matrix &backprop_data() const override {
             return m_din;
         }
 
@@ -76,6 +73,9 @@ namespace xsdnn {
         std::string output_type() const override {
             return "BinaryClassEntropy";
         }
+
+    private:
+        xsTypes::Matrix m_din;            ///< производные по выходному слою
     };
 } // namespace xsdnn
 

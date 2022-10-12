@@ -11,19 +11,17 @@
 namespace xsdnn {
     namespace internal {
         namespace bn1d {
-            typedef Eigen::VectorXd Vector;
-
             template<typename Activation>
-            inline void computeForward(const Matrix& prev_data,
-                                       Matrix& z,
-                                       Matrix& a,
-                                       Vector& m_curr,
-                                       Vector& v_curr,
-                                       Vector& m,
-                                       Vector& v,
-                                       Vector& stddev,
-                                       Vector& g,
-                                       Vector& b,
+            inline void computeForward(const xsTypes::Matrix& prev_data,
+                                       xsTypes::Matrix& z,
+                                       xsTypes::Matrix& a,
+                                       xsTypes::Vector& m_curr,
+                                       xsTypes::Vector& v_curr,
+                                       xsTypes::Vector& m,
+                                       xsTypes::Vector& v,
+                                       xsTypes::Vector& stddev,
+                                       xsTypes::Vector& g,
+                                       xsTypes::Vector& b,
                                        std::string& wflow,
                                        Scalar& eps,
                                        bool affine,
@@ -40,14 +38,14 @@ namespace xsdnn {
             }
 
             template<typename Activation>
-            inline void computeBackward(const Matrix& prev_data,
-                                        const Matrix& next_grad,
-                                        Matrix& z,
-                                        Matrix& a,
-                                        Matrix& din,
-                                        Vector& dg,
-                                        Vector& db,
-                                        Vector& stddev,
+            inline void computeBackward(const xsTypes::Matrix& prev_data,
+                                        const xsTypes::Matrix& next_grad,
+                                        xsTypes::Matrix& z,
+                                        xsTypes::Matrix& a,
+                                        xsTypes::Matrix& din,
+                                        xsTypes::Vector& dg,
+                                        xsTypes::Vector& db,
+                                        xsTypes::Vector& stddev,
                                         bool affine,
                                         const int size) {
 

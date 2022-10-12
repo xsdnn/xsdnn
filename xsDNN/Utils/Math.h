@@ -8,11 +8,9 @@
 namespace xsdnn {
     namespace internal {
         namespace math {
-            typedef Eigen::VectorXd Vector;
-
-            inline void calc_varience(const Matrix &in,
-                                      const Vector &mu,
-                                      Vector &var) {
+            inline void calc_varience(const xsTypes::Matrix &in,
+                                      const xsTypes::Vector &mu,
+                                      xsTypes::Vector &var) {
                 int index = 0;
                 for (auto row: in.rowwise()) {
                     Scalar &curr_var = var[index];
@@ -26,10 +24,10 @@ namespace xsdnn {
                 }
             }
 
-            inline void update_statistics(const Matrix &in,
+            inline void update_statistics(const xsTypes::Matrix &in,
                                           const int &dim,
-                                          Vector &mu,
-                                          Vector &var) {
+                                          xsTypes::Vector &mu,
+                                          xsTypes::Vector &var) {
                 mu.resize(dim);
                 assert(mu.size() == in.rows());
                 mu = in.rowwise().mean();
@@ -43,7 +41,7 @@ namespace xsdnn {
             /// Получить поколоночный argmax вектор. Каждый элемент arg - argmax в каждом столбце m
             /// \param m матрица для поиска максимумов
             /// \param arg вектор максимумов
-            inline void colargmax_vector(const Matrix& m,
+            inline void colargmax_vector(const xsTypes::Matrix& m,
                                          std::vector<int>& arg) {
                 for (auto col : m.colwise()) {
                     auto max = col.maxCoeff();
@@ -61,7 +59,7 @@ namespace xsdnn {
             /// Получить поколоночный argmax вектор.
             /// \param m матрица для поиска максимумов
             /// \return вектор максимумов
-            inline std::vector<int> colargmax_vector(const Matrix& m) {
+            inline std::vector<int> colargmax_vector(const xsTypes::Matrix& m) {
                 std::vector<int> arg;
                 for (auto col : m.colwise()) {
                     auto max = col.maxCoeff();

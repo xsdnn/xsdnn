@@ -18,32 +18,6 @@ namespace xsdnn {
     */
     template<typename Distribution, typename Activation>
     class BatchNorm1D : public Layer {
-    private:
-        typedef Eigen::VectorXd Vector;
-        typedef Vector::AlignedMapType AlignedMapVec;
-
-        Matrix m_z;                    ///< equal      in_hat
-        Matrix m_a;                    ///< equal      gammas * in_hat + betas
-        Vector m_gammas;               ///< gamma для линейного отображения
-        Vector m_betas;                ///< beta для линейного отображения
-
-        Vector mean_curr;              ///< матожидание для текущего батча
-        Vector var_curr;               ///< дисперсия для текущего батча
-        Vector m_stddev;               ///< стандартное отклонение
-
-        Vector m_mean;                 ///< скользящее среднее мат ожидания
-        Vector m_var;                  ///< скользящее среднее дисперсии
-
-
-        Matrix m_din;
-        Vector m_dg;
-        Vector m_db;
-
-        Scalar eps;
-        Scalar moment;
-
-        bool affine_;                 ///< афинное преобразование m_a = m_gammas * m_z + m_betas
-
     public:
         ///
         /// \param in_size длина признакового описания __одного__ объекта
@@ -90,7 +64,7 @@ namespace xsdnn {
         /// \image html batchnorm_forward_bacward_pass.png
         ///
         /// \param prev_layer_data значения нейронов предыдущего слоя
-        void forward(const Matrix &prev_layer_data) override {
+        void forward(const xsTypes::Matrix &prev_layer_data) override {
 
             internal::bn1d::computeForward<Activation>(
                     prev_layer_data, m_z, m_a,
@@ -104,7 +78,7 @@ namespace xsdnn {
 
         ///
         /// \return отнормированные значения нейронов
-        const Matrix &output() const override { return m_a; }
+        const xsTypes::Matrix &output() const override { return m_a; }
 
         /// Обратный проход по слою
         ///
@@ -113,8 +87,8 @@ namespace xsdnn {
         /// Положение предыдущего - следующего слоя равносильно прямому проходу
         /// \param prev_layer_data выходы нейронов предыдущего слоя
         /// \param next_layer_data вектор градиента следующего слоя
-        void backprop(const Matrix &prev_layer_data,
-                      const Matrix &next_layer_backprop_data) override {
+        void backprop(const xsTypes::Matrix &prev_layer_data,
+                      const xsTypes::Matrix &next_layer_backprop_data) override {
 
             internal::bn1d::computeBackward<Activation>(
                     prev_layer_data, next_layer_backprop_data,
@@ -127,7 +101,7 @@ namespace xsdnn {
 
         ///
         /// \return производная по нейронам
-        const Matrix &backprop_data() const override { return m_din; }
+        const xsTypes::Matrix &backprop_data() const override { return m_din; }
 
         /// Обновление параметров слоя -  векторов _gammas_ и _betas_
         /// \param opt - объект класса Optimizer
@@ -136,10 +110,10 @@ namespace xsdnn {
             m_var = moment * m_var + (1 - moment) * var_curr;
 
             if (affine_) {
-                AlignedMapVec dg(m_dg.data(), m_dg.size());
-                AlignedMapVec g(m_gammas.data(), m_gammas.size());
-                AlignedMapVec db(m_db.data(), m_db.size());
-                AlignedMapVec b(m_betas.data(), m_betas.size());
+                xsTypes::AlignedMapVec dg(m_dg.data(), m_dg.size());
+                xsTypes::AlignedMapVec g(m_gammas.data(), m_gammas.size());
+                xsTypes::AlignedMapVec db(m_db.data(), m_db.size());
+                xsTypes::AlignedMapVec b(m_betas.data(), m_betas.size());
 
                 opt.update(dg, g);
                 opt.update(db, b);
@@ -306,21 +280,44 @@ namespace xsdnn {
             map.insert(std::make_pair("momentum " + ind, this->moment));
         }
 
-        void set_gamma(Vector gamma) {
+        void set_gamma(xsTypes::Vector gamma) {
             m_gammas = gamma;
         }
 
-        void set_beta(Vector beta) {
+        void set_beta(xsTypes::Vector beta) {
             m_betas = beta;
         }
 
-        void set_stddev(Vector stddev) {
+        void set_stddev(xsTypes::Vector stddev) {
             m_stddev = stddev;
         }
 
-        void set_m_z(Matrix m_z_) {
+        void set_m_z(xsTypes::Matrix m_z_) {
             m_z = m_z_;
         }
+
+    private:
+        xsTypes::Matrix m_z;                    ///< equal      in_hat
+        xsTypes::Matrix m_a;                    ///< equal      gammas * in_hat + betas
+        xsTypes::Vector m_gammas;               ///< gamma для линейного отображения
+        xsTypes::Vector m_betas;                ///< beta для линейного отображения
+
+        xsTypes::Vector mean_curr;              ///< матожидание для текущего батча
+        xsTypes::Vector var_curr;               ///< дисперсия для текущего батча
+        xsTypes::Vector m_stddev;               ///< стандартное отклонение
+
+        xsTypes::Vector m_mean;                 ///< скользящее среднее мат ожидания
+        xsTypes::Vector m_var;                  ///< скользящее среднее дисперсии
+
+        xsTypes::Matrix m_din;
+        xsTypes::Vector m_dg;
+        xsTypes::Vector m_db;
+
+        Scalar eps;
+        Scalar moment;
+
+        bool affine_;                 ///< афинное преобразование m_a = m_gammas * m_z + m_betas
+
     };
 } // namespace xsdnn
 

@@ -20,7 +20,7 @@ namespace xsdnn {
             /// \return производная по заданной точке
             inline Scalar numerical_gradient(
                     Layer *layer,
-                    Matrix &in_data,
+                    xsTypes::Matrix &in_data,
                     const int in_pos,
                     const int out_pos
             ) {
@@ -43,16 +43,16 @@ namespace xsdnn {
             /// \return производная по заданной точке
             inline Scalar analytical_gradient(
                     Layer *layer,
-                    Matrix &in_data,
+                    xsTypes::Matrix &in_data,
                     const int in_pos,
                     const int out_pos,
                     const int out_size
             ) {
                 const int in_size = in_data.rows();
-                Matrix next_layer_backprop_data(out_size, 1);
+                xsTypes::Matrix next_layer_backprop_data(out_size, 1);
                 next_layer_backprop_data.setZero();
                 next_layer_backprop_data(out_pos, 0) = Scalar(1.0);
-                Matrix prev_layer_data(in_size, 1);
+                xsTypes::Matrix prev_layer_data(in_size, 1);
                 prev_layer_data.setZero();
                 layer->forward(in_data);
                 layer->backprop(prev_layer_data, next_layer_backprop_data);

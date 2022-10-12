@@ -31,10 +31,8 @@ namespace xsdnn {
             /// \endcode
             /// \param Z значения нейронов до активации
             /// \param A значения нейронов после активации
-            static inline void activate(const Matrix &Z, Matrix &A) {
-                A.array() = (Z.rowwise() - Z.colwise().maxCoeff()).array().exp();
-                RowArray colsums = A.colwise().sum();
-                A.array().rowwise() /= colsums;
+            static inline void activate(const xsTypes::Matrix &Z, xsTypes::Matrix &A) {
+                // TODO: implement softmax forward
             }
 
             /// Операция матричного дифференцирования.
@@ -55,10 +53,9 @@ namespace xsdnn {
             /// \param A нейроны слоя после активации.
             /// \param F нейроны следующего слоя.
             /// \param G значения, которые получаются после backprop.
-            static inline void apply_jacobian(const Matrix &Z, const Matrix &A,
-                                              const Matrix &F, Matrix &G) {
-                RowArray a_dot_f = A.cwiseProduct(F).colwise().sum();
-                G.array() = A.array() * (F.array().rowwise() - a_dot_f);
+            static inline void apply_jacobian(const xsTypes::Matrix &Z, const xsTypes::Matrix &A,
+                                              const xsTypes::Matrix &F, xsTypes::Matrix &G) {
+                // TODO: implement softmax backward
             }
 
             ///

@@ -73,27 +73,27 @@ namespace xsdnn {
         /// Реализация метода отличается у каждого типа слоев
         /// </summary>
         /// <param name="prev_layer_data"> - предыдущий слой, значения его нейронов</param>
-        virtual void forward(const Matrix &prev_layer_data) = 0;
+        virtual void forward(const xsTypes::Matrix &prev_layer_data) = 0;
 
         /// <summary>
         /// None
         /// </summary>
         /// <returns>Значения нейронов в слою после функции активации. Использование
         /// метода разрешено только после метода Layer::forward()!</returns>
-        virtual const Matrix &output() const = 0;
+        virtual const xsTypes::Matrix &output() const = 0;
 
         /// Обратный проход по сети
         /// \param prev_layer_data - output слоя слева
         /// \param next_layer_backprop_data - backprop_data слоя справа
-        virtual void backprop(const Matrix &prev_layer_data,
-                              const Matrix &next_layer_backprop_data) = 0;
+        virtual void backprop(const xsTypes::Matrix &prev_layer_data,
+                              const xsTypes::Matrix &next_layer_backprop_data) = 0;
 
         /// <summary>
         /// None
         /// </summary>
         /// <returns>Возвращает next_layer_data в Layer::backprop()
         /// </returns>
-        virtual const Matrix &backprop_data() const = 0;
+        virtual const xsTypes::Matrix &backprop_data() const = 0;
 
         /// <summary>
         /// Обновление параметров сетки после обратного распространения

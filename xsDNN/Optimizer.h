@@ -13,10 +13,6 @@ namespace xsdnn {
     \date Март 2022 года
     */
     class Optimizer {
-    protected:
-        typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-        typedef Vector::AlignedMapType AlignedMapVec;
-
     public:
         virtual ~Optimizer() = default;
 
@@ -31,7 +27,7 @@ namespace xsdnn {
         /// Собственно метод, отвечающий за обновление весов в сетке
         ///
 
-        virtual void update(AlignedMapVec &dvec, AlignedMapVec &vec) = 0;
+        virtual void update(xsTypes::AlignedMapVec &dvec, xsTypes::AlignedMapVec &vec) = 0;
     };
 } // namespace xsdnn
 

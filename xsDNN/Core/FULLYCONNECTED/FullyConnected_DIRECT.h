@@ -10,14 +10,12 @@ namespace xsdnn {
     namespace internal {
         namespace fc {
             namespace algorithm {
-                typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-
                 template<typename Activation>
-                inline void compute_forward_direct(const Matrix& prev_data,
-                                                   Matrix& w,
-                                                   Vector& b,
-                                                   Matrix& z,
-                                                   Matrix& a,
+                inline void compute_forward_direct(const xsTypes::Matrix& prev_data,
+                                                   xsTypes::Matrix& w,
+                                                   xsTypes::Vector& b,
+                                                   xsTypes::Matrix& z,
+                                                   xsTypes::Matrix& a,
                                                    bool    bias,
                                                    const int out_size) {
                     const long ncols = prev_data.cols();
@@ -30,19 +28,19 @@ namespace xsdnn {
                 }
 
                 template<typename Activation>
-                inline void compute_backward_direct(const Matrix& prev_data,
-                                                    const Matrix& next_grad,
-                                                    Matrix& w,
-                                                    Matrix& dw,
-                                                    Vector& db,
-                                                    Matrix& din,
-                                                    Matrix& z,
-                                                    Matrix& a,
+                inline void compute_backward_direct(const xsTypes::Matrix& prev_data,
+                                                    const xsTypes::Matrix& next_grad,
+                                                    xsTypes::Matrix& w,
+                                                    xsTypes::Matrix& dw,
+                                                    xsTypes::Vector& db,
+                                                    xsTypes::Matrix& din,
+                                                    xsTypes::Matrix& z,
+                                                    xsTypes::Matrix& a,
                                                     bool    bias,
                                                     const int in_size) {
                     const long ncols = prev_data.cols();
 
-                    Matrix &dLz = z;
+                    xsTypes::Matrix &dLz = z;
                     Activation::apply_jacobian(z, a, next_grad, dLz);
                     dw.noalias() = prev_data * dLz.transpose() / ncols;
                     if (bias) { db.noalias() = dLz.rowwise().mean(); }

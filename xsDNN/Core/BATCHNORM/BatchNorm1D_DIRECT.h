@@ -12,19 +12,17 @@ namespace xsdnn {
     namespace internal {
         namespace bn1d {
             namespace algorithm {
-                typedef Eigen::VectorXd Vector;
-
                 template<typename Activation>
-                inline void compute_forward_direct(const Matrix& prev_data,
-                                                   Matrix& z,
-                                                   Matrix& a,
-                                                   Vector& m_curr,
-                                                   Vector& v_curr,
-                                                   Vector& m,
-                                                   Vector& v,
-                                                   Vector& stddev,
-                                                   Vector& g,
-                                                   Vector& b,
+                inline void compute_forward_direct(const xsTypes::Matrix& prev_data,
+                                                   xsTypes::Matrix& z,
+                                                   xsTypes::Matrix& a,
+                                                   xsTypes::Vector& m_curr,
+                                                   xsTypes::Vector& v_curr,
+                                                   xsTypes::Vector& m,
+                                                   xsTypes::Vector& v,
+                                                   xsTypes::Vector& stddev,
+                                                   xsTypes::Vector& g,
+                                                   xsTypes::Vector& b,
                                                    std::string& wflow,
                                                    Scalar& eps,
                                                    bool affine,
@@ -33,8 +31,8 @@ namespace xsdnn {
                     z.resize(size, ncols);
                     a.resize(size, ncols);
 
-                    Vector mean = (wflow == "train") ? m_curr : m;
-                    Vector var = (wflow == "train") ? v_curr : v;
+                    xsTypes::Vector mean = (wflow == "train") ? m_curr : m;
+                    xsTypes::Vector var = (wflow == "train") ? v_curr : v;
 
                     if (wflow == "train") {
                         internal::math::update_statistics(prev_data, size, mean, var);
@@ -56,20 +54,20 @@ namespace xsdnn {
                 }
 
                 template<typename Activation>
-                inline void compute_backward_direct(const Matrix& prev_data,
-                                                    const Matrix& next_grad,
-                                                    Matrix& z,
-                                                    Matrix& a,
-                                                    Matrix& din,
-                                                    Vector& dg,
-                                                    Vector& db,
-                                                    Vector& stddev,
+                inline void compute_backward_direct(const xsTypes::Matrix& prev_data,
+                                                    const xsTypes::Matrix& next_grad,
+                                                    xsTypes::Matrix& z,
+                                                    xsTypes::Matrix& a,
+                                                    xsTypes::Matrix& din,
+                                                    xsTypes::Vector& dg,
+                                                    xsTypes::Vector& db,
+                                                    xsTypes::Vector& stddev,
                                                     bool affine,
                                                     const int size) {
                     const int ncols = z.cols();
                     din.resize(size, ncols);
 
-                    Matrix dLz;
+                    xsTypes::Matrix dLz;
                     Activation::apply_jacobian(z, a, next_grad, dLz);
 
                     // if Y = (X-mean(X))/(sqrt(var(X)+eps)), then
@@ -79,11 +77,11 @@ namespace xsdnn {
                     //     ./ sqrt(var(X) + eps)
                     //
 
-                    Matrix dLz_dot_y;
+                    xsTypes::Matrix dLz_dot_y;
                     dLz_dot_y.resize(size, ncols);
                     dLz_dot_y = dLz.cwiseProduct(z);
 
-                    Vector mean_dLz, mean_dLz_dot_y;
+                    xsTypes::Vector mean_dLz, mean_dLz_dot_y;
                     mean_dLz.resize(size);
                     mean_dLz_dot_y.resize(size);
                     mean_dLz = dLz.rowwise().mean();
