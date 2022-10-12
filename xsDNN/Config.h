@@ -31,6 +31,11 @@ namespace xsdnn {
                 Matrix;
         typedef Eigen::Tensor<Scalar, 1, Eigen::ColMajor, Eigen::DenseIndex>
                 Vec;
+        // TODO: закоммить "define aligned map type's"
+        typedef Eigen::TensorMap<Tensor_4D, Eigen::Aligned> AlignedMapTensor4D;
+        typedef Eigen::TensorMap<Tensor_3D, Eigen::Aligned> AlignedMapTensor3D;
+        typedef Eigen::TensorMap<Matrix, Eigen::Aligned> AlignedMapMatrix;
+        typedef Eigen::TensorMap<Vec, Eigen::Aligned> AlignedMapVec;
     };
 } // namespace xsdnn
 
