@@ -29,12 +29,9 @@
 # Executables
 *.exe
 *.out
+*.app
+vtable-opt
+vtable-dbg
 
-.idea/
-cmake-build-debug/
-build/
-
-old/Doxygen_old/html/
-old/Doxygen_old/latex/
-
-eigen/
+# Temp
+*~*
