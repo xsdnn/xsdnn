@@ -5,5 +5,10 @@
 
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
+#define EIGEN_USE_THREADS
+
+#include <Eigen/Core>
+#include <unsupported/Eigen/CXX11/Tensor>
+#include "src/config.h"
 
 #endif //XSDNN_XSDNN_H
