@@ -3,8 +3,10 @@ project(xsDNN VERSION 0.1.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
-option(BUILD_TESTS      "Set to ON to build tests"              OFF)
+option(BUILD_TEST      "Set to ON to build tests"              ON)
+option(BUILD_EXAMPLE   "Set to ON to build examples"	       OFF)
 
+// TODO: add USE_DOUBLE derictive
 
 if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
     message( FATAL_ERROR
@@ -14,6 +16,6 @@ include_directories($ENV{EIGEN3_INCLUDE_DIR})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
-if(BUILD_TESTS)
+if(BUILD_TEST)
     add_subdirectory(test)
-endif(BUILD_TESTS)
+endif(BUILD_TEST)
