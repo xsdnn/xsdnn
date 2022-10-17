@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 option(BUILD_TEST      "Set to ON to build tests"              ON)
 option(BUILD_EXAMPLE   "Set to ON to build examples"	       OFF)
 
-// TODO: add USE_DOUBLE derictive
+# TODO: add USE_DOUBLE derictive
 
 if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
     message( FATAL_ERROR
