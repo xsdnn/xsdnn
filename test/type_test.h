@@ -10,7 +10,7 @@ TEST(tensor_types, unaligned) {
     Tensor_4D T4(1, 2, 3, 4); T4.setRandom(); std::cout << T4 << "\n\n\n";
     Tensor_3D T3(1, 2, 3); T3.setRandom(); std::cout << T3 << "\n\n\n";
     Matrix T2(2, 2); T2.setRandom(); std::cout << T2 << "\n\n\n";
-    Vector T1(2); T1.setRandom();
+    Vector T1(2); T1.setRandom(); std::cout << T1 << "\n\n\n";
 }
 
 TEST(tensor_types, aligned) {
