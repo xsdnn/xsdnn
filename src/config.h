@@ -36,19 +36,19 @@ namespace xsdnn {
 
     // use for up-level API
 
-    // (N, C, W, H)
+    // (N, C, H, W)
     typedef Eigen::Tensor<Scalar, 4, Eigen::ColMajor, Eigen::DenseIndex>
             Tensor_4D;
 
-    // (C, W, H)
+    // (C, H, W)
     typedef Eigen::Tensor<Scalar, 3, Eigen::ColMajor, Eigen::DenseIndex>
             Tensor_3D;
 
-    // (W, H)
+    // (H, W)
     typedef Eigen::Tensor<Scalar, 2, Eigen::ColMajor, Eigen::DenseIndex>
             Matrix;
 
-    // (H)
+    // (W)
     typedef Eigen::Tensor<Scalar, 1, Eigen::ColMajor, Eigen::DenseIndex>
             Vector;
 
