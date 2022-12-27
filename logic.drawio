@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-12-27T23:43:33.643Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="NZaI-_TOsv6Uy3nH10v-" version="20.7.4" type="github" pages="9">
+<mxfile host="app.diagrams.net" modified="2022-12-27T23:47:01.236Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="CtWXhgpmK7Wp5ZQLK90q" version="20.7.4" type="github" pages="9">
   <diagram name="xsdnn::main" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
     <mxGraphModel dx="1312" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" background="none" math="0" shadow="0">
       <root>
@@ -30,6 +30,9 @@
         </mxCell>
         <mxCell id="vlH5JGkJwxlnS23OrFSM-1" value="&lt;h1&gt;Общие ключевые моменты&lt;/h1&gt;&lt;p&gt;1. Реализуем 3 типа контейнеров - &lt;span style=&quot;background-color: rgb(51, 153, 255);&quot;&gt;weights, bias, data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2. Реализовать граф через концепцию &lt;span style=&quot;background-color: rgb(255, 102, 102);&quot;&gt;&#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3. Реализовать абстракцию описания размеров (мета информация о размере контейнера shape3d et al).&amp;nbsp;&lt;/p&gt;&lt;p&gt;4. Выравнивание weights &amp;amp;&amp;amp; bias должно происходить после их инициализации в методе setup.&lt;/p&gt;&lt;p&gt;Выравнивание data происходит в момент, когда известен размер батча - отдельный метод.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="391" y="10" width="370" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="vlH5JGkJwxlnS23OrFSM-2" value="&lt;h1&gt;Ультра короткий план реализации&lt;/h1&gt;&lt;p&gt;1. Реализация мета описания типов данных aka {index3d, vec_type}&lt;/p&gt;&lt;p&gt;2. Реализация графовой концепции aka {node, edge}&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="10" width="420" height="120" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
