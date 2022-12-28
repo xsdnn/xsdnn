@@ -14,6 +14,14 @@ public:
     index3d(T channel, T width, T height) : channel_(channel), width_(width), height_(height) {}
     index3d() : channel_(0), width_(0), height_(0) {}
 
+    std::array<Eigen::DenseIndex, 3> shape() const {
+        using DI = Eigen::DenseIndex;
+        std::array<Eigen::DenseIndex, 3> dim = {static_cast<DI>(channel_),
+                                                static_cast<DI>(width_),
+                                                static_cast<DI>(height_)};
+        return dim;
+    }
+
     T area() const {
         return width_ * height_;
     }
