@@ -7,3 +7,4 @@
 #include "../xsDNN.h"
 
 using namespace xsdnn;
+#include "colored_print_visual_test.hpp"
