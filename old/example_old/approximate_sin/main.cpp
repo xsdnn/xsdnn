@@ -2,7 +2,7 @@
 // Copyright (c) 2022 xsDNN_old Inc. All rights reserved.
 //
 
-# include "../../xsDNN/xsDNN.h"
+# include "../../../xsDNN.hpp"
 
 int main() {
     Matrix train_data(2, 2048), test_data(2, 1024);

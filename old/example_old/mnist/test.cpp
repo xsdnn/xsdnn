@@ -1,4 +1,4 @@
-# include "../../xsDNN/xsDNN.h"
+# include "../../../xsDNN.hpp"
 using namespace xsdnn;
 
 void calculate_accuracy(const Matrix& target, const Matrix& predict) {

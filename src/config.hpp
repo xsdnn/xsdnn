@@ -3,8 +3,8 @@
 // Copyright (c) 2022 xsDNN. All rights reserved.
 //
 
-#ifndef XSDNN_CONFIG_H
-#define XSDNN_CONFIG_H
+#ifndef XSDNN_CONFIG_HPP
+#define XSDNN_CONFIG_HPP
 
 
 #if defined(_WIN32)
@@ -57,4 +57,4 @@ namespace xsdnn {
     } // xsThread
 } // xsdnn
 
-#endif //XSDNN_CONFIG_H
+#endif //XSDNN_CONFIG_HPP
