@@ -11,4 +11,6 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "src/config.h"
 
+#include "src/util/utils.h"
+
 #endif //XSDNN_XSDNN_H
