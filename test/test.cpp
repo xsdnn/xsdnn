@@ -7,4 +7,3 @@
 #include "../xsDNN.h"
 
 using namespace xsdnn;
-#include "type_test.h"

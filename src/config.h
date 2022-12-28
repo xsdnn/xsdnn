@@ -10,7 +10,9 @@
 #if defined(_WIN32)
 #include <windows.h>
 #elif defined(__linux__) || defined(unix)
+
 #include <unistd.h>
+
 #else
 printf("Unsupported OS");
 exit(1);
@@ -23,33 +25,20 @@ typedef float Scalar;
 #endif
 
 namespace xsdnn {
-    struct xsTypes {
-        typedef Eigen::TensorMap<Eigen::Tensor<Scalar, 4, Eigen::ColMajor, Eigen::DenseIndex>, Eigen::Aligned>
-                AlignedTensor_4D;
-        typedef Eigen::TensorMap<Eigen::Tensor<Scalar, 3, Eigen::ColMajor, Eigen::DenseIndex>, Eigen::Aligned>
-                AlignedTensor_3D;
-        typedef Eigen::TensorMap<Eigen::Tensor<Scalar, 2, Eigen::ColMajor, Eigen::DenseIndex>, Eigen::Aligned>
-                AlignedMatrix;
-        typedef Eigen::TensorMap<Eigen::Tensor<Scalar, 1, Eigen::ColMajor, Eigen::DenseIndex>, Eigen::Aligned>
-                AlignedVector;
-    };
-
-    // use for up-level API
-
-    // (N, C, H, W)
-    typedef Eigen::Tensor<Scalar, 4, Eigen::ColMajor, Eigen::DenseIndex>
+// (N, C, H, W)
+    typedef Eigen::Tensor<Scalar, 4, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_4D;
 
-    // (C, W, H)
-    typedef Eigen::Tensor<Scalar, 3, Eigen::ColMajor, Eigen::DenseIndex>
+// (C, W, H)
+    typedef Eigen::Tensor<Scalar, 3, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_3D;
 
-    // (W, H)
-    typedef Eigen::Tensor<Scalar, 2, Eigen::ColMajor, Eigen::DenseIndex>
+// (W, H)
+    typedef Eigen::Tensor<Scalar, 2, Eigen::AutoAlign, Eigen::DenseIndex>
             Matrix;
 
-    // (H)
-    typedef Eigen::Tensor<Scalar, 1, Eigen::ColMajor, Eigen::DenseIndex>
+// (H)
+    typedef Eigen::Tensor<Scalar, 1, Eigen::AutoAlign, Eigen::DenseIndex>
             Vector;
 
     namespace xsThread {
@@ -62,9 +51,10 @@ namespace xsdnn {
             return sysconf(_SC_NPROCESSORS_ONLN);
 #endif
         }
+
         Eigen::ThreadPool pool(num_core());
         Eigen::ThreadPoolDevice cpu(&pool, pool.NumThreads());
-    } // namespace xsThread
-} // namespace xsdnn
+    } // xsThread
+} // xsdnn
 
 #endif //XSDNN_CONFIG_H
