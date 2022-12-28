@@ -30,6 +30,17 @@ private:
 
 using shape3d = index3d<size_t>;
 
+enum class tensor_type : int32_t {
+    // input/output data
+    data = 0x0001000,  // input/output data
+
+    // trainable parameters
+    weight = 0x0002000,
+    bias   = 0x0002001,
+
+    label = 0x0004000,
+};
+
 } // xsdnn
 
 
