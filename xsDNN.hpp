@@ -15,5 +15,5 @@
 #include "src/util/color_print.hpp"
 #include "src/util/xs_error.hpp"
 
-
+#include "src/node.hpp"
 #endif //XSDNN_XSDNN_HPP
