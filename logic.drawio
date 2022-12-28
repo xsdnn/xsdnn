@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-12-28T12:40:25.885Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="ckJAD1jiB0xypv7nJ0Z0" version="20.7.4" type="github" pages="9">
+<mxfile host="app.diagrams.net" modified="2022-12-28T12:56:52.923Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="UlrldaPqSRtwrmb5kqg0" version="20.7.4" type="github" pages="9">
   <diagram name="xsdnn::main" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
     <mxGraphModel dx="1312" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" background="none" math="0" shadow="0">
       <root>
@@ -28,7 +28,7 @@
         <mxCell id="jkYTFeYgwC2KfP83L8r2-1" value="&lt;h1&gt;Sequential&lt;/h1&gt;&lt;p&gt;Реализация контейнера для&amp;nbsp; последовательной сети&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;text-align: center;&quot;&gt;//&lt;i&gt;TODO&lt;/i&gt;:&amp;nbsp; как ее сделать?&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="40" y="710" width="190" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="vlH5JGkJwxlnS23OrFSM-1" value="&lt;h1&gt;Общие ключевые моменты&lt;/h1&gt;&lt;p&gt;1. Реализуем 3 типа контейнеров - &lt;span style=&quot;background-color: rgb(51, 153, 255);&quot;&gt;weights, bias, data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2. Реализовать граф через концепцию &lt;span style=&quot;background-color: rgb(255, 102, 102);&quot;&gt;&#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3. Реализовать абстракцию описания размеров (мета информация о размере контейнера shape3d et al).&amp;nbsp;&lt;/p&gt;&lt;p&gt;4. Выравнивание weights &amp;amp;&amp;amp; bias должно происходить после их инициализации в методе setup.&lt;/p&gt;&lt;p&gt;Выравнивание data происходит в момент, когда известен размер батча - отдельный метод.&lt;/p&gt;&lt;p&gt;5. Как реализовать сериализацию сетки? Какой интерфейс, какой формат? Планы на будущее: поддержка onnx формата.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+        <mxCell id="vlH5JGkJwxlnS23OrFSM-1" value="&lt;h1&gt;Общие ключевые моменты&lt;/h1&gt;&lt;p&gt;1. Реализуем 3 типа контейнеров - &lt;span style=&quot;background-color: rgb(51, 153, 255);&quot;&gt;weights, bias, data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2. Реализовать граф через концепцию &lt;span style=&quot;background-color: rgb(255, 102, 102);&quot;&gt;&#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3. Реализовать абстракцию описания размеров (мета информация о размере контейнера shape3d et al).&amp;nbsp;&lt;/p&gt;&lt;p&gt;4. Выравнивание weights &amp;amp;&amp;amp; bias должно происходить после их инициализации в методе setup.&lt;/p&gt;&lt;p&gt;Выравнивание data происходит в момент, когда известен размер батча - отдельный метод.&lt;/p&gt;&lt;p&gt;5. Как реализовать сериализацию сетки? Какой интерфейс, какой формат? Планы на будущее: поддержка onnx формата.&lt;/p&gt;&lt;p&gt;6. 3 контейнера weights, bias, data также должны быть описаны is_trainable?&amp;nbsp;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="392" y="10" width="370" height="410" as="geometry" />
         </mxCell>
         <mxCell id="vlH5JGkJwxlnS23OrFSM-2" value="&lt;h1&gt;Ультра короткий план реализации&lt;/h1&gt;&lt;p&gt;1. Реализация мета описания типов данных aka {index3d, vec_type}&lt;/p&gt;&lt;p&gt;2. Реализация графовой концепции aka {node, edge}&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;" parent="1" vertex="1">
@@ -129,8 +129,66 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="TAu-FBMdEZbMYaXYSiBB-1" value="&lt;h1&gt;Ключевой метод для аллокации всех контейнеров&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="TAu-FBMdEZbMYaXYSiBB-1" value="&lt;h1&gt;Ключевой метод для аллокации всех контейнеров&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="270" y="30" width="630" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7N-nF8bvZyM1MKo4GqTC-1" value="&lt;h3&gt;Общая концепция метода:&lt;/h3&gt;&lt;div&gt;1. Проверка, что можем сделать connection соединения &#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/div&gt;&lt;div&gt;2. Аллокация &#39;consumer&#39; контейнеров - fwd_out_, bwd_out контейнеров :: условно&lt;/div&gt;&lt;div&gt;3. Аллокация и инициализация weights &amp;amp;&amp;amp; bias, если они еще не инициализированы или их необходимо сбросить.&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="10" y="120" width="570" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-4" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="785" y="140" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="jQYCyNbgpwOg8DW3xvRe-4" parent="1" target="jQYCyNbgpwOg8DW3xvRe-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="875" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-7" value="check_size of in_shape vec &amp;amp;&amp;amp; out_shape vec" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="700" y="240" width="200" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-8" value="no" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;" edge="1" source="jQYCyNbgpwOg8DW3xvRe-7" parent="1">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="960" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-9" value="yes" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;" edge="1" source="jQYCyNbgpwOg8DW3xvRe-7" parent="1">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="800" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-10" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="960" y="290" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jQYCyNbgpwOg8DW3xvRe-11" target="jQYCyNbgpwOg8DW3xvRe-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-11" value="Аллокация через ith_node_out() consumer контейнеров" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="685" y="480" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-12" value="need init w&amp;amp;b?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="725" y="590" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-13" value="no" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;" edge="1" source="jQYCyNbgpwOg8DW3xvRe-12" parent="1">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="960" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-14" value="yes" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="jQYCyNbgpwOg8DW3xvRe-12" parent="1" target="jQYCyNbgpwOg8DW3xvRe-18">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="800" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-16" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="960" y="615" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="jQYCyNbgpwOg8DW3xvRe-18" target="jQYCyNbgpwOg8DW3xvRe-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-18" value="Аллокация и инициализация w&amp;amp;b" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="685" y="710" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jQYCyNbgpwOg8DW3xvRe-19" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="785" y="797" width="30" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
