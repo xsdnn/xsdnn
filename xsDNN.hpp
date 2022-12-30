@@ -19,6 +19,7 @@
 #include "src/util/serialization.hpp"
 #include "src/util/rng.hpp"
 #include "src/util/random.hpp"
+#include "src/util/weight_init.hpp"
 
 #include "src/node.hpp"
 #include "src/layers/layer.hpp"

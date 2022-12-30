@@ -10,5 +10,8 @@
 using json = nlohmann::json;
 
 int main() {
-    std::cout << xsdnn::uniform_rand<xsdnn::Scalar>(0, 10);
+    xsdnn::Tensor_3D t(3, 4, 4); // in = 10, out = 20
+    xsdnn::xavier w;
+    w.fill(t.data(), t.size(), 16, 32);
+    std::cout << t.format(Eigen::TensorIOFormat::Numpy()) << std::endl;
 }

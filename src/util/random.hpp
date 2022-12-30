@@ -45,9 +45,12 @@ T uniform_rand(T min, T max) {
 }
 
 template<typename T>
-T uniform_rand(T min, T max, base_random_engine& eng) {
+void uniform_rand(T* data, size_t size, T min, T max) {
     uniform_distribution<T> dst(min, max);
-    return dst(eng);
+    default_random_engine eng;
+    for (size_t i = 0; i < size; ++i) {
+        data[i] = dst(eng);
+    }
 }
 
 } // xsdnn
