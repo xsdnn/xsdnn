@@ -4,9 +4,11 @@ project(xsDNN VERSION 0.1.3 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
 
-option(BUILD_TEST      "Set to ON to build tests"               ON)
-option(BUILD_EXAMPLE   "Set to ON to build examples"	        OFF)
 option(USE_DOUBLE      "Set to ON to use double. Default float" OFF)
+option(NO_DTRMNST      "Set to ON to use not fixed seed in rng" OFF)
+option(BUILD_TEST      "Set to ON to build tests"               OFF)
+option(BUILD_EXAMPLE   "Set to ON to build examples"	        OFF)
+
 
 if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
     message( FATAL_ERROR
