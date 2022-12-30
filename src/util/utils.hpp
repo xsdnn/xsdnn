@@ -36,7 +36,7 @@ private:
     T height_;
 };
 
-using shape3d = index3d<size_t>;
+using shape3d = index3d<Eigen::DenseIndex>;
 
 enum class tensor_type : int32_t {
     // input/output data

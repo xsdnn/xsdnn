@@ -73,7 +73,7 @@ public:
         return grad_;
     }
 
-    const tensor_type ttype() const {
+    tensor_type ttype() const {
         return ttype_;
     }
 
