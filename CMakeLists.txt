@@ -28,4 +28,8 @@ if(USE_DOUBLE)
     add_compile_definitions(DNN_USE_DOUBLE)
 endif(USE_DOUBLE)
 
+if(NO_DTRMNST)
+    add_compile_definitions(DNN_NO_DTRMNST)
+endif(NO_DTRMNST)
+
 add_executable(main main.cpp)

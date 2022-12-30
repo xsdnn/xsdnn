@@ -10,6 +10,5 @@
 using json = nlohmann::json;
 
 int main() {
-    xsdnn::default_random_engine rng(42);
-    std::cout << rng.rand();
+    std::cout << xsdnn::uniform_rand<xsdnn::Scalar>(0, 10);
 }
