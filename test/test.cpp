@@ -9,3 +9,4 @@
 using namespace xsdnn;
 #include "colored_print_visual_test.hpp"
 #include "edge_node_test.hpp"
+#include "serialization_helper_test.hpp"

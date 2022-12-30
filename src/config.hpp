@@ -25,19 +25,21 @@ typedef float Scalar;
 #endif
 
 namespace xsdnn {
-// (N, C, H, W)
+    using json = nlohmann::json;
+
+    // (N, C, H, W)
     typedef Eigen::Tensor<Scalar, 4, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_4D;
 
-// (C, W, H)
+    // (C, W, H)
     typedef Eigen::Tensor<Scalar, 3, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_3D;
 
-// (W, H)
+    // (W, H)
     typedef Eigen::Tensor<Scalar, 2, Eigen::AutoAlign, Eigen::DenseIndex>
             Matrix;
 
-// (H)
+    // (H)
     typedef Eigen::Tensor<Scalar, 1, Eigen::AutoAlign, Eigen::DenseIndex>
             Vector;
 

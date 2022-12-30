@@ -9,11 +9,14 @@
 
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <nlohmann/json.hpp>
 #include "src/config.hpp"
 
 #include "src/util/color_print.hpp"
 #include "src/util/xs_error.hpp"
 #include "src/util/utils.hpp"
+#include "src/util/serialization_helper.hpp"
+#include "src/util/serialization.hpp"
 
 #include "src/node.hpp"
 #endif //XSDNN_XSDNN_HPP
