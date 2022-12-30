@@ -17,6 +17,8 @@
 #include "src/util/utils.hpp"
 #include "src/util/serialization_helper.hpp"
 #include "src/util/serialization.hpp"
+#include "src/util/rng.hpp"
 
 #include "src/node.hpp"
+#include "src/layers/layer.hpp"
 #endif //XSDNN_XSDNN_HPP
