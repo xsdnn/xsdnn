@@ -18,13 +18,14 @@ printf("Unsupported OS");
 exit(1);
 #endif
 
-#if defined(DNN_USE_DOUBLE)
-typedef double Scalar;
-#else
-typedef float Scalar;
-#endif
 
 namespace xsdnn {
+#if defined(DNN_USE_DOUBLE)
+    typedef double Scalar;
+#else
+    typedef float Scalar;
+#endif
+
     using json = nlohmann::json;
 
     // (N, C, H, W)

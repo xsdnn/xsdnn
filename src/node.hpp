@@ -57,6 +57,10 @@ public:
         prev_(prev)
     {}
 
+    /*
+     * Getters
+     */
+
     Tensor_3D& get_data() {
         return data_;
     }
@@ -95,6 +99,14 @@ public:
 
     const std::vector<node*> next() const {
         return next_;
+    }
+
+    /*
+     * * * * * * * * * * * * * * * * * * * *
+     */
+
+    void clear_grads() {
+        grad_.setZero();
     }
 
 private:

@@ -10,5 +10,5 @@
 using json = nlohmann::json;
 
 int main() {
-    xsdnn::io::make_dir("FOLDER_TO");
+
 }
