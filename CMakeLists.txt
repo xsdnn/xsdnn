@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(xsDNN VERSION 0.1.3 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
 
 option(BUILD_TEST      "Set to ON to build tests"               ON)
@@ -25,3 +25,5 @@ endif(BUILD_TEST)
 if(USE_DOUBLE)
     add_compile_definitions(DNN_USE_DOUBLE)
 endif(USE_DOUBLE)
+
+add_executable(main main.cpp)
