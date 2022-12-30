@@ -17,16 +17,29 @@ using edgeptr_t = std::shared_ptr<edge>;
 class node {
 public:
     node (size_t in_concept, size_t out_concept) : prev_(in_concept), next_(out_concept) {}
+    node() = delete;
+    virtual ~node() {}
+
+    std::vector<edgeptr_t>& prev() {
+        return prev_;
+    }
 
     const std::vector<edgeptr_t>& prev() const {
         return prev_;
+    }
+
+    std::vector<edgeptr_t>& next() {
+        return next_;
     }
 
     const std::vector<edgeptr_t>& next() const {
         return next_;
     }
 
-private:
+protected:
+    friend void connect(node* head,
+                        node* tail);
+
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output
 };
