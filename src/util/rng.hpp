@@ -8,10 +8,24 @@
 
 namespace xsdnn {
 
-class default_random_engine {
+class base_random_engine {
+public:
+    virtual Scalar rand() = 0;
+    /*
+     * This device need to no determenistic case, when seed changing on each call.
+     */
+    virtual Scalar rand(std::random_device& __rd) = 0;
+
+    virtual ~base_random_engine() {}
+};
+
+class default_random_engine : public base_random_engine{
 public:
     explicit default_random_engine(uint32_t seed)
             : __a(16807), __m(2147483647L), __r(seed ? (seed & __m) : 1) {}
+
+    explicit default_random_engine()
+            : __a(16807), __m(2147483647L), __r(42) {}
 
     ~default_random_engine() = default;
 
@@ -19,9 +33,14 @@ public:
         __r = seed ? (seed & __m) : 1;
     }
 
-    Scalar rand() {
+    virtual Scalar rand() override{
         __r = this->next_rand(__r);
         return (Scalar) __r;
+    }
+
+    virtual Scalar rand(std::random_device& __rd) override {
+        __r = __rd();
+        return this->rand();
     }
 
 private:
