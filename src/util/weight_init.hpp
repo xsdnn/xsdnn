@@ -8,6 +8,7 @@
 
 
 namespace xsdnn {
+namespace weight_init {
 
 class function {
 public:
@@ -19,7 +20,7 @@ protected:
     Scalar scale_;
 };
 
-class xavier : protected function {
+class xavier : public function {
 public:
     xavier() : function(Scalar(6.0)) {}
     explicit xavier(Scalar scale) : function(scale) {}
@@ -30,6 +31,18 @@ public:
     }
 };
 
+class constant : public function {
+public:
+    constant() : function(Scalar(0.0)) {}
+    explicit constant(Scalar scale) : function(scale) {}
+
+    virtual void fill(Scalar* data, size_t size, size_t, size_t) override {
+        // TODO: подумать, как можно не обращать внимания на неиспользуемые параметры функции (через макрос)
+        tensor_fill(data, size, scale_);
+    }
+};
+
+} // weight_init
 } // xsdnn
 
 

@@ -22,5 +22,6 @@
 #include "src/util/weight_init.hpp"
 
 #include "src/node.hpp"
+#include "src/core/backend.hpp"
 #include "src/layers/layer.hpp"
 #endif //XSDNN_XSDNN_HPP

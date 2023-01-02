@@ -70,6 +70,12 @@ bool is_trainable_concept(tensor_type type_) {
     return value;
 }
 
+void tensor_fill(Scalar* data, size_t size, Scalar value) {
+    for (size_t i = 0; i < size; ++i) {
+        data[i] = value;
+    }
+}
+
 } // xsdnn
 
 
