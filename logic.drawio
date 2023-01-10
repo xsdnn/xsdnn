@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-12-30T19:11:28.253Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="3BdDVVSl3qbkGJIqeCze" version="20.7.4" type="github" pages="10">
+<mxfile host="app.diagrams.net" modified="2023-01-10T22:27:45.312Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="yymvQ_RQTNIawCxb_Uxj" version="20.8.3" type="github" pages="10">
   <diagram name="xsdnn::main" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
     <mxGraphModel dx="1312" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" background="none" math="0" shadow="0">
       <root>
@@ -28,10 +28,10 @@
         <mxCell id="jkYTFeYgwC2KfP83L8r2-1" value="&lt;h1&gt;Sequential&lt;/h1&gt;&lt;p&gt;Реализация контейнера для&amp;nbsp; последовательной сети&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;text-align: center;&quot;&gt;//&lt;i&gt;TODO&lt;/i&gt;:&amp;nbsp; как ее сделать?&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="40" y="710" width="190" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="vlH5JGkJwxlnS23OrFSM-1" value="&lt;h1&gt;Общие ключевые моменты&lt;/h1&gt;&lt;p&gt;1. Реализуем 3 типа контейнеров - &lt;span style=&quot;background-color: rgb(51, 153, 255);&quot;&gt;weights, bias, data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2. Реализовать граф через концепцию &lt;span style=&quot;background-color: rgb(255, 102, 102);&quot;&gt;&#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3. Реализовать абстракцию описания размеров (мета информация о размере контейнера shape3d et al).&amp;nbsp;&lt;/p&gt;&lt;p&gt;4. Выравнивание weights &amp;amp;&amp;amp; bias должно происходить после их инициализации в методе setup.&lt;/p&gt;&lt;p&gt;Выравнивание data происходит в момент, когда известен размер батча - отдельный метод.&lt;/p&gt;&lt;p&gt;5. Как реализовать сериализацию сетки? Какой интерфейс, какой формат? Планы на будущее: поддержка onnx формата.&lt;/p&gt;&lt;p&gt;6. 3 контейнера weights, bias, data также должны быть описаны is_trainable?&amp;nbsp;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+        <mxCell id="vlH5JGkJwxlnS23OrFSM-1" value="&lt;h1&gt;Общие ключевые моменты&lt;/h1&gt;&lt;p&gt;1. Реализуем 3 типа контейнеров - &lt;span style=&quot;background-color: rgb(51, 153, 255);&quot;&gt;weights, bias, data&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2. Реализовать граф через концепцию &lt;span style=&quot;background-color: rgb(255, 102, 102);&quot;&gt;&#39;producer&#39;-&amp;gt;&#39;consumer&#39;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3. Реализовать абстракцию описания размеров (мета информация о размере контейнера shape3d et al).&amp;nbsp;&lt;/p&gt;&lt;p&gt;4. Выравнивание weights &amp;amp;&amp;amp; bias должно происходить после их инициализации в методе setup.&lt;/p&gt;&lt;p&gt;Выравнивание data происходит в момент, когда известен размер батча - отдельный метод.&lt;/p&gt;&lt;p&gt;5. Как реализовать сериализацию сетки? Какой интерфейс, какой формат? Планы на будущее: поддержка onnx формата.&lt;/p&gt;&lt;p&gt;6. 3 контейнера weights, bias, data также должны быть описаны is_trainable?&amp;nbsp;&lt;/p&gt;&lt;p&gt;7. Как создать интерфейс без передачи размера батча, а использовать только `set_in_data` для 1 слоя, а далее вычислять размеры автоматически?&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="392" y="10" width="370" height="410" as="geometry" />
         </mxCell>
-        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="vlH5JGkJwxlnS23OrFSM-2" target="-aHUlDHQ0JRG_QK1f5Hc-1">
+        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="vlH5JGkJwxlnS23OrFSM-2" target="-aHUlDHQ0JRG_QK1f5Hc-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="vlH5JGkJwxlnS23OrFSM-2" value="&lt;h1&gt;Ультра короткий план реализации&lt;/h1&gt;&lt;p&gt;1. Реализация мета описания типов данных aka {index3d, vec_type}&lt;/p&gt;&lt;p&gt;2. Реализация графовой концепции aka {node, edge}&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
@@ -43,7 +43,7 @@
             <mxPoint x="970" y="290" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-1" value="&lt;h1&gt;Следующие шаги реализации&lt;/h1&gt;&lt;p&gt;1. Создание интерфейса для сериализации данных.&amp;nbsp;&lt;br&gt;&lt;/p&gt;&lt;p&gt;2. Прототипирование класса слоя (layer : node)&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-1" value="&lt;h1&gt;Следующие шаги реализации&lt;/h1&gt;&lt;p&gt;1. Создание интерфейса для сериализации данных.&amp;nbsp;&lt;br&gt;&lt;/p&gt;&lt;p&gt;2. Прототипирование класса слоя (layer : node)&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="1540" y="200" width="420" height="120" as="geometry" />
         </mxCell>
       </root>
@@ -207,79 +207,79 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-1" value="&lt;h1&gt;Идея и интерфейс сериализации&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-1" value="&lt;h1&gt;Идея и интерфейс сериализации&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" parent="1" vertex="1">
           <mxGeometry y="20" width="1160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-3" value="Необходимо реализовать сохранение и загрузку сети из файла.&amp;nbsp;&lt;br&gt;&lt;br&gt;Вопросы:&lt;br&gt;&lt;ol&gt;&lt;li&gt;В каком формате должна храниться обученная модель? Ответ: создать кастомный формат или использовать идею из xsdnn_old?&lt;/li&gt;&lt;li&gt;Как будет описан граф сети? Ответ: в виде JSON файла.&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;	&lt;/span&gt;В JSON обязательно хранить:&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;Пользовательское название (архитектуру) сети&lt;/li&gt;&lt;li&gt;Кол-во слоев (в том числе активации, которые хранятся просто как факт того, что они там есть)&lt;/li&gt;&lt;li&gt;Каждый слой должен содержать meta информацию о себе - размеры weights &amp;amp; bias, например.&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-3" value="Необходимо реализовать сохранение и загрузку сети из файла.&amp;nbsp;&lt;br&gt;&lt;br&gt;Вопросы:&lt;br&gt;&lt;ol&gt;&lt;li&gt;В каком формате должна храниться обученная модель? Ответ: создать кастомный формат или использовать идею из xsdnn_old?&lt;/li&gt;&lt;li&gt;Как будет описан граф сети? Ответ: в виде JSON файла.&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt; &lt;/span&gt;В JSON обязательно хранить:&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;Пользовательское название (архитектуру) сети&lt;/li&gt;&lt;li&gt;Кол-во слоев (в том числе активации, которые хранятся просто как факт того, что они там есть)&lt;/li&gt;&lt;li&gt;Каждый слой должен содержать meta информацию о себе - размеры weights &amp;amp; bias, например.&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry y="80" width="1160" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-4" value="&lt;h1&gt;Ванильное представление сериализации&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-4" value="&lt;h1&gt;Ванильное представление сериализации&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;align=center;" parent="1" vertex="1">
           <mxGeometry y="430" width="1160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-20" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;template &amp;lt;spec&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;struct save-load&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ field1: Type&lt;br&gt;+ field2: Type&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ cerial_meta(json-node, node-index, param-holder): void&lt;br&gt;+ cerial_wb(in_shape): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ decerial_wb(json-node, in_shape, cerial_vec, param-holder): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-20" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;template &amp;lt;spec&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;struct save-load&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ field1: Type&lt;br&gt;+ field2: Type&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ cerial_meta(json-node, node-index, param-holder): void&lt;br&gt;+ cerial_wb(in_shape): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ decerial_wb(json-node, in_shape, cerial_vec, param-holder): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
           <mxGeometry x="40" y="520" width="370" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-21" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.4;arrowSize=0.4;align=left;verticalAlign=top;fillColor=rgb(255, 255, 255);" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-21" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.4;arrowSize=0.4;align=left;verticalAlign=top;fillColor=rgb(255, 255, 255);" parent="1" vertex="1">
           <mxGeometry x="460" y="585" width="80" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-23" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;cerial_meta&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-23" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;cerial_meta&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" parent="1" vertex="1">
           <mxGeometry x="590" y="520" width="340" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-25" value="writing_to_json a.k.a.&amp;nbsp;&lt;br&gt;{fill_meta_info}" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-25" value="writing_to_json a.k.a.&amp;nbsp;&lt;br&gt;{fill_meta_info}" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="670" y="605" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-26" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;cerial_wb&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-26" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;cerial_wb&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" parent="1" vertex="1">
           <mxGeometry x="1030" y="520" width="400" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=14;" edge="1" parent="1" source="jVqgmW2yrg8SBwkRNUJC-28" target="jVqgmW2yrg8SBwkRNUJC-31">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=14;" parent="1" source="jVqgmW2yrg8SBwkRNUJC-28" target="jVqgmW2yrg8SBwkRNUJC-31" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-28" value="trainable?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-28" value="trainable?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1040" y="565" width="100" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-30" value="y" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" edge="1" source="jVqgmW2yrg8SBwkRNUJC-28" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-30" value="y" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" parent="1" source="jVqgmW2yrg8SBwkRNUJC-28" edge="1">
           <mxGeometry x="-1" relative="1" as="geometry">
             <mxPoint x="1090" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-31" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-31" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1180" y="578" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=14;" edge="1" parent="1" source="jVqgmW2yrg8SBwkRNUJC-33" target="jVqgmW2yrg8SBwkRNUJC-34">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=14;" parent="1" source="jVqgmW2yrg8SBwkRNUJC-33" target="jVqgmW2yrg8SBwkRNUJC-34" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-33" value="copy data to 1-d vector" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-33" value="copy data to 1-d vector" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1030" y="640" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-34" value="call io::cerial_vec()" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;fillColor=rgb(255, 255, 255);" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-34" value="call io::cerial_vec()" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;fillColor=rgb(255, 255, 255);" parent="1" vertex="1">
           <mxGeometry x="1240" y="640" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-36" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.4;arrowSize=0.4;align=left;verticalAlign=top;fillColor=rgb(255, 255, 255);rotation=90;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-36" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.4;arrowSize=0.4;align=left;verticalAlign=top;fillColor=rgb(255, 255, 255);rotation=90;" parent="1" vertex="1">
           <mxGeometry x="160" y="750" width="80" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-37" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;decerial_wb&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-37" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;decerial_wb&lt;/font&gt;&lt;/b&gt;&lt;/span&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;width=160;height=40;boundedLbl=1;verticalAlign=middle;align=left;spacingLeft=5;" parent="1" vertex="1">
           <mxGeometry x="40" y="880" width="340" height="310" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-38" value="На вход подается json-noda, контейнер входных концептов, холдер для параметров и прочитанный из бинарного файла вектор весов и смещений&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-38" value="На вход подается json-noda, контейнер входных концептов, холдер для параметров и прочитанный из бинарного файла вектор весов и смещений&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="40" y="940" width="340" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-39" value="trainable?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-39" value="trainable?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffc0;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="40" y="1000" width="130" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-40" value="no" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" edge="1" source="jVqgmW2yrg8SBwkRNUJC-39" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-40" value="no" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" parent="1" source="jVqgmW2yrg8SBwkRNUJC-39" edge="1">
           <mxGeometry x="-1" relative="1" as="geometry">
             <mxPoint x="230" y="1030" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-41" value="yes" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" edge="1" source="jVqgmW2yrg8SBwkRNUJC-39" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-41" value="yes" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;fontSize=14;" parent="1" source="jVqgmW2yrg8SBwkRNUJC-39" edge="1">
           <mxGeometry x="-1" relative="1" as="geometry">
             <mxPoint x="105" y="1080" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-42" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-42" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="230" y="1015" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="jVqgmW2yrg8SBwkRNUJC-43" value="Установить значения как необходимо" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="jVqgmW2yrg8SBwkRNUJC-43" value="Установить значения как необходимо" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;labelBackgroundColor=#FFFFFF;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="40" y="1080" width="300" height="60" as="geometry" />
         </mxCell>
       </root>
