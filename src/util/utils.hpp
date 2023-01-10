@@ -67,7 +67,7 @@ bool is_trainable_concept(tensor_type type_) {
             value = true;
             break;
         default:
-            throw xs_error("Unsopported tensor type");
+            throw xs_error("Unsupported tensor type");
     }
     return value;
 }
@@ -83,12 +83,20 @@ Matrix transpose(Matrix& m) {
     return m.shuffle(shuffle_idx);
 }
 
-Tensor_4D _3D_to_4D(std::array<Eigen::DenseIndex, 3> copies,
-                    std::array<Eigen::DenseIndex, 4> shape,
+
+Tensor_4D _3D_to_4D(std::array<Eigen::DenseIndex, 3> copies, /*batch_size, height, width*/
+                    std::array<Eigen::DenseIndex, 4> shape,  /*batch_size, channel, height, width*/
                     Tensor_3D& t_) {
     return t_.broadcast(copies).reshape(shape);
 }
 
+/*
+ * This method can transform 4D Tensor to 2D ColMajor Matrix if shuffle & shape param correct
+ *
+ * >>> Tranform 4D(60, 1, 28, 1) -> 2D(28, 60)
+ * >>> shuffle_ = {2, 0, 1, 3}
+ * >>> shape_   = {28, 60}
+ */
 Matrix _4D_to_2D(std::array<Eigen::DenseIndex, 4> shuffle_,
                  std::array<Eigen::DenseIndex, 2> shape_,
                  Tensor_4D& t_) {
