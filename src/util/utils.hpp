@@ -78,6 +78,23 @@ void tensor_fill(Scalar* data, size_t size, Scalar value) {
     }
 }
 
+Matrix transpose(Matrix& m) {
+    auto shuffle_idx = std::array<Eigen::DenseIndex, 2> {1, 0};
+    return m.shuffle(shuffle_idx);
+}
+
+Tensor_4D _3D_to_4D(std::array<Eigen::DenseIndex, 3> copies,
+                    std::array<Eigen::DenseIndex, 4> shape,
+                    Tensor_3D& t_) {
+    return t_.broadcast(copies).reshape(shape);
+}
+
+Matrix _4D_to_2D(std::array<Eigen::DenseIndex, 4> shuffle_,
+                 std::array<Eigen::DenseIndex, 2> shape_,
+                 Tensor_4D& t_) {
+    return t_.shuffle(shuffle_).reshape(shape_);
+}
+
 } // xsdnn
 
 
