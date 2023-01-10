@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(xsDNN VERSION 0.1.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
 
 option(USE_DOUBLE      "Set to ON to use double. Default float" OFF)
 option(NO_DTRMNST      "Set to ON to use not fixed seed in rng" OFF)
-option(BUILD_TEST      "Set to ON to build tests"               OFF)
+option(BUILD_TEST      "Set to ON to build tests"               ON)
 option(BUILD_EXAMPLE   "Set to ON to build examples"	        OFF)
 
 
@@ -18,7 +17,8 @@ endif()
 include_directories($ENV{EIGEN3_INCLUDE_DIR})
 include_directories(third_party/json/single_include)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 if(BUILD_TEST)
     add_subdirectory(test)
@@ -32,4 +32,4 @@ if(NO_DTRMNST)
     add_compile_definitions(DNN_NO_DTRMNST)
 endif(NO_DTRMNST)
 
-add_executable(main main.cpp)
+#add_executable(main main.cpp)

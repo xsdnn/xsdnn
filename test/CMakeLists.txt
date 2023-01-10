@@ -16,13 +16,37 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(
-        all_test
-        test.cpp
+        edge_node_test
+        edge_node_test.cpp
 )
 target_link_libraries(
-        all_test
+        edge_node_test
         GTest::gtest_main
 )
 
+##########################################################
+
+add_executable(
+        colored_print_visual_test
+        colored_print_visual_test.cpp
+)
+target_link_libraries(
+        colored_print_visual_test
+        GTest::gtest_main
+)
+
+##########################################################
+
+add_executable(
+        serialization_helper_test
+        serialization_helper_test.cpp
+)
+target_link_libraries(
+        serialization_helper_test
+        GTest::gtest_main
+)
+
+##########################################################
+
+
 include(GoogleTest)
-gtest_discover_tests(all_test)

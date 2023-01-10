@@ -1,10 +1,11 @@
 //
-// Created by Andrei R. on 29.12.22.
-// Copyright (c) 2022 xsDNN. All rights reserved.
+// Created by Andrei R. on 10.01.23.
+// Copyright (c) 2023 xsDNN. All rights reserved.
 //
 
-#ifndef XSDNN_EDGE_NODE_TEST_HPP
-#define XSDNN_EDGE_NODE_TEST_HPP
+#include <gtest/gtest.h>
+#include "../xsDNN.hpp"
+using namespace xsdnn;
 
 TEST(Edge, Alloc) {
     shape3d shp1(3, 4, 4);
@@ -74,4 +75,8 @@ TEST(Node, Alloc) {
         ASSERT_TRUE(_grad.size() == out_shape[i].size());
     }
 }
-#endif //XSDNN_EDGE_NODE_TEST_HPP
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
