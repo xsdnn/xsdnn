@@ -38,3 +38,5 @@ old/Doxygen_old/html/
 old/Doxygen_old/latex/
 
 eigen/
+
+main.cpp
