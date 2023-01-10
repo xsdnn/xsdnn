@@ -6,6 +6,8 @@
 #ifndef XSDNN_UTILS_H
 #define XSDNN_UTILS_H
 
+#define DNN_UNUSED_PARAMETER(x) (void)(x)
+
 namespace xsdnn {
 
 template <typename T>

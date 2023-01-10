@@ -36,8 +36,9 @@ public:
     constant() : function(Scalar(0.0)) {}
     explicit constant(Scalar scale) : function(scale) {}
 
-    virtual void fill(Scalar* data, size_t size, size_t, size_t) override {
-        // TODO: подумать, как можно не обращать внимания на неиспользуемые параметры функции (через макрос)
+    virtual void fill(Scalar* data, size_t size, size_t fan_in, size_t fan_out) override {
+        DNN_UNUSED_PARAMETER(fan_in);
+        DNN_UNUSED_PARAMETER(fan_out);
         tensor_fill(data, size, scale_);
     }
 };
