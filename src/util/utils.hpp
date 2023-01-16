@@ -40,6 +40,40 @@ private:
 
 using shape3d = index3d<Eigen::DenseIndex>;
 
+template<typename T>
+class index4d {
+public:
+    index4d(T num, T channel, T height, T width) : num_(num), channel_(channel), height_(height), width_(width) {}
+    index4d() : num_(0), channel_(0), height_(0), width_(0) {}
+
+    std::array<Eigen::DenseIndex, 4> shape() const {
+        using DI = Eigen::DenseIndex;
+        std::array<DI, 4> dim = {
+                static_cast<DI>(num_),
+                static_cast<DI>(channel_),
+                static_cast<DI>(height_),
+                static_cast<DI>(width_),
+        };
+        return dim;
+    }
+
+    T area() const {
+        return (T) height_ * width_;
+    }
+
+    T size() const {
+        return (T) num_ * channel_ * height_ * width_;
+    }
+
+private:
+    T num_;
+    T channel_;
+    T height_;
+    T width_;
+};
+
+using shape4d = index4d<Eigen::DenseIndex>;
+
 enum class tensor_type : int32_t {
     // input/output data
     data = 0x0001000,  // input/output data
@@ -100,6 +134,12 @@ Tensor_4D _3D_to_4D(std::array<Eigen::DenseIndex, 3> copies, /*batch_size, heigh
 Matrix _4D_to_2D(std::array<Eigen::DenseIndex, 4> shuffle_,
                  std::array<Eigen::DenseIndex, 2> shape_,
                  Tensor_4D& t_) {
+    return t_.shuffle(shuffle_).reshape(shape_);
+}
+
+Matrix _3D_to_2D(std::array<Eigen::DenseIndex, 3> shuffle_,
+                std::array<Eigen::DenseIndex, 2> shape_,
+                Tensor_3D& t_) {
     return t_.shuffle(shuffle_).reshape(shape_);
 }
 
