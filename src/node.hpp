@@ -10,6 +10,7 @@ namespace xsdnn {
 
 class edge;
 using edgeptr_t = std::shared_ptr<edge>;
+class layer;
 
 /*
  * Containing edge container before layer operation and after
@@ -36,10 +37,12 @@ public:
         return next_;
     }
 
-protected:
-    friend void connect(node* head,
-                        node* tail);
+    virtual void connect(layer* head,
+                 layer* tail,
+                 size_t head_data_concept_idx = 0,
+                 size_t tail_data_concept_idx = 0);
 
+protected:
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output
 };
