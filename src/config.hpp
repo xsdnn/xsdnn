@@ -32,15 +32,15 @@ namespace xsdnn {
     typedef Eigen::Tensor<Scalar, 4, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_4D;
 
-    // (C, W, H)
+    // (C, H, W)
     typedef Eigen::Tensor<Scalar, 3, Eigen::AutoAlign, Eigen::DenseIndex>
             Tensor_3D;
 
-    // (W, H)
+    // (H, W)
     typedef Eigen::Tensor<Scalar, 2, Eigen::AutoAlign, Eigen::DenseIndex>
             Matrix;
 
-    // (H)
+    // (W)
     typedef Eigen::Tensor<Scalar, 1, Eigen::AutoAlign, Eigen::DenseIndex>
             Vector;
 
