@@ -51,8 +51,79 @@ public:
         return out_type_;
     }
 
+    /*Holders for describing in / out concept size*/
     virtual std::vector<shape3d> in_shape() const = 0;
     virtual std::vector<shape3d> out_shape() const = 0;
+
+    /*Unique  type of this layer*/
+    virtual std::string layer_type() const = 0;
+
+    /*Num features at input & output stages*/
+    virtual Eigen::DenseIndex fan_in_size() const = 0;
+    virtual Eigen::DenseIndex fan_out_shape() const = 0;
+
+    /*
+     * General method, where calling kernel forward algorithm for these layer
+     */
+    virtual void forward_propagation(const std::vector<Tensor_3D *>& in_data,
+                                     std::vector<Tensor_3D *>& out_data) = 0;
+
+    /*
+     * General method, where calling kernel backward algorithm for these layer
+     */
+    virtual void backward_propagation(const std::vector<Tensor_3D *>& in_data,
+                                      const std::vector<Tensor_3D *>& out_data,
+                                      std::vector<Tensor_3D *>& in_grad,
+                                      std::vector<Tensor_3D *>& out_grad) = 0;
+
+    void set_in_data(const Tensor_4D& in_data /*// TODO: можно ли получать 3D ?*/) {
+        DNN_UNUSED_PARAMETER(in_data);
+        for (size_t i = 0; i < in_concept_; ++i) {
+            if (in_type_[i] != tensor_type::data) continue;
+            Tensor_3D& dst_data = ith_in_node(i)->get_data();
+            DNN_UNUSED_PARAMETER(dst_data);
+            // TODO: единственный вариант, как на данном этапе не делать увеличение ранга тензора, но учесть кол-во
+            // элементов в батче - resize (!batch_size! * channel, height, width)
+            // FIXME: подумать, нужно ли после расчетов - возвращать данные в исходный 3D формат - предварительно да.
+            // TODO: подумать, как коннектятся слои между собой
+            //  :: https://github.com/tiny-dnn/tiny-dnn/blob/c0f576f5cb7b35893f62127cb7aec18f77a3bcc5/tiny_dnn/layers/layer.h#L863
+        }
+    }
+
+    void forward() {
+        // TODO: implement this place...
+        // How we move from 3D to 4D Tensor
+    }
+
+    /*
+     * Main method for w&b allocating
+     */
+    void setup(bool reset_wb) {
+        if (in_shape().size() != in_concept_ ||
+            out_shape().size() != out_concept_) {
+            xs_error("Connection mismatch. You make programming mistake!");
+        }
+
+        /*
+         * Allocating data for output concept
+         */
+        for (size_t i = 0; i < out_concept_; ++i) {
+            if (!next_[i]) {
+                alloc_output(i);
+            }
+        }
+
+        /*
+         * Allocating inputs w&b
+         */
+        if (!initialized_ || reset_wb) {
+            init_weight();
+        }
+    }
+
+    void init_weight() {
+        // TODO: implement this
+    }
 
 protected:
     /*Indicate layer parameters initializing*/
@@ -110,6 +181,34 @@ private:
             alloc_output(i);
         }
         return next_[i];
+    }
+
+    Tensor_3D* get_weight_data(size_t i) {
+        assert(is_trainable_concept(in_type_[i]));
+        return &ith_in_node(i)->get_data();
+    }
+
+    /*
+     * Connecting prev / next layer in a sequential
+     */
+    virtual void connect(layer *prev,
+                         layer *next,
+                         size_t prev_data_concept_idx = 0,
+                         size_t next_data_concept_idx = 0) override{
+        auto prev_shape = prev->out_shape()[prev_data_concept_idx];
+        auto next_shape = next->in_shape()[next_data_concept_idx];
+
+        if (prev_shape.size() != next_shape.size()) {
+            // TODO: add connection mismatch method
+            xs_error("Connection mismatch. You make programming mistake!");
+        }
+
+        if (!prev->next_[prev_data_concept_idx]) {
+            xs_error("Output data on previous layer must be not nullptr");
+        }
+
+        next->prev_[next_data_concept_idx] = prev->next_[prev_data_concept_idx];
+        // next->prev_[next_data_concept_idx]->add_next_node(next);
     }
 };
 
