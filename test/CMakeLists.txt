@@ -48,5 +48,16 @@ target_link_libraries(
 
 ##########################################################
 
+add_executable(
+        matmul_op_test
+        matmul_op_test.cpp
+)
+target_link_libraries(
+        matmul_op_test
+        GTest::gtest_main
+)
+
+##########################################################
+
 
 include(GoogleTest)
