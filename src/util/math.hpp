@@ -34,6 +34,21 @@ public:
                        const DimArray& dim, const DimReduce& dim_reduce) {
         out.device(d) = in1.contract(in2, dim).maximum(dim_reduce);
     }
+
+    template<typename T>
+    static void fill(T& obj, const Scalar val) {
+        if (val == Scalar(0.0)) {
+            obj.setZero();
+        } else {
+            obj.setConstant(val);
+        }
+    }
+
+    static void fill(Scalar* data, size_t size, const Scalar val) {
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = val;
+        }
+    }
 };
 
 } // xsdnn
