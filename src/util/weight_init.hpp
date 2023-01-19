@@ -39,7 +39,7 @@ public:
     virtual void fill(Scalar* data, size_t size, size_t fan_in, size_t fan_out) override {
         DNN_UNUSED_PARAMETER(fan_in);
         DNN_UNUSED_PARAMETER(fan_out);
-        tensor_fill(data, size, scale_);
+        tensorize::fill(data, size, scale_);
     }
 };
 
