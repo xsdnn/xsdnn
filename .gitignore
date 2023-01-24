@@ -34,8 +34,8 @@
 cmake-build-debug/
 build/
 
-old/Doxygen_old/html/
-old/Doxygen_old/latex/
+legacy/Doxygen_old/html/
+legacy/Doxygen_old/latex/
 
 eigen/
 
