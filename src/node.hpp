@@ -109,7 +109,7 @@ public:
      */
 
     void clear_grads() {
-        grad_.setZero();
+        tensorize::fill(grad_, 0.0);
     }
 
 private:
