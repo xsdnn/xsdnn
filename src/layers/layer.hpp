@@ -164,6 +164,9 @@ protected:
     /*Type of backeng engine*/
     core::backend_t backend_;
 
+    /*For serialization task*/
+    friend struct cerial;
+
 private:
     /*Need we update trainable concept for this layer?*/
     bool trainable_;
