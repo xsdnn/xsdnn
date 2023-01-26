@@ -24,6 +24,8 @@ public:
         trainable_ = true;
     }
 
+    virtual ~layer() = default;
+
     /*
      * getters
      */
@@ -60,7 +62,7 @@ public:
 
     /*Num features at input & output stages*/
     virtual Eigen::DenseIndex fan_in_size() const = 0;
-    virtual Eigen::DenseIndex fan_out_shape() const = 0;
+    virtual Eigen::DenseIndex fan_out_size() const = 0;
 
     /*
      * General method, where calling kernel forward algorithm for these layer
@@ -122,7 +124,29 @@ public:
     }
 
     void init_weight() {
-        // TODO: implement this
+        if (!trainable_) {
+            initialized_ = true;
+            return;
+        }
+
+        for (size_t i = 0; i < in_concept_; ++i) {
+            switch (in_type_[i]) {
+                case tensor_type::weight: {
+                    Tensor_3D *w = get_weight_data(i);
+                    weight_init_->fill(w->data(), w->size(), fan_in_size(), fan_out_size());
+                    break;
+                }
+
+                case tensor_type::bias: {
+                    Tensor_3D *b = get_weight_data(i);
+                    bias_init_->fill(b->data(), b->size(), fan_in_size(), fan_out_size());
+                    break;
+                }
+
+                default:
+                    break;
+            }
+        }
     }
 
 protected:
