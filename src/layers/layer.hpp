@@ -115,6 +115,27 @@ public:
         forward_propagation(fwd_in_data_, fwd_out_data_);
     }
 
+    void backward() {
+        bwd_in_data_.resize(in_concept_);
+        bwd_in_grad_.resize(in_concept_);
+        bwd_out_data_.resize(out_concept_);
+        bwd_out_grad_.resize(out_concept_);
+
+        for (size_t i = 0; i < in_concept_; i++) {
+            const auto& nd = ith_in_node(i);
+            bwd_in_data_[i] = &nd->get_data();
+            bwd_in_grad_[i] = &nd->get_gradient();
+        }
+
+        for (size_t i = 0; i < out_concept_; i++) {
+            const auto& nd = ith_out_node(i);
+            bwd_out_data_[i] = &nd->get_data();
+            bwd_out_grad_[i] = &nd->get_gradient();
+        }
+
+        backward_propagation(bwd_in_data_, bwd_out_data_, bwd_in_grad_, bwd_out_grad_);
+    }
+
     /*
      * Main method for w&b allocating
      */
