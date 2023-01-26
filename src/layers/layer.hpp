@@ -92,9 +92,27 @@ public:
         }
     }
 
+    /*
+     * The purpose of this method is to forward the data from the
+     * computational graph to the layer interface.
+     */
     void forward() {
-        // TODO: implement this place...
-        // How we move from 3D to 4D Tensor
+        fwd_in_data_.resize(in_concept_);
+        fwd_out_data_.resize(out_concept_);
+
+        for (size_t i = 0; i < in_concept_; i++) {
+            fwd_in_data_[i] = &ith_in_node(i)->get_data();
+        }
+
+        for (size_t i = 0; i < out_concept_; i++) {
+            fwd_out_data_[i] = &ith_out_node(i)->get_data();
+
+            // FIXME: почему мы делаем это именно здесь? Почему не перед backward-pass?
+            ith_out_node(i)->clear_grads();
+        }
+
+        // call the forward kernel
+        forward_propagation(fwd_in_data_, fwd_out_data_);
     }
 
     /*
