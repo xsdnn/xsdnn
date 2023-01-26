@@ -78,17 +78,11 @@ public:
                                       std::vector<Tensor_3D *>& in_grad,
                                       std::vector<Tensor_3D *>& out_grad) = 0;
 
-    void set_in_data(const Tensor_4D& in_data /*// TODO: можно ли получать 3D ?*/) {
-        DNN_UNUSED_PARAMETER(in_data);
-        for (size_t i = 0; i < in_concept_; ++i) {
+    void set_in_data(const Tensor_3D& in_data) {
+        for (size_t i = 0; i < in_concept_; i++) {
             if (in_type_[i] != tensor_type::data) continue;
             Tensor_3D& dst_data = ith_in_node(i)->get_data();
-            DNN_UNUSED_PARAMETER(dst_data);
-            // TODO: единственный вариант, как на данном этапе не делать увеличение ранга тензора, но учесть кол-во
-            // элементов в батче - resize (!batch_size! * channel, height, width)
-            // FIXME: подумать, нужно ли после расчетов - возвращать данные в исходный 3D формат - предварительно да.
-            // TODO: подумать, как коннектятся слои между собой
-            //  :: https://github.com/tiny-dnn/tiny-dnn/blob/c0f576f5cb7b35893f62127cb7aec18f77a3bcc5/tiny_dnn/layers/layer.h#L863
+            assert(dst_data.size() == in_data.size());
         }
     }
 
