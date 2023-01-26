@@ -259,8 +259,7 @@ private:
         auto next_shape = next->in_shape()[next_data_concept_idx];
 
         if (prev_shape.size() != next_shape.size()) {
-            // TODO: add connection mismatch method
-            xs_error("Connection mismatch. You make programming mistake!");
+            connection_mismatch(prev, next);
         }
 
         if (!prev->next_[prev_data_concept_idx]) {
@@ -269,6 +268,23 @@ private:
 
         next->prev_[next_data_concept_idx] = prev->next_[prev_data_concept_idx];
         // next->prev_[next_data_concept_idx]->add_next_node(next);
+    }
+
+    void connection_mismatch(layer* prev, layer* next) {
+        std::ostringstream os;
+
+        os << std::endl;
+
+        os << "Out size of layer[N] must be eq in size of layer[N+1]" << std::endl;
+
+        os << "Layer[N]" << std::setw(12) << prev->layer_type()
+           << "in: " << prev->fan_in_size() << "," << "out: " << prev->fan_out_size();
+
+        os << "Layer[N+1]" << std::setw(12) << next->layer_type()
+           << "in: " << next->fan_in_size() << "," << "out: " << next->fan_out_size();
+
+        std::string detail = os.str();
+        xs_error("Connection mismatch. You make programming mistake!" + detail);
     }
 };
 
