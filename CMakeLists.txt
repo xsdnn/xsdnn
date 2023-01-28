@@ -15,10 +15,12 @@ if( NOT DEFINED ENV{EIGEN3_INCLUDE_DIR} )
 endif()
 
 include_directories($ENV{EIGEN3_INCLUDE_DIR})
-include_directories(third_party/json/single_include)
+include_directories(json/single_include)
+include_directories(spdlog/include)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -march=native")
 set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
 
 if(BUILD_TEST)
     add_subdirectory(test)
@@ -32,4 +34,4 @@ if(NO_DTRMNST)
     add_compile_definitions(DNN_NO_DTRMNST)
 endif(NO_DTRMNST)
 
-#add_executable(main main.cpp)
+add_executable(main main.cpp)
