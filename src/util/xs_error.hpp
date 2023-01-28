@@ -7,6 +7,7 @@
 #define XSDNN_XS_ERROR_HPP
 
 #include <exception>
+#include "color_print.hpp"
 
 namespace xsdnn {
 

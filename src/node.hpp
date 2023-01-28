@@ -18,7 +18,6 @@ class layer;
 class node {
 public:
     node (size_t in_concept, size_t out_concept) : prev_(in_concept), next_(out_concept) {}
-    node() = delete;
     virtual ~node() {}
 
     std::vector<edgeptr_t>& prev() {
@@ -43,6 +42,8 @@ public:
                  size_t tail_data_concept_idx = 0);
 
 protected:
+    node() = delete;
+
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output
 };

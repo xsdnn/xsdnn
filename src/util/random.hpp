@@ -21,7 +21,7 @@ class uniform_distribution : protected base_distribution {
 public:
     uniform_distribution(T min, T max) : min_(min), max_(max), coef_(max_ - min_) {}
 
-#if defined(DNN_NO_DTRMNST)
+#if defined(XS_NO_DTRMNST)
     T operator() (base_random_engine& eng) {
         return min_ + eng.rand(rd) * coef_ / RAND_MAX;
     }

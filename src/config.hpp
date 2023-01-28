@@ -18,12 +18,58 @@ printf("Unsupported OS");
 exit(1);
 #endif
 
+#include "util/xs_error.hpp"
 
 namespace xsdnn {
-#if defined(DNN_USE_DOUBLE)
+#if defined(XS_USE_DOUBLE)
     typedef double Scalar;
 #else
     typedef float Scalar;
+#endif
+
+#ifdef XS_USE_LOG
+namespace logger {
+
+enum class type {
+    info,
+    warn,
+    error,
+    critical
+};
+
+std::string logger_name = "default_logger";
+std::string logger_path = "logs/log.txt";
+
+auto file_logger = spdlog::basic_logger_mt(logger_name, logger_path);
+
+void log(type type, const std::string& msg) {
+    switch(type) {
+        case type::info:
+            spdlog::info(msg);
+            file_logger->info(msg);
+            break;
+
+        case type::warn:
+            spdlog::warn(msg);
+            file_logger->warn(msg);
+            break;
+
+        case type::error:
+            spdlog::error(msg);
+            file_logger->error(msg);
+            break;
+
+        case type::critical:
+            spdlog::critical(msg);
+            file_logger->critical(msg);
+            break;
+
+        default:
+            throw xs_error("Unsupported logger type");
+    }
+}
+
+} // logger
 #endif
 
     using json = nlohmann::json;
