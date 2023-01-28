@@ -61,8 +61,8 @@ public:
     virtual std::string layer_type() const = 0;
 
     /*Num features at input & output stages*/
-    virtual Eigen::DenseIndex fan_in_size() const = 0;
-    virtual Eigen::DenseIndex fan_out_size() const = 0;
+    virtual Index fan_in_size() const = 0;
+    virtual Index fan_out_size() const = 0;
 
     /*
      * General method, where calling kernel forward algorithm for these layer
@@ -181,6 +181,8 @@ public:
             }
         }
     }
+
+    // TODO: impl update_weight methods
 
 protected:
     /*Indicate layer parameters initializing*/

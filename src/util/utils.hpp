@@ -16,11 +16,10 @@ public:
     index3d(T channel, T width, T height) : channel_(channel), width_(width), height_(height) {}
     index3d() : channel_(0), width_(0), height_(0) {}
 
-    std::array<Eigen::DenseIndex, 3> shape() const {
-        using DI = Eigen::DenseIndex;
-        std::array<Eigen::DenseIndex, 3> dim = {static_cast<DI>(channel_),
-                                                static_cast<DI>(width_),
-                                                static_cast<DI>(height_)};
+    std::array<Index, 3> shape() const {
+        std::array<Index, 3> dim = {static_cast<Index>(channel_),
+                                    static_cast<Index>(width_),
+                                    static_cast<Index>(height_)};
         return dim;
     }
 
@@ -38,7 +37,7 @@ private:
     T height_;
 };
 
-using shape3d = index3d<Eigen::DenseIndex>;
+using shape3d = index3d<Index>;
 
 template<typename T>
 class index4d {
@@ -46,13 +45,12 @@ public:
     index4d(T num, T channel, T height, T width) : num_(num), channel_(channel), height_(height), width_(width) {}
     index4d() : num_(0), channel_(0), height_(0), width_(0) {}
 
-    std::array<Eigen::DenseIndex, 4> shape() const {
-        using DI = Eigen::DenseIndex;
-        std::array<DI, 4> dim = {
-                static_cast<DI>(num_),
-                static_cast<DI>(channel_),
-                static_cast<DI>(height_),
-                static_cast<DI>(width_),
+    std::array<Index, 4> shape() const {
+        std::array<Index, 4> dim = {
+                static_cast<Index>(num_),
+                static_cast<Index>(channel_),
+                static_cast<Index>(height_),
+                static_cast<Index>(width_),
         };
         return dim;
     }
@@ -72,7 +70,7 @@ private:
     T width_;
 };
 
-using shape4d = index4d<Eigen::DenseIndex>;
+using shape4d = index4d<Index>;
 
 enum class tensor_type : int32_t {
     // input/output data
@@ -109,7 +107,7 @@ bool is_trainable_concept(tensor_type type_) {
 
 // FIXME: can we do better at this place?
 Matrix transpose(Matrix& m) {
-    auto shuffle_idx = std::array<Eigen::DenseIndex, 2> {1, 0};
+    auto shuffle_idx = std::array<Index, 2> {1, 0};
     return m.shuffle(shuffle_idx);
 }
 

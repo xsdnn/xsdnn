@@ -8,10 +8,10 @@
 
 namespace xsdnn {
 
-using DimPair = Eigen::IndexPair<Eigen::DenseIndex>;
+using DimPair = Eigen::IndexPair<Index>;
 using DimArray = std::array<DimPair, 1>;
-using ReduceArray1D = std::array<Eigen::DenseIndex, 1>;
-using ReduceArray2D = std::array<Eigen::DenseIndex, 2>;
+using ReduceArray1D = std::array<Index, 1>;
+using ReduceArray2D = std::array<Index, 2>;
 
 // must be only static member funtion class
 class tensorize {

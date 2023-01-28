@@ -27,21 +27,22 @@ namespace xsdnn {
 #endif
 
     using json = nlohmann::json;
+    using Index = Eigen::DenseIndex;
 
     // (N, C, H, W)
-    typedef Eigen::Tensor<Scalar, 4, Eigen::AutoAlign, Eigen::DenseIndex>
+    typedef Eigen::Tensor<Scalar, 4, Eigen::AutoAlign, Index>
             Tensor_4D;
 
     // (C, H, W)
-    typedef Eigen::Tensor<Scalar, 3, Eigen::AutoAlign, Eigen::DenseIndex>
+    typedef Eigen::Tensor<Scalar, 3, Eigen::AutoAlign, Index>
             Tensor_3D;
 
     // (H, W)
-    typedef Eigen::Tensor<Scalar, 2, Eigen::AutoAlign, Eigen::DenseIndex>
+    typedef Eigen::Tensor<Scalar, 2, Eigen::AutoAlign, Index>
             Matrix;
 
     // (W)
-    typedef Eigen::Tensor<Scalar, 1, Eigen::AutoAlign, Eigen::DenseIndex>
+    typedef Eigen::Tensor<Scalar, 1, Eigen::AutoAlign, Index>
             Vector;
 
     namespace xsThread {
@@ -54,7 +55,6 @@ namespace xsdnn {
             return sysconf(_SC_NPROCESSORS_ONLN);
 #endif
         }
-
         Eigen::ThreadPool pool(num_core());
         Eigen::ThreadPoolDevice cpu(&pool, pool.NumThreads());
     } // xsThread
