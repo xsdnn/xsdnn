@@ -4,6 +4,7 @@ project(xsDNN VERSION 0.1.3 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 option(USE_DOUBLE      "Set to ON to use double. Default float" OFF)
+option(LOGGING         "Set to ON to activate logger"           OFF)
 option(NO_DTRMNST      "Set to ON to use not fixed seed in rng" OFF)
 option(BUILD_TEST      "Set to ON to build tests"               ON)
 option(BUILD_EXAMPLE   "Set to ON to build examples"	        OFF)
@@ -21,17 +22,20 @@ include_directories(spdlog/include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -march=native")
 set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror -Wextra")
 
+if(LOGGING)
+    add_compile_definitions(XS_USE_LOG)
+endif(LOGGING)
 
 if(BUILD_TEST)
     add_subdirectory(test)
 endif(BUILD_TEST)
 
 if(USE_DOUBLE)
-    add_compile_definitions(DNN_USE_DOUBLE)
+    add_compile_definitions(XS_USE_DOUBLE)
 endif(USE_DOUBLE)
 
 if(NO_DTRMNST)
-    add_compile_definitions(DNN_NO_DTRMNST)
+    add_compile_definitions(XS_NO_DTRMNST)
 endif(NO_DTRMNST)
 
 add_executable(main main.cpp)
