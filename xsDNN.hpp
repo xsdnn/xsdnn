@@ -10,8 +10,11 @@
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include "src/config.hpp"
 
+#include "src/util/math.hpp"
 #include "src/util/color_print.hpp"
 #include "src/util/xs_error.hpp"
 #include "src/util/utils.hpp"
