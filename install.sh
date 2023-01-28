@@ -3,10 +3,6 @@
 git submodule init
 git submodule update
 
-mkdir third_party
-mv json/ third_party/json
-mv logger/ third_party/spdlog
-
 DIRECTORY=./eigen/Eigen
 SOURCE_DIR=$( pwd; )
 
