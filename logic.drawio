@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-02-09T17:58:16.742Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="ZYkzU__Pw_4Df5o74Zdk" version="20.8.19" type="github" pages="10">
+<mxfile host="app.diagrams.net" modified="2023-02-09T18:22:54.905Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="GlIpn6qVO1LVKWn5PldT" version="20.8.19" type="github" pages="10">
   <diagram name="xsdnn::main" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
     <mxGraphModel dx="1312" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" background="none" math="0" shadow="0">
       <root>
@@ -43,8 +43,16 @@
             <mxPoint x="970" y="290" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-1" value="&lt;h1&gt;Следующие шаги реализации&lt;/h1&gt;&lt;p&gt;1. Создание интерфейса для сериализации данных.&amp;nbsp;&lt;br&gt;&lt;/p&gt;&lt;p&gt;2. Прототипирование класса слоя (layer : node)&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+        <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-1" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Выполнено&lt;/span&gt;&lt;/h1&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;1. Создание интерфейса для сериализации данных.&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;p&gt;2. Прототипирование класса слоя (layer : node)&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="1540" y="200" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="XAud37Kml1fj0hQrQdyj-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" target="XAud37Kml1fj0hQrQdyj-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1750" y="320" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XAud37Kml1fj0hQrQdyj-2" value="&lt;h1&gt;Следующие шаги реализации&lt;/h1&gt;&lt;p&gt;1. Добавить проверки данных и другие проверки в сериализации&lt;br&gt;&lt;/p&gt;&lt;p&gt;2. Сделать nodes::sequential&lt;/p&gt;&lt;p&gt;3. Продумать верхнеуровневую часть сериализации&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="390" width="420" height="120" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
