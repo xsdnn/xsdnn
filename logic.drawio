@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-07T11:15:52.136Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="SjMYDRWkA_SHO6hFSdAi" version="20.8.23" type="github" pages="10">
+<mxfile host="app.diagrams.net" modified="2023-03-07T11:16:29.606Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.124 YaBrowser/22.9.3.894 Yowser/2.5 Safari/537.36" etag="YN3Yw4jn3CYKqTXLa0Xt" version="20.8.23" type="github" pages="10">
   <diagram name="xsdnn::main" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
     <mxGraphModel dx="1312" dy="804" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" background="none" math="0" shadow="0">
       <root>
@@ -34,7 +34,7 @@
         <mxCell id="-aHUlDHQ0JRG_QK1f5Hc-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="vlH5JGkJwxlnS23OrFSM-2" target="-aHUlDHQ0JRG_QK1f5Hc-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="vlH5JGkJwxlnS23OrFSM-2" value="&lt;h1&gt;Ультра короткий план реализации&lt;/h1&gt;&lt;p&gt;1. Реализация мета описания типов данных aka {index3d, vec_type}&lt;/p&gt;&lt;p&gt;2. Реализация графовой концепции aka {node, edge}&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="vlH5JGkJwxlnS23OrFSM-2" value="&lt;h1&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Выполнено&lt;/span&gt;&lt;/h1&gt;&lt;h1&gt;&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;1. Реализация мета описания типов данных aka {index3d, vec_type}&lt;/span&gt;&lt;br&gt;&lt;/h1&gt;&lt;p&gt;2. Реализация графовой концепции aka {node, edge}&lt;/p&gt;" style="text;html=1;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="1540" y="10" width="420" height="120" as="geometry" />
         </mxCell>
         <mxCell id="T77I6tmEs8zFwJfBUPsZ-1" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="vlH5JGkJwxlnS23OrFSM-1" target="_2fx6bxfBk6hNO2VCk2_-2" edge="1">
