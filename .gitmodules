@@ -1,6 +1,0 @@
-[submodule "cmake/external/spdlog"]
-	path = cmake/external/spdlog
-	url = https://github.com/gabime/spdlog.git
-[submodule "cmake/external/json"]
-	path = cmake/external/json
-	url = https://github.com/nlohmann/json.git
