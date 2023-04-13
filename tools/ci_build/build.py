@@ -37,6 +37,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+            "--config",
+            required=True,
+            help="Type of CMAKE_BUILD_TYPE"
+            )
+
+    parser.add_argument(
             "--skip_submodule_sync",
             action='store_true',
             help="Don't do a 'git submodule update'. Makes the Update phase faster."
@@ -105,8 +111,11 @@ def main():
     args = parse_arguments()
     script_dir = os.path.realpath(os.path.dirname(__file__))
     source_dir = os.path.normpath(os.path.join(script_dir, "..", ".."))
-
-    build_dir = args.build_dir
+    
+    if args.config in ['Debug', 'Release', 'RelWithDebInfo']:
+        build_dir = args.build_dir + "/" + args.config
+    else:
+        raise UsageError("Unsupported type of config")
     
     if not args.skip_submodule_sync:
         update_submodules(source_dir)
@@ -114,9 +123,7 @@ def main():
     cmake_path = resolve_executable_path(args.cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
-    if run_build(cmake_args).returncode == 0:
-        return 0
-    return 1
+    return run_build(cmake_args).returncode
 
 
 if __name__ == '__main__':
