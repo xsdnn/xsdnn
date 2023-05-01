@@ -61,6 +61,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--parallel",
+        action="store_true",
+        help="Turn ON to parallel build"
+    )
+
+    parser.add_argument(
             "--use_double_type",
             action='store_true',
             help="Turn ON to use double type instead of float"
@@ -89,6 +95,28 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
     ]
 
     return cmake_args
+
+def generate_build_tree_mmpack(build_dir, args):
+    cmake_args = [
+        "./cmake/external/mmpack/build.sh",
+        "--config=" + args.config
+        # TODO: аргументы для билда mmpack добавлять здесь
+    ]
+
+    if args.parallel:
+        cmake_args.append("--parallel")
+
+
+    # Копирование libmmpack.a в директорию текущего билда
+    if "Linux" in build_dir:
+        os = "Linux"
+    else:
+        raise BuildError("Unsupported OS")
+
+    os_args = [
+        "cp", "cmake/external/mmpack/build/" + os + "/" + args.config + "/libmmpack.a", build_dir
+    ]
+    return cmake_args, os_args
 
 def resolve_executable_path(command_or_path):
     """Returns the absolute path of an executable."""
@@ -124,6 +152,13 @@ def main():
     cmake_path = resolve_executable_path(args.cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
+
+    log.info("Start Build MMPACK")
+    mmpack_cmake_args, mmpack_cp_args = generate_build_tree_mmpack(build_dir, args)
+    run_build(mmpack_cmake_args)
+    run_build(mmpack_cp_args)
+    log.info("MMPACK Built Succesfully")
+
     return run_build(cmake_args).returncode
 
 

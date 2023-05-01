@@ -7,5 +7,9 @@ option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
 
 if (xsdnn_USE_DOUBLE)
-    add_compile_definitions(XS_USE_DOUBLE)
+    add_compile_definitions(MM_USE_DOUBLE)
 endif (xsdnn_USE_DOUBLE)
+
+include_directories(
+        external/mmpack/src/mmpack.h
+)
