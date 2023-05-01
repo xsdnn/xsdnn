@@ -40,7 +40,7 @@ def parse_arguments():
             "--config",
             required=True,
             help="Type of CMAKE_BUILD_TYPE"
-            )
+    )
 
     parser.add_argument(
             "--skip_submodule_sync",
@@ -77,14 +77,15 @@ def parse_arguments():
 def update_submodules(source_dir):
     subprocess.run(["git", "submodule", "sync", "--recursive"])
     subprocess.run(["git", "submodule", "update", "--init", "--recursive"])
+    subprocess.run(["git", "submodule", "foreach", "git", "pull", "origin", "master"])
 
 def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_dir = os.path.join(source_dir, 'cmake')
     cmake_args = [
-            cmake_path, "-S", cmake_dir, "-B", build_dir,
-            "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
-            "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
-            "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF")
+        cmake_path, "-S", cmake_dir, "-B", build_dir,
+        "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
+        "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
+        "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
     ]
 
     return cmake_args
