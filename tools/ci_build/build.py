@@ -106,6 +106,9 @@ def generate_build_tree_mmpack(build_dir, args):
     if args.parallel:
         cmake_args.append("--parallel")
 
+    if args.skip_submodule_sync:
+        cmake_args.append("--skip_submodule_sync")
+
 
     # Копирование libmmpack.a в директорию текущего билда
     if "Linux" in build_dir:
