@@ -56,7 +56,7 @@ public:
         :   shape_(shape), ttype_(ttype),
             data_({ mat_t(shape.size()) }),
             grad_({ mat_t(shape.size()) }),
-            prev(prev) {}
+            prev_(prev) {}
 
     tensor_t& get_data();
     const tensor_t& get_data() const;

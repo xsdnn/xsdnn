@@ -4,3 +4,5 @@
 [submodule "cmake/external/mmpack"]
 	path = cmake/external/mmpack
 	url = https://github.com/xsdnn/mmpack.git
+	branch = master
+
