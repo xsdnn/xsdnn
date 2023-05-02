@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import shutil
 import logging
+import multiprocessing
 
 class BaseError(Exception):
     """Base class for errors originating from build.py."""
@@ -83,7 +84,6 @@ def parse_arguments():
 def update_submodules(source_dir):
     subprocess.run(["git", "submodule", "sync", "--recursive"])
     subprocess.run(["git", "submodule", "update", "--init", "--recursive"])
-    subprocess.run(["git", "submodule", "foreach", "git", "pull", "origin", "master"])
 
 def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_dir = os.path.join(source_dir, 'cmake')
@@ -139,6 +139,15 @@ def try_create_dir(path):
 def run_build(build_tree):
     return subprocess.run(build_tree)
 
+def make(build_dir, args):
+    make_args = [
+        "make",
+        "-C", build_dir,
+        f"-j{multiprocessing.cpu_count() if args.parallel else 1}"
+    ]
+
+    return subprocess.run(make_args)
+
 def main():
     args = parse_arguments()
     script_dir = os.path.realpath(os.path.dirname(__file__))
@@ -162,7 +171,10 @@ def main():
     run_build(mmpack_cp_args)
     log.info("MMPACK Built Succesfully")
 
-    return run_build(cmake_args).returncode
+    run_build(cmake_args)
+
+    # Start making
+    make(build_dir, args)
 
 
 if __name__ == '__main__':

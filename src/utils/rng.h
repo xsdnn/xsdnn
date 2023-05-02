@@ -3,11 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#ifndef XSDNN_RNG_H
-#define XSDNN_RNG_H
-
-#include <mmpack/mmpack.h>
 #include <random>
+#include <mmpack/mmpack.h>
 using namespace mmpack;
 
 namespace xsdnn {
@@ -23,7 +20,7 @@ public:
     virtual ~base_random_engine() {}
 };
 
-class default_random_engine : public base_random_engine {
+class default_random_engine : public base_random_engine{
 public:
     explicit default_random_engine(uint32_t seed)
             : __a(16807), __m(2147483647L), __r(seed ? (seed & __m) : 1) {}
@@ -38,13 +35,12 @@ public:
     virtual mm_scalar rand(std::random_device& __rd) override;
 
 private:
+    int32_t next_rand(int32_t r_);
+
+private:
     const uint32_t __a;
     const uint32_t __m;
     int32_t __r;
-
-    int32_t next_rand(int32_t r_);
 };
 
 } // xsdnn
-
-#endif //XSDNN_RNG_H
