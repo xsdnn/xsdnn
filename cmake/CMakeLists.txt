@@ -39,3 +39,9 @@ set (xsdnn_nodes
         )
 
 add_library(xsdnn_nodes STATIC ${xsdnn_nodes})
+
+set(xsdnn_layers
+        ${XSROOT}/src/layers/layer.cc)
+
+add_library(xsdnn_layers STATIC ${xsdnn_layers})
+

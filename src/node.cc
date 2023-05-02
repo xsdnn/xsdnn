@@ -23,20 +23,20 @@ namespace xsdnn {
         return next_;
     }
 
-    tensor_t &edge::get_data() {
-        return data_;
+    tensor_t* edge::get_data() {
+        return &data_;
     }
 
-    const tensor_t &edge::get_data() const {
-        return data_;
+    const tensor_t* edge::get_data() const {
+        return &data_;
     }
 
-    tensor_t &edge::get_gradient() {
-        return grad_;
+    tensor_t* edge::get_gradient() {
+        return &grad_;
     }
 
-    const tensor_t &edge::get_gradient() const {
-        return grad_;
+    const tensor_t* edge::get_gradient() const {
+        return &grad_;
     }
 
     tensor_type edge::ttype() const {
@@ -64,7 +64,9 @@ namespace xsdnn {
     }
 
     void edge::clear_grads() {
-        tensorize::fill(grad_.data(), grad_.size(), 0.0f);
+        for (size_t i = 0; i < grad_.size(); ++i) {
+            tensorize::fill(grad_[i].data(), grad_[i].size(), 0.0f);
+        }
     }
 
     void edge::add_next_node(node *nd) {

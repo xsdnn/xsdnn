@@ -7,6 +7,7 @@
 #define XSDNN_NODES_H
 
 #include "node.h"
+#include "optimizers/optimizer_base.h"
 
 namespace xsdnn {
 
@@ -21,8 +22,25 @@ public:
 
     virtual
     void
-    backward(const std::vector<...>& ) = 0;
+    backward(const std::vector<tensor_t>& start) = 0;
 
+    virtual
+    std::vector<tensor_t>
+    forward(const std::vector<tensor_t>& start) = 0;
+
+    virtual
+    void
+    update_weights(optimizer* opt, int batch_size);
+
+    virtual
+    void
+    setup(bool reset_weight);
+
+    void clear_grads();
+
+    // TODO: дописать все интерфейсные методы
+protected:
+    std::vector<layer*> nodes_;
 };
 
 } // xsdnn

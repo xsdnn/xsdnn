@@ -15,8 +15,8 @@ void xavier::fill(mmpack::mm_scalar *data, size_t size, size_t fan_in, size_t fa
 }
 
 void constant::fill(mmpack::mm_scalar *data, size_t size, size_t fan_in, size_t fan_out) {
-    DNN_UNUSED_PARAMETER(fan_in);
-    DNN_UNUSED_PARAMETER(fan_out);
+    XS_UNUSED_PARAMETER(fan_in);
+    XS_UNUSED_PARAMETER(fan_out);
     tensorize::fill(data, size, scale_);
 }
 

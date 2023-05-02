@@ -35,13 +35,11 @@ public:
 
     const std::vector<edgeptr_t>& next() const;
 
-    virtual void connect(layer* head,
-                         layer* tail,
-                         size_t head_data_concept_idx = 0,
-                         size_t tail_data_concept_idx = 0) {};
-
 protected:
     node() = delete;
+
+    friend void connect(layer* head, layer* tail,
+                        size_t head_index, size_t tail_index);
 
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output
@@ -58,11 +56,11 @@ public:
             grad_({ mat_t(shape.size()) }),
             prev_(prev) {}
 
-    tensor_t& get_data();
-    const tensor_t& get_data() const;
+    tensor_t* get_data();
+    const tensor_t* get_data() const;
 
-    tensor_t& get_gradient();
-    const tensor_t& get_gradient() const;
+    tensor_t* get_gradient();
+    const tensor_t* get_gradient() const;
 
     tensor_type ttype() const;
     const shape3d& shape() const;
@@ -75,6 +73,7 @@ public:
 
     void clear_grads();
     void add_next_node(node* nd);
+    void accumulate_grads(mat_t* dst);
 
 private:
     shape3d shape_;

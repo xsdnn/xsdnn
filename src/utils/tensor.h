@@ -16,8 +16,7 @@ namespace xsdnn {
             pt::malloc_allocator<mm_scalar, true, false>,
             size_t> vec_t;
 
-    typedef mmpack::tensor mat_t;
-
+    typedef std::vector<mm_scalar, aligned_allocator<mm_scalar, 64>> mat_t;
     typedef std::vector<mat_t> tensor_t;
 }
 

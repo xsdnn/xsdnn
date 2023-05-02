@@ -6,6 +6,7 @@
 #ifndef XSDNN_MACRO_H
 #define XSDNN_MACRO_H
 
-#define DNN_UNUSED_PARAMETER(x) (void)(x)
+#define XS_UNUSED_PARAMETER(x) (void)(x)
+#define XS_2D_1D_CONVERTER(i, j, lda) i * lda + j
 
 #endif //XSDNN_MACRO_H
