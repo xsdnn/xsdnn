@@ -6,7 +6,7 @@
 #ifndef XSDNN_LAYER_H
 #define XSDNN_LAYER_H
 
-#include "../node.h"
+#include "../common/node.h"
 #include "../utils/weight_init.h"
 #include "../optimizers/optimizer_base.h"
 #include "../core/backend.h"

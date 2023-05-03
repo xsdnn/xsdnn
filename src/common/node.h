@@ -8,10 +8,10 @@
 
 #include <memory>
 #include <vector>
-#include "utils/tensor_shape.h"
-#include "utils/util.h"
-#include "utils/tensor.h"
-#include "utils/tensor_utils.h"
+#include "../utils/tensor_shape.h"
+#include "../utils/util.h"
+#include "../utils/tensor.h"
+#include "../utils/tensor_utils.h"
 
 namespace xsdnn {
 

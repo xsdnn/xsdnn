@@ -34,8 +34,8 @@ set (xsdnn_utils
 add_library(xsdnn_utils STATIC ${xsdnn_utils})
 
 set (xsdnn_nodes
-        ${XSROOT}/src/node.cc
-        ${XSROOT}/src/nodes.cc
+        ${XSROOT}/src/common/node.cc
+        ${XSROOT}/src/common/nodes.cc
         )
 
 add_library(xsdnn_nodes STATIC ${xsdnn_nodes})
