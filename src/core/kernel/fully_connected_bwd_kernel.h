@@ -6,4 +6,17 @@
 #ifndef XSDNN_FULLY_CONNECTED_BWD_KERNEL_H
 #define XSDNN_FULLY_CONNECTED_BWD_KERNEL_H
 
+#include "../framework/op_kernel.h"
+
+namespace xsdnn {
+    namespace core {
+
+class FullyConnectedBwdKernel : public OpKernel {
+public:
+    virtual void compute(OpContext& ctx, params::fully& p);
+};
+
+    } // core
+} // xsdnn
+
 #endif //XSDNN_FULLY_CONNECTED_BWD_KERNEL_H

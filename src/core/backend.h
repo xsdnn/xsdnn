@@ -11,6 +11,8 @@ namespace xsdnn {
 
 enum class backend_t { xs };
 
+inline backend_t default_backend_engine();
+
     } // core
 } // xsdnn
 

@@ -282,7 +282,7 @@ namespace xsdnn {
                     dw[j] *= rcp_batch_size;
                 }
 
-                opt->update();
+                opt->update(dw, w);
             }
         }
         clear_grads();
@@ -336,4 +336,31 @@ namespace xsdnn {
         assert(is_trainable_concept(in_type_[i]));
         return &(*const_cast<layer*>(this)->ith_in_node(i)->get_data())[0];
     }
+
+    inline void connect(layer* last_node,
+                        layer* next_node,
+                        size_t last_node_data_concept_idx = 0,
+                        size_t next_node_data_concept_idx = 0) {
+        auto out_shape = last_node->out_shape()[last_node_data_concept_idx];
+        auto in_shape = next_node->in_shape()[next_node_data_concept_idx];
+
+        last_node->setup(false);
+
+        if (out_shape.size() != in_shape.size()) {
+            connection_mismatch(*last_node, *next_node);
+        }
+
+        if (!last_node->next_[last_node_data_concept_idx]) {
+            xs_error("Not alloc \"data\" on last node");
+        }
+
+        next_node->prev_[last_node_data_concept_idx] = last_node->next_[next_node_data_concept_idx];
+    }
+
+    // TODO: расширить описание
+    inline void connection_mismatch(const layer& from, const layer& to) {
+        throw xs_error("Connection mismatch error");
+    }
+
+
 } // xsdnn

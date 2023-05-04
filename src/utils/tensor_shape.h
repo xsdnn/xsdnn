@@ -8,12 +8,16 @@
 
 #include "tensor.h"
 
+namespace xsdnn {
+
 struct shape3d {
 public:
     shape3d(size_t width, size_t height, size_t depth);
     shape3d();
 
     size_t operator() (size_t x, size_t y, size_t channel);
+    bool operator == (const shape3d& rhs);
+    bool operator != (const shape3d& rhs);
 
     void reshape(size_t width, size_t height, size_t depth);
 
@@ -25,5 +29,9 @@ public:
     size_t H;
     size_t D;
 };
+
+} // xsdnn
+
+
 
 #endif //XSDNN_TENSOR_SHAPE_H

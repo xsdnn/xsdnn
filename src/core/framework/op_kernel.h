@@ -6,4 +6,24 @@
 #ifndef XSDNN_OP_KERNEL_H
 #define XSDNN_OP_KERNEL_H
 
+#include "op_context.h"
+#include "params.h"
+
+namespace xsdnn {
+    namespace core {
+
+class OpKernel {
+public:
+    OpKernel() = default;
+    OpKernel(const OpKernel&) = delete;
+    OpKernel& operator=(const OpKernel&) = delete;
+    virtual ~OpKernel() {}
+
+public:
+    virtual void compute(core::OpContext& ctx, params::fully& p) {}
+};
+
+    } // core
+} // xsdnn
+
 #endif //XSDNN_OP_KERNEL_H

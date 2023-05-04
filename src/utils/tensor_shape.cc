@@ -5,6 +5,8 @@
 
 #include "tensor_shape.h"
 
+namespace xsdnn {
+
 shape3d::shape3d(size_t width, size_t height, size_t depth) {
     reshape(width, height, depth);
 }
@@ -26,8 +28,20 @@ size_t shape3d::operator()(size_t x, size_t y, size_t channel) {
     return (D * channel + y) * W + x;
 }
 
+bool shape3d::operator==(const shape3d &rhs) {
+    return (W == rhs.W) && (H == rhs.H) && (D == rhs.D);
+}
+
+bool shape3d::operator!=(const shape3d &rhs) {
+    return !(*this == rhs);
+}
+
 size_t shape3d::area() const { return (size_t) W * H; }
 size_t shape3d::size() const { return (size_t) W * H * D; }
+
+}
+
+
 
 
 

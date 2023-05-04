@@ -119,6 +119,10 @@ public:
     virtual
     void set_sample_count(size_t sample_count);
 
+public:
+    friend void connection_mismatch(const layer& from,
+                                    const layer& to);
+
 private:
     void alloc_input(size_t i) const;
     void alloc_output(size_t i) const;
@@ -150,12 +154,12 @@ private:
     std::vector<tensor_t*> bwd_out_grad;
 };
 
-inline void connect(layer* head,
-                     layer* tail,
-                     size_t head_data_concept_idx = 0,
-                     size_t tail_data_concept_idx = 0) {
+inline void connect(layer* last_node,
+                     layer* next_node,
+                     size_t last_node_data_concept_idx,
+                     size_t next_node_data_concept_idx);
 
-}
+inline void connection_mismatch(const layer& from, const layer& to);
 
 } // xsdnn
 

@@ -7,6 +7,7 @@
 #define XSDNN_UTIL_H
 
 #include "xs_error.h"
+#include <vector>
 
 namespace xsdnn {
 
@@ -42,6 +43,11 @@ bool is_trainable_concept(tensor_type type_) {
     return value;
 }
 
+std::pair<size_t, size_t> find_data_idx(const std::vector<tensor_type>& t1,
+                                        const std::vector<tensor_type>& t2);
+
+
+std::vector<tensor_type> define_input_bias_condition(bool has_bias);
 }
 
 #endif //XSDNN_UTIL_H
