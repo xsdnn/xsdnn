@@ -7,6 +7,27 @@
 
 namespace xsdnn {
 
+bool is_trainable_concept(tensor_type type_) {
+    bool value;
+    switch (type_) {
+        case tensor_type::data:
+            value = false;
+            break;
+        case tensor_type::label:
+            value = false;
+            break;
+        case tensor_type::weight:
+            value = true;
+            break;
+        case tensor_type::bias:
+            value = true;
+            break;
+        default:
+            throw xs_error("Unsupported tensor type");
+    }
+    return value;
+}
+
 std::pair<size_t, size_t> find_data_idx(const std::vector<tensor_type>& t1,
                                         const std::vector<tensor_type>& t2) {
     auto data_idx = std::pair<size_t, size_t>(-1, -1);

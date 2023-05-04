@@ -5,18 +5,18 @@
 
 #include "fully_connected_fwd_xs_impl.h"
 #include "../../utils/macro.h"
+#include <cstring>
 
 namespace xsdnn {
     namespace kernel {
 
-inline void fully_connected_fwd_xs_impl(const tensor_t& in,
-                                        const mat_t& W,
-                                        const mat_t& b,
-                                        tensor_t& out,
-                                        const params::fully& p,
-                                        bool parallelize) {
+void fully_connected_fwd_xs_impl(const tensor_t& in,
+                                 const mat_t& W,
+                                 const mat_t& b,
+                                 tensor_t& out,
+                                 const params::fully& p,
+                                 bool parallelize) {
     XS_UNUSED_PARAMETER(parallelize);
-    mmpack::xsdnn::concurrency::ThreadPool ThreadPool; // FIXME: fake
 
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
@@ -41,8 +41,7 @@ inline void fully_connected_fwd_xs_impl(const tensor_t& in,
                        in_ptr, in_size,
                        w_ptr, out_size,
                        beta,
-                       out_ptr, out_size,
-                       &ThreadPool);
+                       out_ptr, out_size);
     }
 }
 

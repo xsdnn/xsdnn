@@ -25,7 +25,7 @@ class layer;
 class node {
 public:
     node (size_t in_concept, size_t out_concept) : prev_(in_concept), next_(out_concept) {}
-    virtual ~node() {}
+    virtual ~node();
 
     std::vector<edgeptr_t>& prev();
 
@@ -38,8 +38,8 @@ public:
 protected:
     node() = delete;
 
-    friend void connect(layer* head, layer* tail,
-                        size_t head_index, size_t tail_index);
+    friend void connect(layer* last_node, layer* next_node,
+                        size_t last_node_data_concept_idx, size_t next_node_data_concept_idx);
 
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output

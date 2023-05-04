@@ -7,12 +7,6 @@
 
 namespace xsdnn {
 
-template<typename L>
-network& network::operator<<(L &&layer) {
-    net_.add(std::forward<L>(layer));
-    return *this;
-}
-
 void network::init_weight() {
     net_.setup(true);
 }

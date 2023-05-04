@@ -6,4 +6,9 @@
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
 
+#include "src/common/network.h"
+
+#include "src/layers/layer.h"
+#include "src/layers/fully_connected.h"
+
 #endif //XSDNN_XSDNN_H

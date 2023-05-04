@@ -64,13 +64,6 @@ namespace xsdnn {
         return nodes_.back()->out_data_size();
     }
 
-    template<typename T>
-    void nodes::push_back(T &&node) {
-        owner_nodes_.push_back(std::make_shared<
-                typename std::remove_reference<T>::type>(node));
-        nodes_.push_back(owner_nodes_.back().get());
-    }
-
     void nodes::reorder_input(const std::vector<tensor_t> &input,
                               std::vector<tensor_t> &output) {
         size_t sample_count  = input.size();
@@ -114,19 +107,6 @@ namespace xsdnn {
         std::vector<tensor_t> output;
         reorder_output(nodes_.back()->output(), output);
         return output;
-    }
-
-    template<typename T>
-    void sequential::add(T &&layer) {
-        push_back(layer);
-
-        if (nodes_.size() > 1) {
-            auto last_node = nodes_[nodes_.size() - 2];
-            auto next_node = nodes_[nodes_.size() - 1];
-            auto data_idx = find_data_idx(last_node->out_types(), next_node->in_types());
-            connect(last_node, next_node, data_idx.first, data_idx.second);
-        }
-        check_connectivity();
     }
 
     void sequential::check_connectivity() {

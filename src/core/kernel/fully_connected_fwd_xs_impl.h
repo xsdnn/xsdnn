@@ -12,12 +12,12 @@
 namespace xsdnn {
     namespace kernel {
 
-inline void fully_connected_fwd_xs_impl(const tensor_t& in,
-                                        const mat_t& W,
-                                        const mat_t& b,
-                                        tensor_t& out,
-                                        const params::fully& p,
-                                        bool parallelize);
+void fully_connected_fwd_xs_impl(const tensor_t& in,
+                                 const mat_t& W,
+                                 const mat_t& b,
+                                 tensor_t& out,
+                                 const params::fully& p,
+                                 bool parallelize);
 
     } // kernel
 } // xsdnn

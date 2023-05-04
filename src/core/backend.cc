@@ -8,7 +8,7 @@
 namespace xsdnn {
     namespace core {
 
-inline backend_t default_backend_engine() {
+backend_t default_backend_engine() {
     return backend_t::xs;
 }
 

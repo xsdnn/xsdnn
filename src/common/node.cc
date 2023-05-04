@@ -7,6 +7,8 @@
 
 namespace xsdnn {
 
+    node::~node() {}
+
     std::vector<edgeptr_t> &node::prev() {
         return prev_;
     }
@@ -71,5 +73,10 @@ namespace xsdnn {
 
     void edge::add_next_node(node *nd) {
         next_.push_back(nd);
+    }
+
+    // TODO: impl this
+    void edge::accumulate_grads(xsdnn::mat_t *dst) {
+
     }
 }

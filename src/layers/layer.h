@@ -16,18 +16,9 @@ namespace xsdnn {
 class layer : public node {
 public:
     layer(const std::vector<tensor_type>& in_type,
-          const std::vector<tensor_type>& out_type)
-          : node(in_type.size(), out_type.size()),
-          initialized_(false),
-          parallelize_(true),
-          in_concept_(in_type.size()),
-          out_concept_(out_type.size()),
-          in_type_(in_type),
-          out_type_(out_type) {
-        weight_init_ = std::make_shared<weight_init::xavier>();
-        bias_init_ = std::make_shared<weight_init::xavier>();
-        trainable_ = true;
-    }
+          const std::vector<tensor_type>& out_type);
+    virtual ~layer();
+
 
     void set_parallelize(bool parallelize);
     void set_backend(core::backend_t engine);
@@ -60,7 +51,6 @@ public:
     std::vector<tensor_type> in_types() const;
     std::vector<tensor_type> out_types() const;
 
-    virtual
     void
     post_update() {}
 
@@ -78,11 +68,11 @@ public:
 
     virtual
     size_t
-    fan_in_size() const;
+    fan_in_size() const = 0;
 
     virtual
     size_t
-    fan_out_size() const;
+    fan_out_size() const = 0;
 
     // TODO: что делать с сеттерами weight/bias init?
     //  Придумать как сделать без шаблонов
@@ -154,12 +144,12 @@ private:
     std::vector<tensor_t*> bwd_out_grad;
 };
 
-inline void connect(layer* last_node,
+void connect(layer* last_node,
                      layer* next_node,
                      size_t last_node_data_concept_idx,
                      size_t next_node_data_concept_idx);
 
-inline void connection_mismatch(const layer& from, const layer& to);
+void connection_mismatch(const layer& from, const layer& to);
 
 } // xsdnn
 

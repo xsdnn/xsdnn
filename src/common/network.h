@@ -20,9 +20,10 @@ public:
     network() = default;
     network(const network&) = default;
     network& operator=(const network&) = default;
+    ~network() = default;
 
     template<typename L>
-    network& operator << (L&& layer);
+    network& operator<<(L &&layer);
 
 public:
     void init_weight();

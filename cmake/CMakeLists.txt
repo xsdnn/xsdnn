@@ -18,10 +18,46 @@ endif()
 
 include_directories(
         external/
-        external/mmpack/cmake/external/pector/include
 )
 
-set (xsdnn_utils
+#set (xsdnn_utils
+#        ${XSROOT}/src/utils/random.cc
+#        ${XSROOT}/src/utils/rng.cc
+#        ${XSROOT}/src/utils/tensor_shape.cc
+#        ${XSROOT}/src/utils/tensor_utils.cc
+#        ${XSROOT}/src/utils/util.cc
+#        ${XSROOT}/src/utils/weight_init.cc
+#        ${XSROOT}/src/utils/xs_error.cc
+#        )
+#
+#add_library(xsdnn_utils STATIC ${xsdnn_utils})
+#
+#set (xsdnn_common
+#        ${XSROOT}/src/common/node.cc
+#        ${XSROOT}/src/common/nodes.cc
+#        ${XSROOT}/src/common/network.cc
+#        )
+#
+#add_library(xsdnn_common STATIC ${xsdnn_common})
+#
+#set(xsdnn_layers
+#        ${XSROOT}/src/layers/layer.cc
+#        ${XSROOT}/src/layers/fully_connected.cc
+#        )
+#
+#add_library(xsdnn_layers STATIC ${xsdnn_layers})
+#
+#set(xsdnn_core
+#        ${XSROOT}/src/core/backend.cc
+#        ${XSROOT}/src/core/framework/op_context.cc
+#        ${XSROOT}/src/core/framework/op_kernel.cc
+#        ${XSROOT}/src/core/kernel/fully_connected_fwd_kernel.cc
+#        ${XSROOT}/src/core/kernel/fully_connected_fwd_xs_impl.cc
+#        )
+#
+#add_library(xsdnn_core STATIC ${xsdnn_core})
+
+set (xsdnn
         ${XSROOT}/src/utils/random.cc
         ${XSROOT}/src/utils/rng.cc
         ${XSROOT}/src/utils/tensor_shape.cc
@@ -29,19 +65,17 @@ set (xsdnn_utils
         ${XSROOT}/src/utils/util.cc
         ${XSROOT}/src/utils/weight_init.cc
         ${XSROOT}/src/utils/xs_error.cc
-        )
-
-add_library(xsdnn_utils STATIC ${xsdnn_utils})
-
-set (xsdnn_nodes
+        ${XSROOT}/src/core/backend.cc
         ${XSROOT}/src/common/node.cc
         ${XSROOT}/src/common/nodes.cc
+        ${XSROOT}/src/common/network.cc
+        ${XSROOT}/src/layers/layer.cc
+        ${XSROOT}/src/layers/fully_connected.cc
+        ${XSROOT}/src/layers/layer_register.cc
+        ${XSROOT}/src/core/framework/op_context.cc
+        ${XSROOT}/src/core/framework/op_kernel.cc
+        ${XSROOT}/src/core/kernel/fully_connected_fwd_kernel.cc
+        ${XSROOT}/src/core/kernel/fully_connected_fwd_xs_impl.cc
         )
-
-add_library(xsdnn_nodes STATIC ${xsdnn_nodes})
-
-set(xsdnn_layers
-        ${XSROOT}/src/layers/layer.cc)
-
-add_library(xsdnn_layers STATIC ${xsdnn_layers})
-
+set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -pg")
+add_library(xsdnn STATIC ${xsdnn})

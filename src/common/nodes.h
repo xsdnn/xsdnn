@@ -18,6 +18,10 @@ namespace xsdnn {
 
 class nodes {
 public:
+    nodes();
+    virtual ~nodes();
+
+public:
     typedef std::vector<layer*>::iterator iterator;
     typedef std::vector<layer*>::const_iterator const_iterator;
 
@@ -50,29 +54,30 @@ public:
     size_t out_data_size() const;
 
 protected:
-    // TODO: Impl push back method
-    template<typename T>
-    void push_back(T&& node);
-
     // TODO: реализовать без копирования - возможно ли это?
-    std::vector<tensor_t> reorder_input(const std::vector<tensor_t>& input);
+    void reorder_input(const std::vector<tensor_t> &input,
+                       std::vector<tensor_t> &output);
 
 protected:
+    std::vector<std::shared_ptr<layer>> owner_nodes_; // for r-value impl
     std::vector<layer*> nodes_;
 };
 
 class sequential : public nodes {
 public:
+    sequential();
+    virtual ~sequential();
+
+public:
     virtual void backward(const std::vector<tensor_t>& start);
     virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
-
-    template<typename T>
-    void add(T&& layer);
 
     void check_connectivity();
 
 protected:
-    std::vector<tensor_t> reorder_output(const std::vector<tensor_t>& output);
+    void reorder_output(const std::vector<tensor_t>& input,
+                        std::vector<tensor_t>& output);
+    friend class network;
 };
 
 } // xsdnn

@@ -7,6 +7,22 @@
 
 namespace xsdnn {
 
+    layer::layer(const std::vector<tensor_type> &in_type, const std::vector<tensor_type> &out_type)
+        : node(in_type.size(), out_type.size()),
+                initialized_(false),
+                parallelize_(true),
+                in_concept_(in_type.size()),
+                out_concept_(out_type.size()),
+                in_type_(in_type),
+                out_type_(out_type) {
+            weight_init_ = std::make_shared<weight_init::xavier>();
+            bias_init_ = std::make_shared<weight_init::xavier>();
+            trainable_ = true;
+
+    }
+
+    layer::~layer() {}
+
     void layer::set_parallelize(bool parallelize) {
         parallelize_ = parallelize;
     }
@@ -337,7 +353,7 @@ namespace xsdnn {
         return &(*const_cast<layer*>(this)->ith_in_node(i)->get_data())[0];
     }
 
-    inline void connect(layer* last_node,
+    void connect(layer* last_node,
                         layer* next_node,
                         size_t last_node_data_concept_idx = 0,
                         size_t next_node_data_concept_idx = 0) {
@@ -358,7 +374,7 @@ namespace xsdnn {
     }
 
     // TODO: расширить описание
-    inline void connection_mismatch(const layer& from, const layer& to) {
+    void connection_mismatch(const layer& from, const layer& to) {
         throw xs_error("Connection mismatch error");
     }
 
