@@ -9,7 +9,7 @@ namespace xsdnn {
 
 template<typename L>
 network& network::operator<<(L &&layer) {
-    net_.add(std::move<L>(layer));
+    net_.add(std::forward<L>(layer));
     return *this;
 }
 
