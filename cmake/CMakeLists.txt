@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 set(CMAKE_CXX_STANDARD 14)
 project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
-
-
 option(xsdnn_BUILD_TEST OFF)
 option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
@@ -21,6 +18,10 @@ endif (xsdnn_USE_DOUBLE)
 if (NOT xsdnn_USE_DETERMENISTIC_GEN)
     add_compile_definitions(XS_NO_DTRMNST)
 endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_VERBOSE_MAKEFILE ON)
+endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
