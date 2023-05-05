@@ -28,6 +28,7 @@ bool is_trainable_concept(tensor_type type_) {
     return value;
 }
 
+// TODO: решить проблему с типами
 std::pair<size_t, size_t> find_data_idx(const std::vector<tensor_type>& t1,
                                         const std::vector<tensor_type>& t2) {
     auto data_idx = std::pair<size_t, size_t>(-1, -1);

@@ -71,5 +71,9 @@ void fully_connected::set_params(size_t in_size,
     params_.has_bias_ = has_bias;
 }
 
+void fully_connected::init_backend(core::backend_t engine) {
+    fwd_kernel_.reset(new core::FullyConnectedFwdKernel);
+    bwd_kernel_.reset(new core::FullyConnectedBwdKernel);
+}
 
 } // xsdnn

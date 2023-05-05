@@ -1,12 +1,17 @@
-cmake_minimum_required(VERSION 3.13)
-project(xsdnn CXX)
+cmake_minimum_required(VERSION 3.0)
+set(CMAKE_CXX_STANDARD 14)
+project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
 option(xsdnn_BUILD_TEST OFF)
 option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
+option(xsdnn_BUILD_SHARED OFF)
 
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
+set(XSROOT_SRC ${XSROOT}/src)
 
 if (xsdnn_USE_DOUBLE)
     add_compile_definitions(MM_USE_DOUBLE)
@@ -20,62 +25,27 @@ include_directories(
         external/
 )
 
-#set (xsdnn_utils
-#        ${XSROOT}/src/utils/random.cc
-#        ${XSROOT}/src/utils/rng.cc
-#        ${XSROOT}/src/utils/tensor_shape.cc
-#        ${XSROOT}/src/utils/tensor_utils.cc
-#        ${XSROOT}/src/utils/util.cc
-#        ${XSROOT}/src/utils/weight_init.cc
-#        ${XSROOT}/src/utils/xs_error.cc
-#        )
-#
-#add_library(xsdnn_utils STATIC ${xsdnn_utils})
-#
-#set (xsdnn_common
-#        ${XSROOT}/src/common/node.cc
-#        ${XSROOT}/src/common/nodes.cc
-#        ${XSROOT}/src/common/network.cc
-#        )
-#
-#add_library(xsdnn_common STATIC ${xsdnn_common})
-#
-#set(xsdnn_layers
-#        ${XSROOT}/src/layers/layer.cc
-#        ${XSROOT}/src/layers/fully_connected.cc
-#        )
-#
-#add_library(xsdnn_layers STATIC ${xsdnn_layers})
-#
-#set(xsdnn_core
-#        ${XSROOT}/src/core/backend.cc
-#        ${XSROOT}/src/core/framework/op_context.cc
-#        ${XSROOT}/src/core/framework/op_kernel.cc
-#        ${XSROOT}/src/core/kernel/fully_connected_fwd_kernel.cc
-#        ${XSROOT}/src/core/kernel/fully_connected_fwd_xs_impl.cc
-#        )
-#
-#add_library(xsdnn_core STATIC ${xsdnn_core})
+# Set flags to build type
+set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
+set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
+set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg")
 
-set (xsdnn
-        ${XSROOT}/src/utils/random.cc
-        ${XSROOT}/src/utils/rng.cc
-        ${XSROOT}/src/utils/tensor_shape.cc
-        ${XSROOT}/src/utils/tensor_utils.cc
-        ${XSROOT}/src/utils/util.cc
-        ${XSROOT}/src/utils/weight_init.cc
-        ${XSROOT}/src/utils/xs_error.cc
-        ${XSROOT}/src/core/backend.cc
-        ${XSROOT}/src/common/node.cc
-        ${XSROOT}/src/common/nodes.cc
-        ${XSROOT}/src/common/network.cc
-        ${XSROOT}/src/layers/layer.cc
-        ${XSROOT}/src/layers/fully_connected.cc
-        ${XSROOT}/src/layers/layer_register.cc
-        ${XSROOT}/src/core/framework/op_context.cc
-        ${XSROOT}/src/core/framework/op_kernel.cc
-        ${XSROOT}/src/core/kernel/fully_connected_fwd_kernel.cc
-        ${XSROOT}/src/core/kernel/fully_connected_fwd_xs_impl.cc
-        )
-set(CMAKE_CXX_FLAGS     "${CMAKE_CXX_FLAGS} -pg")
-add_library(xsdnn STATIC ${xsdnn})
+# Set compiler options
+set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE}")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG}")
+
+include(xsdnn_common.cmake)
+include(xsdnn_core.cmake)
+include(xsdnn_layers.cmake)
+include(xsdnn_optimizers.cmake)
+include(xsdnn_utils.cmake)
+
+add_library(xsdnn STATIC
+        ${xsdnn_common_src}
+        ${xsdnn_core_common_src}
+        ${xsdnn_core_framework_src}
+        ${xsdnn_core_kernel_src}
+        ${xsdnn_layers_src}
+        ${xsdnn_optimizers_src}
+        ${xsdnn_utils_src})

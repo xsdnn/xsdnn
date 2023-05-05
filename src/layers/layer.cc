@@ -195,15 +195,15 @@ namespace xsdnn {
         }
 
         // Find the tensor_type::data index
-        size_t data_idx = -1;
-        for (size_t i = 0; i < in_concept_; ++i) {
+        int32_t data_idx = -1;
+        for (int32_t i = 0; i < (int32_t) in_concept_; ++i) {
             if (in_type_[i] == tensor_type::data) data_idx = i;
         }
 
         if (data_idx == -1) {
             throw xs_error("Not found \'data\' tensor type.");
         } else {
-            set_sample_count(fwd_in_data[data_idx]->size());
+            set_sample_count(fwd_in_data[(size_t) data_idx]->size());
         }
 
         for (size_t i = 0; i < out_concept_; ++i) {

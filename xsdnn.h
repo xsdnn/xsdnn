@@ -7,6 +7,7 @@
 #define XSDNN_XSDNN_H
 
 #include "src/common/network.h"
+#include "src/utils/tensor.h"
 
 #include "src/layers/layer.h"
 #include "src/layers/fully_connected.h"

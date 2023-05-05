@@ -23,6 +23,7 @@ public:
             :
             layer(define_input_bias_condition(has_bias), {tensor_type::data}) {
         set_params(in_size, out_size, has_bias);
+        init_backend(engine);
         layer::set_backend(engine);
     }
 
@@ -44,6 +45,7 @@ public:
 
 private:
     void set_params(size_t in_size, size_t out_size, bool has_bias);
+    void init_backend(core::backend_t engine);
 
 private:
     params::fully params_;

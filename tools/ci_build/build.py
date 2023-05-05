@@ -89,6 +89,7 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_dir = os.path.join(source_dir, 'cmake')
     cmake_args = [
         cmake_path, "-S", cmake_dir, "-B", build_dir,
+        "-DCMAKE_BUILD_TYPE=" + args.config,
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
         "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
