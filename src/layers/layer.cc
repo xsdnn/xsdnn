@@ -153,9 +153,9 @@ namespace xsdnn {
     void layer::set_in_data(const std::vector<tensor_t> &data) {
         size_t data_idx = 0;
         for (size_t i = 0; i < in_concept_; ++i) {
-            if (out_type_[i] != tensor_type::data) continue;
+            if (in_type_[i] != tensor_type::data) continue;
             assert(data_idx < data.size());
-            *ith_out_node(i)->get_data() = data[data_idx++];
+            *ith_in_node(i)->get_data() = data[data_idx++];
         }
     }
 
