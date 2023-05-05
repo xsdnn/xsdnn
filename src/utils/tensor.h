@@ -6,7 +6,8 @@
 #ifndef XSDNN_TENSOR_H
 #define XSDNN_TENSOR_H
 
-#include <mmpack/mmpack.h>
+#include <vector>
+#include "../mmpack/inc/mmpack.h"
 using namespace mmpack;
 
 namespace xsdnn {

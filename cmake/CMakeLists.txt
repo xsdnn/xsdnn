@@ -12,6 +12,7 @@ option(xsdnn_BUILD_SHARED OFF)
 
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
+set(MMPACK_ROOT ${XSROOT_SRC}/mmpack/lib)
 
 if (xsdnn_USE_DOUBLE)
     add_compile_definitions(MM_USE_DOUBLE)
@@ -20,10 +21,6 @@ endif (xsdnn_USE_DOUBLE)
 if (NOT xsdnn_USE_DETERMENISTIC_GEN)
     add_compile_definitions(XS_NO_DTRMNST)
 endif()
-
-include_directories(
-        external/
-)
 
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
@@ -35,6 +32,7 @@ set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG}")
 
+include(xsdnn_mmpack.cmake)
 include(xsdnn_common.cmake)
 include(xsdnn_core.cmake)
 include(xsdnn_layers.cmake)
@@ -42,6 +40,7 @@ include(xsdnn_optimizers.cmake)
 include(xsdnn_utils.cmake)
 
 add_library(xsdnn STATIC
+        ${mmpack_common_src}
         ${xsdnn_common_src}
         ${xsdnn_core_common_src}
         ${xsdnn_core_framework_src}
