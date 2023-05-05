@@ -21,6 +21,8 @@ set(
         "${XSROOT_SRC}/core/kernel/fully_connected_bwd_kernel.cc"
         "${XSROOT_SRC}/core/kernel/fully_connected_fwd_xs_impl.h"
         "${XSROOT_SRC}/core/kernel/fully_connected_fwd_xs_impl.cc"
+        "${XSROOT_SRC}/core/kernel/fully_connected_bwd_xs_impl.h"
+        "${XSROOT_SRC}/core/kernel/fully_connected_bwd_xs_impl.cc"
 )
 
 add_library(xsdnn_core STATIC
