@@ -4,3 +4,13 @@
 //
 
 #include "optimizer_base.h"
+
+namespace xsdnn {
+
+optimizer::optimizer() = default;
+optimizer::optimizer(const xsdnn::optimizer &rhs) = default;
+optimizer &optimizer::operator=(const xsdnn::optimizer &rhs) = default;
+optimizer::~optimizer() = default;
+void optimizer::reset() {}
+
+}

@@ -12,13 +12,13 @@ namespace xsdnn {
 
 class optimizer {
 public:
-    optimizer() = default;
-    optimizer(const optimizer& rhs) = default;
-    optimizer& operator=(const optimizer& rhs) = default;
+    optimizer();
+    optimizer(const optimizer& rhs);
+    optimizer& operator=(const optimizer& rhs);
 
-    virtual ~optimizer() = default;
+    virtual ~optimizer();
     virtual void update(const mat_t& dw, mat_t& w) = 0;
-    virtual void reset() {}
+    virtual void reset();
 };
 
 }
