@@ -353,6 +353,10 @@ namespace xsdnn {
         return &(*const_cast<layer*>(this)->ith_in_node(i)->get_data())[0];
     }
 
+    std::pair<mm_scalar, mm_scalar> layer::out_value_range() const {
+        return { mm_scalar(0.0f), mm_scalar(1.0f) };
+    }
+
     void connect(layer* last_node,
                         layer* next_node,
                         size_t last_node_data_concept_idx = 0,

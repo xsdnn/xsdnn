@@ -74,6 +74,8 @@ public:
     size_t
     fan_out_size() const = 0;
 
+    virtual std::pair<mm_scalar, mm_scalar> out_value_range() const;
+
     // TODO: что делать с сеттерами weight/bias init?
     //  Придумать как сделать без шаблонов
 
