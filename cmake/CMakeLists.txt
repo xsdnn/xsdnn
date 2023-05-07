@@ -26,7 +26,7 @@ endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
-set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg")
+set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -O0")
 
 # Set compiler options
 set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
@@ -51,3 +51,7 @@ add_library(xsdnn STATIC
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
         ${xsdnn_utils_src})
+
+if (xsdnn_BUILD_TEST)
+    include(xsdnn_unittest.cmake)
+endif (xsdnn_BUILD_TEST)

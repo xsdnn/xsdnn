@@ -12,4 +12,10 @@
 #include "src/layers/layer.h"
 #include "src/layers/fully_connected.h"
 
+#include "src/loss/loss_base.h"
+#include "src/loss/mse_loss.h"
+
+#include "src/optimizers/optimizer_base.h"
+#include "src/optimizers/sgd.h"
+
 #endif //XSDNN_XSDNN_H
