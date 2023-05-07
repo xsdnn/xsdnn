@@ -24,6 +24,10 @@ public:
 
 void gradient(loss* l_ptr, const mat_t& y, const mat_t& a, mat_t& dst);
 void gradient(loss* l_ptr, const tensor_t& y, const tensor_t& a, tensor_t& dst);
+void gradient(loss* l_ptr,
+              const std::vector<tensor_t>& y,
+              const std::vector<tensor_t>& a,
+              std::vector<tensor_t>& dst);
 
 
 } // xsdnn

@@ -24,7 +24,7 @@ mm_scalar mse_loss::f(const mat_t &y, const mat_t &a) {
 }
 
 void mse_loss::df(const mat_t &y, const mat_t &a, mat_t &dst) {
-    assert( (y.size() == a.size()) == dst.size());
+    assert(y.size() == dst.size());
     mm_scalar alpha = (mm_scalar) 2.0f / y.size();
 
     for (size_t i = 0; i < y.size(); ++i) {
