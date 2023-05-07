@@ -10,7 +10,7 @@ namespace xsdnn {
     nodes::nodes() {}
     nodes::~nodes()  {}
 
-    void nodes::update_weights(optimizer *opt, int batch_size) {
+    void nodes::update_weights(optimizer *opt) {
         for (auto l : nodes_) {
             l->update_weight(opt);
         }

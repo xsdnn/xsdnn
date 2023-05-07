@@ -75,8 +75,20 @@ namespace xsdnn {
         next_.push_back(nd);
     }
 
-    // TODO: impl this
-    void edge::accumulate_grads(xsdnn::mat_t *dst) {
+    // TODO: parallize this with simd instruction
+    void edge::accumulate_grads(mat_t* dst) {
+        assert(!grad_.empty());
+        size_t sample_count = grad_.size();
+        size_t size = grad_[0].size();
 
+        if (dst->empty()) (*dst).resize(size);
+
+        for (size_t sample = 0; sample < sample_count; ++sample) {
+            const auto& grad_sample = grad_[sample];
+            for (size_t i = 0; i < size; ++i) {
+                (*dst)[i] = grad_sample[i];
+            }
+
+        }
     }
 }

@@ -8,7 +8,10 @@
 
 #include <vector>
 #include "../layers/layer.h"
+#include "../loss/loss_base.h"
+#include "../optimizers/optimizer_base.h"
 #include "nodes.h"
+#include "config.h"
 
 namespace xsdnn {
 
@@ -31,10 +34,49 @@ public:
     tensor_t predict(const tensor_t& in);
     std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
 
+    void train(loss* loss,
+               optimizer* opt,
+               const tensor_t& input,
+               const std::vector<size_t>& label,
+               size_t batch_size,
+               size_t epoch);
+
+
+protected:
+    void fit(loss* l_ptr,
+             optimizer* opt_ptr,
+             std::vector<tensor_t>& input,
+             std::vector<tensor_t>& label,
+             size_t batch_size,
+             size_t epoch);
+
+    void fit_batch(loss* l_ptr,
+                   optimizer* opt_ptr,
+                   const tensor_t* input,
+                   const tensor_t* label,
+                   size_t batch_size);
+
+    void compute(loss* l_ptr,
+                 optimizer* opt_ptr,
+                 const tensor_t* input,
+                 const tensor_t* label,
+                 size_t batch_size);
+
+    void newaxis(const tensor_t& in,
+                 std::vector<tensor_t>& out);
+
+    void label2vec(const std::vector<size_t>& label,
+                   std::vector<tensor_t>& output);
+
 protected:
     mat_t fprop(const mat_t& in);
     std::vector<mat_t> fprop(const std::vector<mat_t>& in);
     std::vector<tensor_t> fprop(const std::vector<tensor_t>& in);
+
+    void bprop(loss* l_ptr,
+               optimizer* opt_ptr,
+               const std::vector<tensor_t>& net_out,
+               const std::vector<tensor_t>& label);
 
 private:
     sequential net_;

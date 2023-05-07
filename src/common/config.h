@@ -6,4 +6,8 @@
 #ifndef XSDNN_CONFIG_H
 #define XSDNN_CONFIG_H
 
+namespace xsdnn {
+    enum class status { ok, bad };
+}
+
 #endif //XSDNN_CONFIG_H

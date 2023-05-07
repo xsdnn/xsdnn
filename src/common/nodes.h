@@ -35,7 +35,7 @@ public:
 
     virtual
     void
-    update_weights(optimizer* opt, int batch_size);
+    update_weights(optimizer* opt);
 
     virtual
     void
