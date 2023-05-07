@@ -25,48 +25,38 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
     mm_scalar alpha = 1.0f;
     mm_scalar beta  = 0.0f;
 
-    /*
-     * grad(x) = dLz * W.T [for each elem in batch]
-     */
     for (size_t sample = 0; sample < sample_count; ++sample) {
+        /*
+         * grad(x) = dLz * W.T [for each elem in batch]
+         */
         mm_scalar* dLz_ptr = dLz[sample].data(); // A
         const mm_scalar* W_ptr = W.data();       // B
         mm_scalar* dx_ptr = dx[sample].data();   // C
 
-        mmpack::MmGemm(mmpack::CblasNoTrans,
-                       mmpack::CblasTrans,
-                       1, out_size, in_size,
-                       alpha,
-                       dLz_ptr, out_size,
-                       W_ptr, out_size,
-                       beta,
-                       dx_ptr, in_size);
-    }
+        for (size_t i = 0; i < in_size; ++i) {
+            dx_ptr[i] = mmpack::MmDot(dLz_ptr,
+                                      &W_ptr[i * out_size],
+                                      out_size);
+        }
 
-    /*
-     * grad(W) = x.T * dLz [for each elem in batch]
-     */
-    for (size_t sample = 0; sample < sample_count; ++sample) {
-        mm_scalar* dLz_ptr = dLz[sample].data();
+        /*
+         * grad(W) = x.T * dLz [for each elem in batch]
+         */
+
+        dLz_ptr = dLz[sample].data();
         const mm_scalar* x_ptr = x[sample].data();
         mm_scalar* dW_ptr = dW[sample].data();
 
-        mmpack::MmGemm(mmpack::CblasTrans,
-                       mmpack::CblasNoTrans,
-                       1, out_size, in_size,
-                       alpha,
-                       x_ptr, in_size,
-                       dLz_ptr, out_size,
-                       beta,
-                       dW_ptr, out_size);
-    }
+        mmpack::MmVectorToMatrixMul(in_size, out_size,
+                                    alpha,
+                                    x_ptr,
+                                    dLz_ptr,
+                                    beta, dW_ptr, out_size);
 
-    /*
-     * grad(b) = dLz [for each elem in batch]
-     */
-    // FIXME : добавить векторизацию через simd
-    if (!db.empty()) {
-        for (size_t sample = 0; sample < sample_count; ++sample) {
+        /*
+         * grad(b) = dLz [for each elem in batch]
+         */
+        if (!db.empty()) {
             for (size_t i = 0; i < out_size; ++i) {
                 db[sample][i] += dLz[sample][i];
             }
