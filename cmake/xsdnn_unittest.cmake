@@ -20,3 +20,8 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_sv2mm.cc
 )
 
+AddTest(
+        xsdnn_fully_connected_test
+        ${XSDNN_TEST_ROOT}/test_fully_connected.cc
+)
+

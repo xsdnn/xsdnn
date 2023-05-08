@@ -51,6 +51,12 @@ public:
     std::vector<tensor_type> in_types() const;
     std::vector<tensor_type> out_types() const;
 
+    template<typename WeightInit>
+    void weight_init(const WeightInit& f);
+
+    template<typename BiasInit>
+    void bias_init(const BiasInit& f);
+
     void
     post_update() {}
 
@@ -75,9 +81,6 @@ public:
     fan_out_size() const = 0;
 
     virtual std::pair<mm_scalar, mm_scalar> out_value_range() const;
-
-    // TODO: что делать с сеттерами weight/bias init?
-    //  Придумать как сделать без шаблонов
 
     /*
      * Forward \ backward propagation
@@ -144,6 +147,8 @@ private:
     std::vector<tensor_t*> bwd_in_grad;
     std::vector<tensor_t*> bwd_out_data;
     std::vector<tensor_t*> bwd_out_grad;
+
+    friend class GradChecker;
 };
 
 void connect(layer* last_node,

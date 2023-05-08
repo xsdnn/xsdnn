@@ -27,6 +27,16 @@ network& network::operator<<(layer_type &&layer) {                              
     return *this;                                                                                   \
 }
 
+#define XS_REGISTER_WEIGHT_INIT(wi_type)                                                            \
+template<>                                                                                          \
+void layer::weight_init(const wi_type& f) {                                                         \
+    weight_init_ = std::make_shared<wi_type>(f);                                                    \
+}                                                                                                   \
 
+#define XS_REGISTER_BIAS_INIT(bi_type)                                                              \
+template<>                                                                                          \
+void layer::bias_init(const bi_type& f) {                                                           \
+    bias_init_ = std::make_shared<bi_type>(f);                                                      \
+}                                                                                                   \
 
 #endif //XSDNN_MACRO_H

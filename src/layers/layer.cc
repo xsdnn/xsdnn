@@ -4,6 +4,7 @@
 //
 
 #include "layer.h"
+#include "../utils/macro.h"
 
 namespace xsdnn {
 
@@ -383,4 +384,9 @@ namespace xsdnn {
     }
 
 
+    XS_REGISTER_WEIGHT_INIT(weight_init::xavier)
+    XS_REGISTER_WEIGHT_INIT(weight_init::constant)
+
+    XS_REGISTER_BIAS_INIT(weight_init::xavier)
+    XS_REGISTER_BIAS_INIT(weight_init::constant)
 } // xsdnn
