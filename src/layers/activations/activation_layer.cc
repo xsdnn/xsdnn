@@ -12,6 +12,11 @@ activation_layer::activation_layer()
     layer({tensor_type::data}, {tensor_type::data}),
     in_shape_(0, 0, 0) {}
 
+activation_layer::activation_layer(const size_t in_size)
+    :
+    layer({tensor_type::data}, {tensor_type::data}),
+    in_shape_(in_size, 1, 1) {}
+
 activation_layer::activation_layer(const xsdnn::activation_layer &) = default;
 activation_layer &activation_layer::operator=(const xsdnn::activation_layer &) = default;
 

@@ -25,3 +25,7 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_fully_connected.cc
 )
 
+AddTest(
+        xsdnn_relu_test
+        ${XSDNN_TEST_ROOT}/test_relu.cc
+)

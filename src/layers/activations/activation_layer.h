@@ -13,6 +13,7 @@ namespace xsdnn {
 class activation_layer : public layer {
 public:
     activation_layer();
+    activation_layer(const size_t in_size);
     activation_layer(const activation_layer&);
     activation_layer& operator=(const activation_layer&);
 
@@ -36,7 +37,7 @@ public:
 
     virtual
     void
-    forward_activation(const mat_t& in_data, mat_t out_data) = 0;
+    forward_activation(const mat_t& in_data, mat_t& out_data) = 0;
 
     virtual
     void

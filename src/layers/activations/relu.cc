@@ -7,7 +7,7 @@
 
 namespace xsdnn {
 
-void relu::forward_activation(const mat_t &in_data, mat_t out_data) {
+void relu::forward_activation(const mat_t &in_data, mat_t& out_data) {
     for (size_t j = 0; j < in_data.size(); ++j) {
         out_data[j] = std::max(in_data[j], (mm_scalar) 0.0f);
     }

@@ -15,7 +15,7 @@ public:
     using activation_layer::activation_layer;
 
 public:
-    void forward_activation(const mat_t& in_data, mat_t out_data) override;
+    void forward_activation(const mat_t& in_data, mat_t& out_data) override;
 
     void back_activation(const mat_t& in_data,
                          const mat_t& out_data,
