@@ -29,5 +29,8 @@ void uniform_rand(mm_scalar* data, size_t size, mm_scalar min, mm_scalar max) {
     }
 }
 
+size_t uniform_idx(size_t size) {
+    return static_cast<size_t>(uniform_rand(0.0f, size));
+}
 
 } // xsdnn

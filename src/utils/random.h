@@ -1,3 +1,4 @@
+#pragma once
 //
 // Created by rozhin on 01.05.23.
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
@@ -28,5 +29,6 @@ private:
 
 mm_scalar uniform_rand(mm_scalar min, mm_scalar max);
 void uniform_rand(mm_scalar* data, size_t size, mm_scalar min, mm_scalar max);
+size_t uniform_idx(size_t size);
 
 } // xsdnn
