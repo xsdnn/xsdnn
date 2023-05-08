@@ -88,6 +88,10 @@ namespace xsdnn {
         return ids;
     }
 
+    void layer::set_in_shape(const xsdnn::shape3d in_shape) {
+        throw xs_error("You can't set input shape. Sorry ^(");
+    }
+
     std::vector<const mat_t *> layer::weights() const {
         std::vector<const mat_t *> v;
         for (size_t i = 0; i < in_concept_; ++i) {
@@ -366,6 +370,11 @@ namespace xsdnn {
         auto in_shape = next_node->in_shape()[next_node_data_concept_idx];
 
         last_node->setup(false);
+
+        if (in_shape.size() == 0 /* eq. this activation */) {
+            next_node->set_in_shape(out_shape);
+            in_shape = out_shape;
+        }
 
         if (out_shape.size() != in_shape.size()) {
             connection_mismatch(*last_node, *next_node);

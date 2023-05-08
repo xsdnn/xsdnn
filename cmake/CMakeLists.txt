@@ -37,6 +37,7 @@ include(xsdnn_mmpack.cmake)
 include(xsdnn_common.cmake)
 include(xsdnn_core.cmake)
 include(xsdnn_layers.cmake)
+include(xsdnn_activations.cmake)
 include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
@@ -48,6 +49,7 @@ add_library(xsdnn STATIC
         ${xsdnn_core_framework_src}
         ${xsdnn_core_kernel_src}
         ${xsdnn_layers_src}
+        ${xsdnn_activations_src}
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
         ${xsdnn_utils_src})

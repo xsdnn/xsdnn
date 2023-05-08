@@ -8,8 +8,18 @@
 
 #include "fully_connected.h"
 
+
+#include "activations/relu.h"
+
 namespace xsdnn {
 
 XS_REGISTER_LAYER_FOR_NET(fully_connected)
+
+
+/*
+ * Activations
+ */
+
+XS_REGISTER_LAYER_FOR_NET(relu)
 
 }

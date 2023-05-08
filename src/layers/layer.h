@@ -80,6 +80,11 @@ public:
     size_t
     fan_out_size() const = 0;
 
+    virtual
+    void
+    set_in_shape(const shape3d in_shape);
+
+
     virtual std::pair<mm_scalar, mm_scalar> out_value_range() const;
 
     /*

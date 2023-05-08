@@ -12,6 +12,9 @@
 #include "src/layers/layer.h"
 #include "src/layers/fully_connected.h"
 
+#include "src/layers/activations/activation_layer.h"
+#include "src/layers/activations/relu.h"
+
 #include "src/loss/loss_base.h"
 #include "src/loss/mse_loss.h"
 
