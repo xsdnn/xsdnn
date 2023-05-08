@@ -53,7 +53,7 @@ void network::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
     }
     opt_ptr->reset();
     for (size_t e = 0; e < epoch; ++e) {
-        for (size_t b = 0; b < batch_size; b += batch_size) {
+        for (size_t b = 0; b < input.size(); b += batch_size) {
             fit_batch(l_ptr,
                       opt_ptr,
                       &input[b], &label[b],
