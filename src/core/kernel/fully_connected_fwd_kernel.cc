@@ -3,10 +3,10 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "fully_connected_fwd_kernel.h"
-#include "fully_connected_fwd_xs_impl.h"
-#include "../../utils/tensor_utils.h"
-#include "../../utils/xs_error.h"
+#include <core/kernel/linear/fully_connected_fwd_kernel.h>
+#include <core/kernel/linear/fully_connected_fwd_xs_impl.h>
+#include <utils/tensor_utils.h>
+#include <utils/xs_error.h>
 
 namespace xsdnn {
     namespace core {

@@ -3,8 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "fully_connected_fwd_xs_impl.h"
-#include "../../utils/macro.h"
+#include <core/kernel/linear/fully_connected_fwd_xs_impl.h>
+#include <utils/macro.h>
 #include <cstring>
 
 namespace xsdnn {

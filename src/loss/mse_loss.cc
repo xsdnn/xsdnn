@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "mse_loss.h"
+#include <loss/mse_loss.h>
 #include <cassert>
 
 namespace xsdnn {

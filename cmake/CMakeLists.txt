@@ -11,6 +11,10 @@ set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
 set(MMPACK_ROOT ${XSROOT_SRC}/mmpack/lib)
 
+include_directories(
+        ${XSROOT}/include/
+)
+
 if (xsdnn_USE_DOUBLE)
     add_compile_definitions(MM_USE_DOUBLE)
 endif (xsdnn_USE_DOUBLE)

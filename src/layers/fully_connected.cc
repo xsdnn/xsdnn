@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "fully_connected.h"
+#include <layers/fully_connected.h>
 
 namespace xsdnn {
 

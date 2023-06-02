@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "loss_base.h"
+#include <loss/loss_base.h>
 #include <cassert>
 
 namespace xsdnn {

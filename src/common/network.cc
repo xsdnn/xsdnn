@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "network.h"
+#include <common/network.h>
 
 namespace xsdnn {
 

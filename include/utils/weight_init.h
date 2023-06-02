@@ -6,7 +6,7 @@
 #ifndef XSDNN_WEIGHT_INIT_H
 #define XSDNN_WEIGHT_INIT_H
 
-#include "../mmpack/inc/mmpack.h"
+#include "../../src/mmpack/inc/mmpack.h"
 #include <cmath>
 #include "random.h"
 #include "tensor_utils.h"

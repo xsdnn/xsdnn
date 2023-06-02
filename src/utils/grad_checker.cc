@@ -3,9 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "grad_checker.h"
-#include "random.h"
-#include "tensor_utils.h"
+#include <utils/grad_checker.h>
 
 namespace xsdnn {
     namespace internal {

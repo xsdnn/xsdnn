@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "fully_connected_bwd_xs_impl.h"
+#include <core/kernel/linear/fully_connected_bwd_xs_impl.h>
 
 namespace xsdnn {
     namespace kernel {

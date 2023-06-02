@@ -3,13 +3,12 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "../common/network.h"
-#include "../utils/macro.h"
+#include <common/network.h>
+#include <utils/macro.h>
 
-#include "fully_connected.h"
+#include <layers/fully_connected.h>
 
-
-#include "activations/relu.h"
+#include <layers/activations/relu.h>
 
 namespace xsdnn {
 

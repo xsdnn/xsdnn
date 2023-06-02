@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "op_context.h"
+#include <core/framework/op_context.h>
 
 namespace xsdnn {
     namespace core {

@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "tensor_utils.h"
+#include <utils/tensor_utils.h>
 
 namespace xsdnn {
     namespace tensorize {

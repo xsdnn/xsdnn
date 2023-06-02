@@ -3,8 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "xs_error.h"
-#include "color_print.h"
+#include <utils/xs_error.h>
+#include <utils/color_print.h>
 
 namespace xsdnn {
     const char* xs_error::what() const throw() {

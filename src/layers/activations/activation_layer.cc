@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "activation_layer.h"
+#include <layers/activations/activation_layer.h>
 
 namespace xsdnn {
 

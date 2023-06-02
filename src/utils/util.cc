@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "util.h"
+#include <utils/util.h>
 
 namespace xsdnn {
 

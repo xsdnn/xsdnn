@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "tensor_shape.h"
+#include <utils/tensor_shape.h>
 
 namespace xsdnn {
 

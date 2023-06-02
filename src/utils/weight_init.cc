@@ -3,8 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "weight_init.h"
-#include "macro.h"
+#include <utils/weight_init.h>
+#include <utils/macro.h>
 
 namespace xsdnn {
     namespace weight_init {

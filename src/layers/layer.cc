@@ -3,8 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "layer.h"
-#include "../utils/macro.h"
+#include <layers/layer.h>
+#include <utils/macro.h>
 
 namespace xsdnn {
 
