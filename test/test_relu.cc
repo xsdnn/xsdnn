@@ -5,7 +5,7 @@
 
 #include "../xsdnn.h"
 #include <gtest/gtest.h>
-#include "../src/utils/grad_checker.h"
+#include "../include/utils/grad_checker.h"
 using namespace xsdnn;
 
 TEST(relu, forward) {

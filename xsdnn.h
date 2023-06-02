@@ -6,19 +6,19 @@
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
 
-#include "src/common/network.h"
-#include "src/utils/tensor.h"
+#include "include/common/network.h"
+#include "include/utils/tensor.h"
 
-#include "src/layers/layer.h"
-#include "src/layers/fully_connected.h"
+#include "include/layers/layer.h"
+#include "include/layers/fully_connected.h"
 
-#include "src/layers/activations/activation_layer.h"
-#include "src/layers/activations/relu.h"
+#include "include/layers/activations/activation_layer.h"
+#include "include/layers/activations/relu.h"
 
-#include "src/loss/loss_base.h"
-#include "src/loss/mse_loss.h"
+#include "include/loss/loss_base.h"
+#include "include/loss/mse_loss.h"
 
-#include "src/optimizers/optimizer_base.h"
-#include "src/optimizers/sgd.h"
+#include "include/optimizers/optimizer_base.h"
+#include "include/optimizers/sgd.h"
 
 #endif //XSDNN_XSDNN_H
