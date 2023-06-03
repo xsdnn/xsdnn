@@ -21,6 +21,11 @@ AddTest(
 )
 
 AddTest(
+        mmpack_sdot_test
+        ${XSDNN_TEST_ROOT}/test_dot.cc
+)
+
+AddTest(
         xsdnn_fully_connected_test
         ${XSDNN_TEST_ROOT}/test_fully_connected.cc
 )
@@ -29,3 +34,4 @@ AddTest(
         xsdnn_relu_test
         ${XSDNN_TEST_ROOT}/test_relu.cc
 )
+
