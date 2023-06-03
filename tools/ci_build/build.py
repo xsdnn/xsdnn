@@ -68,6 +68,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--use_sse",
+        action='store_true',
+        help="Turn ON to use sse instruction for processor"
+    )
+
+    parser.add_argument(
             "--use_double_type",
             action='store_true',
             help="Turn ON to use double type instead of float"
@@ -93,7 +99,8 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
         "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
-    ]
+        "-Dxsdnn_USE_SSE=" + ("ON" if args.use_sse else "OFF"),
+        ]
 
     return cmake_args
 

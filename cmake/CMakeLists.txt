@@ -6,6 +6,7 @@ option(xsdnn_BUILD_TEST OFF)
 option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
 option(xsdnn_BUILD_SHARED OFF)
+option(xsdnn_USE_SSE OFF)
 
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
@@ -36,6 +37,12 @@ set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -O0
 set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE}")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG}")
+
+if (xsdnn_USE_SSE)
+    add_compile_definitions(MM_USE_SSE)
+    set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -msse3")
+    set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -msse3")
+endif()
 
 include(xsdnn_mmpack.cmake)
 include(xsdnn_common.cmake)
