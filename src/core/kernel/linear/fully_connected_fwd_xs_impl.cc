@@ -20,8 +20,8 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
 
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
-    mm_scalar alpha = 1;
-    mm_scalar beta = 1;
+    mm_scalar alpha = 1.0;
+    mm_scalar beta = 1.0;
 
     for (size_t sample = 0; sample < in.size(); ++sample) {
         const mm_scalar* in_ptr = in[sample].data();
