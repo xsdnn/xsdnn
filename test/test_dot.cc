@@ -32,3 +32,20 @@ TEST(dot, with_floating_point) {
     ASSERT_FLOAT_EQ(mmpack::MmDot(&A[0], &B[0], 5), -21898.686);
 #endif
 }
+
+TEST(dot, stress) {
+    xsdnn::default_random_engine rng(42);
+    std::vector<mm_scalar> A(1000000);
+    std::vector<mm_scalar> B(1000000);
+
+
+    for (size_t K = 0; K < 10; K++) {
+
+        for (size_t i = 0; i < A.size(); i++) {
+            A[i] = rng.rand();
+            B[i] = rng.rand();
+        }
+
+        mmpack::MmDot(A.data(), B.data(), 1000);
+    }
+}
