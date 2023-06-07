@@ -51,6 +51,7 @@ include(xsdnn_layers.cmake)
 include(xsdnn_activations.cmake)
 include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
+include(xsdnn_framework.cmake)
 include(xsdnn_utils.cmake)
 
 add_library(xsdnn STATIC
@@ -63,6 +64,7 @@ add_library(xsdnn STATIC
         ${xsdnn_activations_src}
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
+        ${xsdnn_threadpool_framework_src}
         ${xsdnn_utils_src})
 
 if (xsdnn_BUILD_TEST)
