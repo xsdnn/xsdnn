@@ -35,3 +35,7 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_relu.cc
 )
 
+AddTest(
+        xsdnn_threadpool_test
+        ${XSDNN_TEST_ROOT}/test_threadpool.cc
+)

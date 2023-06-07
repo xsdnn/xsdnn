@@ -15,6 +15,7 @@
 #include <condition_variable>
 #include <queue>
 #include <unordered_set>
+#include <utils/macro.h>
 
 namespace xsdnn {
     namespace concurrency {
@@ -43,6 +44,8 @@ public:
 
     void wait_all();
 
+    size_t num_threads() const;
+
 private:
     std::vector<std::thread> threads;
     std::atomic<bool> quite{ false };
@@ -56,6 +59,10 @@ private:
     std::condition_variable completed_task_ids_cv;
     std::mutex completed_task_ids_mtx;
 };
+
+static threadpool ThreadPool(
+        XS_NUM_THREAD > std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : XS_NUM_THREAD
+);
 
     }
 }

@@ -48,6 +48,10 @@ void threadpool::wait_all() {
     });
 }
 
+size_t threadpool::num_threads() const {
+    return threads.size();
+}
+
 threadpool::~threadpool() {
     wait_all();
     quite = true;
