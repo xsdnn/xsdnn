@@ -39,6 +39,6 @@ void layer::bias_init(const bi_type& f) {                                       
     bias_init_ = std::make_shared<bi_type>(f);                                                      \
 }                                                                                                   \
 
-#define XS_NUM_THREAD 8
+#define XS_NUM_THREAD 12
 
 #endif //XSDNN_MACRO_H

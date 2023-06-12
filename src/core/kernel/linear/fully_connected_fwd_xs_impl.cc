@@ -4,7 +4,7 @@
 //
 
 #include <core/kernel/linear/fully_connected_fwd_xs_impl.h>
-#include <utils/macro.h>
+#include <framework/threadpool.h>
 #include <cstring>
 
 namespace xsdnn {
@@ -16,8 +16,6 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
                                  tensor_t& out,
                                  const params::fully& p,
                                  bool parallelize) {
-    XS_UNUSED_PARAMETER(parallelize);
-
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
     mm_scalar alpha = 1.0;
@@ -34,14 +32,36 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
             memcpy(out_ptr, b.data(), sizeof(mm_scalar) * out_size);
         }
 
-        mmpack::MmGemm(mmpack::CblasNoTrans,
-                       mmpack::CblasNoTrans,
-                       1, out_size, in_size,
-                       alpha,
-                       in_ptr, in_size,
-                       w_ptr, out_size,
-                       beta,
-                       out_ptr, out_size);
+        if (parallelize) {
+            mmpack::CBLAS_TRANSPOSE A_trans = mmpack::CblasNoTrans;
+            mmpack::CBLAS_TRANSPOSE B_trans = mmpack::CblasNoTrans;
+            size_t M = 1;
+
+            concurrency::ThreadPool.add_task(
+                    mmpack::MmGemm,
+                    mmpack::CblasNoTrans,
+                    mmpack::CblasNoTrans,
+                    1, out_size, in_size,
+                    alpha,
+                    in_ptr, in_size,
+                    w_ptr, out_size,
+                    beta,
+                    out_ptr, out_size
+                    );
+        } else {
+            mmpack::MmGemm(mmpack::CblasNoTrans,
+                           mmpack::CblasNoTrans,
+                           1, out_size, in_size,
+                           alpha,
+                           in_ptr, in_size,
+                           w_ptr, out_size,
+                           beta,
+                           out_ptr, out_size);
+        }
+    }
+
+    if (parallelize) {
+        concurrency::ThreadPool.wait_all();
     }
 }
 

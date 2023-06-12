@@ -3,18 +3,10 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#ifndef XSDNN_THREADPOOL_H
-#define XSDNN_THREADPOOL_H
+#ifndef XSDNN_THREADPOOL_UPDATE_H
+#define XSDNN_THREADPOOL_UPDATE_H
 
-#include <cstddef>
-#include <vector>
-#include <thread>
-#include <atomic>
-#include <future>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
-#include <unordered_set>
+#include <BS_thread_pool.hpp>
 #include <utils/macro.h>
 
 namespace xsdnn {
@@ -22,49 +14,34 @@ namespace xsdnn {
 
 class threadpool {
 public:
-    explicit threadpool(size_t num_threads);
+    threadpool(size_t num_threads) : pool(num_threads) {}
     threadpool(const threadpool&) = delete;
     threadpool operator=(const threadpool&) = delete;
 
-    ~threadpool();
+    ~threadpool() = default;
 
 public:
-    template<typename Func, typename ...Args>
-    int32_t add_task(const Func& task_func, Args&&... args){
-        int32_t task_idx = last_idx++;
+    size_t num_threads() const { return pool.get_thread_count(); }
 
-        std::lock_guard<std::mutex> q_lock(queue_mutex);
-        tasks_queue.emplace(std::async(std::launch::deferred, task_func, args...), task_idx);
-
-        queue_cv.notify_one();
-        return task_idx;
+    template <typename F, typename... A>
+    void add_task(F&& f, A&&... args) {
+        pool.template push_task(f, std::forward<A>(args)...);
     }
 
-    void run();
-
-    void wait_all();
-
-    size_t num_threads() const;
+    void wait_all() {
+        pool.wait_for_tasks();
+    }
 
 private:
-    std::vector<std::thread> threads;
-    std::atomic<bool> quite{ false };
-    std::atomic<int64_t> last_idx{ 0 };
-
-    std::queue<std::pair<std::future<void>, int>> tasks_queue;
-    std::mutex queue_mutex;
-    std::condition_variable queue_cv;
-    std::unordered_set<int> done_ids;
-
-    std::condition_variable completed_task_ids_cv;
-    std::mutex completed_task_ids_mtx;
+    BS::thread_pool pool;
 };
 
+auto available_threads = std::thread::hardware_concurrency();
 static threadpool ThreadPool(
-        XS_NUM_THREAD > std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : XS_NUM_THREAD
-);
+        XS_NUM_THREAD > available_threads ? available_threads : XS_NUM_THREAD
+        );
 
     }
 }
 
-#endif //XSDNN_THREADPOOL_H
+#endif //XSDNN_THREADPOOL_UPDATE_H

@@ -54,7 +54,6 @@ public:
     size_t out_data_size() const;
 
 protected:
-    // TODO: реализовать без копирования - возможно ли это?
     void reorder_input(const std::vector<tensor_t> &input,
                        std::vector<tensor_t> &output);
 

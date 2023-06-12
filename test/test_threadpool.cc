@@ -30,7 +30,7 @@ TEST(threadpool, simple_test) {
 
     for (size_t i = 0; i < T.size(); i++) {
         ThreadPool.add_task(sum,
-                    std::ref(T[i]),
+                    T[i],
                     std::ref(S[i]));
     }
     ThreadPool.wait_all();

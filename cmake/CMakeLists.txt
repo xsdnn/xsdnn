@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
 
 option(xsdnn_BUILD_TEST OFF)
@@ -11,9 +11,11 @@ option(xsdnn_USE_SSE OFF)
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
 set(MMPACK_ROOT ${XSROOT_SRC}/mmpack/lib)
+set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
 
 include_directories(
         ${XSROOT}/include/
+        ${THIRD_PARTY_ROOT}/threadpool/include
 )
 
 if (xsdnn_USE_DOUBLE)
@@ -51,7 +53,6 @@ include(xsdnn_layers.cmake)
 include(xsdnn_activations.cmake)
 include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
-include(xsdnn_framework.cmake)
 include(xsdnn_utils.cmake)
 
 add_library(xsdnn STATIC
@@ -64,7 +65,6 @@ add_library(xsdnn STATIC
         ${xsdnn_activations_src}
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
-        ${xsdnn_threadpool_framework_src}
         ${xsdnn_utils_src})
 
 if (xsdnn_BUILD_TEST)
