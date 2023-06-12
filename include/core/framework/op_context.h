@@ -7,8 +7,8 @@
 #define XSDNN_OP_CONTEXT_H
 
 #include <vector>
-#include <utils/tensor.h>
-#include <core/backend.h>
+#include "../../utils/tensor.h"
+#include "../backend.h"
 
 namespace xsdnn {
     namespace core {

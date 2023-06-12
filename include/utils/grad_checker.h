@@ -6,7 +6,7 @@
 #ifndef XSDNN_GRAD_CHECKER_H
 #define XSDNN_GRAD_CHECKER_H
 
-#include <layers/layer.h>
+#include "../layers/layer.h"
 
 namespace xsdnn {
 

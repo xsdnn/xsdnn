@@ -6,9 +6,9 @@
 #ifndef XSDNN_NODES_H
 #define XSDNN_NODES_H
 
-#include <common/node.h>
-#include <layers/layer.h>
-#include <optimizers/optimizer_base.h>
+#include "node.h"
+#include "../layers/layer.h"
+#include "../optimizers/optimizer_base.h"
 
 namespace xsdnn {
 

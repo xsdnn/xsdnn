@@ -6,8 +6,8 @@
 #ifndef XSDNN_TENSOR_UTILS_H
 #define XSDNN_TENSOR_UTILS_H
 
-#include <utils/tensor.h>
-#include <mmpack.h>
+#include "tensor.h"
+#include "../../src/mmpack/inc/mmpack.h"
 using namespace mmpack;
 
 namespace xsdnn {

@@ -6,9 +6,9 @@
 #ifndef XSDNN_FULLY_CONNECTED_BWD_XS_IMPL_H
 #define XSDNN_FULLY_CONNECTED_BWD_XS_IMPL_H
 
-#include <utils/tensor.h>
-#include <utils/macro.h>
-#include <core/framework/params.h>
+#include "../../../utils/tensor.h"
+#include "../../../utils/macro.h"
+#include "../../framework/params.h"
 
 namespace xsdnn {
     namespace kernel {

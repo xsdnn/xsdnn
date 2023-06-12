@@ -6,7 +6,7 @@
 #ifndef XSDNN_OPTIMIZER_BASE_H
 #define XSDNN_OPTIMIZER_BASE_H
 
-#include <utils/tensor.h>
+#include "../utils/tensor.h"
 
 namespace xsdnn {
 

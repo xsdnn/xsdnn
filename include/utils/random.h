@@ -4,7 +4,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include <utils/rng.h>
+#include "rng.h"
 
 namespace xsdnn {
 

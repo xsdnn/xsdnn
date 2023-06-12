@@ -8,11 +8,11 @@
 
 #include <vector>
 #include <thread>
-#include <layers/layer.h>
-#include <loss/loss_base.h>
-#include <optimizers/optimizer_base.h>
-#include <common/nodes.h>
-#include <common/config.h>
+#include "../layers/layer.h"
+#include "../loss/loss_base.h"
+#include "../optimizers/optimizer_base.h"
+#include "nodes.h"
+#include "config.h"
 
 namespace xsdnn {
 

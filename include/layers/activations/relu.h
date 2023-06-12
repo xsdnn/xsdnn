@@ -6,7 +6,7 @@
 #ifndef XSDNN_RELU_H
 #define XSDNN_RELU_H
 
-#include <layers/activations/activation_layer.h>
+#include "activation_layer.h"
 
 namespace xsdnn {
 

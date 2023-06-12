@@ -6,7 +6,7 @@
 #ifndef XSDNN_MSE_LOSS_H
 #define XSDNN_MSE_LOSS_H
 
-#include <loss/loss_base.h>
+#include "loss_base.h"
 
 namespace xsdnn {
 

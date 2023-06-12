@@ -6,8 +6,8 @@
 #ifndef XSDNN_OP_KERNEL_H
 #define XSDNN_OP_KERNEL_H
 
-#include <core/framework/op_context.h>
-#include <core/framework/params.h>
+#include "op_context.h"
+#include "params.h"
 
 namespace xsdnn {
     namespace core {
