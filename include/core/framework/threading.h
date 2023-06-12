@@ -64,6 +64,7 @@ void MultiThreadParallelFor(size_t num_threads, T start, T end, const Func& f) {
     for (auto& future : futures) future.wait();
 }
 
+
 template<typename T, typename Func>
 void TryParallelFor(bool parallel, size_t num_threads, T start, T end, const Func& f) {
     if (parallel) {
@@ -86,7 +87,7 @@ namespace concurrency {
 template<typename T, typename Func>
 void TryParallelFor(bool parallel, size_t num_threads, T end, Func f) {
 
-    detail::TryParallelFor(parallel, num_threads, 0u, end, [&](const detail::range& r) {
+    detail::TryParallelFor(parallel, num_threads, static_cast<T>(0), end, [&](const detail::range& r) {
         for(size_t i = r.begin(); i < r.end(); ++i) {
             f(i);
         }

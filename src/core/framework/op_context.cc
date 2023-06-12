@@ -65,8 +65,16 @@ void OpContext::set_parallelize(bool parallelize) {
     parallelize_ = parallelize;
 }
 
+void OpContext::set_num_threads(size_t num_threads) {
+    num_threads_ = num_threads;
+}
+
 bool OpContext::parallelize() const {
     return parallelize_;
+}
+
+size_t OpContext::num_threads() const {
+    return num_threads_;
 }
 
     } // core

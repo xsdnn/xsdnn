@@ -47,6 +47,7 @@ void fully_connected::forward_propagation(
     fwd_ctx_.set_in_out(in_data, out_data);
     fwd_ctx_.set_engine(layer::engine());
     fwd_ctx_.set_parallelize(layer::parallelize());
+    fwd_ctx_.set_num_threads(layer::num_threads_);
 
     fwd_kernel_->compute(fwd_ctx_, params_);
 }
@@ -59,6 +60,7 @@ void fully_connected::back_propagation(
     bwd_ctx_.set_in_out(in_data, out_data, out_grad, in_grad);
     bwd_ctx_.set_engine(layer::engine());
     bwd_ctx_.set_parallelize(layer::parallelize());
+    bwd_ctx_.set_num_threads(layer::num_threads_);
 
     bwd_kernel_->compute(bwd_ctx_, params_);
 }

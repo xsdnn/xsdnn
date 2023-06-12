@@ -22,7 +22,8 @@ public:
             in_grad_(nullptr),
             out_grad_(nullptr),
             engine_(core::backend_t::xs),
-            parallelize_(true) {}
+            parallelize_(true),
+            num_threads_(0) {}
 
 public:
     tensor_t& input_data(const size_t index);
@@ -50,7 +51,10 @@ public:
     core::backend_t engine() const;
 
     void set_parallelize(bool parallelize);
+    void set_num_threads(size_t num_threads);
+
     bool parallelize() const;
+    size_t num_threads() const;
 
 private:
     std::vector<tensor_t*>* in_data_;
@@ -60,6 +64,7 @@ private:
 
     core::backend_t engine_;
     bool parallelize_;
+    size_t num_threads_;
 };
 
     } // core

@@ -4,7 +4,7 @@
 //
 
 #include <core/kernel/linear/fully_connected_fwd_xs_impl.h>
-#include <utils/macro.h>
+#include <core/framework/threading.h>
 #include <cstring>
 
 namespace xsdnn {
@@ -15,15 +15,15 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
                                  const mat_t& b,
                                  tensor_t& out,
                                  const params::fully& p,
-                                 bool parallelize) {
-    XS_UNUSED_PARAMETER(parallelize);
+                                 bool parallelize,
+                                 size_t nthreads) {
 
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
     mm_scalar alpha = 1.0;
     mm_scalar beta = 1.0;
 
-    for (size_t sample = 0; sample < in.size(); ++sample) {
+    concurrency::TryParallelFor(parallelize, nthreads, in.size(), [&](size_t sample) {
         const mm_scalar* in_ptr = in[sample].data();
         const mm_scalar* w_ptr = W.data();
         mm_scalar* out_ptr = out[sample].data();
@@ -42,7 +42,7 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
                        w_ptr, out_size,
                        beta,
                        out_ptr, out_size);
-    }
+    });
 }
 
     } // kernel
