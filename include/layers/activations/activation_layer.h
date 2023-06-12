@@ -6,7 +6,7 @@
 #ifndef XSDNN_ACTIVATION_LAYER_H
 #define XSDNN_ACTIVATION_LAYER_H
 
-#include "../layer.h"
+#include <layers/layer.h>
 
 namespace xsdnn {
 

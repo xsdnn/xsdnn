@@ -6,8 +6,8 @@
 #ifndef XSDNN_FULLY_CONNECTED_FWD_XS_IMPL_H
 #define XSDNN_FULLY_CONNECTED_FWD_XS_IMPL_H
 
-#include "../../framework/params.h"
-#include "../../../utils/tensor.h"
+#include <core/framework/params.h>
+#include <utils/tensor.h>
 
 namespace xsdnn {
     namespace kernel {

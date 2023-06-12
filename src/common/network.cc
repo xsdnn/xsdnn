@@ -11,6 +11,10 @@ void network::init_weight() {
     net_.setup(true);
 }
 
+void network::set_num_threads(size_t num_threads) noexcept {
+    net_.user_num_threads_ = num_threads;
+}
+
 mat_t network::predict(const mat_t &in) {
     return fprop(in);
 }
@@ -48,8 +52,12 @@ void network::train(loss *loss, optimizer *opt, const tensor_t &input,
 void network::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
                   std::vector<tensor_t> &label, size_t batch_size, size_t epoch) {
     net_.setup(true);
+    size_t num_threads = net_.user_num_threads_ > 0
+                                                ? net_.user_num_threads_
+                                                : std::thread::hardware_concurrency() / 2;
     for (auto l : net_) {
         l->set_parallelize(true);
+        l->set_num_threads(num_threads);
     }
     opt_ptr->reset();
     for (size_t e = 0; e < epoch; ++e) {

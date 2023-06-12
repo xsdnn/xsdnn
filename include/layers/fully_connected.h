@@ -6,11 +6,11 @@
 #ifndef XSDNN_FULLY_CONNECTED_H
 #define XSDNN_FULLY_CONNECTED_H
 
-#include "layer.h"
-#include "../core/framework/op_context.h"
-#include "../core/framework/params.h"
-#include "../core/kernel/linear/fully_connected_fwd_kernel.h"
-#include "../core/kernel/linear/fully_connected_bwd_kernel.h"
+#include <layers/layer.h>
+#include <core/framework/op_context.h>
+#include <core/framework/params.h>
+#include <core/kernel/linear/fully_connected_fwd_kernel.h>
+#include <core/kernel/linear/fully_connected_bwd_kernel.h>
 
 namespace xsdnn {
 

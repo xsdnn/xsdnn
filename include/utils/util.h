@@ -6,7 +6,7 @@
 #ifndef XSDNN_UTIL_H
 #define XSDNN_UTIL_H
 
-#include "xs_error.h"
+#include <utils/xs_error.h>
 #include <vector>
 
 namespace xsdnn {

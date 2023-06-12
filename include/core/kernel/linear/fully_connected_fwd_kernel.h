@@ -6,7 +6,7 @@
 #ifndef XSDNN_FULLY_CONNECTED_FWD_KERNEL_H
 #define XSDNN_FULLY_CONNECTED_FWD_KERNEL_H
 
-#include "../../framework/op_kernel.h"
+#include <core/framework/op_kernel.h>
 
 namespace xsdnn {
     namespace core {

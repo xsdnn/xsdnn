@@ -6,9 +6,9 @@
 #ifndef XSDNN_NODES_H
 #define XSDNN_NODES_H
 
-#include "node.h"
-#include "../layers/layer.h"
-#include "../optimizers/optimizer_base.h"
+#include <common/node.h>
+#include <layers/layer.h>
+#include <optimizers/optimizer_base.h>
 
 namespace xsdnn {
 
@@ -53,8 +53,10 @@ public:
     size_t in_data_size() const;
     size_t out_data_size() const;
 
+public:
+    size_t user_num_threads_ = 0;
+
 protected:
-    // TODO: реализовать без копирования - возможно ли это?
     void reorder_input(const std::vector<tensor_t> &input,
                        std::vector<tensor_t> &output);
 

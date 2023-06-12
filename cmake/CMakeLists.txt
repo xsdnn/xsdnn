@@ -14,6 +14,7 @@ set(MMPACK_ROOT ${XSROOT_SRC}/mmpack/lib)
 
 include_directories(
         ${XSROOT}/include/
+        ${XSROOT}/src/mmpack/inc
 )
 
 if (xsdnn_USE_DOUBLE)

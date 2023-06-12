@@ -6,7 +6,7 @@
 #ifndef XSDNN_SGD_H
 #define XSDNN_SGD_H
 
-#include "optimizer_base.h"
+#include <optimizers/optimizer_base.h>
 
 namespace xsdnn {
 

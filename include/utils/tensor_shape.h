@@ -6,7 +6,7 @@
 #ifndef XSDNN_TENSOR_SHAPE_H
 #define XSDNN_TENSOR_SHAPE_H
 
-#include "tensor.h"
+#include <utils/tensor.h>
 #include <cassert>
 
 namespace xsdnn {
