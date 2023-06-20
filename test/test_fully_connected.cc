@@ -87,6 +87,7 @@ TEST(fc, forward_1_parallel) {
     fc.bias_init(weight_init::constant(1.0f));
 
     mat_t in = {0, 1, 2, 3, 4, 5};
+    fc.set_num_threads(std::thread::hardware_concurrency());
     fc.setup(false);
     fc.set_in_data({{ in }});
     fc.forward();
@@ -108,6 +109,7 @@ TEST(fc, forward_2_parallel) {
     fc.bias_init(weight_init::constant(0.3f));
 
     mat_t in = {0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    fc.set_num_threads(std::thread::hardware_concurrency());
     fc.setup(false);
     fc.set_in_data({{ in }});
     fc.forward();
@@ -128,6 +130,7 @@ TEST(fc, forward_nobias_parallel) {
     fc.weight_init(weight_init::constant(0.5f));
 
     mat_t in = {0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    fc.set_num_threads(std::thread::hardware_concurrency());
     fc.setup(false);
     fc.set_in_data({{ in }});
     fc.forward();
@@ -145,6 +148,7 @@ TEST(fc, forward_nobias_parallel) {
 
 TEST(fc, backward_parallel) {
     fully_connected fc(50, 100);
+    fc.set_num_threads(std::thread::hardware_concurrency());
     GradChecker checker(&fc, GradChecker::mode::random);
     GradChecker::status STATUS = checker.run();
     ASSERT_EQ(STATUS, GradChecker::status::ok);
