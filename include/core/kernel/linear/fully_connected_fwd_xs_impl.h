@@ -17,7 +17,8 @@ void fully_connected_fwd_xs_impl(const tensor_t& in,
                                  const mat_t& b,
                                  tensor_t& out,
                                  const params::fully& p,
-                                 bool parallelize);
+                                 bool parallelize,
+                                 size_t nthreads);
 
     } // kernel
 } // xsdnn

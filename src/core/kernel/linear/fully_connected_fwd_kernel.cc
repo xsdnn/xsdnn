@@ -25,7 +25,7 @@ void FullyConnectedFwdKernel::compute(OpContext &ctx, params::fully &p) {
         kernel::fully_connected_fwd_xs_impl(in,
                                             W[0],
                                             p.has_bias_ ? (*b)[0] : mat_t(),
-                                            out, p, ctx.parallelize());
+                                            out, p, ctx.parallelize(), ctx.num_threads());
     } else {
         throw xs_error("Unsupported engine type"); // TODO: расширить на понятную ошибку
     }

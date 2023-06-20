@@ -74,6 +74,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--use_openmp",
+        action='store_true',
+        help="Turn ON to use sse instruction for processor"
+    )
+
+    parser.add_argument(
             "--use_double_type",
             action='store_true',
             help="Turn ON to use double type instead of float"
@@ -100,6 +106,7 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
         "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
         "-Dxsdnn_USE_SSE=" + ("ON" if args.use_sse else "OFF"),
+        "-Dxsdnn_USE_OPENMP=" + ("ON" if args.use_openmp else "OFF"),
         ]
 
     return cmake_args

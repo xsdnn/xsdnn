@@ -21,6 +21,7 @@ public:
 
 
     void set_parallelize(bool parallelize);
+    void set_num_threads(size_t num_threads);
     void set_backend(core::backend_t engine);
     core::backend_t engine() const;
 
@@ -134,6 +135,7 @@ private:
 protected:
     bool initialized_;
     bool parallelize_;
+    size_t num_threads_;
     size_t in_concept_;
     size_t out_concept_;
     std::vector<tensor_type> in_type_;

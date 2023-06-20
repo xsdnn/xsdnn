@@ -29,7 +29,7 @@ void FullyConnectedBwdKernel::compute(xsdnn::core::OpContext &ctx, params::fully
                                             dW,
                                             p.has_bias_ ? *db : fake_tensor,
                                             dLz,
-                                            p,paralellize);
+                                            p,paralellize, ctx.num_threads());
     } else {
         throw xs_error("Unsupported engine type");
     }

@@ -20,8 +20,8 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
                                  tensor_t& db,
                                  tensor_t& dLz,
                                  const params::fully& p,
-                                 bool parallelize
-                                 );
+                                 bool parallelize,
+                                 size_t nthreads);
 
     } // kernel
 } // xsdnn

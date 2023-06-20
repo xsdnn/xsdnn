@@ -4,6 +4,7 @@
 //
 
 #include <core/kernel/linear/fully_connected_bwd_xs_impl.h>
+#include <core/framework/threading.h>
 
 namespace xsdnn {
     namespace kernel {
@@ -15,9 +16,8 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
                                  tensor_t& db,
                                  tensor_t& dLz,
                                  const params::fully& p,
-                                 bool parallelize) {
-    XS_UNUSED_PARAMETER(parallelize);
-
+                                 bool parallelize,
+                                 size_t nthreads) {
     size_t sample_count = x.size();
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
@@ -25,7 +25,7 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
     mm_scalar alpha = 1.0f;
     mm_scalar beta  = 0.0f;
 
-    for (size_t sample = 0; sample < sample_count; ++sample) {
+    concurrency::TryParallelFor(parallelize, nthreads, sample_count, [&](size_t sample) {
         /*
          * grad(x) = dLz * W.T [for each elem in batch]
          */
@@ -61,7 +61,7 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
                 db[sample][i] += dLz[sample][i];
             }
         }
-    }
+    });
 }
 
     } // kernel

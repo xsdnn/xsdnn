@@ -28,6 +28,10 @@ namespace xsdnn {
         parallelize_ = parallelize;
     }
 
+    void layer::set_num_threads(size_t num_threads) {
+        num_threads_ = num_threads;
+    }
+
     void layer::set_backend(core::backend_t engine) {
         engine_ = engine;
     }

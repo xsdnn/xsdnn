@@ -7,6 +7,7 @@
 #define XSDNN_NETWORK_H
 
 #include <vector>
+#include <thread>
 #include "../layers/layer.h"
 #include "../loss/loss_base.h"
 #include "../optimizers/optimizer_base.h"
@@ -30,6 +31,8 @@ public:
 
 public:
     void init_weight();
+    void set_num_threads(size_t num_threads) noexcept;
+
     mat_t predict(const mat_t& in);
     tensor_t predict(const tensor_t& in);
     std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
