@@ -11,6 +11,10 @@
 #include <future>
 #include <vector>
 
+#ifdef XS_USE_OMP
+#include <omp.h>
+#endif
+
 namespace xsdnn {
 namespace detail {
 
@@ -35,7 +39,16 @@ void SingleThreadParallelFor(T start, T end, const Func& f) {
     range r(start, end);
     f(r);
 }
-
+#ifdef XS_USE_OMP
+template<typename T, typename Func>
+void MultiThreadParallelFor(size_t nthread, T start, T end, const Func& f) {
+    assert(end >= start);
+    #pragma omp parallel for num_threads(nthread)
+    for(size_t i = start; i < end; ++i) {
+        f(range(i, i + 1));
+    }
+}
+#else
 template<typename T, typename Func>
 void MultiThreadParallelFor(size_t num_threads, T start, T end, const Func& f) {
     assert(end >= start);
@@ -63,12 +76,13 @@ void MultiThreadParallelFor(size_t num_threads, T start, T end, const Func& f) {
 
     for (auto& future : futures) future.wait();
 }
+#endif
 
 
 template<typename T, typename Func>
 void TryParallelFor(bool parallel, size_t num_threads, T start, T end, const Func& f) {
     if (parallel) {
-        if (num_threads < 1) {
+        if (num_threads <= 1) {
             SingleThreadParallelFor(start, end, f);
         } else {
             MultiThreadParallelFor(num_threads, start, end, f);
@@ -88,9 +102,17 @@ template<typename T, typename Func>
 void TryParallelFor(bool parallel, size_t num_threads, T end, Func f) {
 
     detail::TryParallelFor(parallel, num_threads, static_cast<T>(0), end, [&](const detail::range& r) {
+#ifdef XS_USE_OMP
+         #pragma omp parallel for num_threads(num_threads)
+         for (int i = static_cast<int>(r.begin());
+              i < static_cast<int>(r.end()); i++) {
+           f(i);
+         }
+#else
         for(size_t i = r.begin(); i < r.end(); ++i) {
             f(i);
         }
+#endif
     });
 
 }

@@ -7,6 +7,7 @@ option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
 option(xsdnn_BUILD_SHARED OFF)
 option(xsdnn_USE_SSE OFF)
+option(xsdnn_USE_OPENMP OFF)
 
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
@@ -27,6 +28,18 @@ endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+find_package(OpenMP QUIET)
+if(xsdnn_USE_OPENMP AND OPENMP_FOUND)
+    message(STATUS "Found OpenMP")
+    add_compile_definitions(XS_USE_OMP)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+elseif(xsdnn_USE_OPENMP AND NOT OPENMP_FOUND)
+    message(FATAL_ERROR "Can't find OpenMP. Please set OpenMP_C_FLAGS & "
+            "OpenMP_CXX_FLAGS")
+endif()
 
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
@@ -68,3 +81,6 @@ add_library(xsdnn STATIC
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
 endif (xsdnn_BUILD_TEST)
+
+add_executable(simple_test ${XSROOT}/test/simple_test.cc)
+target_link_libraries(simple_test GTest::gtest_main xsdnn)
