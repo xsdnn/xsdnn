@@ -40,3 +40,4 @@ legacy/Doxygen_old/latex/
 eigen/
 
 main.cpp
+test/simple_test.cc
