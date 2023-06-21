@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
 
 option(xsdnn_BUILD_TEST OFF)
@@ -16,7 +16,6 @@ set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
 
 include_directories(
         ${XSROOT}/include/
-        ${THIRD_PARTY_ROOT}/threadpool/include
 )
 
 if (xsdnn_USE_DOUBLE)
@@ -46,7 +45,7 @@ endif()
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
-set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -O0")
+set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -fsanitize=leak -O0")
 
 # Set compiler options
 set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
