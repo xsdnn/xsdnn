@@ -5,6 +5,7 @@
 
 #include <cstdlib>
 #include "config.h"
+#include "utils/wrappers.h"
 
 namespace mmpack {
 

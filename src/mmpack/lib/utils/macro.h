@@ -75,3 +75,15 @@
 #else
 #define HAS_MM_MALLOC 0
 #endif
+
+/*
+ * Выделяет выровненную память по границе alignment для переменной variable.
+ */
+#define MM_MAKE_ALIGN(variable, alignment) variable __attribute__ ((aligned(alignment)))
+
+/*
+ * Шаги для среза матриц по умолчанию
+ */
+
+#define MM_SGEMM_STRIDE_K   128
+#define MM_SGEMM_STRIDE_N   128
