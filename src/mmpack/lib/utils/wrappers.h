@@ -96,6 +96,12 @@ MmUnpackValue(const Mm_Float32x4& Vector) {
     return Vector[0] + Vector[1] + Vector[2] + Vector[3];
 }
 
+MM_STRONG_INLINE
+Mm_Float32x4
+MmBroadcastFloat32x4(const float x) {
+    return _mm_set1_ps(x);
+}
+
 
 MM_STRONG_INLINE
 Mm_Float32x4
