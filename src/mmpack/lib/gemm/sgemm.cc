@@ -4,6 +4,7 @@
 //
 
 #include "../gemm.h"
+#include "../utils/wrappers.h"
 
 namespace mmpack {
 
@@ -374,9 +375,6 @@ Return Value:
                 r1_b3 = MmMultiplyAddFloat32x4(B_e3, r1A_e0, r1_b3);
             }
 
-            if (k == 2) {
-                const float e = 5;
-            }
 
             if (BIsAligned) {
                 B_e0 = MmLoadFloat32x4<std::true_type>(B + 16);
@@ -412,11 +410,9 @@ Return Value:
             BIsAligned = MmIsAligned(B);
 
             r0A_e0 = a[0];
-            r0A_e1 = a[1];
 
             if (ProcessTwoRows) {
                 r1A_e0 = a[lda];
-                r1A_e1 = a[lda + 1];
             }
 
             if (BIsAligned) {
