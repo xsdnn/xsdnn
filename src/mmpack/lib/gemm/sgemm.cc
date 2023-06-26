@@ -4,7 +4,6 @@
 //
 
 #include "../gemm.h"
-#include "../utils/macro.h"
 
 namespace mmpack {
 
@@ -143,7 +142,7 @@ Return Value:
         const float* b = src;
 
         do {
-            BIsAligned = MmIsAligned(src);
+            BIsAligned = MmIsAligned(b);
 
             if (BIsAligned) {
                 t0 = MmLoadFloat32x4<std::true_type>(b);
@@ -179,7 +178,7 @@ Return Value:
         do {
             float* d = dst;
             const float* b = src;
-            BIsAligned = MmIsAligned(src);
+            BIsAligned = MmIsAligned(b);
 
             MmStoreFloat32x4<std::true_type>(dst, ZeroFloat32x4);
             MmStoreFloat32x4<std::true_type>(dst + 4, ZeroFloat32x4);
@@ -243,6 +242,463 @@ Return Value:
 
         } while (y > 0);
     }
+}
+
+template<bool ZeroMode, bool ProcessTwoRows>
+MM_STRONG_INLINE
+size_t
+MmGemmKernel(
+    const float* A,
+    const float* B,
+    float* C,
+    size_t CountN,
+    size_t CountK,
+    size_t lda,
+    size_t ldc,
+    float alpha
+)
+/*++
+
+Описание процедуры:
+
+    Ядро умножения - умножение одной или двух строк за операцию.
+    Поддерживает работу с занулением или добавлением содержимого к матрице С.
+
+    Аргументы:
+
+    A - указатель на матрицу A.
+
+    B - указатель на упакованный буфер В.
+
+    C - указатель на матрицу C.
+
+    CountN - кол-во столбцов матрицы B и C для обработк.
+
+    CountK - кол-во столбцов матрицы А, кол-во строк матрицы В для обработки.
+
+    lda - лидирующее измерение матрицы А. Равно кол-во столбцов.
+
+    ldc - лидирующее измерение матрицы C. Равно кол-во столбцов.
+
+    alpha - коэффициент умножения - см. формулу.
+
+Return Value:
+
+    кол-во обработанных (умноженных) строк.
+
+--*/
+{
+    Mm_Float32x4 r0_b0; // row 0, block 0 у матрицы C.
+    Mm_Float32x4 r0_b1;
+    Mm_Float32x4 r0_b2;
+    Mm_Float32x4 r0_b3;
+
+    Mm_Float32x4 r1_b0;
+    Mm_Float32x4 r1_b1;
+    Mm_Float32x4 r1_b2;
+    Mm_Float32x4 r1_b3;
+
+    // Бродкастим значение коэфф. alpha для дальнейшего умножения.
+
+    Mm_Float32x4 Alpha = MmBroadcastFloat32x4(alpha);
+
+    bool BIsAligned;
+
+    do {
+
+        Mm_Float32x4 B_e0; // Element B[i * 4]
+        Mm_Float32x4 B_e1;
+        Mm_Float32x4 B_e2;
+        Mm_Float32x4 B_e3;
+
+        float r0A_e0; // row 0, element 0 у матрицы А.
+        float r0A_e1;
+        float r1A_e0;
+        float r1A_e1;
+
+        /*
+         * Зануляем значения, с которыми будем работать при умножении.
+         */
+        r0_b0 = MmSetZeroFloat32x4();
+        r0_b1 = MmSetZeroFloat32x4();
+        r0_b2 = MmSetZeroFloat32x4();
+        r0_b3 = MmSetZeroFloat32x4();
+
+        if (ProcessTwoRows) {
+            r1_b0 = MmSetZeroFloat32x4();
+            r1_b1 = MmSetZeroFloat32x4();
+            r1_b2 = MmSetZeroFloat32x4();
+            r1_b3 = MmSetZeroFloat32x4();
+        }
+
+        /*
+         * Вычисляем блок 1х16 или 2х16
+         */
+
+        const float* a = A;
+        size_t k = CountK;
+
+        while (k >= 2) {
+
+            BIsAligned = MmIsAligned(B);
+
+            r0A_e0 = a[0];
+            r0A_e1 = a[1];
+
+            if (ProcessTwoRows) {
+                r1A_e0 = a[lda];
+                r1A_e1 = a[lda + 1];
+            }
+
+            if (BIsAligned) {
+                B_e0 = MmLoadFloat32x4<std::true_type>(B);
+                B_e1 = MmLoadFloat32x4<std::true_type>(B + 4);
+                B_e2 = MmLoadFloat32x4<std::true_type>(B + 8);
+                B_e3 = MmLoadFloat32x4<std::true_type>(B + 12);
+            } else {
+                B_e0 = MmLoadFloat32x4<std::false_type>(B);
+                B_e1 = MmLoadFloat32x4<std::false_type>(B + 4);
+                B_e2 = MmLoadFloat32x4<std::false_type>(B + 8);
+                B_e3 = MmLoadFloat32x4<std::false_type>(B + 12);
+            }
+
+            r0_b0 = MmMultiplyAddFloat32x4(B_e0, r0A_e0, r0_b0);
+            r0_b1 = MmMultiplyAddFloat32x4(B_e1, r0A_e0, r0_b1);
+            r0_b2 = MmMultiplyAddFloat32x4(B_e2, r0A_e0, r0_b2);
+            r0_b3 = MmMultiplyAddFloat32x4(B_e3, r0A_e0, r0_b3);
+
+            if (ProcessTwoRows) {
+                r1_b0 = MmMultiplyAddFloat32x4(B_e0, r1A_e0, r1_b0);
+                r1_b1 = MmMultiplyAddFloat32x4(B_e1, r1A_e0, r1_b1);
+                r1_b2 = MmMultiplyAddFloat32x4(B_e2, r1A_e0, r1_b2);
+                r1_b3 = MmMultiplyAddFloat32x4(B_e3, r1A_e0, r1_b3);
+            }
+
+            if (BIsAligned) {
+                B_e0 = MmLoadFloat32x4<std::true_type>(B + 16);
+                B_e1 = MmLoadFloat32x4<std::true_type>(B + 20);
+                B_e2 = MmLoadFloat32x4<std::true_type>(B + 24);
+                B_e3 = MmLoadFloat32x4<std::true_type>(B + 28);
+            } else {
+                B_e0 = MmLoadFloat32x4<std::false_type>(B + 16);
+                B_e1 = MmLoadFloat32x4<std::false_type>(B + 20);
+                B_e2 = MmLoadFloat32x4<std::false_type>(B + 24);
+                B_e3 = MmLoadFloat32x4<std::false_type>(B + 28);
+            }
+
+            r0_b0 = MmMultiplyAddFloat32x4(B_e0, r0A_e1, r0_b0);
+            r0_b1 = MmMultiplyAddFloat32x4(B_e1, r0A_e1, r0_b1);
+            r0_b2 = MmMultiplyAddFloat32x4(B_e2, r0A_e1, r0_b2);
+            r0_b3 = MmMultiplyAddFloat32x4(B_e3, r0A_e1, r0_b3);
+
+            if (ProcessTwoRows) {
+                r1_b0 = MmMultiplyAddFloat32x4(B_e0, r1A_e1, r1_b0);
+                r1_b1 = MmMultiplyAddFloat32x4(B_e1, r1A_e1, r1_b1);
+                r1_b2 = MmMultiplyAddFloat32x4(B_e2, r1A_e1, r1_b2);
+                r1_b3 = MmMultiplyAddFloat32x4(B_e3, r1A_e1, r1_b3);
+            }
+
+            a += 2;
+            B += 32;
+            k -= 2;
+        }
+
+        if (k > 0) {
+
+            BIsAligned = MmIsAligned(B);
+
+            r0A_e0 = a[0];
+            r0A_e1 = a[1];
+
+            if (ProcessTwoRows) {
+                r1A_e0 = a[lda];
+                r1A_e1 = a[lda + 1];
+            }
+
+            if (BIsAligned) {
+                B_e0 = MmLoadFloat32x4<std::true_type>(B + 0);
+                B_e1 = MmLoadFloat32x4<std::true_type>(B + 4);
+                B_e2 = MmLoadFloat32x4<std::true_type>(B + 8);
+                B_e3 = MmLoadFloat32x4<std::true_type>(B + 12);
+            } else {
+                B_e0 = MmLoadFloat32x4<std::false_type>(B + 0);
+                B_e1 = MmLoadFloat32x4<std::false_type>(B + 4);
+                B_e2 = MmLoadFloat32x4<std::false_type>(B + 8);
+                B_e3 = MmLoadFloat32x4<std::false_type>(B + 12);
+            }
+
+            r0_b0 = MmMultiplyAddFloat32x4(B_e0, r0A_e0, r0_b0);
+            r0_b1 = MmMultiplyAddFloat32x4(B_e1, r0A_e0, r0_b1);
+            r0_b2 = MmMultiplyAddFloat32x4(B_e2, r0A_e0, r0_b2);
+            r0_b3 = MmMultiplyAddFloat32x4(B_e3, r0A_e0, r0_b3);
+
+            if (ProcessTwoRows) {
+                r1_b0 = MmMultiplyAddFloat32x4(B_e0, r1A_e0, r1_b0);
+                r1_b1 = MmMultiplyAddFloat32x4(B_e1, r1A_e0, r1_b1);
+                r1_b2 = MmMultiplyAddFloat32x4(B_e2, r1A_e0, r1_b2);
+                r1_b3 = MmMultiplyAddFloat32x4(B_e3, r1A_e0, r1_b3);
+            }
+
+            B += 16;
+        }
+
+        /*
+         * Домножим значения на alpha
+         */
+
+        r0_b0 = MmMultiplyFloat32x4(r0_b0, Alpha);
+        r0_b1 = MmMultiplyFloat32x4(r0_b1, Alpha);
+        r0_b2 = MmMultiplyFloat32x4(r0_b2, Alpha);
+        r0_b3 = MmMultiplyFloat32x4(r0_b3, Alpha);
+
+        if (ProcessTwoRows) {
+            r1_b0 = MmMultiplyFloat32x4(r1_b0, Alpha);
+            r1_b1 = MmMultiplyFloat32x4(r1_b1, Alpha);
+            r1_b2 = MmMultiplyFloat32x4(r1_b2, Alpha);
+            r1_b3 = MmMultiplyFloat32x4(r1_b3, Alpha);
+        }
+
+        /*
+         * Сохраним значения в результирующую матрицу С целиком по 16 значений.
+         */
+
+        if (CountN >= 16) {
+
+            if (!ZeroMode) {
+                r0_b0 = MmAddFloat32x4(r0_b0, MmLoadFloat32x4<std::false_type>(C + 0));
+                r0_b1 = MmAddFloat32x4(r0_b1, MmLoadFloat32x4<std::false_type>(C + 4));
+                r0_b2 = MmAddFloat32x4(r0_b2, MmLoadFloat32x4<std::false_type>(C + 8));
+                r0_b3 = MmAddFloat32x4(r0_b3, MmLoadFloat32x4<std::false_type>(C + 12));
+            }
+
+            MmStoreFloat32x4<std::false_type>(C + 0, r0_b0);
+            MmStoreFloat32x4<std::false_type>(C + 4, r0_b1);
+            MmStoreFloat32x4<std::false_type>(C + 8, r0_b2);
+            MmStoreFloat32x4<std::false_type>(C + 12, r0_b3);
+
+
+            if (ProcessTwoRows) {
+
+                if (!ZeroMode) {
+                    r1_b0 = MmAddFloat32x4(r1_b0, MmLoadFloat32x4<std::false_type>(C + ldc + 0));
+                    r1_b1 = MmAddFloat32x4(r1_b1, MmLoadFloat32x4<std::false_type>(C + ldc + 4));
+                    r1_b2 = MmAddFloat32x4(r1_b2, MmLoadFloat32x4<std::false_type>(C + ldc + 8));
+                    r1_b3 = MmAddFloat32x4(r1_b3, MmLoadFloat32x4<std::false_type>(C + ldc + 12));
+                }
+
+                MmStoreFloat32x4<std::false_type>(C + ldc + 0, r1_b0);
+                MmStoreFloat32x4<std::false_type>(C + ldc + 4, r1_b1);
+                MmStoreFloat32x4<std::false_type>(C + ldc + 8, r1_b2);
+                MmStoreFloat32x4<std::false_type>(C + ldc + 12, r1_b3);
+            }
+
+        } else {
+            /*
+             * Сохраним значения в результирующую матрицу С частично.
+             */
+
+            if ((CountN & 8) != 0) {
+
+                if (!ZeroMode) {
+                    r0_b0 = MmAddFloat32x4(r0_b0, MmLoadFloat32x4<std::false_type>(C + 0));
+                    r0_b1 = MmAddFloat32x4(r0_b1, MmLoadFloat32x4<std::false_type>(C + 4));
+                }
+
+                MmStoreFloat32x4<std::false_type>(C + 0, r0_b0);
+                MmStoreFloat32x4<std::false_type>(C + 4, r0_b1);
+
+
+                r0_b0 = r0_b2;
+                r0_b1 = r0_b3;
+
+                if (ProcessTwoRows) {
+
+
+                    if (!ZeroMode) {
+                        r1_b0 = MmAddFloat32x4(r1_b0, MmLoadFloat32x4<std::false_type>(C + ldc + 0));
+                        r1_b1 = MmAddFloat32x4(r1_b1, MmLoadFloat32x4<std::false_type>(C + ldc + 4));
+                    }
+
+                    MmStoreFloat32x4<std::false_type>(C + ldc + 0, r1_b0);
+                    MmStoreFloat32x4<std::false_type>(C + ldc + 4, r1_b1);
+
+
+                    r1_b0 = r1_b2;
+                    r1_b1 = r1_b3;
+                }
+
+                C += 8;
+            }
+
+            if ((CountN & 4) != 0) {
+
+                if (!ZeroMode) {
+                    r0_b0 = MmAddFloat32x4(r0_b0, MmLoadFloat32x4<std::false_type>(C + 0));
+                }
+
+                MmStoreFloat32x4<std::false_type>(C + 0, r0_b0);
+
+
+                r0_b0 = r0_b1;
+
+                if (ProcessTwoRows) {
+
+                    if (!ZeroMode) {
+                        r1_b0 = MmAddFloat32x4(r1_b0, MmLoadFloat32x4<std::false_type>(C + ldc + 0));
+                    }
+
+                    MmStoreFloat32x4<std::false_type>(C + ldc + 0, r1_b0);
+
+                    r1_b0 = r1_b1;
+                }
+
+                C += 4;
+
+            }
+
+            float r0_b00 = MmExtractPosFloat32x4<0>(r0_b0);
+            float r0_b01 = MmExtractPosFloat32x4<1>(r0_b0);
+            float r1_b00;
+            float r1_b01;
+
+            if (ProcessTwoRows) {
+                r1_b00 = MmExtractPosFloat32x4<0>(r1_b0);
+                r1_b01 = MmExtractPosFloat32x4<1>(r1_b0);
+            }
+
+            if ((CountN & 2) != 0) {
+
+                if (!ZeroMode) {
+                    r0_b00 += C[0];
+                    r0_b01 += C[1];
+                }
+
+                C[0] = r0_b00;
+                C[1] = r0_b01;
+                r0_b00 = MmExtractPosFloat32x4<2>(r0_b0);
+                r0_b01 = MmExtractPosFloat32x4<3>(r0_b0);
+
+                if (ProcessTwoRows) {
+
+                    if (!ZeroMode) {
+                        r1_b00 += C[ldc + 0];
+                        r1_b01 += C[ldc + 1];
+                    }
+
+                    C[ldc + 0] = r1_b00;
+                    C[ldc + 1] = r1_b01;
+                    r1_b00 = MmExtractPosFloat32x4<2>(r1_b0);
+                    r1_b01 = MmExtractPosFloat32x4<3>(r1_b0);
+
+                }
+
+                C += 2;
+            }
+
+            if ((CountN & 1) != 0) {
+
+                if (!ZeroMode) {
+                    r0_b00 += C[0];
+                }
+
+                C[0] = r0_b00;
+
+                if (ProcessTwoRows) {
+
+                    if (!ZeroMode) {
+                        r1_b00 += C[ldc + 0];
+                    }
+
+                    C[ldc + 0] = r1_b00;
+
+                }
+
+                C += 2;
+
+            }
+
+            break;
+        }
+
+
+    } while (CountN > 0);
+
+    return ProcessTwoRows ? 2 : 1;
+}
+
+MM_STRONG_INLINE
+float*
+MmGemmKernelLoop(
+    const float* A,
+    const float* B,
+    float* C,
+    size_t CountM,
+    size_t CountN,
+    size_t CountK,
+    size_t lda,
+    size_t ldc,
+    float alpha,
+    bool ZeroMode
+)
+/*++
+
+Описание процедуры:
+
+    Построчно (по строкам матрицы С) производит умножение.
+
+    Аргументы:
+
+    A - указатель на матрицу A.
+
+    B - указатель на упакованный буфер В.
+
+    C - указатель на матрицу C.
+
+    CountM - кол-во строк матрицы А и С для обработки.
+
+    CountN - кол-во столбцов матрицы B и C для обработк.
+
+    CountK - кол-во столбцов матрицы А, кол-во строк матрицы В для обработки.
+
+    lda - лидирующее измерение матрицы А. Равно кол-во столбцов.
+
+    ldc - лидирующее измерение матрицы C. Равно кол-во столбцов.
+
+    alpha - коэффициент умножения - см. формулу.
+
+    ZeroMode - перезаписывать значения в матрице C?
+
+Return Value:
+
+    указатель на начало необработанной части матрицы С.
+
+--*/
+{
+    size_t RowsProcessed;
+    while (CountM > 0) {
+        if (ZeroMode) {
+
+            if (CountM >= 2) {
+                RowsProcessed = MmGemmKernel<true, true>(A, B, C, CountN, CountK, lda, ldc, alpha);
+            } else {
+                RowsProcessed = MmGemmKernel<true, false>(A, B, C, CountN, CountK, lda, ldc, alpha);
+            }
+
+        } else {
+
+            if (CountM >= 2) {
+                RowsProcessed = MmGemmKernel<false, true>(A, B, C, CountN, CountK, lda, ldc, alpha);
+            } else {
+                RowsProcessed = MmGemmKernel<false, false>(A, B, C, CountN, CountK, lda, ldc, alpha);
+            }
+
+        }
+
+        C += ldc * RowsProcessed;
+        A += lda * RowsProcessed;
+        CountM -= RowsProcessed;
+    }
+    return C;
 }
 
 MM_STRONG_INLINE
@@ -355,9 +811,14 @@ Return Value:
             if (TransB == CblasNoTrans) {
                 MmGemmCopyBufferB(BufferB, B + n + k * ldb, ldb, CountN, CountK);
             } else {
-                // FIXME: реализовать транспонирование матрицы А
+                // FIXME: реализовать транспонирование матрицы B
             }
 
+            float* c = C + n;
+
+            if (TransA == CblasNoTrans) {
+                MmGemmKernelLoop(A + k, BufferB, c, M, CountN, CountK, lda, ldc, alpha, ZeroMode);
+            }
 
         }
     }

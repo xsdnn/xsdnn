@@ -31,6 +31,12 @@ MM_STRONG_INLINE
 void
 MmStoreFloat32x4(float* Buffer, const Mm_Float32x4& Vector);
 
+template<unsigned pos>
+MM_STRONG_INLINE
+float
+MmExtractPosFloat32x4(const Mm_Float32x4 Vector) {
+    return _mm_cvtss_f32(_mm_shuffle_ps(Vector, Vector, _MM_SHUFFLE(pos, pos, pos, pos)));
+}
 
 MM_STRONG_INLINE
 bool
@@ -96,6 +102,13 @@ MmUnpackValue(const Mm_Float32x4& Vector) {
     return Vector[0] + Vector[1] + Vector[2] + Vector[3];
 }
 
+template<>
+MM_STRONG_INLINE
+float
+MmExtractPosFloat32x4<0>(const Mm_Float32x4 Vector) {
+    return _mm_cvtss_f32(Vector);
+}
+
 MM_STRONG_INLINE
 Mm_Float32x4
 MmBroadcastFloat32x4(const float x) {
@@ -113,6 +126,28 @@ MM_STRONG_INLINE
 Mm_Float32x4
 MmAddFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
     return _mm_add_ps(Vector1, Vector2);
+}
+
+/*
+ * Multiply Add
+ */
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmMultiplyAddFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2, const Mm_Float32x4& Vector3) {
+    return _mm_add_ps(_mm_mul_ps(Vector1, Vector2), Vector3);
+}
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmMultiplyAddFloat32x4(const Mm_Float32x4& Vector1, const float Value, const Mm_Float32x4& Vector3) {
+    return MmMultiplyAddFloat32x4(Vector1, MmBroadcastFloat32x4(Value), Vector3);
+}
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmMultiplyAddFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2, const float Value) {
+    return MmMultiplyAddFloat32x4(Vector1, Vector2, MmBroadcastFloat32x4(Value));
 }
 
 
