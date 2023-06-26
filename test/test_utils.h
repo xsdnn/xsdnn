@@ -20,6 +20,13 @@ void init(mm_scalar* ptr, size_t rows, size_t cols) {
     }
 }
 
+void random_init(mm_scalar* ptr, size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        *ptr = static_cast<mm_scalar>(rand() / RAND_MAX);
+        ptr += 1;
+    }
+}
+
 std::vector<tensor_t> generate_fwd_data(const size_t num_concept,
                                                const std::vector<size_t> sizes) {
     std::vector<tensor_t> data;

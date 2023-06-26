@@ -16,6 +16,11 @@ AddTest(
 )
 
 AddTest(
+        mmpack_sgemm_perfomance_test
+        ${XSDNN_TEST_ROOT}/test_sgemm_perfomance.cc
+)
+
+AddTest(
         mmpack_sv2mm_test
         ${XSDNN_TEST_ROOT}/test_sv2mm.cc
 )

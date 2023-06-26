@@ -10,8 +10,8 @@
 using namespace mmpack;
 
 #define M 5
-#define K 4
 #define N 6
+#define K 4
 
 TEST(sgemm, NoTrans_NoTrans) {
     xsdnn::mat_t A; A.reserve(M * K);
