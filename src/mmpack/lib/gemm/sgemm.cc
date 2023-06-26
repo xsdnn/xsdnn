@@ -8,6 +8,7 @@
 
 namespace mmpack {
 
+#if !defined(MM_USE_SSE)
 void ReferenceGemm(
     CBLAS_TRANSPOSE TransA,
     CBLAS_TRANSPOSE TransB,
@@ -97,7 +98,7 @@ void ReferenceGemm(
         }
     }
 }
-
+#else
 MM_STRONG_INLINE
 void
 MmGemmCopyBufferB(
@@ -825,6 +826,7 @@ Return Value:
         }
     }
 }
+#endif
 
 void
 MmGemm(
@@ -842,7 +844,11 @@ MmGemm(
     float* C,
     size_t ldc
 ) {
+#if defined(MM_USE_SSE)
     MmGemmOp(TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
+#else
+    ReferenceGemm(TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
+#endif
 }
 } // mmpack
 
