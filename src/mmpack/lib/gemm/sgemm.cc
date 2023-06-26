@@ -374,6 +374,10 @@ Return Value:
                 r1_b3 = MmMultiplyAddFloat32x4(B_e3, r1A_e0, r1_b3);
             }
 
+            if (k == 2) {
+                const float e = 5;
+            }
+
             if (BIsAligned) {
                 B_e0 = MmLoadFloat32x4<std::true_type>(B + 16);
                 B_e1 = MmLoadFloat32x4<std::true_type>(B + 20);
@@ -620,6 +624,8 @@ Return Value:
             break;
         }
 
+        C += 16;
+        CountN -= 16;
 
     } while (CountN > 0);
 
