@@ -98,7 +98,77 @@ void ReferenceGemm(
         }
     }
 }
+
 #else
+
+MM_STRONG_INLINE
+void
+MmGemmMulBeta(
+    float* C,
+    size_t CountM,
+    size_t CountN,
+    size_t ldc,
+    float beta
+)
+/*++
+
+Описание процедуры:
+
+    Домножение выходной матрицы С на коэффициент beta - см. формулу.
+
+    Аргументы:
+
+    С - указатель на выходную матрицу.
+
+    CountМ - кол-во строк матрицы С.
+
+    CountN - кол-во столбцов матрицы С.
+
+    ldc - лидирующее измерение матрицы C. Равно кол-во столбцов.
+
+    beta - коэфф. домножения
+
+Return Value:
+
+    None.
+
+--*/
+{
+    Mm_Float32x4 Beta = MmBroadcastFloat32x4(beta);
+
+    /*
+     * Полность обойдем матрицу и домножим на beta.
+     */
+    size_t n;
+    float* c;
+
+    while (CountM > 0) {
+        n = CountN;
+        c = C;
+
+        while (n >= 4) {
+            MmStoreFloat32x4<std::false_type>(c,
+                                              MmMultiplyFloat32x4(
+                                                    MmLoadFloat32x4<std::false_type>(c),
+                                                    Beta));
+            c += 4;
+            n -= 4;
+        }
+
+        while (n > 0) {
+            _mm_store_ss(c,
+                         _mm_mul_ss(
+                                 _mm_load_ss(c),
+                                 Beta
+                    ));
+            c += 1;
+            n -= 1;
+        }
+
+        C += ldc;
+    }
+}
+
 MM_STRONG_INLINE
 void
 MmGemmCopyBufferB(
@@ -797,7 +867,7 @@ Return Value:
         CountN = n_temp < StrideN ? n_temp : StrideN;
 
         if (beta != 0.0f && beta != 1.0f) {
-            // FIXME: реализовать домножение
+            MmGemmMulBeta(C + n, M, CountN, ldc, beta);
         }
 
         size_t CountK;
@@ -821,6 +891,8 @@ Return Value:
 
             if (TransA == CblasNoTrans) {
                 MmGemmKernelLoop(A + k, BufferB, c, M, CountN, CountK, lda, ldc, alpha, ZeroMode);
+            } else {
+                // FIXME: реализовать транспонированную матрицу А
             }
 
         }
