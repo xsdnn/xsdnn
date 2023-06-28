@@ -62,7 +62,6 @@ MmDotOp(
         const float* B,
         size_t size
 ) {
-#if defined(MM_USE_SSE)
     bool A_aligned = MmIsAligned(A);
     bool B_aligned = MmIsAligned(B);
 
@@ -79,11 +78,6 @@ MmDotOp(
             return MmDotKernelSse<std::false_type, std::false_type>(A, B, size);
         }
     }
-#elif defined(MM_USE_AVX)
-#error NotImplementedYet
-#else
-    return ReferenceDot(A, B, size);
-#endif
 }
 
 float
@@ -92,7 +86,13 @@ MmDot(
         const float* B,
         size_t size
 ) {
+#if defined(MM_USE_SSE)
     return MmDotOp(A, B, size);
+#elif defined(MM_USE_AVX)
+#error NotImplementedYet
+#else
+    return ReferenceDot(A, B, size);
+#endif
 }
 
 } // mmpack
