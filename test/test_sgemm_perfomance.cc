@@ -81,7 +81,7 @@ public:
                           "\nDiff: " << bad_result[i].Diff  << "\x1B[33m" << "\n\n\n";
             }
         } else {
-            std::cout << "\x1B[32m" << "All test passed!" << "\x1B[32m" << std::endl;
+            std::cout << "\x1B[32m" << "All short test passed!" << "\x1B[32m" << std::endl;
         }
     }
 
