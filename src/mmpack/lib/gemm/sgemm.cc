@@ -171,6 +171,110 @@ Return Value:
 
 MM_STRONG_INLINE
 void
+MmGemmTransposeA(
+    float* dst,
+    const float* src,
+    size_t lda,
+    size_t ColNum,
+    size_t RowNum
+)
+/*++
+
+Описание процедуры:
+
+    Транспонирование матрицы \ подматрицы A.
+
+    Аргументы:
+
+    dst - указатель на буфер назначения.
+
+    src - указатель на матрицу А.
+
+    ldа - лидирующее измерение матрицы А. Равно кол-во столбцов.
+
+    ColNum - кол-во столбцов в матрице А.
+
+    RowNum - кол-во строк в матрице А.
+
+Return Value:
+
+    None.
+
+--*/
+{
+    size_t lddst = RowNum;
+
+    while (RowNum >= 4) {
+        float* d = dst;
+        const float* a = src;
+        size_t y = ColNum;
+
+        do {
+            float t0 = a[0];
+            float t1 = a[lda];
+            float t2 = a[lda * 2];
+            float t3 = a[lda * 3];
+
+            d[0] = t0;
+            d[1] = t1;
+            d[2] = t2;
+            d[3] = t3;
+
+            d += lddst;
+            a += 1;
+            --y;
+        } while (y > 0);
+
+        dst += 4;
+        src += lda * 4;
+        RowNum -= 4;
+    }
+
+    if (RowNum >= 2) {
+
+        float* d = dst;
+        const float* a = src;
+        size_t y = ColNum;
+
+        do {
+
+            float t0 = a[0];
+            float t1 = a[lda];
+
+            d[0] = t0;
+            d[1] = t1;
+
+            d += lddst;
+            a += 1;
+            --y;
+
+        } while (y > 0);
+
+        dst += 2;
+        src += lda * 2;
+        RowNum -= 2;
+    }
+
+    if (RowNum >= 1) {
+
+        float* d = dst;
+        const float* a = src;
+        size_t y = ColNum;
+
+        do {
+
+            d[0] = a[0];
+
+            d += lddst;
+            a += 1;
+            -y;
+
+        } while (y > 0);
+    }
+}
+
+MM_STRONG_INLINE
+void
 MmGemmCopyBufferB(
     float* dst,
     const float* src,
@@ -835,7 +939,7 @@ Return Value:
 --*/
 {
     MM_MAKE_ALIGN(float BufferB[MM_SGEMM_STRIDE_N * MM_SGEMM_STRIDE_K], 16 * sizeof(float));
-
+    float BufferA[MM_SGEMM_TRANSA_ROWS * MM_SGEMM_STRIDE_K];
     /*
      * Оптимизируем размеры шагов, для лучшей утилизации данных в BufferB.
      *
@@ -892,9 +996,22 @@ Return Value:
             if (TransA == CblasNoTrans) {
                 MmGemmKernelLoop(A + k, BufferB, c, M, CountN, CountK, lda, ldc, alpha, ZeroMode);
             } else {
-                // FIXME: реализовать транспонированную матрицу А
-            }
+                const float* a = A + k * lda;
+                size_t RowsProcessed = M;
 
+                while (RowsProcessed > 0) {
+                    size_t RowsTransposed = RowsProcessed > size_t(MM_SGEMM_TRANSA_ROWS)
+                                            ? size_t(MM_SGEMM_TRANSA_ROWS) : RowsProcessed;
+
+                    MmGemmTransposeA(BufferA, a, lda, RowsTransposed, CountK);
+
+                    RowsProcessed -= RowsTransposed;
+                    a += RowsTransposed;
+
+                    c = MmGemmKernelLoop(BufferA, BufferB, c, RowsTransposed, CountN, CountK, CountK, ldc, alpha, ZeroMode);
+                }
+            }
+            ZeroMode = false;
         }
     }
 }
