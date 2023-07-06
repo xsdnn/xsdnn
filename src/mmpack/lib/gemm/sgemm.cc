@@ -267,7 +267,7 @@ Return Value:
 
             d += lddst;
             a += 1;
-            -y;
+            --y;
 
         } while (y > 0);
     }
