@@ -116,7 +116,7 @@ MmGemmMulBeta(
 
     Домножение выходной матрицы С на коэффициент beta - см. формулу.
 
-    Аргументы:
+Аргументы:
 
     С - указатель на выходную матрицу.
 
@@ -184,7 +184,7 @@ MmGemmTransposeA(
 
     Транспонирование матрицы \ подматрицы A.
 
-    Аргументы:
+Аргументы:
 
     dst - указатель на буфер назначения.
 
@@ -272,6 +272,311 @@ Return Value:
         } while (y > 0);
     }
 }
+
+template<unsigned N>
+MM_STRONG_INLINE
+void
+MmGemmTransposeBufferBNx4(
+        float* dst,
+        const float* src,
+        size_t ldb
+)
+/*++
+
+Описание процедуры:
+
+    Транспонирование подматрицы src размера Nx4.
+
+Аргументы:
+
+    dst - указатель на буфер назначения.
+
+    src - указатель на подматрицу.
+
+    ldb - лидирующее измерение подматрицы.
+
+Return Value:
+
+    None.
+
+--*/
+    {
+        for (unsigned n = 0; n < N / 4; n++) {
+
+            Mm_Float32x4 t0 = MmLoadFloat32x4<std::false_type>(&src[ldb * 0]);
+            Mm_Float32x4 t1 = MmLoadFloat32x4<std::false_type>(&src[ldb * 1]);
+            Mm_Float32x4 t2 = MmLoadFloat32x4<std::false_type>(&src[ldb * 2]);
+            Mm_Float32x4 t3 = MmLoadFloat32x4<std::false_type>(&src[ldb * 3]);
+
+            Mm_Float32x4 z0 = MmUnpackInterleaveLowFloat32x4(t0, t2);
+            Mm_Float32x4 z1 = MmUnpackInterleaveHighFloat32x4(t0, t2);
+            Mm_Float32x4 z2 = MmUnpackInterleaveLowFloat32x4(t1, t3);
+            Mm_Float32x4 z3 = MmUnpackInterleaveHighFloat32x4(t1, t3);
+
+            t0 = MmUnpackInterleaveLowFloat32x4(z0, z2);
+            t1 = MmUnpackInterleaveHighFloat32x4(z0, z2);
+            t2 = MmUnpackInterleaveLowFloat32x4(z1, z3);
+            t3 = MmUnpackInterleaveHighFloat32x4(z1, z3);
+
+            MmStoreFloat32x4<std::true_type>(&dst[0], t0);
+            MmStoreFloat32x4<std::true_type>(&dst[16], t1);
+            MmStoreFloat32x4<std::true_type>(&dst[32], t2);
+            MmStoreFloat32x4<std::true_type>(&dst[48], t3);
+
+            dst += 4;
+            src += ldb * 4;
+        }
+    }
+
+MM_STRONG_INLINE
+void
+MmGemmTransposeBufferB(
+    float* dst,
+    const float* src,
+    size_t ldb,
+    size_t RowNum,
+    size_t ColNum
+)
+/*++
+
+Описание процедуры:
+
+    Транспонирование и упаковка матрицы \ подматрицы B, с использованием SSE / AVX / FMA инструкций.
+
+Аргументы:
+
+    dst - указатель на буфер назначения.
+
+    src - указатель на матрицу В.
+
+    ldb - лидирующее измерение матрицы B. Равно кол-во столбцов.
+
+    RowNum - кол-во строк в матрице B.
+
+    ColNum - кол-во столбцов в матрице B.
+
+Return Value:
+
+    None.
+
+--*/
+    {
+        while (RowNum >= 16) {
+
+            const float* b = src;
+            size_t x = ColNum;
+
+            while (x >= 4) {
+
+                MmGemmTransposeBufferBNx4<16>(&dst[0], &b[0], ldb);
+
+                dst += 16 * 4;
+                b += 4;
+                x -= 4;
+            }
+
+            while (x > 0) {
+
+                float t0 = b[0];
+                float t1 = b[ldb];
+                float t2 = b[ldb * 2];
+                float t3 = b[ldb * 3];
+                float t4 = b[ldb * 4];
+                float t5 = b[ldb * 5];
+                float t6 = b[ldb * 6];
+                float t7 = b[ldb * 7];
+                float t8 = b[ldb * 8];
+                float t9 = b[ldb * 9];
+                float t10 = b[ldb * 10];
+                float t11 = b[ldb * 11];
+                float t12 = b[ldb * 12];
+                float t13 = b[ldb * 13];
+                float t14 = b[ldb * 14];
+                float t15 = b[ldb * 15];
+
+                dst[0] = t0;
+                dst[1] = t1;
+                dst[2] = t2;
+                dst[3] = t3;
+                dst[4] = t4;
+                dst[5] = t5;
+                dst[6] = t6;
+                dst[7] = t7;
+                dst[8] = t8;
+                dst[9] = t9;
+                dst[10] = t10;
+                dst[11] = t11;
+                dst[12] = t12;
+                dst[13] = t13;
+                dst[14] = t14;
+                dst[15] = t15;
+
+                dst += 16;
+                b += 1;
+                x--;
+            }
+
+            src += ldb * 16;
+            RowNum -= 16;
+        }
+
+        if (RowNum > 0) {
+
+            Mm_Float32x4 ZeroFloat32x4 = MmSetZeroFloat32x4();
+
+            size_t x = ColNum;
+
+            while (x >= 4) {
+
+                float* d = dst;
+                const float* b = src;
+
+                if ((RowNum & 8) != 0) {
+
+                    MmGemmTransposeBufferBNx4<8>(&d[0], &b[0], ldb);
+
+                    d += 8;
+                    b += ldb * 8;
+
+                } else {
+
+                    MmStoreFloat32x4<std::true_type>(&d[8], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[12], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[24], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[28], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[40], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[44], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[56], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[60], ZeroFloat32x4);
+                }
+
+                if ((RowNum & 4) != 0) {
+
+                    MmGemmTransposeBufferBNx4<4>(&d[0], &b[0], ldb);
+
+                    d += 4;
+                    b += ldb * 4;
+
+                } else {
+
+                    MmStoreFloat32x4<std::true_type>(&d[4], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[20], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[36], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[52], ZeroFloat32x4);
+                }
+
+                MmStoreFloat32x4<std::true_type>(&d[0], ZeroFloat32x4);
+                MmStoreFloat32x4<std::true_type>(&d[16], ZeroFloat32x4);
+                MmStoreFloat32x4<std::true_type>(&d[32], ZeroFloat32x4);
+                MmStoreFloat32x4<std::true_type>(&d[48], ZeroFloat32x4);
+
+                if ((RowNum & 2) != 0) {
+
+                    Mm_Float32x4 t0 = MmLoadFloat32x4<std::false_type>(&b[0]);
+                    Mm_Float32x4 t1 = MmLoadFloat32x4<std::false_type>(&b[ldb]);
+
+                    MmStoreLaneFloat32x4<0>(&d[0], t0);
+                    MmStoreLaneFloat32x4<0>(&d[1], t1);
+                    MmStoreLaneFloat32x4<1>(&d[16], t0);
+                    MmStoreLaneFloat32x4<1>(&d[17], t1);
+                    MmStoreLaneFloat32x4<2>(&d[32], t0);
+                    MmStoreLaneFloat32x4<2>(&d[33], t1);
+                    MmStoreLaneFloat32x4<3>(&d[48], t0);
+                    MmStoreLaneFloat32x4<3>(&d[49], t1);
+
+                    d += 2;
+                    b += ldb * 2;
+                }
+
+                if ((RowNum & 1) != 0) {
+                    d[0] = b[0];
+                    d[16] = b[1];
+                    d[32] = b[2];
+                    d[48] = b[3];
+                }
+
+                dst += 16 * 4;
+                src += 4;
+                x -= 4;
+            }
+
+            while (x > 0) {
+
+                float* d = dst;
+                const float* b = src;
+
+                if ((RowNum & 8) != 0) {
+
+                    float t0 = b[0];
+                    float t1 = b[ldb];
+                    float t2 = b[ldb * 2];
+                    float t3 = b[ldb * 3];
+                    float t4 = b[ldb * 4];
+                    float t5 = b[ldb * 5];
+                    float t6 = b[ldb * 6];
+                    float t7 = b[ldb * 7];
+
+                    d[0] = t0;
+                    d[1] = t1;
+                    d[2] = t2;
+                    d[3] = t3;
+                    d[4] = t4;
+                    d[5] = t5;
+                    d[6] = t6;
+                    d[7] = t7;
+
+                    d += 8;
+                    b += ldb * 8;
+
+                } else {
+
+                    MmStoreFloat32x4<std::true_type>(&d[8], ZeroFloat32x4);
+                    MmStoreFloat32x4<std::true_type>(&d[12], ZeroFloat32x4);
+                }
+
+                if ((RowNum & 4) != 0) {
+
+                    float t0 = b[0];
+                    float t1 = b[ldb];
+                    float t2 = b[ldb * 2];
+                    float t3 = b[ldb * 3];
+
+                    d[0] = t0;
+                    d[1] = t1;
+                    d[2] = t2;
+                    d[3] = t3;
+
+                    d += 4;
+                    b += ldb * 4;
+
+                } else {
+                    MmStoreFloat32x4<std::true_type>(&d[4], ZeroFloat32x4);
+                }
+
+                MmStoreFloat32x4<std::true_type>(d, ZeroFloat32x4);
+
+                if ((RowNum & 2) != 0) {
+
+                    float t0 = b[0];
+                    float t1 = b[ldb];
+
+                    d[0] = t0;
+                    d[1] = t1;
+
+                    d += 2;
+                    b += ldb * 2;
+                }
+
+                if ((RowNum & 1) != 0) {
+                    d[0] = b[0];
+                }
+
+                dst += 16;
+                src += 1;
+                x--;
+            }
+        }
+    }
 
 MM_STRONG_INLINE
 void
@@ -988,7 +1293,7 @@ Return Value:
             if (TransB == CblasNoTrans) {
                 MmGemmCopyBufferB(BufferB, B + n + k * ldb, ldb, CountN, CountK);
             } else {
-                // FIXME: реализовать транспонирование матрицы B
+                MmGemmTransposeBufferB(BufferB, B + k + n * ldb, ldb, CountN, CountK);
             }
 
             float* c = C + n;
