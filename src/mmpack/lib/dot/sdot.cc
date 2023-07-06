@@ -9,6 +9,8 @@
 
 namespace mmpack {
 
+#if !defined(MM_USE_SSE)
+
 float
 ReferenceDot(
         const float* A,
@@ -24,7 +26,7 @@ ReferenceDot(
     return sum;
 }
 
-#if defined(MM_USE_SSE)
+#else
 
 template<typename A_aligned, typename B_aligned>
 MM_STRONG_INLINE
@@ -54,7 +56,6 @@ MmDotKernelSse(
     return result_dot_product;
 }
 
-#endif
 
 float
 MmDotOp(
@@ -79,6 +80,9 @@ MmDotOp(
         }
     }
 }
+
+#endif
+
 
 float
 MmDot(
