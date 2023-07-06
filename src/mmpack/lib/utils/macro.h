@@ -85,5 +85,6 @@
  * Шаги для среза матриц по умолчанию
  */
 
-#define MM_SGEMM_STRIDE_K   128
-#define MM_SGEMM_STRIDE_N   128
+#define MM_SGEMM_STRIDE_K       128
+#define MM_SGEMM_STRIDE_N       128
+#define MM_SGEMM_TRANSA_ROWS    12

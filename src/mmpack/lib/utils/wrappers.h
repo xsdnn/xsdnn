@@ -93,6 +93,13 @@ MmStoreFloat32x4<std::false_type>(float* Buffer, const Mm_Float32x4& Vector) {
     _mm_storeu_ps(Buffer, Vector);
 }
 
+template<unsigned Lane>
+MM_STRONG_INLINE
+void
+MmStoreLaneFloat32x4(float* Buffer, const Mm_Float32x4& Vector) {
+    _mm_store_ss(Buffer, _mm_shuffle_ps(Vector, Vector, _MM_SHUFFLE(Lane, Lane, Lane, Lane)));
+}
+
 /*
 * Unpack Value in Sum
 */
@@ -148,6 +155,18 @@ MM_STRONG_INLINE
 Mm_Float32x4
 MmMultiplyAddFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2, const float Value) {
     return MmMultiplyAddFloat32x4(Vector1, Vector2, MmBroadcastFloat32x4(Value));
+}
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmUnpackInterleaveLowFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
+    return _mm_unpacklo_ps(Vector1, Vector2);
+}
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmUnpackInterleaveHighFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
+    return _mm_unpackhi_ps(Vector1, Vector2);
 }
 
 
