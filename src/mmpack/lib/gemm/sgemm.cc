@@ -166,6 +166,7 @@ Return Value:
         }
 
         C += ldc;
+        CountM -= 1;
     }
 }
 
