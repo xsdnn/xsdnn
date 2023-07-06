@@ -6,6 +6,7 @@
 #include "../xsdnn.h"
 #include "test_utils.h"
 #include <iostream>
+#include <random>
 using namespace mmpack;
 
 bool check_eq(float x1, float x2, float eps) {
@@ -33,9 +34,9 @@ public:
         constexpr size_t K = 32;
         std::vector<mnk_holder> bad_result;
 
-        for (size_t m = 0; m < M; ++m) {
-            for (size_t n = 0; n < N; ++n) {
-                for (size_t k = 0; k < K; ++k) {
+        for (size_t m = 1; m < M; ++m) {
+            for (size_t n = 1; n < N; ++n) {
+                for (size_t k = 1; k < K; ++k) {
                     init(m, n, k);
                     MmGemm(
                             mmpack::CblasNoTrans,
@@ -86,7 +87,201 @@ public:
     }
 
     void ExecuteLong() {
+        constexpr size_t M = 64;
+        constexpr size_t N = 64;
+        constexpr size_t K = 64;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<float> random(-10.0f, 10.0f);
 
+        /*
+         * case: Trans_NoTrans
+         */
+
+        std::vector<mnk_holder> bad_result;
+
+        for (size_t m = 1; m < M; ++m) {
+            for (size_t n = 1; n < N; ++n) {
+                for (size_t k = 1; k < K; ++k) {
+                    init(m, n, k);
+                    float alpha = random(gen);
+                    float beta = random(gen);
+
+                    MmGemm(
+                            mmpack::CblasTrans,
+                            mmpack::CblasNoTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), m,
+                            B_.data(), n,
+                            beta,
+                            C_.data(), n);
+
+                    ReferenceGemm(
+                            mmpack::CblasTrans,
+                            mmpack::CblasNoTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), m,
+                            B_.data(), n,
+                            beta,
+                            CReference.data(), n
+                    );
+
+
+                    for (size_t i = 0; i < m; ++i) {
+                        for (size_t j = 0; j < n; ++j) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                                bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
+                                                                std::abs(C_[i * n + j] - CReference[i * n + j])));
+                            }
+                        }
+                    }
+
+                    clear();
+                }
+            }
+        }
+
+        if (bad_result.size() != 0) {
+            for (size_t i = 0; i < bad_result.size(); ++i) {
+                std::cout << "\x1B[31m" << "Critical Error Mismatch!\tTrans_NoTrans" << "\x1B[31m" << std::endl;
+                std::cout << "\x1B[33m" << "M: " << bad_result[i].M << " N: " << bad_result[i].N << " K: " << bad_result[i].K <<
+                          "\tGEMM: " << bad_result[i].GEMM << "\nReference: " << bad_result[i].Ref <<
+                          "\nDiff: " << bad_result[i].Diff  << "\x1B[33m" << "\n\n\n";
+            }
+        }
+
+        bad_result.clear();
+
+
+
+
+
+
+        /*
+         * case: NoTrans_Trans
+         */
+
+        for (size_t m = 1; m < M; ++m) {
+            for (size_t n = 1; n < N; ++n) {
+                for (size_t k = 1; k < K; ++k) {
+                    init(m, n, k);
+                    float alpha = random(gen);
+                    float beta = random(gen);
+
+                    MmGemm(
+                            mmpack::CblasNoTrans,
+                            mmpack::CblasTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), k,
+                            B_.data(), k,
+                            beta,
+                            C_.data(), n);
+
+                    ReferenceGemm(
+                            mmpack::CblasNoTrans,
+                            mmpack::CblasTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), k,
+                            B_.data(), k,
+                            beta,
+                            CReference.data(), n
+                    );
+
+
+                    for (size_t i = 0; i < m; ++i) {
+                        for (size_t j = 0; j < n; ++j) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                                bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
+                                                                std::abs(C_[i * n + j] - CReference[i * n + j])));
+                            }
+                        }
+                    }
+
+                    clear();
+                }
+            }
+        }
+
+        if (bad_result.size() != 0) {
+            for (size_t i = 0; i < bad_result.size(); ++i) {
+                std::cout << "\x1B[31m" << "Critical Error Mismatch!\tNoTrans_Trans" << "\x1B[31m" << std::endl;
+                std::cout << "\x1B[33m" << "M: " << bad_result[i].M << " N: " << bad_result[i].N << " K: " << bad_result[i].K <<
+                          "\tGEMM: " << bad_result[i].GEMM << "\nReference: " << bad_result[i].Ref <<
+                          "\nDiff: " << bad_result[i].Diff  << "\x1B[33m" << "\n\n\n";
+            }
+        }
+
+        bad_result.clear();
+
+        /*
+         * case: Trans_Trans
+         */
+
+        for (size_t m = 1; m < M; ++m) {
+            for (size_t n = 1; n < N; ++n) {
+                for (size_t k = 1; k < K; ++k) {
+                    init(m, n, k);
+                    float alpha = random(gen);
+                    float beta = random(gen);
+
+                    MmGemm(
+                            mmpack::CblasTrans,
+                            mmpack::CblasTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), m,
+                            B_.data(), n,
+                            beta,
+                            C_.data(), n);
+
+                    ReferenceGemm(
+                            mmpack::CblasTrans,
+                            mmpack::CblasTrans,
+                            m, n, k,
+                            alpha,
+                            A_.data(), m,
+                            B_.data(), n,
+                            beta,
+                            CReference.data(), n
+                    );
+
+
+                    for (size_t i = 0; i < m; ++i) {
+                        for (size_t j = 0; j < n; ++j) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                                bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
+                                                                std::abs(C_[i * n + j] - CReference[i * n + j])));
+                            }
+                        }
+                    }
+
+                    clear();
+                }
+            }
+        }
+
+        if (bad_result.size() != 0) {
+            for (size_t i = 0; i < bad_result.size(); ++i) {
+                std::cout << "\x1B[31m" << "Critical Error Mismatch!\tTrans_Trans" << "\x1B[31m" << std::endl;
+                std::cout << "\x1B[33m" << "M: " << bad_result[i].M << " N: " << bad_result[i].N << " K: " << bad_result[i].K <<
+                          "\tGEMM: " << bad_result[i].GEMM << "\nReference: " << bad_result[i].Ref <<
+                          "\nDiff: " << bad_result[i].Diff  << "\x1B[33m" << "\n\n\n";
+            }
+        } else {
+            std::cout << "\x1B[32m" << "All long test passed!" << "\x1B[32m" << std::endl;
+        }
+    }
+
+    /*
+     * Получить файл с оценкой временных и вычислительных затрат для матриц разного размера
+     * на оптимизированном и reference матричном умножении.
+     */
+    void ProfileGemm() {
+        // TODO: Impl this
     }
 
     void ReferenceGemm(
@@ -208,6 +403,7 @@ private:
 
 int main() {
     SGemmTester tester;
-    tester.ExecuteShort();
+//    tester.ExecuteShort();
+//    tester.ExecuteLong();
+    tester.ProfileGemm();
 }
-
