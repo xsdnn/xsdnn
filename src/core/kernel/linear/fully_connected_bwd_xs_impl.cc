@@ -47,11 +47,16 @@ void fully_connected_bwd_xs_impl(const tensor_t& x,
         const mm_scalar* x_ptr = x[sample].data();
         mm_scalar* dW_ptr = dW[sample].data();
 
-        mmpack::MmVectorToMatrixMul(in_size, out_size,
-                                    alpha,
-                                    x_ptr,
-                                    dLz_ptr,
-                                    beta, dW_ptr, out_size);
+        mmpack::MmGemm(
+                mmpack::CblasNoTrans,
+                mmpack::CblasNoTrans,
+                in_size, out_size, 1,
+                alpha,
+                x_ptr, 1,
+                dLz_ptr, out_size,
+                beta,
+                dW_ptr, out_size
+        );
 
         /*
          * grad(b) = dLz [for each elem in batch]
