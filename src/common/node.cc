@@ -82,13 +82,13 @@ namespace xsdnn {
         size_t size = grad_[0].size();
 
         if (dst->empty()) (*dst).resize(size);
+        tensorize::fill(dst->data(), size, 0.0f);
 
         for (size_t sample = 0; sample < sample_count; ++sample) {
             const auto& grad_sample = grad_[sample];
             for (size_t i = 0; i < size; ++i) {
-                (*dst)[i] = grad_sample[i];
+                (*dst)[i] += grad_sample[i];
             }
-
         }
     }
 }
