@@ -403,7 +403,7 @@ private:
 
 int main() {
     SGemmTester tester;
-//    tester.ExecuteShort();
+    tester.ExecuteShort();
 //    tester.ExecuteLong();
     tester.ProfileGemm();
 }
