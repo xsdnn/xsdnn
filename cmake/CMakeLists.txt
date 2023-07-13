@@ -67,6 +67,7 @@ include(xsdnn_activations.cmake)
 include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
+include(xsdnn_converter.cmake)
 
 add_library(xsdnn STATIC
         ${mmpack_common_src}
@@ -78,7 +79,8 @@ add_library(xsdnn STATIC
         ${xsdnn_activations_src}
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
-        ${xsdnn_utils_src})
+        ${xsdnn_utils_src}
+        ${xsdnn_converter_src})
 
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
