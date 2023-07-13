@@ -75,7 +75,6 @@ namespace xsdnn {
         next_.push_back(nd);
     }
 
-    // TODO: parallize this with simd instruction
     void edge::accumulate_grads(mat_t* dst) {
         assert(!grad_.empty());
         size_t sample_count = grad_.size();

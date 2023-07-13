@@ -10,6 +10,8 @@
 #include "../utils/weight_init.h"
 #include "../optimizers/optimizer_base.h"
 #include "../core/backend.h"
+#include "../utils/tensor_shape.h"
+#include <sstream>
 
 namespace xsdnn {
 

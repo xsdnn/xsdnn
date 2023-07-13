@@ -8,6 +8,7 @@
 
 #include "tensor.h"
 #include <cassert>
+#include <iostream>
 
 namespace xsdnn {
 
@@ -30,6 +31,9 @@ public:
     size_t H;
     size_t D;
 };
+
+std::ostream& operator<<(std::ostream& out, const shape3d& obj);
+std::ostream& operator<<(std::ostream& out, const std::vector<shape3d>& obj);
 
 } // xsdnn
 

@@ -39,6 +39,16 @@ bool shape3d::operator!=(const shape3d &rhs) {
 size_t shape3d::area() const { return (size_t) W * H; }
 size_t shape3d::size() const { return (size_t) W * H * D; }
 
+std::ostream& operator<<(std::ostream& out, const shape3d& obj) {
+    out << "[" << obj.W << ", " << obj.H << ", " << obj.D << "]";
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const std::vector<shape3d>& obj) {
+    out << obj[0];
+    return out;
+}
+
 }
 
 
