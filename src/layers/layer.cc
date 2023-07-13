@@ -397,7 +397,6 @@ namespace xsdnn {
         next_node->prev_[last_node_data_concept_idx] = last_node->next_[next_node_data_concept_idx];
     }
 
-    // TODO: расширить описание
     void connection_mismatch(const layer& from, const layer& to) {
         std::ostringstream io;
         io << "\x1B[31m" << "Critical Error! Layer mismatch!" << std::endl;
