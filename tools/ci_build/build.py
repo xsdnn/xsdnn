@@ -162,8 +162,6 @@ def compile_onnx(protoc_path, source_dir):
     onnx_proto = source_dir + "/cmake/external/onnx/onnx"
     destination = source_dir + "/include/converter"
     subprocess.run([protoc_path, f"--cpp_out={destination}", f"--proto_path={onnx_proto}", "onnx.proto3"])
-    if not os.path.exists(source_dir + "/src/converter/onnx.proto3.pb.cc"):
-        shutil.move(destination + "/onnx.proto3.pb.cc", source_dir + "/src/converter")
 
 def run_build(build_tree):
     return subprocess.run(build_tree)
