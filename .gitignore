@@ -44,5 +44,5 @@ eigen/
 main.cpp
 test/simple_test.cc
 
-include/converter/onnx.proto3.pb.cc
-src/converter/onnx.proto3.pb.h
+include/converter/onnx.proto3.pb.h
+src/converter/onnx.proto3.pb.cc
