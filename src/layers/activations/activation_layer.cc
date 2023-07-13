@@ -44,7 +44,6 @@ void activation_layer::set_in_shape(const xsdnn::shape3d in_shape) {
 void
 activation_layer::forward_propagation(const std::vector<tensor_t *> &in_data,
                                       std::vector<tensor_t *> &out_data) {
-    // FIXME: А если data concept не лежит первым в векторе?
     const tensor_t& in_ = *in_data[0];
     tensor_t& out_ = *out_data[0];
 

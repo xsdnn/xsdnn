@@ -13,7 +13,6 @@ sgd::sgd(const sgd &) = default;
 sgd &sgd::operator=(const sgd &) = default;
 sgd::~sgd() = default;
 
-// TODO: можно ли оптимизировать? параллельный расчет, simd и прочее?
 void sgd::update(const mat_t &dw, mat_t &w) {
     if (weight_decay_ == 0.0f) {
         for (size_t i = 0; i < w.size(); ++i) {
@@ -26,4 +25,4 @@ void sgd::update(const mat_t &dw, mat_t &w) {
     }
 }
 
-} // xsnn
+} // xsdnn
