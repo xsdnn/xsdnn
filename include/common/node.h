@@ -84,6 +84,49 @@ private:
     std::vector<node*> next_;   // 'consumer'
 };
 
+/*
+ * Контейнер служит для упаковки нод одного типа,
+ * для последующего соединения в общий граф.
+ */
+template<typename T>
+struct node_container {
+public:
+    node_container(T l1, T l2) {
+        nodes_.push_back(l1);
+        nodes_.push_back(l2);
+    }
+
+    void add_node(T l) {
+        nodes_.push_back(l);
+    }
+
+    size_t size() const {
+        return nodes_.size();
+    }
+
+public:
+    std::vector<T> nodes_;
+};
+
+template<typename T>
+node_container<T*> operator , (T& l1, T& l2) {
+    return node_container<T*>(&l1, &l2);
+}
+
+template<typename T>
+node_container<T*> operator , (node_container<T*>& lhs, T& rhs) {
+    lhs.add_node(&rhs);
+    return lhs;
+}
+
+template<typename T, typename U>
+U& operator << (const node_container<T*>& lhs, U& rhs) {
+    for (size_t i = 0; i < lhs.size(); ++i) {
+        connect(lhs.nodes_[i], rhs, 0, i);
+    }
+    return rhs;
+}
+
 } // xsdnn
 
 #endif //XSDNN_NODE_H
