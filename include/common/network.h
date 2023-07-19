@@ -32,6 +32,7 @@ public:
 public:
     void init_weight();
     void set_num_threads(size_t num_threads) noexcept;
+    bool empty() const;
 
     mat_t predict(const mat_t& in);
     tensor_t predict(const tensor_t& in);
