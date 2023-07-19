@@ -84,47 +84,22 @@ private:
     std::vector<node*> next_;   // 'consumer'
 };
 
-/*
- * Контейнер служит для упаковки нод одного типа,
- * для последующего соединения в общий граф.
- */
-template<typename T>
-struct node_container {
-public:
-    node_container(T l1, T l2) {
-        nodes_.push_back(l1);
-        nodes_.push_back(l2);
-    }
-
-    void add_node(T l) {
-        nodes_.push_back(l);
-    }
-
-    size_t size() const {
-        return nodes_.size();
-    }
-
-public:
-    std::vector<T> nodes_;
-};
-
-template<typename T>
-node_container<T*> operator , (T& l1, T& l2) {
-    return node_container<T*>(&l1, &l2);
+template<typename T,
+        typename U,
+        typename std::enable_if<std::is_base_of<layer, T>::value>::type* = nullptr,
+        typename std::enable_if<std::is_base_of<layer, U>::value>::type* = nullptr>
+std::tuple<T*, U*> operator , (T& lhs, U& rhs) {
+    return std::tuple<T*, U*>(&lhs, &rhs);
 }
 
-template<typename T>
-node_container<T*> operator , (node_container<T*>& lhs, T& rhs) {
-    lhs.add_node(&rhs);
-    return lhs;
+template <typename NewNode, typename... TupleNode>
+std::tuple<TupleNode*..., NewNode*> operator , (const std::tuple<TupleNode*...> &tup, NewNode &el) {
+    return std::tuple_cat(tup, std::make_tuple(&el));
 }
 
-template<typename T, typename U>
-U& operator << (const node_container<T*>& lhs, U& rhs) {
-    for (size_t i = 0; i < lhs.size(); ++i) {
-        connect(lhs.nodes_[i], &rhs, 0, i);
-    }
-    return rhs;
+template <typename NewNode, typename... TupleNode>
+std::tuple<NewNode*, TupleNode*...> operator , (NewNode &el, const std::tuple<TupleNode*...> &tup) {
+    return std::tuple_cat(std::make_tuple(&el), tup);
 }
 
 } // xsdnn
