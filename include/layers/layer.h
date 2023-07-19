@@ -77,11 +77,15 @@ public:
 
     virtual
     size_t
-    fan_in_size() const = 0;
+    fan_in_size() const {
+        return in_shape()[0].W;
+    }
 
     virtual
     size_t
-    fan_out_size() const = 0;
+    fan_out_size() const {
+        return out_shape()[0].W;
+    }
 
     virtual
     void

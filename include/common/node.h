@@ -84,22 +84,39 @@ private:
     std::vector<node*> next_;   // 'consumer'
 };
 
-template<typename T,
-        typename U,
-        typename std::enable_if<std::is_base_of<layer, T>::value>::type* = nullptr,
-        typename std::enable_if<std::is_base_of<layer, U>::value>::type* = nullptr>
-std::tuple<T*, U*> operator , (T& lhs, U& rhs) {
-    return std::tuple<T*, U*>(&lhs, &rhs);
-}
+namespace detail {
 
-template <typename NewNode, typename... TupleNode>
-std::tuple<TupleNode*..., NewNode*> operator , (const std::tuple<TupleNode*...> &tup, NewNode &el) {
-    return std::tuple_cat(tup, std::make_tuple(&el));
-}
+template<typename T>
+class graph_builder {
+public:
+    graph_builder(T* main_node)
+    : main_node_(main_node),
+    curr_connected_idx(0) {}
 
-template <typename NewNode, typename... TupleNode>
-std::tuple<NewNode*, TupleNode*...> operator , (NewNode &el, const std::tuple<TupleNode*...> &tup) {
-    return std::tuple_cat(std::make_tuple(&el), tup);
+public:
+    template<typename ConnectedNode, typename... Args>
+    void connect_subgraph(ConnectedNode* node, Args*... args) {
+        connect_subgraph(node);
+        connect_subgraph(args...);
+    }
+
+    template<typename ConnectedNode>
+    void connect_subgraph(ConnectedNode* node) {
+        connect(node, main_node_, 0, curr_connected_idx);
+        curr_connected_idx += 1;
+    }
+
+private:
+    T* main_node_;
+    size_t curr_connected_idx;
+};
+
+} // detail
+
+template<typename MainNode, typename... Args>
+void connect_subgraph(MainNode& node, Args&... args) {
+    detail::graph_builder<MainNode> graphBuilder(&node);
+    graphBuilder.template connect_subgraph(&args...);
 }
 
 } // xsdnn

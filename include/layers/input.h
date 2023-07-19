@@ -23,8 +23,6 @@ public:
     std::vector<shape3d> in_shape() const;
     std::vector<shape3d> out_shape() const;
     std::string layer_type() const;
-    size_t fan_in_size() const;
-    size_t fan_out_size() const;
 
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,

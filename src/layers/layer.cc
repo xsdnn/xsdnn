@@ -394,8 +394,8 @@ namespace xsdnn {
             xs_error("Not alloc \"data\" on last node");
         }
 
-        next_node->prev_[last_node_data_concept_idx] = last_node->next_[next_node_data_concept_idx];
-        next_node->prev_[last_node_data_concept_idx]->add_next_node(next_node);
+        next_node->prev_[next_node_data_concept_idx] = last_node->next_[last_node_data_concept_idx];
+        next_node->prev_[next_node_data_concept_idx]->add_next_node(next_node);
     }
 
     void connection_mismatch(const layer& from, const layer& to) {

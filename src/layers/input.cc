@@ -20,14 +20,6 @@ std::string input::layer_type() const {
     return "input";
 }
 
-size_t input::fan_in_size() const {
-    return shape_.size();
-}
-
-size_t input::fan_out_size() const {
-    return shape_.size();
-}
-
 void input::forward_propagation(const std::vector<tensor_t *> &in_data,
                                 std::vector<tensor_t *> &out_data) {
     *out_data[0] = *in_data[0];
