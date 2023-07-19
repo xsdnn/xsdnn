@@ -395,6 +395,7 @@ namespace xsdnn {
         }
 
         next_node->prev_[last_node_data_concept_idx] = last_node->next_[next_node_data_concept_idx];
+        next_node->prev_[last_node_data_concept_idx]->add_next_node(next_node);
     }
 
     // TODO: расширить описание
