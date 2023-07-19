@@ -398,9 +398,19 @@ namespace xsdnn {
         next_node->prev_[last_node_data_concept_idx]->add_next_node(next_node);
     }
 
-    // TODO: расширить описание
     void connection_mismatch(const layer& from, const layer& to) {
-        throw xs_error("Connection mismatch error");
+        std::ostringstream io;
+        io << "\x1B[31m" << "Critical Error! Layer mismatch!" << std::endl;
+        io << "\x1B[33m" << "Layer's [N, N + 1]: " << from.layer_type() << " -> " << to.layer_type() << std::endl;
+
+        io << "\x1B[33m" << "N: in=" << from.in_data_size() << ", out=" << from.out_data_size()
+            << " | in_shape=" << from.in_shape() << ", out_shape=" << from.out_shape() << std::endl;
+
+        io << "\x1B[33m" << "N+1: in=" << to.in_data_size() << ", out=" << to.out_data_size()
+           << " | in_shape=" << to.in_shape() << ", out_shape=" << to.out_shape();
+
+        std::string message = io.str();
+        throw xs_error(message.c_str());
     }
 
 

@@ -11,7 +11,7 @@
 
 namespace xsdnn {
 
-class xs_error : std::exception {
+class xs_error : public std::exception {
 public:
     xs_error(const std::string& msg) : msg_(msg) {}
     const char* what() const throw() override;

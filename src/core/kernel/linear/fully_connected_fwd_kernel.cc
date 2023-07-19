@@ -17,8 +17,6 @@ void FullyConnectedFwdKernel::compute(OpContext &ctx, params::fully &p) {
     const tensor_t* b = p.has_bias_ ? &ctx.input_data(2) : nullptr;
     tensor_t& out = ctx.output_data(0);
 
-    tensorize::fill(out, (mm_scalar) 0.0f); // FIXME: Можно ли убрать это?
-
     core::backend_t engine = ctx.engine();
 
     if (engine == core::backend_t::xs) {
@@ -27,7 +25,7 @@ void FullyConnectedFwdKernel::compute(OpContext &ctx, params::fully &p) {
                                             p.has_bias_ ? (*b)[0] : mat_t(),
                                             out, p, ctx.parallelize(), ctx.num_threads());
     } else {
-        throw xs_error("Unsupported engine type"); // TODO: расширить на понятную ошибку
+        throw xs_error("fully_connected support only xs engine type!");
     }
 }
 
