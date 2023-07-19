@@ -12,6 +12,7 @@
 #include "include/layers/layer.h"
 #include "include/layers/fully_connected.h"
 #include "include/layers/input.h"
+#include "include/layers/add.h"
 
 #include "include/layers/activations/activation_layer.h"
 #include "include/layers/activations/relu.h"

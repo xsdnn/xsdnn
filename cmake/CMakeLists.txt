@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
 
 option(xsdnn_BUILD_TEST OFF)
