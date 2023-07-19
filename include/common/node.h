@@ -122,7 +122,7 @@ node_container<T*> operator , (node_container<T*>& lhs, T& rhs) {
 template<typename T, typename U>
 U& operator << (const node_container<T*>& lhs, U& rhs) {
     for (size_t i = 0; i < lhs.size(); ++i) {
-        connect(lhs.nodes_[i], rhs, 0, i);
+        connect(lhs.nodes_[i], &rhs, 0, i);
     }
     return rhs;
 }
