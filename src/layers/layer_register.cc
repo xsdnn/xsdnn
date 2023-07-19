@@ -7,12 +7,14 @@
 #include <utils/macro.h>
 
 #include <layers/fully_connected.h>
+#include <layers/input.h>
 
 #include <layers/activations/relu.h>
 
 namespace xsdnn {
 
 XS_REGISTER_LAYER_FOR_NET(fully_connected)
+XS_REGISTER_LAYER_FOR_NET(input)
 
 
 /*
