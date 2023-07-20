@@ -13,16 +13,16 @@
 #include <layers/activations/relu.h>
 
 namespace xsdnn {
-
-XS_REGISTER_LAYER_FOR_NET(fully_connected)
-XS_REGISTER_LAYER_FOR_NET(input)
-XS_REGISTER_LAYER_FOR_NET(add)
+//
+//XS_REGISTER_LAYER_FOR_NET(fully_connected)
+//XS_REGISTER_LAYER_FOR_NET(input)
+//XS_REGISTER_LAYER_FOR_NET(add)
 
 
 /*
  * Activations
  */
 
-XS_REGISTER_LAYER_FOR_NET(relu)
+//XS_REGISTER_LAYER_FOR_NET(relu)
 
 }

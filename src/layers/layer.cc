@@ -413,10 +413,4 @@ namespace xsdnn {
         throw xs_error(message.c_str());
     }
 
-
-    XS_REGISTER_WEIGHT_INIT(weight_init::xavier)
-    XS_REGISTER_WEIGHT_INIT(weight_init::constant)
-
-    XS_REGISTER_BIAS_INIT(weight_init::xavier)
-    XS_REGISTER_BIAS_INIT(weight_init::constant)
 } // xsdnn

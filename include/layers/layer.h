@@ -55,10 +55,14 @@ public:
     std::vector<tensor_type> out_types() const;
 
     template<typename WeightInit>
-    void weight_init(const WeightInit& f);
+    void weight_init(const WeightInit& f) {
+        weight_init_ = std::make_shared<WeightInit>(f);
+    }
 
     template<typename BiasInit>
-    void bias_init(const BiasInit& f);
+    void bias_init(const BiasInit& f) {
+        bias_init_ = std::make_shared<BiasInit>(f);
+    }
 
     void
     post_update() {}
