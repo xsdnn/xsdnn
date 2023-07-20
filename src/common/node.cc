@@ -25,6 +25,27 @@ namespace xsdnn {
         return next_;
     }
 
+    std::vector<node *> node::prev_nodes() const {
+        std::vector<node *> vecs;
+        for (auto &e : prev_) {
+            if (e && e->prev()) {
+                vecs.insert(vecs.end(), e->prev());
+            }
+        }
+        return vecs;
+    }
+
+    std::vector<node *> node::next_nodes() const {
+        std::vector<node *> vecs;
+        for (auto &e : next_) {
+            if (e) {
+                auto n = e->next();
+                vecs.insert(vecs.end(), n.begin(), n.end());
+            }
+        }
+        return vecs;
+    }
+
     tensor_t* edge::get_data() {
         return &data_;
     }

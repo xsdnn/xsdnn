@@ -16,6 +16,7 @@
 
 namespace xsdnn {
 
+template<typename Net>
 class network {
 public:
     typedef std::vector<layer*>::iterator iterator;
@@ -27,7 +28,19 @@ public:
     ~network() = default;
 
     template<typename L>
-    network& operator<<(L &&layer);
+    network& operator<<(L &&layer) {
+        net_.owner_nodes_.push_back(std::make_shared<typename std::remove_reference<L>::type>(layer));
+        net_.nodes_.push_back(net_.owner_nodes_.back().get());
+
+        if (net_.nodes_.size() > 1) {
+            auto last_node = net_.nodes_[net_.nodes_.size() - 2];
+            auto next_node = net_.nodes_[net_.nodes_.size() - 1];
+            auto data_idx = find_data_idx(last_node->out_types(), next_node->in_types());
+            connect(last_node, next_node, data_idx.first, data_idx.second);
+        }
+        net_.check_connectivity();
+        return *this;
+    }
 
 public:
     void init_weight();
@@ -38,6 +51,9 @@ public:
     tensor_t predict(const tensor_t& in);
     std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
 
+    /*
+     * For sequency execution
+     */
     void train(loss* loss,
                optimizer* opt,
                const tensor_t& input,
@@ -45,6 +61,16 @@ public:
                size_t batch_size,
                size_t epoch);
 
+
+    /*
+     * For graph execution
+     */
+    void train(loss* loss,
+               optimizer* opt,
+               const std::vector<tensor_t>& input, /*multiple input's*/
+               const std::vector<tensor_t>& label, /*multiple output's*/
+               size_t batch_size,
+               size_t epoch);
 
 protected:
     void fit(loss* l_ptr,
@@ -82,8 +108,12 @@ protected:
                const std::vector<tensor_t>& net_out,
                const std::vector<tensor_t>& label);
 
+    friend void construct_graph(network<graph>& net,
+                                const std::vector<layer*>& input,
+                                const std::vector<layer*>& out);
+
 private:
-    sequential net_;
+    Net net_;
 };
 
 } // xsdnn

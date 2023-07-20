@@ -79,7 +79,37 @@ public:
 protected:
     void reorder_output(const std::vector<tensor_t>& input,
                         std::vector<tensor_t>& output);
+    template<typename Net>
     friend class network;
+};
+
+class graph : public nodes {
+public:
+    graph();
+    virtual ~graph();
+
+public:
+    virtual void backward(const std::vector<tensor_t>& start);
+    virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
+
+    /*
+     * Задача метода построить последовательность отсортированных нод
+     * для forward и backward проходов нейросети.
+     */
+    void construct(const std::vector<layer*>& input,
+                 const std::vector<layer*>& output);
+
+protected:
+    void reorder_output(std::vector<tensor_t>& output);
+
+    size_t find_index(const std::vector<node *> &nodes, layer *target);
+
+    template<typename Net>
+    friend class network;
+
+private:
+    std::vector<layer*> input_layers_;
+    std::vector<layer*> output_layers_;
 };
 
 } // xsdnn

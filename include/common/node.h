@@ -35,6 +35,9 @@ public:
 
     const std::vector<edgeptr_t>& next() const;
 
+    std::vector<node*> prev_nodes() const;
+    std::vector<node*> next_nodes() const;
+
 protected:
     node() = delete;
 

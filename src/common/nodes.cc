@@ -4,6 +4,8 @@
 //
 
 #include <common/nodes.h>
+#include <unordered_map>
+#include <algorithm>
 
 namespace xsdnn {
 
@@ -127,6 +129,121 @@ namespace xsdnn {
 
         for (size_t sample = 0; sample < sample_count; ++sample) {
             output[sample][0] = (input[0])[sample];
+        }
+    }
+
+    graph::graph() {}
+    graph::~graph() {}
+
+    std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
+        size_t input_data_concept_count = start[0].size();
+
+        if (input_data_concept_count != input_layers_.size()) {
+            throw xs_error("input size mismatch");
+        }
+
+        std::vector<tensor_t> reordered_data;
+        reorder_input(start, reordered_data);
+        assert(reordered_data.size() == input_data_concept_count);
+
+        for (size_t channel_index = 0; channel_index < input_data_concept_count; channel_index++) {
+            input_layers_[channel_index]->set_in_data({ reordered_data[channel_index] });
+        }
+
+        for (auto l : nodes_) {
+            l->forward();
+        }
+        std::vector<tensor_t> out;
+        reorder_output(out);
+        return out;
+    }
+
+    void graph::backward(const std::vector<tensor_t> &start) {
+        size_t output_data_concept_count = start[0].size();
+
+        if (output_data_concept_count != output_layers_.size()) {
+            throw xs_error("input size mismatch");
+        }
+
+        std::vector<tensor_t> reordered_grad;
+        reorder_input(start, reordered_grad);
+        assert(reordered_grad.size() == output_data_concept_count);
+
+        for (size_t i = 0; i < output_data_concept_count; i++) {
+            output_layers_[i]->set_out_grads({ reordered_grad[i] });
+        }
+
+        for (auto l = nodes_.rbegin(); l != nodes_.rend(); l++) {
+            (*l)->backward();
+        }
+    }
+
+    void graph::construct(const std::vector<layer *> &input,
+                        const std::vector<layer *> &output) {
+        std::vector<layer *> sorted;
+        std::vector<node *> input_nodes(input.begin(), input.end());
+        std::unordered_map<node *, std::vector<uint8_t>> removed_edge;
+
+        while (!input_nodes.empty()) {
+            sorted.push_back(dynamic_cast<layer *>(input_nodes.back()));
+            input_nodes.pop_back();
+
+            layer *curr              = sorted.back();
+            std::vector<node *> next = curr->next_nodes();
+
+            for (size_t i = 0; i < next.size(); i++) {
+                if (!next[i]) continue;
+                // remove edge between next[i] and current
+                if (removed_edge.find(next[i]) == removed_edge.end()) {
+                    removed_edge[next[i]] =
+                            std::vector<uint8_t>(next[i]->prev_nodes().size(), 0);
+                }
+
+                std::vector<uint8_t> &removed = removed_edge[next[i]];
+                removed[find_index(next[i]->prev_nodes(), curr)] = 1;
+
+                if (std::all_of(removed.begin(), removed.end(),
+                                [](uint8_t x) { return x == 1; })) {
+                    input_nodes.push_back(next[i]);
+                }
+            }
+        }
+
+        for (auto& n : sorted) {
+            nodes_.push_back(n);
+        }
+
+        input_layers_ = input;
+        output_layers_ = output;
+
+        setup(false);
+    }
+
+    size_t graph::find_index(const std::vector<node *> &nodes, layer *target) {
+        for (size_t i = 0; i < nodes.size(); i++) {
+            if (nodes[i] == static_cast<node *>(&*target)) return i;
+        }
+        throw xs_error("invalid connection");
+    }
+
+    void graph::reorder_output(std::vector<tensor_t> &output) {
+        std::vector<tensor_t> out;
+        size_t output_channel_count = output_layers_.size();
+        for (size_t output_channel = 0; output_channel < output_channel_count;
+             ++output_channel) {
+            out = output_layers_[output_channel]->output();
+
+            size_t sample_count = out[0].size();
+            if (output_channel == 0) {
+                assert(output.empty());
+                output.resize(sample_count, tensor_t(output_channel_count));
+            }
+
+            assert(output.size() == sample_count);
+
+            for (size_t sample = 0; sample < sample_count; ++sample) {
+                output[sample][output_channel] = out[0][sample];
+            }
         }
     }
 

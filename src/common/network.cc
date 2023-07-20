@@ -7,44 +7,54 @@
 
 namespace xsdnn {
 
-void network::init_weight() {
+template<typename Net>
+void network<Net>::init_weight() {
     net_.setup(true);
 }
 
-void network::set_num_threads(size_t num_threads) noexcept {
+template<typename Net>
+void network<Net>::set_num_threads(size_t num_threads) noexcept {
     net_.user_num_threads_ = num_threads;
 }
 
-bool network::empty() const {
+template<typename Net>
+bool network<Net>::empty() const {
     return net_.nodes_.empty();
 }
 
-mat_t network::predict(const mat_t &in) {
+template<typename Net>
+mat_t network<Net>::predict(const mat_t &in) {
     return fprop(in);
 }
 
-tensor_t network::predict(const tensor_t &in) {
+template<typename Net>
+tensor_t network<Net>::predict(const tensor_t &in) {
     return fprop(in);
 }
 
-std::vector<tensor_t> network::predict(const std::vector<tensor_t> &in) {
+template<typename Net>
+std::vector<tensor_t> network<Net>::predict(const std::vector<tensor_t> &in) {
     return fprop(in);
 }
 
 
-mat_t network::fprop(const mat_t &in) {
+template<typename Net>
+mat_t network<Net>::fprop(const mat_t &in) {
     return fprop(tensor_t{in})[0];
 }
 
-tensor_t network::fprop(const tensor_t &in) {
+template<typename Net>
+tensor_t network<Net>::fprop(const tensor_t &in) {
     return fprop(std::vector<tensor_t>{ in })[0];
 }
 
-std::vector<tensor_t> network::fprop(const std::vector<tensor_t> &in) {
+template<typename Net>
+std::vector<tensor_t> network<Net>::fprop(const std::vector<tensor_t> &in) {
     return net_.forward(in);
 }
 
-void network::train(loss *loss, optimizer *opt, const tensor_t &input,
+template<typename Net>
+void network<Net>::train(loss *loss, optimizer *opt, const tensor_t &input,
                     const std::vector<size_t> &label, size_t batch_size, size_t epoch) {
     std::vector<tensor_t> input_tensor, output_tensor;
     newaxis(input, input_tensor);
@@ -53,7 +63,16 @@ void network::train(loss *loss, optimizer *opt, const tensor_t &input,
     fit(loss, opt, input_tensor, output_tensor, batch_size, epoch);
 }
 
-void network::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
+template<typename Net>
+void network<Net>::train(xsdnn::loss *loss, xsdnn::optimizer *opt, const std::vector<tensor_t> &input,
+                         const std::vector<tensor_t> &label, size_t batch_size, size_t epoch) {
+    std::vector<tensor_t> input_tensor(input.begin(), input.end());
+    std::vector<tensor_t> output_tensor(label.begin(), label.end());
+    fit(loss, opt, input_tensor, output_tensor, batch_size, epoch);
+}
+
+template<typename Net>
+void network<Net>::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
                   std::vector<tensor_t> &label, size_t batch_size, size_t epoch) {
     net_.setup(true);
     size_t num_threads = net_.user_num_threads_ > 0
@@ -74,7 +93,8 @@ void network::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
     }
 }
 
-void network::fit_batch(loss *l_ptr, optimizer *opt_ptr, const tensor_t *input,
+template<typename Net>
+void network<Net>::fit_batch(loss *l_ptr, optimizer *opt_ptr, const tensor_t *input,
                         const tensor_t *label, size_t batch_size) {
     if (batch_size == 1) {
         throw xs_error("Not implemented yet"); // FIXME: доделать
@@ -85,14 +105,16 @@ void network::fit_batch(loss *l_ptr, optimizer *opt_ptr, const tensor_t *input,
     }
 }
 
-void network::compute(loss *l_ptr, optimizer *opt_ptr, const tensor_t *input,
+template<typename Net>
+void network<Net>::compute(loss *l_ptr, optimizer *opt_ptr, const tensor_t *input,
                       const tensor_t *label, size_t batch_size) {
     std::vector<tensor_t> in_batch(&input[0], &input[0] + batch_size);
     std::vector<tensor_t> l_batch(&label[0], &label[0] + batch_size);
     bprop(l_ptr, opt_ptr, fprop(in_batch), l_batch);
 }
 
-void network::bprop(loss* l_ptr,
+template<typename Net>
+void network<Net>::bprop(loss* l_ptr,
                     optimizer* opt_ptr,
                     const std::vector<tensor_t> &net_out,
                     const std::vector<tensor_t> &label) {
@@ -103,14 +125,16 @@ void network::bprop(loss* l_ptr,
     net_.update_weights(opt_ptr);
 }
 
-void network::newaxis(const tensor_t &in, std::vector<tensor_t> &out) {
+template<typename Net>
+void network<Net>::newaxis(const tensor_t &in, std::vector<tensor_t> &out) {
     out.reserve(in.size());
     for (size_t i = 0; i < in.size(); ++i) {
         out.emplace_back(tensor_t{ in[i] });
     }
 }
 
-void network::label2vec(const std::vector<size_t> &label,
+template<typename Net>
+void network<Net>::label2vec(const std::vector<size_t> &label,
                         std::vector<tensor_t>& output) {
     size_t num_label = label.size();
     size_t outdim = net_.out_data_size();
@@ -128,4 +152,14 @@ void network::label2vec(const std::vector<size_t> &label,
     newaxis(predef_vec, output);
 }
 
+void construct_graph(network<graph>& net,
+                     const std::vector<layer*>& input,
+                     const std::vector<layer*>& out) {
+    net.net_.construct(input, out);
+}
+
 } // xsdnn
+
+template class xsdnn::network<xsdnn::sequential>;
+template class xsdnn::network<xsdnn::graph>;
+
