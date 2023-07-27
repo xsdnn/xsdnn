@@ -43,6 +43,9 @@ public:
 
     void clear_grads();
 
+    void save_model(const std::string& filename, const std::string& network_name_);
+    void load_model(const std::string& filename);
+
     size_t size() const;
     iterator begin();
     iterator end();
@@ -75,6 +78,9 @@ public:
     virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
 
     void check_connectivity();
+
+    void save_connections();
+    void load_connections();
 
 protected:
     void reorder_output(const std::vector<tensor_t>& input,

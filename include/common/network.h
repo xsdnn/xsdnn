@@ -72,7 +72,7 @@ public:
                size_t batch_size,
                size_t epoch);
 
-    void save(const std::string filename) const;
+    void save(const std::string filename);
     void load(const std::string filename);
 
 protected:

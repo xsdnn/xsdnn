@@ -6,6 +6,8 @@
 #include <common/nodes.h>
 #include <unordered_map>
 #include <algorithm>
+#include <serializer/cerial.h>
+#include <fstream>
 
 namespace xsdnn {
 
@@ -64,6 +66,65 @@ namespace xsdnn {
 
     size_t nodes::out_data_size() const {
         return nodes_.back()->out_data_size();
+    }
+
+    void nodes::save_model(const std::string& filename,
+                           const std::string& network_name_) {
+        layer_register();
+
+        xs::GraphInfo* graph = new xs::GraphInfo;
+
+        xs::NodeInfo* node;
+        xs::TensorInfo* tensor;
+
+        for (size_t i = 0; i < nodes_.size(); ++i) {
+            node = graph->add_nodes();
+            tensor = graph->add_tensors();
+            serializer::get_instance().save(node, tensor, nodes_[i]);
+        }
+        xs::ModelInfo model;
+        model.set_name(network_name_);
+        model.set_allocated_graph(graph);
+
+        std::ofstream ofs(filename, std::ios_base::out | std::ios_base::binary);
+        model.SerializeToOstream(&ofs);
+
+        if (typeid(*this) == typeid(sequential)) {
+            dynamic_cast<sequential *>(this)->save_connections();
+        } else {
+            throw xs_error("NotImplementedYet");
+        }
+    }
+
+    void nodes::load_model(const std::string& filename) {
+        std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
+        if (!ifs.is_open()) {
+            xs_error("Error when opening model_filename file.");
+        }
+        xs::ModelInfo model;
+        if (!model.ParseFromIstream(&ifs)) {
+            xs_error("Error when parse model.");
+        }
+
+        xs::GraphInfo model_graph = model.graph();
+
+        nodes_.clear();
+        owner_nodes_.clear();
+
+        for (size_t i = 0; i < model_graph.nodes_size(); ++i) {
+            serializer::get_instance().load(&model_graph.nodes(i),
+                                            &model_graph.tensors(i),
+                                            owner_nodes_);
+        }
+
+        for (auto &n : owner_nodes_) {
+            nodes_.push_back(&*n);
+        }
+        if (typeid(*this) == typeid(sequential)) {
+            dynamic_cast<sequential *>(this)->load_connections();
+        } else {
+            throw xs_error("NotImplementedYet");
+        }
     }
 
     void nodes::reorder_input(const std::vector<tensor_t> &input,
@@ -131,6 +192,17 @@ namespace xsdnn {
             output[sample][0] = (input[0])[sample];
         }
     }
+
+    void sequential::load_connections() {
+        for(size_t i = 0; i < nodes_.size() - 1; ++i) {
+            auto last_node = nodes_[i];
+            auto next_node = nodes_[i + 1];
+            auto data_idx = find_data_idx(last_node->out_types(), next_node->in_types());
+            connect(last_node, next_node, data_idx.first, data_idx.second);
+        }
+    }
+
+    void sequential::save_connections() {}
 
     graph::graph() {}
     graph::~graph() {}

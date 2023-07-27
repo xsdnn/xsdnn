@@ -4,7 +4,6 @@
 //
 
 #include <common/network.h>
-#include <serializer/cerial.h>
 #include <fstream>
 
 namespace xsdnn {
@@ -155,56 +154,13 @@ void network<Net>::label2vec(const std::vector<size_t> &label,
 }
 
 template<typename Net>
-void network<Net>::save(const std::string filename) const {
-    layer_register();
-
-    xs::GraphInfo* graph = new xs::GraphInfo;
-
-    xs::NodeInfo* node;
-    xs::TensorInfo* tensor;
-
-    for (size_t i = 0; i < net_.nodes_.size(); ++i) {
-        node = graph->add_nodes();
-        tensor = graph->add_tensors();
-        serializer::get_instance().save(node, tensor, net_.nodes_[i]);
-    }
-    xs::ModelInfo model;
-    model.template set_name(network_name_);
-    model.set_allocated_graph(graph);
-
-    std::ofstream ofs(filename, std::ios_base::out | std::ios_base::binary);
-    model.SerializeToOstream(&ofs);
+void network<Net>::save(const std::string filename) {
+    net_.save_model(filename, network_name_);
 }
 
 template<typename Net>
 void network<Net>::load(const std::string filename) {
-    std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
-    if (!ifs.is_open()) {
-        xs_error("Error when opening model_filename file.");
-    }
-    xs::ModelInfo model;
-    if (!model.ParseFromIstream(&ifs)) {
-        xs_error("Error when parse model.");
-    }
-
-    xs::GraphInfo model_graph = model.graph();
-
-    net_.nodes_.clear();
-    net_.owner_nodes_.clear();
-
-    for (size_t i = 0; i < model_graph.nodes_size(); ++i) {
-        serializer::get_instance().load(&model_graph.nodes(i),
-                                        &model_graph.tensors(i),
-                                        net_.owner_nodes_);
-    }
-
-    for (auto &n : net_.owner_nodes_) {
-        net_.nodes_.push_back(&*n);
-    }
-
-    // TODO: сделать семантику сохранения через nodes
-    // TODO: сделать правильный коннект для seq сеток
-    // TODO: реализовать сохранения для графовой сети с коннектами.
+    net_.load_model(filename);
 }
 
 void construct_graph(network<graph>& net,
