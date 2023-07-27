@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package xs;
+
+message TensorInfo {
+    enum TensorType {
+        UNDEFINED = 0;
+        FLOAT = 1;
+    }
+
+    string name = 1;
+    TensorType type = 2;
+    repeated float float_data = 3;
+    repeated int64 dims = 4;
+}
+
+message AttributeInfo {
+    enum AttributeType {
+        UNDEFINED = 0;
+        FLOAT = 1;
+        INT = 2;
+        STRING = 3;
+    }
+
+    string name = 1;
+    AttributeType type = 2;
+
+    float f = 3;
+    int64 i = 4;
+    string s = 5;
+
+    repeated float floats = 6;
+    repeated int64 ints = 7;
+    repeated string strings = 8;
+}
+
+message NodeInfo {
+    string name = 1;
+    repeated AttributeInfo attribute = 2;
+}
+
+message GraphInfo {
+    repeated NodeInfo nodes = 1;
+    repeated TensorInfo tensors = 2;
+}
+
+message ModelInfo {
+    string name = 1;
+    GraphInfo graph = 7;
+}

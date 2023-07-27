@@ -11,4 +11,13 @@
 #define XS_2D_1D_CONVERTER(i, j, lda) i * lda + j
 #define XS_NUM_THREAD 12
 
+#define XS_LAYER_SAVE_INTERNAL_REGISTER(layer_typename)                                             \
+serializer::get_instance().register_saver(#layer_typename, save<layer_typename>);                   \
+
+#define XS_LAYER_LOAD_INTERNAL_REGISTER(layer_typename)                                             \
+if (node->name() == #layer_typename) {                                                              \
+    std::shared_ptr<layer_typename> layer = cerial::deserialize(node, tensor);                      \
+    owner_nodes.push_back(layer);                                                                   \
+}
+
 #endif //XSDNN_MACRO_H

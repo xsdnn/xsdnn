@@ -67,6 +67,7 @@ include(xsdnn_activations.cmake)
 include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
+include(xsdnn_serializer.cmake)
 
 add_library(xsdnn STATIC
         ${mmpack_common_src}
@@ -78,11 +79,12 @@ add_library(xsdnn STATIC
         ${xsdnn_activations_src}
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
-        ${xsdnn_utils_src})
+        ${xsdnn_utils_src}
+        ${xsdnn_serializer_src})
 
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
 endif (xsdnn_BUILD_TEST)
 
 add_executable(simple_test ${XSROOT}/test/simple_test.cc)
-target_link_libraries(simple_test GTest::gtest_main xsdnn)
+target_link_libraries(simple_test GTest::gtest_main xsdnn protobuf)

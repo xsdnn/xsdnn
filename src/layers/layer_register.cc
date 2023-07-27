@@ -1,28 +1,44 @@
 //
-// Created by rozhin on 04.05.23.
+// Created by rozhin on 25.07.2023.
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include <common/network.h>
-#include <utils/macro.h>
+#include "serializer/cerial.h"
 
-#include <layers/fully_connected.h>
-#include <layers/input.h>
-#include <layers/add.h>
+/*
+ * Save layer register
+ */
+#define XS_LAYER_SAVE_REGISTER                                  \
+XS_LAYER_SAVE_INTERNAL_REGISTER(fully_connected)
 
-#include <layers/activations/relu.h>
 
-namespace xsdnn {
-//
-//XS_REGISTER_LAYER_FOR_NET(fully_connected)
-//XS_REGISTER_LAYER_FOR_NET(input)
-//XS_REGISTER_LAYER_FOR_NET(add)
+
 
 
 /*
- * Activations
+ * Load layer register
  */
+#define XS_LAYER_LOAD_REGISTER                                  \
+XS_LAYER_LOAD_INTERNAL_REGISTER(fully_connected)
 
-//XS_REGISTER_LAYER_FOR_NET(relu)
+
+
+
+
+
+
+
+
+
+namespace xsdnn {
+
+void layer_register() {
+    XS_LAYER_SAVE_REGISTER
+}
+
+void serializer::load(const xs::NodeInfo *node, const xs::TensorInfo *tensor,
+                      std::vector<std::shared_ptr<layer>> &owner_nodes) {
+    XS_LAYER_LOAD_REGISTER
+}
 
 }

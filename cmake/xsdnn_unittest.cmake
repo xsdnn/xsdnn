@@ -6,7 +6,7 @@ set(XSDNN_TEST_ROOT ${XSROOT}/test)
 
 macro(AddTest TARGET SOURCES)
     add_executable(${TARGET} ${SOURCES} )
-    target_link_libraries(${TARGET} GTest::gtest_main xsdnn)
+    target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf)
     add_test(${TARGET} ${TARGET})
 endmacro()
 

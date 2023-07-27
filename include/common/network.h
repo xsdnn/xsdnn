@@ -22,7 +22,7 @@ public:
     typedef std::vector<layer*>::iterator iterator;
     typedef std::vector<layer*>::const_iterator const_iterator;
 
-    network() = default;
+    explicit network(const std::string network_name) : network_name_(network_name) {}
     network(const network&) = default;
     network& operator=(const network&) = default;
     ~network() = default;
@@ -72,6 +72,9 @@ public:
                size_t batch_size,
                size_t epoch);
 
+    void save(const std::string filename) const;
+    void load(const std::string filename);
+
 protected:
     void fit(loss* l_ptr,
              optimizer* opt_ptr,
@@ -114,6 +117,7 @@ protected:
 
 private:
     Net net_;
+    std::string network_name_;
 };
 
 } // xsdnn
