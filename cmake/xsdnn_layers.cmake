@@ -5,6 +5,7 @@ set(
         "${XSROOT_SRC}/layers/input.cc"
         "${XSROOT_SRC}/layers/add.cc"
         "${XSROOT_SRC}/layers/abs.cc"
+        "${XSROOT_SRC}/layers/acos.cc"
         "${XSROOT_SRC}/layers/layer_register.cc"
 )
 

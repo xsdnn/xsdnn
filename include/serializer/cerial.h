@@ -129,6 +129,15 @@ struct cerial {
         node->set_name("abs");
     }
 
+    /*
+    * Abs
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::acos* layer) {
+        node->set_name("acos");
+    }
+
 };
 
     template<>
@@ -179,6 +188,14 @@ struct cerial {
     std::shared_ptr<xsdnn::abs> cerial::deserialize(const xs::NodeInfo* node,
                                               const xs::TensorInfo* tensor) {
         std::shared_ptr<xsdnn::abs> l = std::make_shared<xsdnn::abs>();
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<xsdnn::acos> cerial::deserialize(const xs::NodeInfo* node,
+                                                    const xs::TensorInfo* tensor) {
+        std::shared_ptr<xsdnn::acos> l = std::make_shared<xsdnn::acos>();
         return l;
     }
 

@@ -10,6 +10,7 @@
 #include "input.h"
 #include "add.h"
 #include "abs.h"
+#include "acos.h"
 
 
 #include "activations/relu.h"
