@@ -7,7 +7,7 @@
 #define XSDNN_CERIAL_H
 
 #include "xs.proto3.pb.h"
-#include "../layers/fully_connected.h"
+#include "../layers/layers.h"
 #include "../utils/macro.h"
 
 namespace xsdnn {
@@ -21,10 +21,16 @@ namespace xsdnn {
  */
 
 struct cerial {
+    template<typename T>
+    inline
+    std::shared_ptr<T> deserialize(const xs::NodeInfo* node,
+                                     const xs::TensorInfo* tensor);
     /*
      * Fully Connected
      */
-    inline static void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const fully_connected* layer) {
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const fully_connected* layer) {
         node->set_name("fully_connected");
         xs::AttributeInfo* in_size = node->add_attribute();
         xs::AttributeInfo* out_size = node->add_attribute();
@@ -52,9 +58,73 @@ struct cerial {
         layer->save(tensor);
     }
 
+    /*
+     * Input
+     */
     inline
     static
-    std::shared_ptr<fully_connected> deserialize(const xs::NodeInfo* node,
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const input* layer) {
+        node->set_name("input");
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* D = node->add_attribute();
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->shape_.W);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->shape_.H);
+
+        D->set_name("depth");
+        D->set_type(xs::AttributeInfo_AttributeType_INT);
+        D->set_i(layer->shape_.D);
+    }
+
+    /*
+     * Add
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const add* layer) {
+        node->set_name("add");
+        xs::AttributeInfo* n_input = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* D = node->add_attribute();
+
+        n_input->set_name("n_input");
+        n_input->set_type(xs::AttributeInfo_AttributeType_INT);
+        n_input->set_i(layer->n_input_);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->shape_.W);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->shape_.H);
+
+        D->set_name("depth");
+        D->set_type(xs::AttributeInfo_AttributeType_INT);
+        D->set_i(layer->shape_.D);
+    }
+
+    /*
+     * Relu
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const relu* layer) {
+        node->set_name("relu");
+    }
+
+};
+
+    template<>
+    inline
+    std::shared_ptr<fully_connected> cerial::deserialize(const xs::NodeInfo* node,
                                                  const xs::TensorInfo* tensor) {
         size_t in_size = node->attribute(0).i();
         size_t out_size = node->attribute(1).i();
@@ -63,7 +133,37 @@ struct cerial {
         l->load(tensor);
         return l;
     }
-};
+
+    template<>
+    inline
+    std::shared_ptr<input> cerial::deserialize(const xs::NodeInfo* node,
+                                       const xs::TensorInfo* tensor) {
+        size_t W = node->attribute(0).i();
+        size_t H = node->attribute(1).i();
+        size_t D = node->attribute(2).i();
+        std::shared_ptr<input> l = std::make_shared<input>(shape3d(W, H, D));
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<add> cerial::deserialize(const xs::NodeInfo* node,
+                                               const xs::TensorInfo* tensor) {
+        size_t n_input = node->attribute(0).i();
+        size_t W = node->attribute(1).i();
+        size_t H = node->attribute(2).i();
+        size_t D = node->attribute(3).i();
+        std::shared_ptr<add> l = std::make_shared<add>(n_input, shape3d(W, H, D));
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<relu> cerial::deserialize(const xs::NodeInfo* node,
+                                             const xs::TensorInfo* tensor) {
+        std::shared_ptr<relu> l = std::make_shared<relu>();
+        return l;
+    }
 
 class serializer {
 public:
@@ -100,11 +200,6 @@ private:
 template<typename T>
 void save(xs::NodeInfo* n, xs::TensorInfo* t, const layer* l) {
     cerial::serialize(n, t, dynamic_cast<const T*>(l));
-}
-
-template<typename T>
-void load(const xs::NodeInfo* n, const xs::TensorInfo* t, layer* l) {
-    cerial::deserialize(n, t, dynamic_cast<T*>(l));
 }
 
 void layer_register();

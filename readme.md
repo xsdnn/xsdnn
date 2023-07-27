@@ -34,3 +34,7 @@
 ``[sample][input_layer_id][dim]``.   
 4. В пространстве пользователя при работе с графовым представлением нейросети порядок выходных данных описывается так:
 ``[sample][output_layer_id][dim]``.   
+
+# Idea's for feature
+
+1. Сделать концепт InferenceSession

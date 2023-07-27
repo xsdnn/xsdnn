@@ -56,6 +56,7 @@ public:
 private:
     size_t n_input_;
     shape3d shape_;
+    friend struct cerial;
 };
 
 } // xsdnn

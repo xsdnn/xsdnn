@@ -188,7 +188,6 @@ void network<Net>::load(const std::string filename) {
     }
 
     xs::GraphInfo model_graph = model.graph();
-    // TODO: как по названию ноды добавлять в сетку?
 
     net_.nodes_.clear();
     net_.owner_nodes_.clear();
@@ -198,6 +197,14 @@ void network<Net>::load(const std::string filename) {
                                         &model_graph.tensors(i),
                                         net_.owner_nodes_);
     }
+
+    for (auto &n : net_.owner_nodes_) {
+        net_.nodes_.push_back(&*n);
+    }
+
+    // TODO: сделать семантику сохранения через nodes
+    // TODO: сделать правильный коннект для seq сеток
+    // TODO: реализовать сохранения для графовой сети с коннектами.
 }
 
 void construct_graph(network<graph>& net,

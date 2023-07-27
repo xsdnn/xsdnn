@@ -27,7 +27,7 @@ std::pair<mm_scalar, mm_scalar> relu::out_value_range() const {
 }
 
 std::string relu::layer_type() const {
-    return "relu_activation";
+    return "relu";
 }
 
 } // xsdnn

@@ -3,14 +3,17 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "serializer/cerial.h"
+#include <serializer/cerial.h>
+
 
 /*
  * Save layer register
  */
 #define XS_LAYER_SAVE_REGISTER                                  \
-XS_LAYER_SAVE_INTERNAL_REGISTER(fully_connected)
-
+XS_LAYER_SAVE_INTERNAL_REGISTER(fully_connected)                \
+XS_LAYER_SAVE_INTERNAL_REGISTER(input)                          \
+XS_LAYER_SAVE_INTERNAL_REGISTER(add)                            \
+XS_LAYER_SAVE_INTERNAL_REGISTER(relu)
 
 
 
@@ -19,8 +22,11 @@ XS_LAYER_SAVE_INTERNAL_REGISTER(fully_connected)
  * Load layer register
  */
 #define XS_LAYER_LOAD_REGISTER                                  \
-XS_LAYER_LOAD_INTERNAL_REGISTER(fully_connected)
-
+cerial c;                                                       \
+XS_LAYER_LOAD_INTERNAL_REGISTER(fully_connected)                \
+XS_LAYER_LOAD_INTERNAL_REGISTER(input)                          \
+XS_LAYER_LOAD_INTERNAL_REGISTER(add)                            \
+XS_LAYER_LOAD_INTERNAL_REGISTER(relu)
 
 
 

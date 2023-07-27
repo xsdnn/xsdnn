@@ -36,6 +36,7 @@ public:
 
 private:
     shape3d shape_;
+    friend struct cerial;
 };
 
 } // xsdnn

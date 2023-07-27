@@ -111,6 +111,7 @@ public:
     std::vector<shape3d>
     out_shape() const = 0;
 
+
     virtual
     std::string
     layer_type() const = 0;

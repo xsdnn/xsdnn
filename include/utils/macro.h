@@ -16,7 +16,7 @@ serializer::get_instance().register_saver(#layer_typename, save<layer_typename>)
 
 #define XS_LAYER_LOAD_INTERNAL_REGISTER(layer_typename)                                             \
 if (node->name() == #layer_typename) {                                                              \
-    std::shared_ptr<layer_typename> layer = cerial::deserialize(node, tensor);                      \
+    std::shared_ptr<layer_typename> layer = c.deserialize<layer_typename>(node, tensor);            \
     owner_nodes.push_back(layer);                                                                   \
 }
 

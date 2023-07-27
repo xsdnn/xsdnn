@@ -163,6 +163,12 @@ def compile_onnx(protoc_path, source_dir):
     destination = source_dir + "/include/converter"
     subprocess.run([protoc_path, f"--cpp_out={destination}", f"--proto_path={onnx_proto}", "onnx.proto3"])
 
+def compile_xs(protoc_path, source_dir):
+    protoc_path = resolve_executable_path(protoc_path)
+    onnx_proto = source_dir + "/include/serializer"
+    destination = source_dir + "/include/serializer"
+    subprocess.run([protoc_path, f"--cpp_out={destination}", f"--proto_path={onnx_proto}", "xs.proto3"])
+
 def run_build(build_tree):
     return subprocess.run(build_tree)
 
@@ -191,7 +197,8 @@ def main():
     cmake_path = resolve_executable_path(args.cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
-    compile_onnx(args.protoc_path, source_dir)
+    # compile_onnx(args.protoc_path, source_dir)
+    compile_xs(args.protoc_path, source_dir)
     run_build(cmake_args)
     # Start making
     make(build_dir, args)
