@@ -53,6 +53,8 @@ private:
     core::OpContext bwd_ctx_;
     std::shared_ptr<core::FullyConnectedFwdKernel> fwd_kernel_;
     std::shared_ptr<core::FullyConnectedBwdKernel> bwd_kernel_;
+
+    friend struct cerial;
 };
 
 } // xsdnn
