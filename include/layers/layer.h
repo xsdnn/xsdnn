@@ -64,10 +64,10 @@ public:
         /*
          * Проверим, что размеры входного тензора равны размерам весов.
          */
-        assert(src->dims_size() == all_w.size());
+        assert(src->dims_size() == static_cast<int>(all_w.size()));
         size_t src_size = 0;
         size_t all_w_size = 0;
-        for (size_t d = 0; d < src->dims_size(); ++d) {
+        for (size_t d = 0; d < static_cast<size_t>(src->dims_size()); ++d) {
             src_size += src->dims(d);
             all_w_size += all_w[d]->size();
         }

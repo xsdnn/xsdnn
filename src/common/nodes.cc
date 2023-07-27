@@ -111,7 +111,7 @@ namespace xsdnn {
         nodes_.clear();
         owner_nodes_.clear();
 
-        for (size_t i = 0; i < model_graph.nodes_size(); ++i) {
+        for (size_t i = 0; i < static_cast<size_t>(model_graph.nodes_size()); ++i) {
             serializer::get_instance().load(&model_graph.nodes(i),
                                             &model_graph.tensors(i),
                                             owner_nodes_);

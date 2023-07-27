@@ -9,6 +9,7 @@
 #include "fully_connected.h"
 #include "input.h"
 #include "add.h"
+#include "abs.h"
 
 
 #include "activations/relu.h"
