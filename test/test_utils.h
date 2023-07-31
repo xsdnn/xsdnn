@@ -20,9 +20,17 @@ void init(mm_scalar* ptr, size_t rows, size_t cols) {
     }
 }
 
+void value_init(mm_scalar* ptr, mm_scalar value, size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        *ptr = value;
+        ptr += 1;
+    }
+}
+
 void random_init(mm_scalar* ptr, size_t size) {
     for (size_t i = 0; i < size; ++i) {
-        *ptr = static_cast<mm_scalar>(rand() / RAND_MAX);
+        mm_scalar value = static_cast <mm_scalar> (rand()) / static_cast <mm_scalar> (RAND_MAX);
+        *ptr = value;
         ptr += 1;
     }
 }
