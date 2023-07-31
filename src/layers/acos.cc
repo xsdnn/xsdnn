@@ -5,6 +5,7 @@
 
 #include <layers/acos.h>
 #include <utils/macro.h>
+#include <core/framework/threading.h>
 
 namespace xsdnn {
 
@@ -26,14 +27,14 @@ namespace xsdnn {
 
     void acos::forward_propagation(const std::vector<tensor_t *> &in_data,
                                   std::vector<tensor_t *> &out_data) {
-        tensor_t& in = *in_data[0];
+        const tensor_t& in = *in_data[0];
         tensor_t& out = *out_data[0];
 
-        for (size_t sample = 0; sample < in.size(); ++sample) {
+        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, in.size(), [&](size_t sample) {
             for (size_t j = 0; j < in[sample].size(); ++j) {
                 out[sample][j] = std::acos(in[sample][j]);
             }
-        }
+        });
     }
 
     void acos::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
@@ -42,13 +43,13 @@ namespace xsdnn {
         XS_UNUSED_PARAMETER(out_data);
 
         tensor_t& dx = *in_grad[0];
-        tensor_t& dLz = *out_grad[0];
+        const tensor_t& dLz = *out_grad[0];
 
-        for (size_t sample = 0; sample < dx.size(); ++sample) {
+        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, dx.size(), [&](size_t sample) {
             for (size_t j = 0; j < dx[sample].size(); ++j) {
                 dx[sample][j] = - 1 / (std::sqrt(1 - dLz[sample][j] * dLz[sample][j]));
             }
-        }
+        });
     }
 
 } // xsdnn

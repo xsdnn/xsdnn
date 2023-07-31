@@ -11,6 +11,7 @@
 #include "add.h"
 #include "abs.h"
 #include "acos.h"
+#include "and.h"
 
 
 #include "activations/relu.h"
