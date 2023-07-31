@@ -52,8 +52,7 @@ namespace xsdnn {
             const mat_t& in2_sample = in2[sample];
             mat_t& out_sample = out[sample];
 
-            // TODO: impl simd
-            throw xs_error("NotImplementedYet");
+            mmpack::MmMulAdd(in1_sample.data(), in2_sample.data(), out_sample.data(), in1_sample.size());
         });
     }
 
@@ -74,8 +73,8 @@ namespace xsdnn {
             mat_t& d_in2_sample = d_in2[sample];
             const mat_t& dLz_sample = dLz[sample];
 
-            // TODO: impl simd
-            throw xs_error("NotImplementedYet");
+            mmpack::MmMulAdd(in2_sample.data(), dLz_sample.data(), d_in1_sample.data(), dLz_sample.size());
+            mmpack::MmMulAdd(in1_sample.data(), dLz_sample.data(), d_in2_sample.data(), dLz_sample.size());
         });
     }
 
