@@ -11,23 +11,28 @@ macro(AddTest TARGET SOURCES)
 endmacro()
 
 AddTest(
-        mmpack_sgemm_test
+        mmpack_gemm_test
         ${XSDNN_TEST_ROOT}/test_sgemm.cc
 )
 
 AddTest(
-        mmpack_sgemm_perfomance_test
+        mmpack_gemm_perfomance_test
         ${XSDNN_TEST_ROOT}/test_sgemm_perfomance.cc
 )
 
 AddTest(
-        mmpack_sv2mm_test
+        mmpack_v2mm_test
         ${XSDNN_TEST_ROOT}/test_sv2mm.cc
 )
 
 AddTest(
-        mmpack_sdot_test
+        mmpack_dot_test
         ${XSDNN_TEST_ROOT}/test_dot.cc
+)
+
+AddTest(
+        mmpack_muladd_test
+        ${XSDNN_TEST_ROOT}/test_muladd.cc
 )
 
 AddTest(

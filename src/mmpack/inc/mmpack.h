@@ -2,3 +2,4 @@
 #include "../lib/gemm.h"
 #include "../lib/v2mm.h"
 #include "../lib/dot.h"
+#include "../lib/muladd.h"

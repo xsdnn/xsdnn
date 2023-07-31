@@ -613,7 +613,7 @@ Return Value:
 --*/
 {
     bool BIsAligned;
-    while(ColNum > 16) {
+    while(ColNum >= 16) {
         size_t y = RowNum;
 
         Mm_Float32x4 t0;

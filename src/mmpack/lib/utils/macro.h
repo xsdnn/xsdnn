@@ -88,3 +88,5 @@
 #define MM_SGEMM_STRIDE_K       128
 #define MM_SGEMM_STRIDE_N       128
 #define MM_SGEMM_TRANSA_ROWS    12
+
+#define MM_SMULADD_STRIDE       128 * 128
