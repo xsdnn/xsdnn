@@ -39,9 +39,21 @@ message NodeInfo {
     repeated AttributeInfo attribute = 2;
 }
 
+message ConnectionInfo {
+    int64 last_node_idx;
+    int64 next_node_idx;
+    int64 last_node_data_concept_idx;
+    int64 next_node_data_concept_idx;
+}
+
 message GraphInfo {
     repeated NodeInfo nodes = 1;
     repeated TensorInfo tensors = 2;
+
+    // Опциональное поля для хранения связей в графовой нейросети
+    repeated int64 inputs = 3;
+    repeated int64 outputs = 4;
+    ConnectionInfo connections = 5;
 }
 
 message ModelInfo {
