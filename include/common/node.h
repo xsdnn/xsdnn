@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <vector>
+#include <algorithm>
 #include "../utils/tensor_shape.h"
 #include "../utils/util.h"
 #include "../utils/tensor.h"
@@ -34,6 +35,18 @@ public:
     std::vector<edgeptr_t>& next();
 
     const std::vector<edgeptr_t>& next() const;
+
+    size_t prev_port(const edge &e) const {
+        auto it = std::find_if(prev_.begin(), prev_.end(),
+                               [&](edgeptr_t ep) { return ep.get() == &e; });
+        return (size_t)std::distance(prev_.begin(), it);
+    }
+
+    size_t next_port(const edge &e) const {
+        auto it = std::find_if(next_.begin(), next_.end(),
+                               [&](edgeptr_t ep) { return ep.get() == &e; });
+        return (size_t)std::distance(next_.begin(), it);
+    }
 
     std::vector<node*> prev_nodes() const;
     std::vector<node*> next_nodes() const;

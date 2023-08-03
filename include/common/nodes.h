@@ -79,8 +79,8 @@ public:
 
     void check_connectivity();
 
-    void save_connections();
-    void load_connections();
+    void save_connections(xs::GraphInfo* Graph);
+    void load_connections(xs::GraphInfo* Graph);
 
 protected:
     void reorder_output(const std::vector<tensor_t>& input,
@@ -104,6 +104,9 @@ public:
      */
     void construct(const std::vector<layer*>& input,
                  const std::vector<layer*>& output);
+
+    void save_connections(xs::GraphInfo* Graph);
+    void load_connections(xs::GraphInfo* Graph);
 
 protected:
     void reorder_output(std::vector<tensor_t>& output);

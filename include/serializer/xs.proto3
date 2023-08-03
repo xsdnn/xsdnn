@@ -40,10 +40,10 @@ message NodeInfo {
 }
 
 message ConnectionInfo {
-    int64 last_node_idx;
-    int64 next_node_idx;
-    int64 last_node_data_concept_idx;
-    int64 next_node_data_concept_idx;
+    int64 last_node_idx = 1;
+    int64 next_node_idx = 2;
+    int64 last_node_data_concept_idx = 3;
+    int64 next_node_data_concept_idx = 4;
 }
 
 message GraphInfo {
@@ -53,10 +53,10 @@ message GraphInfo {
     // Опциональное поля для хранения связей в графовой нейросети
     repeated int64 inputs = 3;
     repeated int64 outputs = 4;
-    ConnectionInfo connections = 5;
+    repeated ConnectionInfo connections = 5;
 }
 
 message ModelInfo {
     string name = 1;
-    GraphInfo graph = 7;
+    GraphInfo graph = 2;
 }

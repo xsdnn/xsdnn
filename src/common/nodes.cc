@@ -4,6 +4,8 @@
 //
 
 #include <common/nodes.h>
+#include <utils/graph.h>
+#include <utils/macro.h>
 #include <unordered_map>
 #include <algorithm>
 #include <serializer/cerial.h>
@@ -72,28 +74,29 @@ namespace xsdnn {
                            const std::string& network_name_) {
         layer_register();
 
-        xs::GraphInfo* graph = new xs::GraphInfo;
+        xs::GraphInfo* Graph = new xs::GraphInfo;
 
         xs::NodeInfo* node;
         xs::TensorInfo* tensor;
 
         for (size_t i = 0; i < nodes_.size(); ++i) {
-            node = graph->add_nodes();
-            tensor = graph->add_tensors();
+            node = Graph->add_nodes();
+            tensor = Graph->add_tensors();
             serializer::get_instance().save(node, tensor, nodes_[i]);
         }
+
+        if (typeid(*this) == typeid(sequential)) {
+            dynamic_cast<sequential *>(this)->save_connections(Graph);
+        } else {
+            dynamic_cast<graph *>(this)->save_connections(Graph);
+        }
+
         xs::ModelInfo model;
         model.set_name(network_name_);
-        model.set_allocated_graph(graph);
+        model.set_allocated_graph(Graph);
 
         std::ofstream ofs(filename, std::ios_base::out | std::ios_base::binary);
         model.SerializeToOstream(&ofs);
-
-        if (typeid(*this) == typeid(sequential)) {
-            dynamic_cast<sequential *>(this)->save_connections();
-        } else {
-            throw xs_error("NotImplementedYet");
-        }
     }
 
     void nodes::load_model(const std::string& filename) {
@@ -121,9 +124,9 @@ namespace xsdnn {
             nodes_.push_back(&*n);
         }
         if (typeid(*this) == typeid(sequential)) {
-            dynamic_cast<sequential *>(this)->load_connections();
+            dynamic_cast<sequential *>(this)->load_connections(&model_graph);
         } else {
-            throw xs_error("NotImplementedYet");
+            dynamic_cast<graph *>(this)->load_connections(&model_graph);
         }
     }
 
@@ -193,7 +196,7 @@ namespace xsdnn {
         }
     }
 
-    void sequential::load_connections() {
+    void sequential::load_connections(xs::GraphInfo* Graph) {
         for(size_t i = 0; i < nodes_.size() - 1; ++i) {
             auto last_node = nodes_[i];
             auto next_node = nodes_[i + 1];
@@ -202,7 +205,7 @@ namespace xsdnn {
         }
     }
 
-    void sequential::save_connections() {}
+    void sequential::save_connections(xs::GraphInfo* Graph) {}
 
     graph::graph() {}
     graph::~graph() {}
@@ -265,7 +268,7 @@ namespace xsdnn {
 
             for (size_t i = 0; i < next.size(); i++) {
                 if (!next[i]) continue;
-                // remove edge between next[i] and current
+
                 if (removed_edge.find(next[i]) == removed_edge.end()) {
                     removed_edge[next[i]] =
                             std::vector<uint8_t>(next[i]->prev_nodes().size(), 0);
@@ -316,6 +319,59 @@ namespace xsdnn {
             for (size_t sample = 0; sample < sample_count; ++sample) {
                 output[sample][output_channel] = out[0][sample];
             }
+        }
+    }
+
+    void graph::save_connections(xs::GraphInfo *Graph) {
+        std::unordered_map<node*, size_t> nd_idx;
+        size_t idx = 0;
+
+        for (auto nd : nodes_) {
+            nd_idx[nd] = idx++;
+        }
+
+        for (auto nd: input_layers_) {
+            Graph->add_inputs(nd_idx[nd]);
+        }
+
+        for (auto nd: output_layers_) {
+            Graph->add_outputs(nd_idx[nd]);
+        }
+
+        for (auto l : input_layers_) {
+            dfs_graph_traverse(l,
+                               [](layer& l) { XS_UNUSED_PARAMETER(l); },
+                               [&](edge& e) {
+               auto next         = e.next();
+               size_t head_index = e.prev()->next_port(e);
+
+               for (auto n : next) {
+                   size_t tail_index = n->prev_port(e);
+                   xs::ConnectionInfo* connect = Graph->add_connections();
+                   connect->set_last_node_idx(nd_idx[e.prev()]);
+                   connect->set_next_node_idx(nd_idx[n]);
+                   connect->set_last_node_data_concept_idx(head_index);
+                   connect->set_next_node_data_concept_idx(tail_index);
+               }
+            });
+        }
+    }
+
+    void graph::load_connections(xs::GraphInfo *Graph) {
+        for (size_t i = 0; i < Graph->connections_size(); ++i) {
+            const xs::ConnectionInfo& c_ = Graph->connections(i);
+            connect(nodes_[c_.last_node_idx()],
+                    nodes_[c_.next_node_idx()],
+                    c_.last_node_data_concept_idx(),
+                    c_.next_node_data_concept_idx());
+        }
+
+        for (size_t i = 0; i < Graph->inputs_size(); ++i) {
+            input_layers_.push_back(nodes_[Graph->inputs(i)]);
+        }
+
+        for (size_t i = 0; i < Graph->outputs_size(); ++i) {
+            output_layers_.push_back(nodes_[Graph->outputs(i)]);
         }
     }
 
