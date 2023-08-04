@@ -33,8 +33,7 @@ namespace xsdnn {
                                    std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
         XS_UNUSED_PARAMETER(in_data);
         XS_UNUSED_PARAMETER(out_data);
-        XS_UNUSED_PARAMETER(out_grad);
-        XS_UNUSED_PARAMETER(in_grad);
+        *in_grad[0] = *out_grad[0];
     }
 
 } // xsdnn
