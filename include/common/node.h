@@ -135,6 +135,8 @@ void connect_subgraph(MainNode& node, Args&... args) {
     graphBuilder.template connect_subgraph(&args...);
 }
 
+// TODO: add rvalue impl
+
 } // xsdnn
 
 #endif //XSDNN_NODE_H

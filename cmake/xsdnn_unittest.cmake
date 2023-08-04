@@ -44,3 +44,8 @@ AddTest(
         xsdnn_relu_test
         ${XSDNN_TEST_ROOT}/test_relu.cc
 )
+
+AddTest(
+        xsdnn_network_serialization_test
+        ${XSDNN_TEST_ROOT}/test_network_serialization.cc
+)

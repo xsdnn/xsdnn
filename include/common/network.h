@@ -101,6 +101,46 @@ protected:
     void label2vec(const std::vector<size_t>& label,
                    std::vector<tensor_t>& output);
 
+    friend bool operator == (network<Net>& lhs, network<Net>& rhs) {
+        /*
+         * Check topological sorted vector
+         */
+        if (lhs.net_.size() != rhs.net_.size()) {
+            return false;
+        }
+
+        for (size_t i = 0; i <  lhs.net_.size(); ++i) {
+            layer* lhs_layer = lhs.net_[i];
+            layer* rhs_layer = rhs.net_[i];
+            if (lhs_layer->layer_type() != rhs_layer->layer_type()) {
+                return false;
+            }
+        }
+
+        /*
+         * Check weights data
+         */
+
+        for (size_t i = 0; i <  lhs.net_.size(); ++i) {
+            layer* lhs_layer = lhs.net_[i];
+            layer* rhs_layer = rhs.net_[i];
+
+            std::vector<mat_t*> lhs_weights = lhs_layer->weights();
+            std::vector<mat_t*> rhs_weights = rhs_layer->weights();
+
+            if (lhs_weights.size() != rhs_weights.size()) {
+                return false;
+            }
+
+            for (size_t j = 0; j < lhs_weights.size(); ++j) {
+                if (*lhs_weights[j] != *rhs_weights[j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 protected:
     mat_t fprop(const mat_t& in);
     std::vector<mat_t> fprop(const std::vector<mat_t>& in);

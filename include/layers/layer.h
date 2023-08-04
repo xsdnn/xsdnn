@@ -73,9 +73,10 @@ public:
         }
         assert(src_size == all_w_size);
 
+        size_t idx = 0;
         for (size_t i = 0; i < all_w.size(); ++i) {
             for (size_t j = 0; j < all_w[i]->size(); ++j) {
-                (*all_w[i])[j] = src->float_data(i * j + j);
+                (*all_w[i])[j] = src->float_data(idx++); // FIXME: а если будет не float?
             }
         }
         initialized_ = true;
