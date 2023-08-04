@@ -12,6 +12,7 @@
 #include "abs.h"
 #include "acos.h"
 #include "and.h"
+#include "flatten.h"
 
 
 #include "activations/relu.h"

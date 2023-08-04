@@ -22,6 +22,7 @@ public:
     typedef std::vector<layer*>::iterator iterator;
     typedef std::vector<layer*>::const_iterator const_iterator;
 
+    network() : network_name_("default_name") {}
     explicit network(const std::string network_name) : network_name_(network_name) {}
     network(const network&) = default;
     network& operator=(const network&) = default;

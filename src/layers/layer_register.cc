@@ -16,7 +16,8 @@ XS_LAYER_SAVE_INTERNAL_REGISTER(add)                            \
 XS_LAYER_SAVE_INTERNAL_REGISTER(abs)                            \
 XS_LAYER_SAVE_INTERNAL_REGISTER(acos)                           \
 XS_LAYER_SAVE_INTERNAL_REGISTER(and_layer)                      \
-XS_LAYER_SAVE_INTERNAL_REGISTER(relu)                           \
+XS_LAYER_SAVE_INTERNAL_REGISTER(flatten)                        \
+XS_LAYER_SAVE_INTERNAL_REGISTER(relu)
 
 
 
@@ -32,6 +33,7 @@ XS_LAYER_LOAD_INTERNAL_REGISTER(add)                            \
 XS_LAYER_LOAD_INTERNAL_REGISTER(abs)                            \
 XS_LAYER_LOAD_INTERNAL_REGISTER(acos)                           \
 XS_LAYER_LOAD_INTERNAL_REGISTER(and_layer)                      \
+XS_LAYER_LOAD_INTERNAL_REGISTER(flatten)                        \
 XS_LAYER_LOAD_INTERNAL_REGISTER(relu)
 
 

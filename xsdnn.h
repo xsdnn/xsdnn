@@ -10,13 +10,8 @@
 #include "include/utils/tensor.h"
 
 #include "include/layers/layer.h"
-#include "include/layers/fully_connected.h"
-#include "include/layers/input.h"
-#include "include/layers/add.h"
-#include "include/layers/abs.h"
-
 #include "include/layers/activations/activation_layer.h"
-#include "include/layers/activations/relu.h"
+#include "include/layers/layers.h"
 
 #include "include/loss/loss_base.h"
 #include "include/loss/mse_loss.h"
