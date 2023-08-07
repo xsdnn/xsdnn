@@ -17,7 +17,7 @@ void compute_mean(const tensor_t& in, size_t channels, size_t spatial_size, mat_
         for (size_t c = 0; c < channels; ++c) {
             mm_scalar& m = mean.at(c);
             const auto start = in[sample].begin() + (c * spatial_size);
-            std::accumulate(start, start + spatial_size, m);
+            m = std::accumulate(start, start + spatial_size, m);
         }
     }
     std::transform(mean.begin(), mean.end(), mean.begin(),
@@ -62,8 +62,8 @@ void batch_normalization_fwd_xs_impl(const tensor_t& in,
                                      params::bnorm& p,
                                      bool parallelize,
                                      size_t nthreads) {
-    mat_t& mean = (p.phase_ == op_mode::train) ? *p.mean_running_ : *p.mean_;
-    mat_t& stddev = (p.phase_ == op_mode::train) ? *p.stddev_running_ : *p.stddev_;
+    mat_t& mean = (p.phase_ == op_mode::train) ? p.param_holder["mean_running_"] : p.param_holder["mean_"];
+    mat_t& stddev = (p.phase_ == op_mode::train) ? p.param_holder["stddev_running_"] : p.param_holder["stddev_"];
 
     if (p.phase_ == op_mode::train) {
         compute_moments(in, p.in_shape_, mean, stddev, p.eps_);

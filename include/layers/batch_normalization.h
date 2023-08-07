@@ -19,7 +19,7 @@ public:
         : layer({tensor_type::data, tensor_type::weight, tensor_type::bias},
                 {tensor_type::data}) {
         set_params(momentum, epsilon, phase);
-        init_backend();
+        init_backend(engine);
     }
 
 public:
@@ -40,7 +40,7 @@ public:
 
 private:
     void set_params(mm_scalar momentum, mm_scalar epsilon, op_mode phase);
-    void init_backend();
+    void init_backend(core::backend_t engine);
 
 private:
     params::bnorm params_;

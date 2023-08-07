@@ -7,6 +7,7 @@
 #define XSDNN_PARAMS_H
 
 #include <cstddef>
+#include <unordered_map>
 #include "../../utils/tensor_shape.h"
 #include "../../utils/util.h"
 
@@ -24,12 +25,7 @@ struct bnorm {
     mm_scalar momentum_;
     mm_scalar eps_;
     op_mode phase_;
-
-    mat_t* mean_running_;
-    mat_t* stddev_running_;
-
-    mat_t* mean_;
-    mat_t* stddev_;
+    std::unordered_map<std::string, mat_t> param_holder;
 
     bool statistic_initialized {false};
 };

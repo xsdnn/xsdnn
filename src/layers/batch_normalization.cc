@@ -35,9 +35,12 @@ void batch_norm::set_params(mmpack::mm_scalar momentum,
     params_.phase_ = phase;
 }
 
-void batch_norm::init_backend() {
+void batch_norm::init_backend(core::backend_t engine) {
     fwd_kernel_.reset(new core::BatchNormalizationFwdKernel);
     bwd_kernel_.reset(new core::BatchNormalizationBwdKernel);
+    this->weight_init(weight_init::constant(1.0f));
+    this->bias_init(weight_init::constant(0.0f));
+    set_backend(engine);
 }
 
 void batch_norm::forward_propagation(const std::vector<tensor_t *> &in_data,
@@ -48,6 +51,11 @@ void batch_norm::forward_propagation(const std::vector<tensor_t *> &in_data,
     fwd_ctx_.set_num_threads(this->num_threads_);
 
     fwd_kernel_->compute(fwd_ctx_, params_);
+}
+
+void batch_norm::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
+                                  std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
+
 }
 
 } // xsdnn

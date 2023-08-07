@@ -49,3 +49,9 @@ AddTest(
         xsdnn_network_serialization_test
         ${XSDNN_TEST_ROOT}/test_network_serialization.cc
 )
+
+AddTest(
+        xsdnn_batch_norm_test
+        ${XSDNN_TEST_ROOT}/test_batch_norm.cc
+)
+
