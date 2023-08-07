@@ -75,7 +75,7 @@ void network<Net>::train(xsdnn::loss *loss, xsdnn::optimizer *opt, const std::ve
 template<typename Net>
 void network<Net>::fit(loss *l_ptr, optimizer *opt_ptr, std::vector<tensor_t> &input,
                   std::vector<tensor_t> &label, size_t batch_size, size_t epoch) {
-    net_.setup(true);
+    net_.setup(false);
     size_t num_threads = net_.user_num_threads_ > 0
                                                 ? net_.user_num_threads_
                                                 : std::thread::hardware_concurrency() / 2;

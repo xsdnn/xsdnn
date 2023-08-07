@@ -27,7 +27,7 @@ ReferenceMulAdd(
         C += 1;
     }
 }
-#endif
+#else
 
 MM_STRONG_INLINE
 void
@@ -382,6 +382,8 @@ Return Value:
         } while (Count > 0);
     }
 }
+
+#endif
 
 void
 MmMulAdd(

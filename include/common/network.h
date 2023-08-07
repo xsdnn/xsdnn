@@ -142,6 +142,10 @@ protected:
         return true;
     }
 
+    friend void construct_graph(network<graph>& net,
+                                const std::vector<layer*>& input,
+                                const std::vector<layer*>& out);
+
 protected:
     mat_t fprop(const mat_t& in);
     std::vector<mat_t> fprop(const std::vector<mat_t>& in);
@@ -152,14 +156,15 @@ protected:
                const std::vector<tensor_t>& net_out,
                const std::vector<tensor_t>& label);
 
-    friend void construct_graph(network<graph>& net,
-                                const std::vector<layer*>& input,
-                                const std::vector<layer*>& out);
 
 private:
     Net net_;
     std::string network_name_;
 };
+
+    void construct_graph(network<graph>& net,
+                         const std::vector<layer*>& input,
+                         const std::vector<layer*>& out);
 
 } // xsdnn
 

@@ -29,6 +29,12 @@ std::pair<size_t, size_t> find_data_idx(const std::vector<tensor_type>& t1,
 
 
 std::vector<tensor_type> define_input_bias_condition(bool has_bias);
+
+enum class op_mode {
+    inference = 0,
+    train = 1
+};
+
 }
 
 #endif //XSDNN_UTIL_H
