@@ -101,6 +101,7 @@ public:
         bias_init_ = std::make_shared<BiasInit>(f);
     }
 
+    virtual
     void
     post_update() {}
 

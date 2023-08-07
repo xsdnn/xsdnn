@@ -34,10 +34,10 @@ void BatchNormalizationFwdKernel::compute(xsdnn::core::OpContext &ctx, params::b
 void BatchNormalizationFwdKernel::init_statistics(params::bnorm &p) {
     size_t in_channels = p.in_shape_.D;
 
-    p.param_holder["mean_running_"] = mat_t(in_channels);
-    p.param_holder["stddev_running_"] = mat_t(in_channels);
-    p.param_holder["mean_"] = mat_t(in_channels);
-    p.param_holder["stddev_"] = mat_t(in_channels);
+    p.stat_holder["mean_running_"] = mat_t(in_channels);
+    p.stat_holder["stddev_running_"] = mat_t(in_channels);
+    p.stat_holder["mean_"] = mat_t(in_channels);
+    p.stat_holder["stddev_"] = mat_t(in_channels);
 
     p.statistic_initialized = true;
 }

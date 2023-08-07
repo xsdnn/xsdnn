@@ -25,7 +25,7 @@ struct bnorm {
     mm_scalar momentum_;
     mm_scalar eps_;
     op_mode phase_;
-    std::unordered_map<std::string, mat_t> param_holder;
+    std::unordered_map<std::string, mat_t> stat_holder;
 
     bool statistic_initialized {false};
 };

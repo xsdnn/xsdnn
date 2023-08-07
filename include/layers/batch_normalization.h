@@ -38,6 +38,8 @@ public:
                      std::vector<tensor_t*>&       out_grad,
                      std::vector<tensor_t*>&       in_grad);
 
+    void post_update();
+
 private:
     void set_params(mm_scalar momentum, mm_scalar epsilon, op_mode phase);
     void init_backend(core::backend_t engine);

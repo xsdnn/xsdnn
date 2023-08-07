@@ -62,8 +62,8 @@ void batch_normalization_fwd_xs_impl(const tensor_t& in,
                                      params::bnorm& p,
                                      bool parallelize,
                                      size_t nthreads) {
-    mat_t& mean = (p.phase_ == op_mode::train) ? p.param_holder["mean_running_"] : p.param_holder["mean_"];
-    mat_t& stddev = (p.phase_ == op_mode::train) ? p.param_holder["stddev_running_"] : p.param_holder["stddev_"];
+    mat_t& mean = (p.phase_ == op_mode::train) ? p.stat_holder["mean_running_"] : p.stat_holder["mean_"];
+    mat_t& stddev = (p.phase_ == op_mode::train) ? p.stat_holder["stddev_running_"] : p.stat_holder["stddev_"];
 
     if (p.phase_ == op_mode::train) {
         compute_moments(in, p.in_shape_, mean, stddev, p.eps_);

@@ -58,4 +58,17 @@ void batch_norm::back_propagation(const std::vector<tensor_t *> &in_data, const 
 
 }
 
+void batch_norm::post_update() {
+    mat_t& mean_ = params_.stat_holder["mean_"];
+    mat_t& stddev_ = params_.stat_holder["stddev_"];
+    mat_t& mean_running_ = params_.stat_holder["mean_running_"];
+    mat_t& stddev_running_ = params_.stat_holder["stddev_running_"];
+    mm_scalar momentum_ = params_.momentum_;
+
+    for (size_t i = 0; i < mean_.size(); i++) {
+        mean_[i] = momentum_ * mean_[i] + (1 - momentum_) * mean_running_[i];
+        stddev_[i] = momentum_ * stddev_[i] + (1 - momentum_) * stddev_running_[i];
+    }
+}
+
 } // xsdnn
