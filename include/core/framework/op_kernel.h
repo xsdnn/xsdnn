@@ -21,6 +21,7 @@ public:
 
 public:
     virtual void compute(core::OpContext& ctx, params::fully& p) {}
+    virtual void compute(core::OpContext& ctx, params::bnorm& p) {}
 };
 
     } // core

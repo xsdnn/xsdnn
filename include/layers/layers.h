@@ -13,6 +13,7 @@
 #include "acos.h"
 #include "and.h"
 #include "flatten.h"
+#include "batch_normalization.h"
 
 
 #include "activations/relu.h"
