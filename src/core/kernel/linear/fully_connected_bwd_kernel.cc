@@ -31,7 +31,7 @@ void FullyConnectedBwdKernel::compute(xsdnn::core::OpContext &ctx, params::fully
                                             dLz,
                                             p,paralellize, ctx.num_threads());
     } else {
-        throw xs_error("Unsupported engine type");
+        throw xs_error("[fully_connected backward] unsupported engine type");
     }
 }
 

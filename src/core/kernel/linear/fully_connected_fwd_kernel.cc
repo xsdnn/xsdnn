@@ -25,7 +25,7 @@ void FullyConnectedFwdKernel::compute(OpContext &ctx, params::fully &p) {
                                             p.has_bias_ ? (*b)[0] : mat_t(),
                                             out, p, ctx.parallelize(), ctx.num_threads());
     } else {
-        throw xs_error("fully_connected support only xs engine type!");
+        throw xs_error("[fully_connected forward] unsuported engine type");
     }
 }
 
