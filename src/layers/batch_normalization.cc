@@ -55,7 +55,12 @@ void batch_norm::forward_propagation(const std::vector<tensor_t *> &in_data,
 
 void batch_norm::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
                                   std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
+    bwd_ctx_.set_in_out(in_data, out_data, out_grad, in_grad);
+    bwd_ctx_.set_engine(engine());
+    bwd_ctx_.set_parallelize(parallelize());
+    bwd_ctx_.set_num_threads(this->num_threads_);
 
+    bwd_kernel_->compute(bwd_ctx_, params_);
 }
 
 void batch_norm::post_update() {
