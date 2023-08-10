@@ -59,4 +59,20 @@ std::vector<tensor_type> define_input_bias_condition(bool has_bias) {
     }
 }
 
+std::ostream& operator<<(std::ostream& out, tensor_type type) {
+    switch (type) {
+        case tensor_type::data:
+            out << "data";
+            break;
+        case tensor_type::weight:
+            out << "weight";
+            break;
+        case tensor_type::bias:
+            out << "bias";
+            break;
+    }
+    return out;
+}
+
+
 } // xsdnn

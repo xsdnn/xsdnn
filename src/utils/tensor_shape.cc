@@ -40,7 +40,7 @@ size_t shape3d::area() const { return (size_t) W * H; }
 size_t shape3d::size() const { return (size_t) W * H * D; }
 
 std::ostream& operator<<(std::ostream& out, const shape3d& obj) {
-    out << "[" << obj.W << ", " << obj.H << ", " << obj.D << "]";
+    out << "[" << obj.D << ", " << obj.H << ", " << obj.W << "]";
     return out;
 }
 
