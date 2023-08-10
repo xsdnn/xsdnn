@@ -43,6 +43,9 @@ public:
         return *this;
     }
 
+    const layer *operator[](size_t index) const { return net_[index]; }
+    layer *operator[](size_t index) { return net_[index]; }
+
 public:
     void init_weight();
     void set_num_threads(size_t num_threads) noexcept;

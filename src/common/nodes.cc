@@ -100,6 +100,7 @@ namespace xsdnn {
     }
 
     void nodes::load_model(const std::string& filename) {
+        layer_register();
         std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
         if (!ifs.is_open()) {
             xs_error("Error when opening model_filename file.");

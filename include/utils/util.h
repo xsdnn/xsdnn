@@ -8,6 +8,7 @@
 
 #include "xs_error.h"
 #include <vector>
+#include <iostream>
 
 namespace xsdnn {
 
@@ -21,6 +22,8 @@ enum class tensor_type : int32_t {
 
     label = 0x0004000,
 };
+
+std::ostream& operator<<(std::ostream& out, tensor_type type);
 
 bool is_trainable_concept(tensor_type type_);
 
