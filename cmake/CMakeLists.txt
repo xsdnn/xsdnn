@@ -68,6 +68,7 @@ include(xsdnn_optimizers.cmake)
 include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
 include(xsdnn_serializer.cmake)
+include(xsdnn_session.cmake)
 
 add_library(xsdnn STATIC
         ${mmpack_common_src}
@@ -80,7 +81,8 @@ add_library(xsdnn STATIC
         ${xsdnn_optimizers_src}
         ${xsdnn_loss_src}
         ${xsdnn_utils_src}
-        ${xsdnn_serializer_src})
+        ${xsdnn_serializer_src}
+        ${xsdnn_session_src})
 
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
