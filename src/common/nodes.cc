@@ -103,11 +103,12 @@ namespace xsdnn {
         layer_register();
         std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
         if (!ifs.is_open()) {
-            xs_error("Error when opening model_filename file.");
+            std::string msg = "Error when opening \x1B[33m" + filename;
+            throw xs_error(msg);
         }
         xs::ModelInfo model;
         if (!model.ParseFromIstream(&ifs)) {
-            xs_error("Error when parse model.");
+            throw xs_error("Error when parse model.");
         }
 
         xs::GraphInfo model_graph = model.graph();

@@ -4,3 +4,15 @@
 //
 
 #include <session/inference_options.h>
+
+namespace xsdnn {
+
+    std::ostream& operator<<(std::ostream& out, const InfOptions& opt) {
+        out << "Inf Options: " << std::endl;
+        out << "\tNumThreads : " << opt.num_threads_ << std::endl;
+        out << "\tBatchSize  : " << opt.batch_size_;
+        return out;
+    }
+
+} // xsdnn
+

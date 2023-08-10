@@ -163,6 +163,7 @@ protected:
 private:
     Net net_;
     std::string network_name_;
+    friend class InfSession;
 };
 
     void construct_graph(network<graph>& net,

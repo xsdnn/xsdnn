@@ -6,6 +6,9 @@
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
 
+#include "include/session/inference_session.h"
+#include "include/session/inference_options.h"
+
 #include "include/common/network.h"
 #include "include/utils/tensor.h"
 #include "include/utils/xs_visualizer.h"

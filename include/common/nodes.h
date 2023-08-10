@@ -119,6 +119,7 @@ protected:
 private:
     std::vector<layer*> input_layers_;
     std::vector<layer*> output_layers_;
+    friend class InfSession;
 };
 
 } // xsdnn
