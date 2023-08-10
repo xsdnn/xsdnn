@@ -83,6 +83,30 @@ struct cerial {
     }
 
     /*
+     * Output
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const output* layer) {
+        node->set_name("output");
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* D = node->add_attribute();
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->shape_.W);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->shape_.H);
+
+        D->set_name("depth");
+        D->set_type(xs::AttributeInfo_AttributeType_INT);
+        D->set_i(layer->shape_.D);
+    }
+
+    /*
      * Add
      */
     inline
@@ -130,7 +154,7 @@ struct cerial {
     }
 
     /*
-    * Abs
+    * Acos
     */
     inline
     static
@@ -139,7 +163,7 @@ struct cerial {
     }
 
     /*
-    * Abs
+    * And
     */
     inline
     static
@@ -178,6 +202,17 @@ struct cerial {
         size_t H = node->attribute(1).i();
         size_t D = node->attribute(2).i();
         std::shared_ptr<input> l = std::make_shared<input>(shape3d(W, H, D));
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<output> cerial::deserialize(const xs::NodeInfo* node,
+                                               const xs::TensorInfo* tensor) {
+        size_t W = node->attribute(0).i();
+        size_t H = node->attribute(1).i();
+        size_t D = node->attribute(2).i();
+        std::shared_ptr<output> l = std::make_shared<output>(shape3d(W, H, D));
         return l;
     }
 

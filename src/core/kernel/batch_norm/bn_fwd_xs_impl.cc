@@ -33,7 +33,7 @@ void compute_stddev(const tensor_t& in, size_t channels, size_t spatial_size,
             const mm_scalar ex = mean[j];
             rstddev             = std::accumulate(it, it + spatial_size, rstddev,
                                                [ex](mm_scalar current, mm_scalar x) {
-                                                   return current + std::pow(x - ex, mm_scalar{2.0});
+                                                   return current + std::pow(x - ex, mm_scalar{2.0f});
                                                });
         }
     }

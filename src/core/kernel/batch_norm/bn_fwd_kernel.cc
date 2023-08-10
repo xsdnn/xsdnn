@@ -27,7 +27,7 @@ void BatchNormalizationFwdKernel::compute(xsdnn::core::OpContext &ctx, params::b
         kernel::batch_normalization_fwd_xs_impl(in, gamma[0], beta[0], out, p,
                                                 ctx.parallelize(), ctx.num_threads());
     } else {
-        xs_error("Unsupported engine type in BatchNormalization kernel");
+        xs_error("[batch_norm forward] unsupported engine type");
     }
 }
 

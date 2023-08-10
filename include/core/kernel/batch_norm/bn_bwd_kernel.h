@@ -12,6 +12,7 @@ namespace xsdnn {
     namespace core {
 
         class BatchNormalizationBwdKernel : public OpKernel {
+        public:
             virtual void compute(OpContext& ctx, params::bnorm& p);
         };
 

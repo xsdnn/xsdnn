@@ -8,6 +8,7 @@
 
 #include "include/common/network.h"
 #include "include/utils/tensor.h"
+#include "include/utils/xs_visualizer.h"
 
 #include "include/layers/layer.h"
 #include "include/layers/activations/activation_layer.h"
