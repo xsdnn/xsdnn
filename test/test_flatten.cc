@@ -1,0 +1,30 @@
+//
+// Created by rozhin on 11.08.2023.
+// Copyright (c) 2021-2023 xsdnn. All rights reserved.
+//
+
+#include "../xsdnn.h"
+#include <gtest/gtest.h>
+#include "test_utils.h"
+using namespace xsdnn;
+
+TEST(flatten, forward) {
+    shape3d in_shape(128, 224, 3);
+    flatten fl(in_shape);
+
+    mat_t in_data(in_shape.size());
+    utils::random_init(in_data.data(), in_data.size());
+
+    fl.set_in_data({{ in_data }});
+    fl.set_parallelize(false);
+    fl.setup(false);
+
+    fl.forward();
+    ASSERT_TRUE(fl.out_shape()[0] == shape3d(1, in_shape.size(), 1));
+}
+
+TEST(flatten, cerial) {
+    shape3d in_shape(128, 224, 3);
+    flatten fl(in_shape);
+    utils::cerial_testing(fl);
+}
