@@ -65,4 +65,29 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_abs.cc
 )
 
+AddTest(
+        xsdnn_acos_test
+        ${XSDNN_TEST_ROOT}/test_acos.cc
+)
+
+AddTest(
+        xsdnn_add_test
+        ${XSDNN_TEST_ROOT}/test_add.cc
+)
+
+AddTest(
+        xsdnn_and_test
+        ${XSDNN_TEST_ROOT}/test_and.cc
+)
+
+AddTest(
+        xsdnn_flatten_test
+        ${XSDNN_TEST_ROOT}/test_flatten.cc
+)
+
+AddTest(
+        xsdnn_output_test
+        ${XSDNN_TEST_ROOT}/test_output.cc
+)
+
 
