@@ -8,18 +8,18 @@
 #include "test_utils.h"
 using namespace xsdnn;
 
-TEST(input, forward) {
+TEST(output, forward) {
     shape3d shape_ = shape3d(224, 224, 3);
-    Input in(shape_);
+    Output out(shape_);
     mat_t in_data(shape_.size());
     utils::random_init(in_data.data(), shape_.size());
 
-    in.set_in_data({{ in_data }});
-    in.set_parallelize(false);
-    in.setup(false);
+    out.set_in_data({{ in_data }});
+    out.set_parallelize(false);
+    out.setup(false);
 
-    in.forward();
-    mat_t out = in.output()[0][0];
+    out.forward();
+    mat_t out_ = out.output()[0][0];
 
     for (size_t h = 0; h < shape_.H; ++h) {
         for (size_t w = 0; w < shape_.W; ++w) {
@@ -27,15 +27,15 @@ TEST(input, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(in_data[shape_(h, w, c)], out[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(in_data[shape_(h, w, c)], out_[shape_(h, w, c)]);
 #endif
             }
         }
     }
 }
 
-TEST(input, cerial) {
+TEST(output, cerial) {
     shape3d shape_ = shape3d(224, 224, 3);
-    Input in(shape_);
-    utils::cerial_testing(in);
+    Output out(shape_);
+    utils::cerial_testing(out);
 }

@@ -63,8 +63,8 @@ struct cerial {
      */
     inline
     static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const input* layer) {
-        node->set_name("input");
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Input* layer) {
+        node->set_name("Input");
         xs::AttributeInfo* H = node->add_attribute();
         xs::AttributeInfo* W = node->add_attribute();
         xs::AttributeInfo* C = node->add_attribute();
@@ -87,8 +87,8 @@ struct cerial {
      */
     inline
     static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const output* layer) {
-        node->set_name("output");
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Output* layer) {
+        node->set_name("Output");
         xs::AttributeInfo* H = node->add_attribute();
         xs::AttributeInfo* W = node->add_attribute();
         xs::AttributeInfo* C = node->add_attribute();
@@ -196,23 +196,23 @@ struct cerial {
 
     template<>
     inline
-    std::shared_ptr<input> cerial::deserialize(const xs::NodeInfo* node,
+    std::shared_ptr<Input> cerial::deserialize(const xs::NodeInfo* node,
                                        const xs::TensorInfo* tensor) {
         size_t H = node->attribute(0).i();
         size_t W = node->attribute(1).i();
         size_t C = node->attribute(2).i();
-        std::shared_ptr<input> l = std::make_shared<input>(shape3d(H, W, C));
+        std::shared_ptr<Input> l = std::make_shared<Input>(shape3d(H, W, C));
         return l;
     }
 
     template<>
     inline
-    std::shared_ptr<output> cerial::deserialize(const xs::NodeInfo* node,
+    std::shared_ptr<Output> cerial::deserialize(const xs::NodeInfo* node,
                                                const xs::TensorInfo* tensor) {
         size_t H = node->attribute(0).i();
         size_t W = node->attribute(1).i();
         size_t C = node->attribute(2).i();
-        std::shared_ptr<output> l = std::make_shared<output>(shape3d(H, W, C));
+        std::shared_ptr<Output> l = std::make_shared<Output>(shape3d(H, W, C));
         return l;
     }
 

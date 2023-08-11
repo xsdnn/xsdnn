@@ -10,17 +10,17 @@
 
 namespace xsdnn {
 
-class output : public layer {
+class Output : public layer {
 public:
-    explicit output()
+    explicit Output()
     : layer({tensor_type::data}, {tensor_type::data}),
     shape_(shape3d(0, 0, 0)) {}
 
-    explicit output(shape3d shape)
+    explicit Output(shape3d shape)
     : layer({tensor_type::data}, {tensor_type::data}),
     shape_(shape) {}
 
-    explicit output(size_t in_size)
+    explicit Output(size_t in_size)
     : layer({tensor_type::data}, {tensor_type::data}),
     shape_(1, in_size, 1) {}
 

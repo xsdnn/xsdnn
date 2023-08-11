@@ -10,13 +10,13 @@
 
 namespace xsdnn {
 
-class input : public layer {
+class Input : public layer {
 public:
-    explicit input(shape3d shape)
+    explicit Input(shape3d shape)
             : layer({tensor_type::data}, {tensor_type::data}),
             shape_(shape) {}
 
-    explicit input(size_t in_size)
+    explicit Input(size_t in_size)
             : layer({tensor_type::data}, {tensor_type::data}),
               shape_(1, in_size, 1) {}
 

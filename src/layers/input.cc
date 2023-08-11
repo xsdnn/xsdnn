@@ -8,24 +8,24 @@
 
 namespace xsdnn {
 
-std::vector<shape3d> input::in_shape() const {
+std::vector<shape3d> Input::in_shape() const {
     return {shape_};
 }
 
-std::vector<shape3d> input::out_shape() const {
+std::vector<shape3d> Input::out_shape() const {
     return {shape_};
 }
 
-std::string input::layer_type() const {
-    return "input";
+std::string Input::layer_type() const {
+    return "Input";
 }
 
-void input::forward_propagation(const std::vector<tensor_t *> &in_data,
+void Input::forward_propagation(const std::vector<tensor_t *> &in_data,
                                 std::vector<tensor_t *> &out_data) {
     *out_data[0] = *in_data[0];
 }
 
-void input::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
+void Input::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
                              std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
     XS_UNUSED_PARAMETER(in_data);
     XS_UNUSED_PARAMETER(out_data);
