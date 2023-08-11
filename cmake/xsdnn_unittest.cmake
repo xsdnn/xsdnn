@@ -60,4 +60,9 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_input.cc
 )
 
+AddTest(
+        xsdnn_abs_test
+        ${XSDNN_TEST_ROOT}/test_abs.cc
+)
+
 
