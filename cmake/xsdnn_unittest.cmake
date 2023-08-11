@@ -55,3 +55,9 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_batch_norm.cc
 )
 
+AddTest(
+        xsdnn_input_test
+        ${XSDNN_TEST_ROOT}/test_input.cc
+)
+
+
