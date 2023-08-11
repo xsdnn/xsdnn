@@ -6,10 +6,19 @@
 #ifndef MMPACK_TEST_UTILS_H
 #define MMPACK_TEST_UTILS_H
 #include "../xsdnn.h"
+#include "serializer/cerial.h"
+#include <fstream>
+# include <filesystem>
+namespace fs = std::filesystem;
 using namespace mmpack;
 using namespace xsdnn;
 
 namespace utils {
+
+void create_directory(const std::string &directory_name) {
+    fs::current_path("./");
+    fs::create_directory(directory_name);
+}
 
 void init(mm_scalar* ptr, size_t rows, size_t cols) {
     for (size_t i = 0; i < rows; ++i) {
@@ -45,6 +54,21 @@ std::vector<tensor_t> generate_fwd_data(const size_t num_concept,
         uniform_rand(&data[i][0][0], sizes[i], -10.0f, 10.0f);
     }
     return data;
+}
+
+template<typename T>
+void cerial_testing(T& layer) {
+    create_directory("layer_cerial_tmp_directory");
+    std::string path = "./layer_cerial_tmp_directory/" + layer.layer_type();
+
+    network<sequential> net_saver;
+    net_saver << layer;
+    net_saver.save(path);
+
+    network<sequential> net_loader;
+    net_loader.load(path);
+
+    ASSERT_TRUE(net_saver == net_loader);
 }
 
 } // utils
