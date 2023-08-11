@@ -5,6 +5,7 @@
 
 #include "../xsdnn.h"
 #include <gtest/gtest.h>
+#include "test_utils.h"
 #include "../include/utils/grad_checker.h"
 using namespace xsdnn;
 
@@ -152,4 +153,9 @@ TEST(fc, backward_parallel) {
     GradChecker checker(&fc, GradChecker::mode::random);
     GradChecker::status STATUS = checker.run();
     ASSERT_EQ(STATUS, GradChecker::status::ok);
+}
+
+TEST(fc, cerial) {
+    fully_connected fc(50, 100);
+    ASSERT_TRUE(utils::cerial_testing(fc));
 }

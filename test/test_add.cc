@@ -61,5 +61,5 @@ TEST(add, backward) {
 TEST(add, cerial) {
     shape3d shape_(64, 64, 1);
     xsdnn::add add1(shape_);
-    utils::cerial_testing(add1);
+    ASSERT_TRUE(utils::cerial_testing(add1));
 }

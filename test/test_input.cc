@@ -37,5 +37,5 @@ TEST(input, forward) {
 TEST(input, cerial) {
     shape3d shape_ = shape3d(224, 224, 3);
     Input in(shape_);
-    utils::cerial_testing(in);
+    ASSERT_TRUE(utils::cerial_testing(in));
 }

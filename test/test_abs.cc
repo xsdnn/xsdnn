@@ -57,5 +57,5 @@ TEST(abs, backward_parallel) {
 TEST(abs, cerial) {
     shape3d shape_(224, 224, 3);
     xsdnn::abs abs1(shape_);
-    utils::cerial_testing(abs1);
+    ASSERT_TRUE(utils::cerial_testing(abs1));
 }

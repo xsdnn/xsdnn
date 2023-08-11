@@ -56,6 +56,6 @@ TEST(acos, backward_parallel) {
 TEST(acos, cerial) {
     shape3d shape_(64, 64, 3);
     xsdnn::acos acos1(shape_);
-    utils::cerial_testing(acos1);
+    ASSERT_TRUE(utils::cerial_testing(acos1));
 }
 

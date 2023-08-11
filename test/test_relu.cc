@@ -6,6 +6,7 @@
 #include "../xsdnn.h"
 #include <gtest/gtest.h>
 #include "../include/utils/grad_checker.h"
+#include "test_utils.h"
 using namespace xsdnn;
 
 TEST(relu, forward) {
@@ -50,4 +51,9 @@ TEST(relu, backward_parallel) {
     GradChecker checker(&rl, GradChecker::mode::random);
     GradChecker::status STATUS = checker.run();
     ASSERT_EQ(STATUS, GradChecker::status::ok);
+}
+
+TEST(relu, cerial) {
+    relu rl(784);
+    ASSERT_TRUE(utils::cerial_testing(rl));
 }

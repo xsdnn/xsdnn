@@ -26,5 +26,5 @@ TEST(flatten, forward) {
 TEST(flatten, cerial) {
     shape3d in_shape(128, 224, 3);
     flatten fl(in_shape);
-    utils::cerial_testing(fl);
+    ASSERT_TRUE(utils::cerial_testing(fl));
 }

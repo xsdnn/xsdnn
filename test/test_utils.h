@@ -57,7 +57,7 @@ std::vector<tensor_t> generate_fwd_data(const size_t num_concept,
 }
 
 template<typename T>
-void cerial_testing(T& layer) {
+bool cerial_testing(T& layer) {
     create_directory("layer_cerial_tmp_directory");
     std::string path = "./layer_cerial_tmp_directory/" + layer.layer_type();
 
@@ -68,7 +68,7 @@ void cerial_testing(T& layer) {
     network<sequential> net_loader;
     net_loader.load(path);
 
-    ASSERT_TRUE(net_saver == net_loader);
+    return net_saver == net_loader;
 }
 
 } // utils

@@ -50,5 +50,5 @@ TEST(add, forward) {
 TEST(add, cerial) {
     shape3d shape_ = shape3d(28, 28, 3);
     xsdnn::and_layer and_(shape_);
-    utils::cerial_testing(and_);
+    ASSERT_TRUE(utils::cerial_testing(and_));
 }
