@@ -14,7 +14,7 @@ namespace xsdnn {
 
 struct shape3d {
 public:
-    shape3d(size_t width, size_t height, size_t depth);
+    shape3d(size_t height, size_t width, size_t depth);
     shape3d();
 
     size_t operator() (size_t x, size_t y, size_t channel);
@@ -27,9 +27,9 @@ public:
     size_t size() const;
 
 public:
-    size_t W;
     size_t H;
-    size_t D;
+    size_t W;
+    size_t C;
 };
 
 std::ostream& operator<<(std::ostream& out, const shape3d& obj);

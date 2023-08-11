@@ -14,7 +14,7 @@ class flatten : public layer {
 public:
     explicit flatten()
         : layer({tensor_type::data}, {tensor_type::data}),
-          in_shape_(0, 0, 0) {}
+          in_shape_() {}
 
     explicit flatten(shape3d shape)
         : layer({tensor_type::data}, {tensor_type::data}),
@@ -22,7 +22,7 @@ public:
 
     explicit flatten(size_t dim)
         : layer({tensor_type::data}, {tensor_type::data}),
-          in_shape_(dim, 1, 1) {}
+          in_shape_(1, dim, 1) {}
 
 public:
     void set_in_shape(const xsdnn::shape3d in_shape);

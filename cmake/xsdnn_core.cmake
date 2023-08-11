@@ -17,8 +17,8 @@ set(
         "${XSROOT_SRC}/core/kernel/linear/fully_connected_bwd_xs_impl.cc"
         "${XSROOT_SRC}/core/kernel/batch_norm/bn_fwd_kernel.cc"
         "${XSROOT_SRC}/core/kernel/batch_norm/bn_bwd_kernel.cc"
-        "${XSROOT_SRC}/core/kernel/batch_norm/bn_fwd_xs_impl.cc"
         "${XSROOT_SRC}/core/kernel/batch_norm/bn_bwd_xs_impl.cc"
+        "${XSROOT_SRC}/core/kernel/batch_norm/bn_fwd_xs_impl.cc"
 )
 
 add_library(xsdnn_core STATIC

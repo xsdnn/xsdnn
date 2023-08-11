@@ -79,7 +79,7 @@ struct cerial {
 
         D->set_name("depth");
         D->set_type(xs::AttributeInfo_AttributeType_INT);
-        D->set_i(layer->shape_.D);
+        D->set_i(layer->shape_.C);
     }
 
     /*
@@ -103,7 +103,7 @@ struct cerial {
 
         D->set_name("depth");
         D->set_type(xs::AttributeInfo_AttributeType_INT);
-        D->set_i(layer->shape_.D);
+        D->set_i(layer->shape_.C);
     }
 
     /*
@@ -132,7 +132,7 @@ struct cerial {
 
         D->set_name("depth");
         D->set_type(xs::AttributeInfo_AttributeType_INT);
-        D->set_i(layer->shape_.D);
+        D->set_i(layer->shape_.C);
     }
 
     /*

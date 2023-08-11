@@ -10,7 +10,7 @@ TEST(batch_norm, simple_forward) {
     xsdnn::batch_norm bn;
 
     xsdnn::mat_t in_data = {0, 1, 2, 3, 4, 5};
-    bn.set_in_shape(xsdnn::shape3d(6, 1, 1));
+    bn.set_in_shape(xsdnn::shape3d(1, 6, 1)); // [H, W, C]
     bn.set_in_data({{ in_data }});
     bn.setup(false);
     bn.set_parallelize(false);

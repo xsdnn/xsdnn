@@ -7,40 +7,40 @@
 
 namespace xsdnn {
 
-shape3d::shape3d(size_t width, size_t height, size_t depth) {
-    reshape(width, height, depth);
+shape3d::shape3d(size_t height, size_t width, size_t depth) {
+    reshape(height, width, depth);
 }
 
 shape3d::shape3d() {
-    W = 0; H = 0; D = 0;
+    H = 0; W = 0; C = 0;
 }
 
-void shape3d::reshape(size_t width, size_t height, size_t depth) {
-    W = width;
+void shape3d::reshape(size_t height, size_t width, size_t depth) {
     H = height;
-    D = depth;
+    W = width;
+    C = depth;
 }
 
-size_t shape3d::operator()(size_t x, size_t y, size_t channel) {
-    assert(x >= 0 && x < W);
+size_t shape3d::operator()(size_t y, size_t x, size_t channel) {
     assert(y >= 0 && y < H);
-    assert(channel >= 0 && channel < D);
-    return (D * channel + y) * W + x;
+    assert(x >= 0 && x < W);
+    assert(channel >= 0 && channel < C);
+    return (C * channel + y) * W + x;
 }
 
 bool shape3d::operator==(const shape3d &rhs) {
-    return (W == rhs.W) && (H == rhs.H) && (D == rhs.D);
+    return (H == rhs.H) && (W == rhs.W) && (C == rhs.C);
 }
 
 bool shape3d::operator!=(const shape3d &rhs) {
     return !(*this == rhs);
 }
 
-size_t shape3d::area() const { return (size_t) W * H; }
-size_t shape3d::size() const { return (size_t) W * H * D; }
+size_t shape3d::area() const { return (size_t) H * W; }
+size_t shape3d::size() const { return (size_t) H * W * C; }
 
 std::ostream& operator<<(std::ostream& out, const shape3d& obj) {
-    out << "[" << obj.H << ", " << obj.W << ", " << obj.D << "]";
+    out << "[" << obj.H << ", " << obj.W << ", " << obj.C << "]";
     return out;
 }
 

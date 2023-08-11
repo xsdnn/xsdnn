@@ -14,7 +14,7 @@ class abs : public layer {
 public:
     explicit abs()
         : layer({tensor_type::data}, {tensor_type::data}),
-            shape_(0, 0, 0) {}
+            shape_() {}
 
     explicit abs(shape3d shape)
         : layer({tensor_type::data}, {tensor_type::data}),
@@ -22,7 +22,7 @@ public:
 
     explicit abs(size_t dim)
         : layer({tensor_type::data}, {tensor_type::data}),
-          shape_(dim, 1, 1) {}
+          shape_(1, dim, 1) {}
 
 public:
     void set_in_shape(const xsdnn::shape3d in_shape);

@@ -19,7 +19,7 @@ public:
     explicit add(size_t n_input, size_t dim)
         : layer(std::vector<tensor_type>(n_input, tensor_type::data),
                 {tensor_type::data}),
-        n_input_(n_input), shape_(dim, 1, 1) {}
+        n_input_(n_input), shape_(1, dim, 1) {}
 
     explicit add(size_t n_input, shape3d shape)
         : layer(std::vector<tensor_type>(n_input, tensor_type::data),
@@ -32,7 +32,7 @@ public:
     explicit add(size_t dim)
         : layer(std::vector<tensor_type>(2, tensor_type::data),
                 {tensor_type::data}),
-        n_input_(2), shape_(dim, 1, 1) {}
+        n_input_(2), shape_(1, dim, 1) {}
 
     explicit add(shape3d shape)
         : layer(std::vector<tensor_type>(2, tensor_type::data),

@@ -22,7 +22,7 @@ public:
 
     explicit output(size_t in_size)
     : layer({tensor_type::data}, {tensor_type::data}),
-    shape_(in_size, 1, 1) {}
+    shape_(1, in_size, 1) {}
 
 public:
     void set_in_shape(const xsdnn::shape3d in_shape);

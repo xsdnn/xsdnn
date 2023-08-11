@@ -48,7 +48,7 @@ void compute_stddev(const tensor_t& in, size_t channels, size_t spatial_size,
 }
 
 void compute_moments(const tensor_t& in, shape3d& shape, mat_t& mean, mat_t& stddev, mm_scalar eps) {
-    size_t channels = shape.D;
+    size_t channels = shape.C;
     size_t spatial_size = shape.area();
 
     compute_mean(in, channels, spatial_size, mean);
@@ -69,7 +69,7 @@ void batch_normalization_fwd_xs_impl(const tensor_t& in,
         compute_moments(in, p.in_shape_, mean, stddev, p.eps_);
     }
 
-    size_t channel = p.in_shape_.D;
+    size_t channel = p.in_shape_.C;
     size_t spatial_size = p.in_shape_.area();
 
     concurrency::TryParallelFor(parallelize, nthreads, in.size(), [&](size_t sample) {
