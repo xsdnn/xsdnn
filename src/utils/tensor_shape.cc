@@ -25,7 +25,7 @@ size_t shape3d::operator()(size_t y, size_t x, size_t channel) {
     assert(y >= 0 && y < H);
     assert(x >= 0 && x < W);
     assert(channel >= 0 && channel < C);
-    return (C * channel + y) * W + x;
+    return C * (y * W + x) + channel;
 }
 
 bool shape3d::operator==(const shape3d &rhs) {
