@@ -15,6 +15,7 @@
 #include "and.h"
 #include "flatten.h"
 #include "batch_normalization.h"
+#include "max_pooling.h"
 
 
 #include "activations/relu.h"

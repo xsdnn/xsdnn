@@ -30,6 +30,19 @@ struct bnorm {
     bool statistic_initialized {false};
 };
 
+struct max_pool {
+    shape3d in_shape_;
+    shape3d out_shape_;
+    size_t kernel_x_;
+    size_t kernel_y_;
+    size_t stride_x_;
+    size_t stride_y_;
+    padding_mode pad_type_;
+
+    std::vector<std::vector<size_t>> out2in;
+    std::vector<size_t> in2out;
+};
+
     } // params
 } // xsdnn
 

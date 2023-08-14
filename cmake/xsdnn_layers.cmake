@@ -10,6 +10,7 @@ set(
         "${XSROOT_SRC}/layers/and.cc"
         "${XSROOT_SRC}/layers/flatten.cc"
         "${XSROOT_SRC}/layers/batch_normalization.cc"
+        "${XSROOT_SRC}/layers/max_pooling.cc"
         "${XSROOT_SRC}/layers/layer_register.cc"
 )
 
