@@ -75,3 +75,5 @@
 - [ ] max_pool
 - [ ] average_pool
 - [ ] global_average_pool
+
+### 2. Поддержка формата  NHWC
