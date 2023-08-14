@@ -18,7 +18,7 @@ public:
 
     explicit Input(size_t in_size)
             : layer({tensor_type::data}, {tensor_type::data}),
-              shape_(1, in_size, 1) {}
+              shape_(1, 1, in_size) {}
 
     std::vector<shape3d> in_shape() const;
     std::vector<shape3d> out_shape() const;

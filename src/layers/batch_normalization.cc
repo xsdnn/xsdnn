@@ -14,8 +14,8 @@ void batch_norm::set_in_shape(const xsdnn::shape3d in_shape) {
 std::vector<shape3d> batch_norm::in_shape() const {
     return {
         params_.in_shape_,
-        shape3d(1, 1, params_.in_shape_.C),
-        shape3d(1, 1, params_.in_shape_.C)
+        shape3d(params_.in_shape_.C, 1, 1),
+        shape3d(params_.in_shape_.C, 1, 1)
     };
 }
 

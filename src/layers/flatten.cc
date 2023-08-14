@@ -21,7 +21,7 @@ namespace xsdnn {
     }
 
     std::vector<shape3d> flatten::out_shape() const {
-        return { shape3d(1, in_shape_.size(), 1) };
+        return { shape3d(1, 1, in_shape_.size()) };
     }
 
     void flatten::forward_propagation(const std::vector<tensor_t *> &in_data,

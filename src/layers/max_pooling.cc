@@ -15,7 +15,7 @@ namespace xsdnn {
         return { params_.out_shape_ };
     }
 
-    void max_pooling::set_params(size_t height, size_t width, size_t channels, size_t kernel_x, size_t kernel_y,
+    void max_pooling::set_params(size_t channels, size_t height, size_t width, size_t kernel_x, size_t kernel_y,
                                  size_t stride_x, size_t stride_y, xsdnn::padding_mode pad_type, bool ceil) {
         params_.in_shape_ = shape3d(channels, height, width);
         size_t h_out = calc_pool_shape(height, kernel_y, stride_y, pad_type, ceil);

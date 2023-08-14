@@ -10,7 +10,7 @@
 using namespace xsdnn;
 
 TEST(add, forward) {
-    shape3d shape_ = shape3d(28, 28, 3);
+    shape3d shape_ = shape3d(3, 28, 28);
     xsdnn::and_layer and_(shape_);
     mat_t in1(shape_.size()), in2(shape_.size());
     utils::value_init(in1.data(), 0.0f, shape_.size());
@@ -30,7 +30,7 @@ TEST(add, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(out[shape_(h, w, c)], expected[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(out[shape_(c, h, w)], expected[shape_(c, h, w)]);
 #endif
             }
         }
@@ -48,7 +48,7 @@ TEST(add, forward) {
 //}
 
 TEST(add, cerial) {
-    shape3d shape_ = shape3d(28, 28, 3);
+    shape3d shape_ = shape3d(3, 28, 28);
     xsdnn::and_layer and_(shape_);
     ASSERT_TRUE(utils::cerial_testing(and_));
 }

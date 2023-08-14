@@ -10,21 +10,21 @@ namespace xsdnn {
 std::vector<shape3d> fully_connected::in_shape() const {
     if (params_.has_bias_) {
         return {
-            shape3d(1, params_.in_size_, 1),
-            shape3d(params_.in_size_, params_.out_size_, 1),
-            shape3d(1, params_.out_size_, 1)
+            shape3d(1, 1, params_.in_size_),
+            shape3d(1, params_.in_size_, params_.out_size_),
+            shape3d(1, 1, params_.out_size_)
         };
     } else {
         return {
-                shape3d(1, params_.in_size_, 1),
-                shape3d(params_.in_size_, params_.out_size_, 1)
+                shape3d(1, 1, params_.in_size_),
+                shape3d(1, params_.in_size_, params_.out_size_),
         };
     }
 }
 
 std::vector<shape3d> fully_connected::out_shape() const {
     return {
-        shape3d(1, params_.out_size_, 1)
+        shape3d(1, 1, params_.out_size_)
     };
 }
 

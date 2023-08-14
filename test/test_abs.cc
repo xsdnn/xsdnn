@@ -9,8 +9,10 @@
 #include "../include/utils/grad_checker.h"
 using namespace xsdnn;
 
+// TODO: поменять обратно на chw
+
 TEST(abs, forward) {
-    shape3d shape_(224, 224, 3);
+    shape3d shape_(3, 224, 224);
     xsdnn::abs abs1(shape_);
     mat_t in_data(shape_.size());
     utils::random_init(in_data.data(), shape_.size());
@@ -28,7 +30,7 @@ TEST(abs, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(std::abs(in_data[shape_(h, w, c)]), out[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(std::abs(in_data[shape_(c, h, w)]), out[shape_(c, h, w)]);
 #endif
             }
         }
@@ -36,7 +38,7 @@ TEST(abs, forward) {
 }
 
 TEST(abs, backward) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::abs abs1(shape_);
     abs1.set_parallelize(false);
     GradChecker checker(&abs1, GradChecker::mode::random);
@@ -45,7 +47,7 @@ TEST(abs, backward) {
 }
 
 TEST(abs, backward_parallel) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::abs abs1(shape_);
     abs1.set_parallelize(true);
     abs1.set_num_threads(std::thread::hardware_concurrency());
@@ -55,7 +57,7 @@ TEST(abs, backward_parallel) {
 }
 
 TEST(abs, cerial) {
-    shape3d shape_(224, 224, 3);
+    shape3d shape_(3, 224, 224);
     xsdnn::abs abs1(shape_);
     ASSERT_TRUE(utils::cerial_testing(abs1));
 }

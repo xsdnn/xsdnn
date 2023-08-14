@@ -10,7 +10,7 @@
 using namespace xsdnn;
 
 TEST(acos, forward) {
-    shape3d shape_(224, 224, 3);
+    shape3d shape_(3, 224, 224);
     xsdnn::acos acos1(shape_);
     mat_t in_data(shape_.size());
     utils::random_init(in_data.data(), shape_.size());
@@ -28,7 +28,7 @@ TEST(acos, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(std::acos(in_data[shape_(h, w, c)]), out[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(std::acos(in_data[shape_(c, h, w)]), out[shape_(c, h, w)]);
 #endif
             }
         }
@@ -36,7 +36,7 @@ TEST(acos, forward) {
 }
 
 TEST(acos, backward) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::acos acos1(shape_);
     acos1.set_parallelize(false);
     GradChecker checker(&acos1, GradChecker::mode::random);
@@ -45,7 +45,7 @@ TEST(acos, backward) {
 }
 
 TEST(acos, backward_parallel) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::acos acos1(shape_);
     acos1.set_parallelize(true);
     acos1.set_num_threads(std::thread::hardware_concurrency());
@@ -54,7 +54,7 @@ TEST(acos, backward_parallel) {
     ASSERT_EQ(STATUS, GradChecker::status::ok);
 }
 TEST(acos, cerial) {
-    shape3d shape_(64, 64, 3);
+    shape3d shape_(3, 64, 64);
     xsdnn::acos acos1(shape_);
     ASSERT_TRUE(utils::cerial_testing(acos1));
 }

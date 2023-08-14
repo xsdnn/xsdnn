@@ -23,7 +23,7 @@ mat_t make_expected(const tensor_t& in_data) {
 }
 
 TEST(add, forward) {
-    shape3d shape_ = shape3d(28, 28, 3);
+    shape3d shape_ = shape3d(3, 28, 28);
     xsdnn::add add1(4, shape_);
     mat_t in1(shape_.size()), in2(shape_.size()), in3(shape_.size()), in4(shape_.size());
     utils::random_init(in1.data(), shape_.size());
@@ -42,7 +42,7 @@ TEST(add, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(out[shape_(h, w, c)], expected[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(out[shape_(c, h, w)], expected[shape_(c, h, w)]);
 #endif
             }
         }
@@ -50,7 +50,7 @@ TEST(add, forward) {
 }
 
 TEST(add, backward) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::add add1(shape_);
     add1.set_parallelize(false);
     GradChecker checker(&add1, GradChecker::mode::random);
@@ -59,7 +59,7 @@ TEST(add, backward) {
 }
 
 TEST(add, cerial) {
-    shape3d shape_(64, 64, 1);
+    shape3d shape_(1, 64, 64);
     xsdnn::add add1(shape_);
     ASSERT_TRUE(utils::cerial_testing(add1));
 }

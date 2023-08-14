@@ -9,7 +9,7 @@
 using namespace xsdnn;
 
 TEST(flatten, forward) {
-    shape3d in_shape(128, 224, 3);
+    shape3d in_shape(3, 128, 224);
     flatten fl(in_shape);
 
     mat_t in_data(in_shape.size());
@@ -20,7 +20,7 @@ TEST(flatten, forward) {
     fl.setup(false);
 
     fl.forward();
-    ASSERT_TRUE(fl.out_shape()[0] == shape3d(1, in_shape.size(), 1));
+    ASSERT_TRUE(fl.out_shape()[0] == shape3d(1, 1, in_shape.size()));
 }
 
 TEST(flatten, cerial) {

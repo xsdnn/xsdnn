@@ -22,7 +22,7 @@ public:
 
     explicit abs(size_t dim)
         : layer({tensor_type::data}, {tensor_type::data}),
-          shape_(1, dim, 1) {}
+          shape_(1, 1, dim) {}
 
 public:
     void set_in_shape(const xsdnn::shape3d in_shape);

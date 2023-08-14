@@ -13,15 +13,15 @@ namespace xsdnn {
 
 class max_pooling : public layer {
 public:
-    explicit max_pooling(size_t height,
+    explicit max_pooling(size_t channels,
+                         size_t height,
                          size_t width,
-                         size_t channels,
                          size_t kernel_xy,
                          size_t stride_xy,
                          padding_mode pad_type = padding_mode::valid,
                          bool   ceil = false,
                          core::backend_t engine = core::default_backend_engine())
-        : max_pooling(height, width, channels, kernel_xy, kernel_xy, stride_xy, stride_xy, pad_type, ceil, engine) {}
+        : max_pooling(channels, height, width, kernel_xy, kernel_xy, stride_xy, stride_xy, pad_type, ceil, engine) {}
 
     explicit max_pooling(shape3d in_shape,
                          size_t kernel_xy,
@@ -29,7 +29,7 @@ public:
                          padding_mode pad_type = padding_mode::valid,
                          bool   ceil = false,
                          core::backend_t engine = core::default_backend_engine())
-        : max_pooling(in_shape.H, in_shape.W, in_shape.C, kernel_xy, kernel_xy, stride_xy, stride_xy, pad_type, ceil, engine) {}
+        : max_pooling(in_shape.C, in_shape.H, in_shape.W, kernel_xy, kernel_xy, stride_xy, stride_xy, pad_type, ceil, engine) {}
 
     explicit max_pooling(shape3d in_shape,
                          size_t kernel_x,
@@ -39,11 +39,11 @@ public:
                          padding_mode pad_type = padding_mode::valid,
                          bool   ceil = false,
                          core::backend_t engine = core::default_backend_engine())
-        : max_pooling(in_shape.H, in_shape.W, in_shape.C, kernel_x, kernel_y, stride_x, stride_y, pad_type, ceil, engine) {}
+        : max_pooling(in_shape.C, in_shape.H, in_shape.W, kernel_x, kernel_y, stride_x, stride_y, pad_type, ceil, engine) {}
 
-    explicit max_pooling(size_t height,
+    explicit max_pooling(size_t channels,
+                         size_t height,
                          size_t width,
-                         size_t channels,
                          size_t kernel_x,
                          size_t kernel_y,
                          size_t stride_x,
@@ -52,7 +52,7 @@ public:
                          bool   ceil = false,
                          core::backend_t engine = core::default_backend_engine())
         : layer({tensor_type::data}, {tensor_type::data}) {
-        set_params(height, width, channels, kernel_x, kernel_y, stride_x, stride_y, pad_type, ceil);
+        set_params(channels, height, width, kernel_x, kernel_y, stride_x, stride_y, pad_type, ceil);
         init_backend(engine);
     }
 
@@ -72,9 +72,9 @@ public:
                      std::vector<tensor_t*>&       in_grad);
 
 private:
-    void set_params(size_t height,
+    void set_params(size_t channels,
+                    size_t height,
                     size_t width,
-                    size_t channels,
                     size_t kernel_x,
                     size_t kernel_y,
                     size_t stride_x,

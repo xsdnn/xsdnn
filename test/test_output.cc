@@ -9,7 +9,7 @@
 using namespace xsdnn;
 
 TEST(output, forward) {
-    shape3d shape_ = shape3d(224, 224, 3);
+    shape3d shape_ = shape3d(3, 224, 224);
     Output out(shape_);
     mat_t in_data(shape_.size());
     utils::random_init(in_data.data(), shape_.size());
@@ -27,7 +27,7 @@ TEST(output, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(in_data[shape_(h, w, c)], out_[shape_(h, w, c)]);
+                ASSERT_FLOAT_EQ(in_data[shape_(c, h, w)], out_[shape_(c, h, w)]);
 #endif
             }
         }
@@ -35,7 +35,7 @@ TEST(output, forward) {
 }
 
 TEST(output, cerial) {
-    shape3d shape_ = shape3d(224, 224, 3);
+    shape3d shape_ = shape3d(3, 224, 224);
     Output out(shape_);
     ASSERT_TRUE(utils::cerial_testing(out));
 }
