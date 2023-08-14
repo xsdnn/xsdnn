@@ -94,6 +94,7 @@ private:
     params::max_pool params_; // TODO: нужен ли in2out???
     core::OpContext fwd_ctx_;
     std::shared_ptr<core::MaxPoolingFwdKernel> fwd_kernel_;
+    friend struct cerial;
 };
 
 } // xsdnn

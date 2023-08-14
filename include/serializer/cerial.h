@@ -180,6 +180,55 @@ struct cerial {
         node->set_name("flatten");
     }
 
+    /*
+    * Max Pooling
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::max_pooling* layer) {
+        node->set_name("max_pooling");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* kernel_x = node->add_attribute();
+        xs::AttributeInfo* kernel_y = node->add_attribute();
+        xs::AttributeInfo* stride_x = node->add_attribute();
+        xs::AttributeInfo* stride_y = node->add_attribute();
+        xs::AttributeInfo* pad_type = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->params_.in_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->params_.in_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->params_.in_shape_.W);
+
+        kernel_x->set_name("kernel_x");
+        kernel_x->set_type(xs::AttributeInfo_AttributeType_INT);
+        kernel_x->set_i(layer->params_.kernel_x_);
+
+        kernel_y->set_name("kernel_y");
+        kernel_y->set_type(xs::AttributeInfo_AttributeType_INT);
+        kernel_y->set_i(layer->params_.kernel_y_);
+
+        stride_x->set_name("stride_x");
+        stride_x->set_type(xs::AttributeInfo_AttributeType_INT);
+        stride_x->set_i(layer->params_.stride_x_);
+
+        stride_y->set_name("stride_y");
+        stride_y->set_type(xs::AttributeInfo_AttributeType_INT);
+        stride_y->set_i(layer->params_.stride_y_);
+
+        pad_type->set_name("pad_type");
+        pad_type->set_type(xs::AttributeInfo_AttributeType_STRING);
+        pad_type->set_name((layer->params_.pad_type_ == padding_mode::same) ? "same" : "valid");
+    }
+
 };
 
     template<>
@@ -265,6 +314,26 @@ struct cerial {
     std::shared_ptr<xsdnn::flatten> cerial::deserialize(const xs::NodeInfo* node,
                                                           const xs::TensorInfo* tensor) {
         std::shared_ptr<xsdnn::flatten> l = std::make_shared<xsdnn::flatten>();
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<xsdnn::max_pooling> cerial::deserialize(const xs::NodeInfo *node,
+                                                            const xs::TensorInfo *tensor) {
+        size_t C = node->attribute(0).i();
+        size_t H = node->attribute(1).i();
+        size_t W = node->attribute(2).i();
+        size_t kernel_x = node->attribute(3).i();
+        size_t kernel_y = node->attribute(4).i();
+        size_t stride_x = node->attribute(5).i();
+        size_t stride_y = node->attribute(6).i();
+        padding_mode pad_type = node->attribute(0).s() == "same"
+                            ? padding_mode::same : padding_mode::valid;
+
+        std::shared_ptr<xsdnn::max_pooling> l = std::make_shared<xsdnn::max_pooling>(
+                shape3d(C, H, W), kernel_x, kernel_y, stride_x, stride_y, pad_type
+                );
         return l;
     }
 

@@ -250,6 +250,12 @@ TEST(max_pool, forward_kernel_y3_padding_same) {
     }
 }
 
+TEST(max_pool, cerial) {
+    shape3d in_shape(3, 224, 224);
+    max_pooling pool(in_shape, 14, 28, 3, 8, padding_mode::same);
+    ASSERT_TRUE(utils::cerial_testing(pool));
+}
+
 
 
 
