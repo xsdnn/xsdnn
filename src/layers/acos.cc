@@ -48,7 +48,7 @@ namespace xsdnn {
 
         concurrency::TryParallelFor(this->parallelize_, this->num_threads_, dx.size(), [&](size_t sample) {
             for (size_t j = 0; j < dx[sample].size(); ++j) {
-                dx[sample][j] = - dLz[sample][j] / (std::sqrt(1 - in[sample][j] * in[sample][j])); // TODO : исправить на нормальную формулу
+                dx[sample][j] = - dLz[sample][j] / (std::sqrt(1 - in[sample][j] * in[sample][j]));
             }
         });
     }
