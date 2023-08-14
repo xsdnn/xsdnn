@@ -90,4 +90,8 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_output.cc
 )
 
+AddTest(
+        xsdnn_max_pooling_test
+        ${XSDNN_TEST_ROOT}/test_max_pooling.cc
+)
 
