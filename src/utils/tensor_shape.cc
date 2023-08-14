@@ -7,25 +7,25 @@
 
 namespace xsdnn {
 
-shape3d::shape3d(size_t height, size_t width, size_t depth) {
-    reshape(height, width, depth);
+shape3d::shape3d(size_t channel, size_t height, size_t width) {
+    reshape(channel, height, width);
 }
 
 shape3d::shape3d() {
     H = 0; W = 0; C = 0;
 }
 
-void shape3d::reshape(size_t height, size_t width, size_t depth) {
+void shape3d::reshape(size_t channel, size_t height, size_t width) {
+    C = channel;
     H = height;
     W = width;
-    C = depth;
 }
 
-size_t shape3d::operator()(size_t y, size_t x, size_t channel) {
+size_t shape3d::operator()(size_t channel, size_t y, size_t x) {
     assert(y >= 0 && y < H);
     assert(x >= 0 && x < W);
     assert(channel >= 0 && channel < C);
-    return C * (y * W + x) + channel;
+    return W * (channel * H + y) + x;
 }
 
 bool shape3d::operator==(const shape3d &rhs) {
@@ -40,7 +40,7 @@ size_t shape3d::area() const { return (size_t) H * W; }
 size_t shape3d::size() const { return (size_t) H * W * C; }
 
 std::ostream& operator<<(std::ostream& out, const shape3d& obj) {
-    out << "[" << obj.H << ", " << obj.W << ", " << obj.C << "]";
+    out << "[" << obj.C << ", " << obj.H << ", " << obj.W << "]";
     return out;
 }
 

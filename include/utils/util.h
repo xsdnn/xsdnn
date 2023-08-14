@@ -38,6 +38,17 @@ enum class op_mode {
     train = 1
 };
 
+enum class padding_mode {
+    same = 0,
+    valid = 1
+};
+
+size_t calc_pool_shape(size_t in_size,
+                       size_t padding,
+                       size_t stride,
+                       padding_mode pad_type,
+                       bool   ceil);
+
 }
 
 #endif //XSDNN_UTIL_H

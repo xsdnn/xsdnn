@@ -14,22 +14,22 @@ namespace xsdnn {
 
 struct shape3d {
 public:
-    shape3d(size_t height, size_t width, size_t depth);
+    shape3d(size_t channel, size_t height, size_t width);
     shape3d();
 
-    size_t operator() (size_t x, size_t y, size_t channel);
+    size_t operator() (size_t channel, size_t y, size_t x);
     bool operator == (const shape3d& rhs);
     bool operator != (const shape3d& rhs);
 
-    void reshape(size_t width, size_t height, size_t depth);
+    void reshape(size_t channel, size_t width, size_t height);
 
     size_t area() const;
     size_t size() const;
 
 public:
+    size_t C;
     size_t H;
     size_t W;
-    size_t C;
 };
 
 std::ostream& operator<<(std::ostream& out, const shape3d& obj);

@@ -4,6 +4,7 @@
 //
 
 #include <utils/util.h>
+#include <cmath>
 
 namespace xsdnn {
 
@@ -72,6 +73,25 @@ std::ostream& operator<<(std::ostream& out, tensor_type type) {
             break;
     }
     return out;
+}
+
+size_t calc_pool_shape(size_t in_size,
+                       size_t padding,
+                       size_t stride,
+                       padding_mode pad_type,
+                       bool   ceil) {
+    size_t out_size;
+
+    if (pad_type == padding_mode::valid) {
+        out_size = in_size - padding + 1;
+    } else if (pad_type == padding_mode::same) {
+        out_size = in_size;
+    } else {
+        xs_error("Unsupported padding mode");
+    }
+
+    float ir_out_size = (out_size + stride - 1) / stride;
+    return (ceil ? std::ceil(ir_out_size) : std::floor(ir_out_size));
 }
 
 
