@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "../xsdnn.h"
+#include "xsdnn.h"
 #include "test_utils.h"
 #include <iostream>
 #include <random>
