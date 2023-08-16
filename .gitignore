@@ -46,3 +46,6 @@ test/simple_test.cc
 
 include/serializer/xs.proto3.pb.h
 include/serializer/xs.proto3.pb.cc
+
+doc/op/head_sim.csv
+doc/op/back_sim.csv
