@@ -3,8 +3,8 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "allocator.h"
-#include "../config.h"
+#include <mmpack/allocator.h>
+#include <mmpack/config.h>
 
 namespace mmpack {
 

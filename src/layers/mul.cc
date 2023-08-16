@@ -21,7 +21,12 @@ namespace xsdnn {
 
     void mul::forward_propagation(const std::vector<tensor_t *> &in_data,
                                   std::vector<tensor_t *> &out_data) {
-        // TODO: make it
+        throw xs_error("[mul fwd] Not Implemented Yet");
+    }
+
+    void mul::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
+                               std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
+        throw xs_error("[mul bwd] Not Implemented Yet");
     }
 
 } // xsdnn

@@ -6,21 +6,21 @@
 #ifndef XSDNN_XSDNN_H
 #define XSDNN_XSDNN_H
 
-#include "include/session/inference_session.h"
-#include "include/session/inference_options.h"
+#include "session/inference_session.h"
+#include "session/inference_options.h"
 
-#include "include/common/network.h"
-#include "include/utils/tensor.h"
-#include "include/utils/xs_visualizer.h"
+#include "common/network.h"
+#include "utils/tensor.h"
+#include "utils/xs_visualizer.h"
 
-#include "include/layers/layer.h"
-#include "include/layers/activations/activation_layer.h"
-#include "include/layers/layers.h"
+#include "layers/layer.h"
+#include "layers/activations/activation_layer.h"
+#include "layers/layers.h"
 
-#include "include/loss/loss_base.h"
-#include "include/loss/mse_loss.h"
+#include "loss/loss_base.h"
+#include "loss/mse_loss.h"
 
-#include "include/optimizers/optimizer_base.h"
-#include "include/optimizers/sgd.h"
+#include "optimizers/optimizer_base.h"
+#include "optimizers/sgd.h"
 
 #endif //XSDNN_XSDNN_H

@@ -4,7 +4,7 @@
 //
 
 #include <random>
-#include "../../src/mmpack/inc/mmpack.h"
+#include "../mmpack/mmpack.h"
 using namespace mmpack;
 
 namespace xsdnn {

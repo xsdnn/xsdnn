@@ -3,7 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "../v2mm.h"
+#include <mmpack/v2mm.h>
 
 namespace mmpack {
 
