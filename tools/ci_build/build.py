@@ -130,6 +130,9 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
 
     return cmake_args
 
+def update_dynamic_libs():
+    return subprocess.run("sudo", "ldconfig")
+
 def generate_build_tree_mmpack(build_dir, args):
     cmake_args = [
         "./cmake/external/mmpack/build.sh",
@@ -193,6 +196,9 @@ def build_protobuf(source_dir, args):
 
     subprocess.run(install_arg)
 
+    if args.build_shared_lib:
+        update_dynamic_libs()
+
     os.chdir(source_dir)
 
 def compile_onnx(protoc_path, source_dir):
@@ -254,6 +260,8 @@ def main():
     make(build_dir, args)
     if args.install:
         install(build_dir, args)
+        if args.build_shared_lib:
+            update_dynamic_libs()
 
 
 if __name__ == '__main__':
