@@ -170,6 +170,31 @@ def try_create_dir(path):
         except:
             os.makedirs(path)
 
+def build_protobuf(source_dir, args):
+    os.chdir(f"{source_dir}/cmake/external/protobuf")
+
+    configure_arg = [
+        "sudo", "cmake", ".",
+        "-Dprotobuf_BUILD_TESTS=OFF",
+        "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF")
+    ]
+    subprocess.run(configure_arg)
+
+    build_arg = [
+        "cmake", "--build", ".",
+        "--parallel", f"{multiprocessing.cpu_count()}" if args.parallel else "1"
+    ]
+
+    subprocess.run(build_arg)
+
+    install_arg = [
+        "sudo", "cmake", "--install", "."
+    ]
+
+    subprocess.run(install_arg)
+
+    os.chdir(source_dir)
+
 def compile_onnx(protoc_path, source_dir):
     protoc_path = resolve_executable_path(protoc_path)
     onnx_proto = source_dir + "/cmake/external/onnx/onnx"
@@ -219,12 +244,14 @@ def main():
     cmake_path = resolve_executable_path(args.cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
-    # compile_onnx(args.protoc_path, source_dir)
+
+    if shutil.which("protoc") is None:
+        build_protobuf(source_dir, args)
+
     compile_xs(args.protoc_path, source_dir)
     run_build(cmake_args)
-    # Start making
-    make(build_dir, args)
 
+    make(build_dir, args)
     if args.install:
         install(build_dir, args)
 

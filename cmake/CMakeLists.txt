@@ -85,7 +85,6 @@ add_library(xsdnn
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})
 
-target_link_libraries(xsdnn protobuf)
 set_target_properties(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
 
 install(TARGETS xsdnn
@@ -98,6 +97,3 @@ install(DIRECTORY ${XSROOT}/include/
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
 endif (xsdnn_BUILD_TEST)
-
-add_executable(simple_test ${XSROOT}/test/simple_test.cc)
-target_link_libraries(simple_test GTest::gtest_main xsdnn protobuf)
