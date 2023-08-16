@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_CXX_STANDARD 17)
-project(xsdnn VERSION 0.0.0 LANGUAGES C CXX)
+project(xsdnn VERSION 1.0.0 LANGUAGES C CXX)
 
 option(xsdnn_BUILD_TEST OFF)
 option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
-option(xsdnn_BUILD_SHARED OFF)
 option(xsdnn_USE_SSE OFF)
 option(xsdnn_USE_OPENMP OFF)
 
 set(XSROOT ${PROJECT_SOURCE_DIR}/..)
 set(XSROOT_SRC ${XSROOT}/src)
-set(MMPACK_ROOT ${XSROOT_SRC}/mmpack/lib)
+set(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
 set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
+
+# TODO: добавить submodule proto + собирать его с -fPIC
 
 include_directories(
         ${XSROOT}/include/
@@ -70,7 +71,7 @@ include(xsdnn_utils.cmake)
 include(xsdnn_serializer.cmake)
 include(xsdnn_session.cmake)
 
-add_library(xsdnn STATIC
+add_library(xsdnn
         ${mmpack_common_src}
         ${xsdnn_common_src}
         ${xsdnn_core_common_src}
@@ -83,6 +84,16 @@ add_library(xsdnn STATIC
         ${xsdnn_utils_src}
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})
+
+target_link_libraries(xsdnn protobuf)
+set_target_properties(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
+
+install(TARGETS xsdnn
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_LIBDIR}/include)
+
+install(DIRECTORY ${XSROOT}/include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xsdnn)
 
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)

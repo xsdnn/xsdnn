@@ -5,4 +5,3 @@ set(
 
 )
 
-add_library(xsdnn_optimizers STATIC ${xsdnn_optimizers_src})
