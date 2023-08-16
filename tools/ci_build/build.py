@@ -50,6 +50,18 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--build_shared_lib",
+        action='store_true',
+        help="Set to build shared lib"
+    )
+
+    parser.add_argument(
+        "--install",
+        action='store_true',
+        help="Set to install xsdnn into 'CMAKE_INSTALL_LIBDIR'"
+    )
+
+    parser.add_argument(
             "--cmake_path",
             default="cmake",
             help="Path to the CMake program."
@@ -108,6 +120,7 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_args = [
         cmake_path, "-S", cmake_dir, "-B", build_dir,
         "-DCMAKE_BUILD_TYPE=" + args.config,
+        "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF"),
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
         "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
@@ -181,6 +194,15 @@ def make(build_dir, args):
 
     return subprocess.run(make_args)
 
+def install(build_dir, args):
+    make_args = [
+        "make",
+        "-C", build_dir,
+        "install"
+    ]
+
+    return subprocess.run(make_args)
+
 def main():
     args = parse_arguments()
     script_dir = os.path.realpath(os.path.dirname(__file__))
@@ -202,6 +224,9 @@ def main():
     run_build(cmake_args)
     # Start making
     make(build_dir, args)
+
+    if args.install:
+        install(build_dir, args)
 
 
 if __name__ == '__main__':
