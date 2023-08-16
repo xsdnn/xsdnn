@@ -36,7 +36,6 @@ cmake-build-release/
 cmake-build-relwithdebinfo/
 build/
 
-cmake/external/protobuf
 
 legacy/Doxygen_old/html/
 legacy/Doxygen_old/latex/
