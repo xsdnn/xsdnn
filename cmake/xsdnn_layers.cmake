@@ -14,5 +14,3 @@ set(
         "${XSROOT_SRC}/layers/mul.cc"
         "${XSROOT_SRC}/layers/layer_register.cc"
 )
-
-add_library(xsdnn_layers STATIC ${xsdnn_layers_src})

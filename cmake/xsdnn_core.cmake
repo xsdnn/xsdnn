@@ -22,8 +22,3 @@ set(
         "${XSROOT_SRC}/core/kernel/max_pool/mp_fwd_kernel.cc"
         "${XSROOT_SRC}/core/kernel/max_pool/mp_fwd_xs_impl.cc"
 )
-
-add_library(xsdnn_core STATIC
-        ${xsdnn_core_common_src}
-        ${xsdnn_core_framework_src}
-        ${xsdnn_core_kernel_src})

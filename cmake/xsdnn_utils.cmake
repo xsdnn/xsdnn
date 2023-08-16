@@ -9,5 +9,3 @@ set(
         "${XSROOT_SRC}/utils/xs_error.cc"
         "${XSROOT_SRC}/utils/grad_checker.cc"
 )
-
-add_library(xsdnn_utils STATIC ${xsdnn_utils_src})

@@ -4,4 +4,3 @@ set(
         "${XSROOT_SRC}/layers/layer_register.cc"
 )
 
-add_library(xsdnn_serializer STATIC ${xsdnn_serializer_src})

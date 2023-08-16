@@ -5,7 +5,7 @@
 
 #ifndef MMPACK_TEST_UTILS_H
 #define MMPACK_TEST_UTILS_H
-#include "../xsdnn.h"
+#include "xsdnn.h"
 #include "serializer/cerial.h"
 #include <fstream>
 # include <filesystem>

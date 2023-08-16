@@ -3,5 +3,3 @@ set(
         "${XSROOT_SRC}/layers/activations/activation_layer.cc"
         "${XSROOT_SRC}/layers/activations/relu.cc"
 )
-
-add_library(xsdnn_activations STATIC ${xsdnn_activations_src})

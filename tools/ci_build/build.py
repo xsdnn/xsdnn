@@ -50,6 +50,18 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--build_shared_lib",
+        action='store_true',
+        help="Set to build shared lib"
+    )
+
+    parser.add_argument(
+        "--install",
+        action='store_true',
+        help="Set to install xsdnn into 'CMAKE_INSTALL_LIBDIR'"
+    )
+
+    parser.add_argument(
             "--cmake_path",
             default="cmake",
             help="Path to the CMake program."
@@ -108,6 +120,7 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_args = [
         cmake_path, "-S", cmake_dir, "-B", build_dir,
         "-DCMAKE_BUILD_TYPE=" + args.config,
+        "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF"),
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
         "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
@@ -157,6 +170,31 @@ def try_create_dir(path):
         except:
             os.makedirs(path)
 
+def build_protobuf(source_dir, args):
+    os.chdir(f"{source_dir}/cmake/external/protobuf")
+
+    configure_arg = [
+        "sudo", "cmake", ".",
+        "-Dprotobuf_BUILD_TESTS=OFF",
+        "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF")
+    ]
+    subprocess.run(configure_arg)
+
+    build_arg = [
+        "cmake", "--build", ".",
+        "--parallel", f"{multiprocessing.cpu_count()}" if args.parallel else "1"
+    ]
+
+    subprocess.run(build_arg)
+
+    install_arg = [
+        "sudo", "cmake", "--install", "."
+    ]
+
+    subprocess.run(install_arg)
+
+    os.chdir(source_dir)
+
 def compile_onnx(protoc_path, source_dir):
     protoc_path = resolve_executable_path(protoc_path)
     onnx_proto = source_dir + "/cmake/external/onnx/onnx"
@@ -181,6 +219,15 @@ def make(build_dir, args):
 
     return subprocess.run(make_args)
 
+def install(build_dir, args):
+    make_args = [
+        "make",
+        "-C", build_dir,
+        "install"
+    ]
+
+    return subprocess.run(make_args)
+
 def main():
     args = parse_arguments()
     script_dir = os.path.realpath(os.path.dirname(__file__))
@@ -197,11 +244,16 @@ def main():
     cmake_path = resolve_executable_path(args.cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
-    # compile_onnx(args.protoc_path, source_dir)
+
+    if shutil.which("protoc") is None:
+        build_protobuf(source_dir, args)
+
     compile_xs(args.protoc_path, source_dir)
     run_build(cmake_args)
-    # Start making
+
     make(build_dir, args)
+    if args.install:
+        install(build_dir, args)
 
 
 if __name__ == '__main__':

@@ -4,5 +4,3 @@ set(
         "${XSROOT_SRC}/common/nodes.cc"
         "${XSROOT_SRC}/common/network.cc"
 )
-
-add_library(xsdnn_common STATIC ${xsdnn_common_src})

@@ -3,9 +3,9 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include "../muladd.h"
-#include "../utils/macro.h"
-#include "../utils/wrappers.h"
+#include <mmpack/muladd.h>
+#include <mmpack/macro.h>
+#include <mmpack/wrappers.h>
 
 namespace mmpack {
 
