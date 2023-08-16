@@ -14,7 +14,7 @@
 - [x] input
 - [x] output
 - [ ] conv
-- [ ] max_pool
+- [x] max_pool
 - [ ] average_pool
 - [ ] global_average_pool
 
@@ -65,6 +65,8 @@
 - [ ] max_pool
 - [ ] average_pool
 - [ ] global_average_pool
+
+### 2. Автоматический выбор размерности операции (1D, 2D) используя входной shape
 
 # Критерии выпуска версии 1.2.0 (24-Q2)
 
