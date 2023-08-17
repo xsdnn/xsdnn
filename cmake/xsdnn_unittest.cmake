@@ -95,3 +95,8 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_max_pooling.cc
 )
 
+AddTest(
+        xsdnn_global_average_pooling_test
+        ${XSDNN_TEST_ROOT}/test_global_average_pooling.cc
+)
+

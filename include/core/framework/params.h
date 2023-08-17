@@ -43,6 +43,11 @@ struct max_pool {
     std::vector<size_t> in2out;
 };
 
+struct global_avg_pool {
+    shape3d in_shape_;
+    shape3d out_shape_;
+};
+
     } // params
 } // xsdnn
 

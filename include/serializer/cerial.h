@@ -229,6 +229,30 @@ struct cerial {
         pad_type->set_name((layer->params_.pad_type_ == padding_mode::same) ? "same" : "valid");
     }
 
+    /*
+    * Global Average Pooling
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::global_average_pooling* layer) {
+        node->set_name("global_average_pooling");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->params_.in_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->params_.in_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->params_.in_shape_.W);
+    }
+
 };
 
     template<>
@@ -334,6 +358,17 @@ struct cerial {
         std::shared_ptr<xsdnn::max_pooling> l = std::make_shared<xsdnn::max_pooling>(
                 shape3d(C, H, W), kernel_x, kernel_y, stride_x, stride_y, pad_type
                 );
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<xsdnn::global_average_pooling> cerial::deserialize(const xs::NodeInfo *node,
+                                                            const xs::TensorInfo *tensor) {
+        size_t C = node->attribute(0).i();
+        size_t H = node->attribute(1).i();
+        size_t W = node->attribute(2).i();
+        std::shared_ptr<global_average_pooling> l = std::make_shared<global_average_pooling>(shape3d(C, H, W));
         return l;
     }
 

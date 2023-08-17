@@ -8,7 +8,6 @@
 #include "test_utils.h"
 using namespace xsdnn;
 
-// TODO: impl this
 
 TEST(max_pool, forward) {
     shape3d in_shape(1, 4, 4);
