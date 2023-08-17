@@ -116,9 +116,8 @@ def update_submodules(source_dir):
     subprocess.run(["git", "submodule", "update", "--init", "--recursive"])
 
 def generate_build_tree(cmake_path, source_dir, build_dir, args):
-    cmake_dir = os.path.join(source_dir, 'cmake')
     cmake_args = [
-        cmake_path, "-S", cmake_dir, "-B", build_dir,
+        cmake_path, "-S", "./cmake", "-B", build_dir,
         "-DCMAKE_BUILD_TYPE=" + args.config,
         "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF"),
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
@@ -213,26 +212,30 @@ def compile_xs(protoc_path, source_dir):
     destination = source_dir + "/include/serializer"
     subprocess.run([protoc_path, f"--cpp_out={destination}", f"--proto_path={onnx_proto}", "xs.proto3"])
 
-def run_build(build_tree):
-    return subprocess.run(build_tree)
+def run_build(build_tree, source_dir, script_dir):
+    os.chdir(source_dir)
+    subprocess.run(build_tree)
+    os.chdir(script_dir)
 
-def make(build_dir, args):
+def make(source_dir, build_dir, script_dir, args):
+    os.chdir(source_dir + "/" + build_dir)
     make_args = [
         "make",
-        "-C", build_dir,
         f"-j{multiprocessing.cpu_count() if args.parallel else 1}"
     ]
 
-    return subprocess.run(make_args)
+    subprocess.run(make_args)
+    os.chdir(script_dir)
 
-def install(build_dir, args):
+def install(source_dir, build_dir, script_dir, args):
+    os.chdir(source_dir + "/" + build_dir)
     make_args = [
         "make",
-        "-C", build_dir,
         "install"
     ]
 
-    return subprocess.run(make_args)
+    subprocess.run(make_args)
+    os.chdir(script_dir)
 
 def main():
     args = parse_arguments()
@@ -255,11 +258,11 @@ def main():
         build_protobuf(source_dir, args)
 
     compile_xs(args.protoc_path, source_dir)
-    run_build(cmake_args)
+    run_build(cmake_args, source_dir, script_dir)
 
-    make(build_dir, args)
+    make(source_dir, build_dir, script_dir, args)
     if args.install:
-        install(build_dir, args)
+        install(source_dir, build_dir, script_dir, args)
         if args.build_shared_lib:
             update_dynamic_libs()
 
