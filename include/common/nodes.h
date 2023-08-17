@@ -87,6 +87,8 @@ protected:
                         std::vector<tensor_t>& output);
     template<typename Net>
     friend class network;
+
+    void connection_mismatch(shape3d lhs, shape3d rhs);
 };
 
 class graph : public nodes {

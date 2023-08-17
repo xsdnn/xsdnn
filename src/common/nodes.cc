@@ -184,9 +184,21 @@ namespace xsdnn {
             auto next = nodes_[i+1]->in_shape();
 
             if (prev[data_idx.first] != next[data_idx.second]) {
-                throw xs_error("Connected error");
+                connection_mismatch(prev[data_idx.first], next[data_idx.second]);
             }
         }
+    }
+
+    void sequential::connection_mismatch(xsdnn::shape3d lhs, xsdnn::shape3d rhs) {
+        std::ostringstream io;
+        io << "\x1B[31m" << "Critical Error! Shape mismatch!" << std::endl;
+
+        io << "\x1B[33m" << "out shape:\t" << lhs << std::endl;
+
+        io << "\x1B[33m" << "in  shape:\t" << rhs << std::endl;
+
+        std::string message = io.str();
+        throw xs_error(message.c_str());
     }
 
     void sequential::reorder_output(const std::vector<tensor_t> &input, std::vector<tensor_t> &output) {
