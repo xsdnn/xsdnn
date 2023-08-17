@@ -43,6 +43,20 @@ elseif(xsdnn_USE_OPENMP AND NOT OPENMP_FOUND)
             "OpenMP_CXX_FLAGS")
 endif()
 
+if (xsdnn_USE_SSE)
+    # Проверим поддержку sse в компиляторе. Supported only gcc.
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        include(CheckCXXCompilerFlag)
+        check_cxx_compiler_flag("-msse3" COMPILER_HAS_SSE_FLAG)
+        if(xsdnn_USE_SSE AND COMPILER_HAS_SSE_FLAG)
+            add_definitions(-DMM_USE_SSE)
+            set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -msse3")
+            set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -msse3")
+        endif()
+    endif()
+
+endif()
+
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
@@ -51,14 +65,11 @@ set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -fs
 # Set compiler options
 set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE} -O3 -ffast-math")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_FLAGS_DEBUG} -O3 -ffast-math")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_FLAGS_DEBUG} -ffast-math")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG} -O0")
 
-if (xsdnn_USE_SSE)
-    add_compile_definitions(MM_USE_SSE)
-    set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -msse3")
-    set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -msse3")
-endif()
+include(summary.cmake)
+xsdnn_print_configuration_summary()
 
 include(xsdnn_mmpack.cmake)
 include(xsdnn_common.cmake)
