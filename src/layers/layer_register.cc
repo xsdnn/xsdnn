@@ -20,8 +20,8 @@ XS_LAYER_SAVE_INTERNAL_REGISTER(and_layer)                      \
 XS_LAYER_SAVE_INTERNAL_REGISTER(flatten)                        \
 XS_LAYER_SAVE_INTERNAL_REGISTER(relu)                           \
 XS_LAYER_SAVE_INTERNAL_REGISTER(max_pooling)                    \
-XS_LAYER_SAVE_INTERNAL_REGISTER(global_average_pooling)
-
+XS_LAYER_SAVE_INTERNAL_REGISTER(global_average_pooling)         \
+XS_LAYER_SAVE_INTERNAL_REGISTER(reshape)
 
 
 
@@ -40,7 +40,8 @@ XS_LAYER_LOAD_INTERNAL_REGISTER(and_layer)                      \
 XS_LAYER_LOAD_INTERNAL_REGISTER(flatten)                        \
 XS_LAYER_LOAD_INTERNAL_REGISTER(relu)                           \
 XS_LAYER_LOAD_INTERNAL_REGISTER(max_pooling)                    \
-XS_LAYER_LOAD_INTERNAL_REGISTER(global_average_pooling)
+XS_LAYER_LOAD_INTERNAL_REGISTER(global_average_pooling)         \
+XS_LAYER_LOAD_INTERNAL_REGISTER(reshape)
 
 
 

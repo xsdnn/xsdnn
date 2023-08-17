@@ -18,6 +18,7 @@
 #include "max_pooling.h"
 #include "mul.h"
 #include "global_average_pooling.h"
+#include "reshape.h"
 
 
 #include "activations/relu.h"

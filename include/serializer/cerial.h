@@ -253,6 +253,30 @@ struct cerial {
         W->set_i(layer->params_.in_shape_.W);
     }
 
+    /*
+    * Reshape
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::reshape* layer) {
+        node->set_name("reshape");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->out_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->out_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->out_shape_.W);
+    }
+
 };
 
     template<>
@@ -369,6 +393,17 @@ struct cerial {
         size_t H = node->attribute(1).i();
         size_t W = node->attribute(2).i();
         std::shared_ptr<global_average_pooling> l = std::make_shared<global_average_pooling>(shape3d(C, H, W));
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<xsdnn::reshape> cerial::deserialize(const xs::NodeInfo *node,
+                                                           const xs::TensorInfo *tensor) {
+        size_t C = node->attribute(0).i();
+        size_t H = node->attribute(1).i();
+        size_t W = node->attribute(2).i();
+        std::shared_ptr<reshape> l = std::make_shared<reshape>(shape3d(C, H, W));
         return l;
     }
 

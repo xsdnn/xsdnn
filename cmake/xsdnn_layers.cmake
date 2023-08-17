@@ -13,5 +13,6 @@ set(
         "${XSROOT_SRC}/layers/max_pooling.cc"
         "${XSROOT_SRC}/layers/global_average_pooling.cc"
         "${XSROOT_SRC}/layers/mul.cc"
+        "${XSROOT_SRC}/layers/reshape.cc"
         "${XSROOT_SRC}/layers/layer_register.cc"
 )

@@ -100,3 +100,8 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_global_average_pooling.cc
 )
 
+AddTest(
+        xsdnn_reshape_test
+        ${XSDNN_TEST_ROOT}/test_reshape.cc
+)
+
