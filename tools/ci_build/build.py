@@ -131,7 +131,7 @@ def generate_build_tree(cmake_path, source_dir, build_dir, args):
     return cmake_args
 
 def update_dynamic_libs():
-    return subprocess.run("sudo", "ldconfig")
+    return subprocess.run(["sudo", "ldconfig"])
 
 def generate_build_tree_mmpack(build_dir, args):
     cmake_args = [
