@@ -4,8 +4,7 @@
 //
 
 #include <type_traits>
-#include <mmpack/dot.h>
-#include <mmpack/wrappers.h>
+#include "mmpack_.h"
 
 namespace mmpack {
 

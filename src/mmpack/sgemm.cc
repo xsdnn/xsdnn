@@ -3,8 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
-#include <mmpack/gemm.h>
-#include <mmpack/wrappers.h>
+#include "mmpack_.h"
 
 namespace mmpack {
 

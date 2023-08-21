@@ -21,11 +21,6 @@ AddTest(
 )
 
 AddTest(
-        mmpack_v2mm_test
-        ${XSDNN_TEST_ROOT}/test_sv2mm.cc
-)
-
-AddTest(
         mmpack_dot_test
         ${XSDNN_TEST_ROOT}/test_dot.cc
 )

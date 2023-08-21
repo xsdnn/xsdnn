@@ -9,7 +9,7 @@
 #include "../include/utils/grad_checker.h"
 using namespace xsdnn;
 
-// TODO: поменять обратно на chw
+
 
 TEST(abs, forward) {
     shape3d shape_(3, 224, 224);
