@@ -97,6 +97,28 @@ namespace mmpack {
     typedef enum { CblasNoTrans=111, CblasTrans=112 } CBLAS_TRANSPOSE;
 #endif
 
+struct MM_CONV_PARAMS {
+    enum MmConvAlgorithm {
+        Im2ColThenGemm = 0
+    };
+
+    size_t dimensions_;
+    size_t group_count_;
+    size_t in_shape_[3];        // [Cin, Hin, Win]
+    size_t in_size_;
+    size_t out_shape_[3];       // [Cout, Hout, Wout]
+    size_t out_size_;
+    size_t k_;
+    size_t padding_[4];         // see onnx.runtime conv op att. pads
+    size_t kernel_shape_[2];
+    size_t dilation_shape_[2];
+    size_t stride_shape_[2];
+    size_t filter_count_;
+    MmConvAlgorithm algorithm_;
+    bool has_bias_;
+    size_t TemproraryBufferSize;
+};
+
 #if !defined(MM_USE_DOUBLE)
 float
 MmDot(
@@ -150,6 +172,45 @@ MmGemm(
         float* C,
         size_t ldc
 );
+/*++
+
+Описание процедуры:
+
+    C := alpha * op(A) * op(B) + beta * C
+
+Аргументы:
+
+    TransA - транспонировать матрицу А.
+
+    TransB - транспонировать матрицу В.
+
+    M - кол-во строк матрицы А и С.
+
+    N - кол-во столбцов матрицы B и C.
+
+    K - кол-во столбцов матрицы А, кол-во строк матрицы В.
+
+    alpha - коэффициент умножения - см. формулу.
+
+    A - указатель на матрицу A.
+
+    lda - лидирующее измерение матрицы А. Равно кол-во столбцов.
+
+    B - указатель на матрицу В.
+
+    ldb - лидирующее измерение матрицы В. Равно кол-во столбцов.
+
+    beta - коэффициент умножения - см. формулу.
+
+    C - указатель на матрицу C.
+
+    ldc - лидирующее измерение матрицы C. Равно кол-во столбцов.
+
+Return Value:
+
+    None.
+
+--*/
 #else
 #error NotImplementedYet
 #endif
@@ -165,6 +226,46 @@ MmMulAdd(
 #else
 #error NotImplementedYet
 #endif
+
+/*
+ * Convolution routines
+ */
+
+void
+MmConv(
+        const MM_CONV_PARAMS* Parameters,
+        const float* Input,
+        const float* Weight,
+        const float* Bias,
+        float* TemporaryBuffer,
+        float* Output
+);
+/*++
+
+Описание процедуры:
+
+    Процедура выполняет свертку последовательности. Поддерживается только 2D операция.
+    1D операция будет добавлена в следующих версиях.
+
+Аргументы:
+
+    Parameters - контейнер параметров, описывающих процедуру свертки.
+
+    Input - входные данные: одно изображение содержащее C каналов.
+
+    Weight - фильтры для выполнения свертки.
+
+    Bias - опциональное смещение к результату свертки.
+
+    TemporaryBuffer - буфер для результата выполнения алгоритма Im2Col.
+
+    Output - буфер для результата свертки.
+
+Return Value:
+
+    None.
+
+--*/
 
 template<typename T, std::size_t alignment>
 class aligned_allocator {

@@ -48,6 +48,35 @@ struct global_avg_pool {
     shape3d out_shape_;
 };
 
+struct conv {
+public:
+    conv();
+
+    void infer_output_requirement_shape(shape3d in, size_t out_channel,
+                                        std::vector<size_t> kernel_shape,
+                                        std::vector<size_t> stride_shape,
+                                        std::vector<size_t> dilation_shape,
+                                        padding_mode pad_type,
+                                        std::vector<size_t> pads);
+
+private:
+    bool is_init();
+
+    void _2D(shape3d in, size_t out_channel,
+             std::vector<size_t> kernel_shape,
+             std::vector<size_t> stride_shape,
+             std::vector<size_t> dilation_shape,
+             padding_mode pad_type,
+             std::vector<size_t> pads);
+
+    size_t computeOutShape(const size_t in_dim, size_t kernel, size_t stride, size_t dilation, size_t pad_0, size_t pad_1);
+    void computePad(const padding_mode pad_type, size_t& pad_0, size_t& pad_1);
+    void computeAlgorithm();
+
+public:
+    MM_CONV_PARAMS holder_;
+};
+
     } // params
 } // xsdnn
 

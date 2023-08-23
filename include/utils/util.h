@@ -7,6 +7,7 @@
 #define XSDNN_UTIL_H
 
 #include "xs_error.h"
+#include "tensor_shape.h"
 #include <vector>
 #include <iostream>
 
@@ -40,7 +41,10 @@ enum class op_mode {
 
 enum class padding_mode {
     same = 0,
-    valid = 1
+    same_lower = 1,
+    same_upper = 2,
+    valid = 3,
+    notset = 4
 };
 
 size_t calc_pool_shape(size_t in_size,
@@ -48,6 +52,11 @@ size_t calc_pool_shape(size_t in_size,
                        size_t stride,
                        padding_mode pad_type,
                        bool   ceil);
+
+size_t calc_conv_padding_shape();
+
+bool is_1D_tensor(shape3d in);
+bool is_2D_tensor(shape3d in);
 
 }
 

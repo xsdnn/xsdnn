@@ -94,5 +94,12 @@ size_t calc_pool_shape(size_t in_size,
     return (ceil ? std::ceil(ir_out_size) : std::floor(ir_out_size));
 }
 
+bool is_1D_tensor(shape3d in) {
+    return in.C == 1 && in.H == 1 && in.W > 1;
+}
+
+bool is_2D_tensor(shape3d in) {
+    return in.C > 1 && in.H > 1 && in.W > 1;
+}
 
 } // xsdnn
