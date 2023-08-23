@@ -11,12 +11,16 @@ namespace xsdnn {
 conv::conv() {}
 
 void
-conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, std::vector<size_t> kernel_shape,
+conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size_t group_count,
+                                     bool has_bias, std::vector<size_t> kernel_shape,
                                      std::vector<size_t> stride_shape, std::vector<size_t> dilation_shape,
                                      xsdnn::padding_mode pad_type, std::vector<size_t> pads) {
     if (!is_init()) {
         throw xs_error("conv param doesn't init");
     }
+
+    holder_.group_count_ = group_count;
+    holder_.has_bias_ = has_bias;
 
     if (holder_.dimensions_ == 2) {
         this->_2D(in, out_channel, kernel_shape, stride_shape, dilation_shape, pad_type, pads);
@@ -28,7 +32,7 @@ conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, std:
 }
 
 bool conv::is_init() {
-    return holder_.dimensions_ != 0 && holder_.group_count_ != 0;
+    return holder_.dimensions_ == 1 || holder_.dimensions_ == 2;
 }
 
 void conv::_2D(xsdnn::shape3d in, size_t out_channel, std::vector<size_t> kernel_shape,

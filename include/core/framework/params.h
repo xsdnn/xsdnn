@@ -52,7 +52,7 @@ struct conv {
 public:
     conv();
 
-    void infer_output_requirement_shape(shape3d in, size_t out_channel,
+    void infer_output_requirement_shape(shape3d in, size_t out_channel, size_t group_count, bool has_bias,
                                         std::vector<size_t> kernel_shape,
                                         std::vector<size_t> stride_shape,
                                         std::vector<size_t> dilation_shape,

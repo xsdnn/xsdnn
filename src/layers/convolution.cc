@@ -15,16 +15,13 @@ void conv::set_params(size_t in_channel, size_t in_height, size_t in_width, size
                       std::vector<size_t> pads) {
     if (is_1D_tensor(shape3d(in_channel, in_height, in_width))) {
         params_.holder_.dimensions_ = 1;
-        params_.holder_.has_bias_ = has_bias;
-        params_.holder_.group_count_ = group_count;
     } else if (is_2D_tensor(shape3d(in_channel, in_height, in_width))) {
         params_.holder_.dimensions_ = 2;
-        params_.holder_.has_bias_ = has_bias;
-        params_.holder_.group_count_ = group_count;
     } else {
         xs_error("Unsupported dimensions in input data of conv layer");
     }
     params_.infer_output_requirement_shape(shape3d(in_channel, in_height, in_width),
+                                           group_count, has_bias,
                                            out_channel, kernel_shape, stride_shape,
                                            dilation_shape, pad_type, pads);
 }
