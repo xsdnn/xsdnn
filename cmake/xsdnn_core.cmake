@@ -7,6 +7,7 @@ set(
         xsdnn_core_framework_src
         "${XSROOT_SRC}/core/framework/op_context.cc"
         "${XSROOT_SRC}/core/framework/op_kernel.cc"
+        "${XSROOT_SRC}/core/framework/params.cc"
 )
 
 set(

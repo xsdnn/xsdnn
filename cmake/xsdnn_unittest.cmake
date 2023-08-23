@@ -100,3 +100,8 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_reshape.cc
 )
 
+AddTest(
+        xsdnn_conv_test
+        ${XSDNN_TEST_ROOT}/test_conv.cc
+)
+
