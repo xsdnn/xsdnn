@@ -71,10 +71,11 @@ private:
 
     size_t computeOutShape(const size_t in_dim, size_t kernel, size_t stride, size_t dilation, size_t pad_0, size_t pad_1);
     void computePad(const padding_mode pad_type, size_t& pad_0, size_t& pad_1);
+    void computeTmpBufferSize();
     void computeAlgorithm();
 
 public:
-    MM_CONV_PARAMS holder_;
+    MM_CONV_PARAMS _;
 };
 
     } // params

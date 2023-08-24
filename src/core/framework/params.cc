@@ -19,12 +19,12 @@ conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size
         throw xs_error("conv param doesn't init");
     }
 
-    holder_.group_count_ = group_count;
-    holder_.has_bias_ = has_bias;
+    _.GroupCount = group_count;
+    _.Bias = has_bias;
 
-    if (holder_.dimensions_ == 2) {
+    if (_.Dimensions == 2) {
         this->_2D(in, out_channel, kernel_shape, stride_shape, dilation_shape, pad_type, pads);
-    } else if (holder_.dimensions_ == 1) {
+    } else if (_.Dimensions == 1) {
         throw xs_error("conv param for 1D not implemented yet");
     } else {
         throw xs_error("[conv] unsupported dimensions in input data");
@@ -32,13 +32,13 @@ conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size
 }
 
 bool conv::is_init() {
-    return holder_.dimensions_ == 1 || holder_.dimensions_ == 2;
+    return _.Dimensions == 1 || _.Dimensions == 2;
 }
 
 void conv::_2D(xsdnn::shape3d in, size_t out_channel, std::vector<size_t> kernel_shape,
                std::vector<size_t> stride_shape, std::vector<size_t> dilation_shape,
                xsdnn::padding_mode pad_type, std::vector<size_t> pads) {
-    size_t rank = holder_.dimensions_;
+    size_t rank = _.Dimensions;
     if (kernel_shape.size() != rank) throw xs_error("[conv] kernel_shape rank must be equal 2"); // TODO: здесь должна быть более полная проверка
     if (stride_shape.empty()) {
         stride_shape.resize(rank, 1);
@@ -57,38 +57,42 @@ void conv::_2D(xsdnn::shape3d in, size_t out_channel, std::vector<size_t> kernel
         throw xs_error("[conv] pads_shape rank must be equal 4");
     }
 
-    holder_.in_shape_[0] = in.C;
-    holder_.in_shape_[1] = in.H;
-    holder_.in_shape_[2] = in.W;
-    holder_.out_shape_[0] = in.C;
+    assert(in.C % _.GroupCount == 0);
+    assert(out_channel % _.GroupCount == 0);
+
+    _.InChannel = static_cast<size_t>(in.C / _.GroupCount);
+    _.InShape[0] = in.H;
+    _.InShape[1] = in.W;
+
 
     size_t in_size = 1;
     size_t out_size = 1;
-    size_t k = in.C;
+    size_t k = _.InChannel;
 
     for (size_t i = 0; i < rank; ++i) {
         computePad(pad_type, pads[i], pads[i + rank]);
-        holder_.padding_[i] = pads[i];
-        holder_.padding_[i + rank] = pads[i + rank];
+        _.Padding[i] = pads[i];
+        _.Padding[i + rank] = pads[i + rank];
 
-        holder_.out_shape_[i + 1] = computeOutShape(holder_.in_shape_[i + 1], kernel_shape[i],
+        _.OutShape[i] = computeOutShape(_.InShape[i], kernel_shape[i],
                                             stride_shape[i], dilation_shape[i], pads[i], pads[i + rank]);
 
-        holder_.kernel_shape_[i] = kernel_shape[i];
-        holder_.dilation_shape_[i] = dilation_shape[i];
-        holder_.stride_shape_[i] = stride_shape[i];
+        _.KernelShape[i] = kernel_shape[i];
+        _.DilationShape[i] = dilation_shape[i];
+        _.StrideShape[i] = stride_shape[i];
 
-        in_size *= holder_.in_shape_[i + 1];
-        out_size *= holder_.out_shape_[i + 1];
-        k *= holder_.kernel_shape_[i];
+        in_size *= _.InShape[i];
+        out_size *= _.OutShape[i];
+        k *= _.KernelShape[i];
     }
-    holder_.filter_count_ = holder_.in_shape_[0] / holder_.group_count_;
+    _.FilterCount = static_cast<size_t>(out_channel / _.GroupCount);
 
-    holder_.in_size_ = in_size;
-    holder_.out_size_ = out_size;
-    holder_.k_ = k;
+    _.InSize = in_size;
+    _.OutSize = out_size;
+    _.K = k;
 
     this->computeAlgorithm();
+    this->computeTmpBufferSize();
 }
 
 size_t conv::computeOutShape(const size_t in_dim, size_t kernel, size_t stride, size_t dilation, size_t pad_0,
@@ -111,8 +115,11 @@ void conv::computePad(const xsdnn::padding_mode pad_type, size_t &pad_0, size_t 
 }
 
 void conv::computeAlgorithm() {
-    // TODO: is to simple...
-    holder_.algorithm_ = holder_.Im2ColThenGemm;
+    _.Algorithm = _.Im2ColThenGemm;
+}
+
+void conv::computeTmpBufferSize() {
+    _.TemproraryBufferSize = 16384;
 }
 
     } // params

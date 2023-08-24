@@ -102,22 +102,59 @@ struct MM_CONV_PARAMS {
         Im2ColThenGemm = 0
     };
 
-    size_t dimensions_;
-    size_t group_count_;
-    size_t in_shape_[3];        // [Cin, Hin, Win]
-    size_t in_size_;
-    size_t out_shape_[3];       // [Cout, Hout, Wout]
-    size_t out_size_;
-    size_t k_;
-    size_t padding_[4];         // see onnx.runtime conv op att. pads
-    size_t kernel_shape_[2];
-    size_t dilation_shape_[2];
-    size_t stride_shape_[2];
-    size_t filter_count_;
-    MmConvAlgorithm algorithm_;
-    bool has_bias_;
+    size_t Dimensions;
+    size_t GroupCount;
+    size_t InChannel;
+    size_t InShape[2];
+    size_t InSize;
+    size_t OutShape[2];       // [Cout, Hout, Wout]
+    size_t OutSize;
+    size_t K;
+    size_t Padding[4];         // see onnx.runtime conv op att. pads
+    size_t KernelShape[2];
+    size_t DilationShape[2];
+    size_t StrideShape[2];
+    size_t FilterCount;
+    MmConvAlgorithm Algorithm;
+    bool Bias;
     size_t TemproraryBufferSize;
 };
+/*++
+
+Описание параметров свертки:
+
+    Dimensions - размерность свертки: поддерживается только 2D. 1D будет добавлена позже.
+
+    GroupCount - кол-во групп, на которые необходимо разбить связи входных и выходных каналов.
+
+    InChannel - кол-во входных каналов в каждой группе.
+
+    InShape - пространственные размеры входной последовательности. 2D: [Hin, Win], 1D: [Win].
+
+    InSize - абсолютная длина входной последовательности.
+
+    OutShape - пространственные размеры выходной последовательности. 2D: [Hout, Wout], 1D: [Wout].
+
+    OutSize - абсолютная длина выходной последовательности.
+
+    K - абсолютная длина всех ядер для каждой группы.
+
+    Padding - кол-во заполнений в формате (y_begin, x_begin, y_end, x_end).
+
+    KernelShape - пространственные размеры ядра.
+
+    DilationShape - пространственные размеры отступов.
+
+    StrideShape - пространственные размеры шага.
+
+    FilterCount - кол-во ядер в каждой группе.
+
+    Algorithm - алгоритм для выполнения свертки.
+
+    Bias - наличие смещения.
+
+    TemprorayBufferSize - размер временного буфера для упаковки результатов Im2Col.
+--*/
 
 #if !defined(MM_USE_DOUBLE)
 float
