@@ -75,7 +75,12 @@ std::string conv::layer_type() const {
 
 void conv::forward_propagation(const std::vector<tensor_t *> &in_data,
                                    std::vector<tensor_t *> &out_data) {
+    fwd_ctx_.set_in_out(in_data, out_data);
+    fwd_ctx_.set_parallelize(this->parallelize());
+    fwd_ctx_.set_engine(this->engine());
+    fwd_ctx_.set_num_threads(this->num_threads_);
 
+    fwd_kernel_->compute(fwd_ctx_, params_);
 }
 
 void conv::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,

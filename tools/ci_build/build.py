@@ -251,6 +251,7 @@ def main():
         update_submodules(source_dir)
     
     cmake_path = resolve_executable_path(args.cmake_path)
+    print(cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
     try_create_dir(build_dir)
 
