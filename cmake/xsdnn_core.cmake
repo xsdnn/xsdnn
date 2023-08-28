@@ -24,4 +24,6 @@ set(
         "${XSROOT_SRC}/core/kernel/max_pool/mp_fwd_xs_impl.cc"
         "${XSROOT_SRC}/core/kernel/global_average_pooling/gap_fwd_kernel.cc"
         "${XSROOT_SRC}/core/kernel/global_average_pooling/gap_fwd_xs_impl.cc"
+        "${XSROOT_SRC}/core/kernel/conv/conv_fwd_kernel.cc"
+        "${XSROOT_SRC}/core/kernel/conv/conv_fwd_xs_impl.cc"
 )
