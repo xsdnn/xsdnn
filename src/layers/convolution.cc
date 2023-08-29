@@ -85,7 +85,7 @@ void conv::forward_propagation(const std::vector<tensor_t *> &in_data,
 
 void conv::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
                             std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-
+    throw xs_error("[conv bwd] Not Impl Yet");
 }
 
 } // xsdnn

@@ -20,10 +20,9 @@ void conv_fwd_xs_impl(const tensor_t& X,
         mat_t TemporaryBuffer(p._.TemproraryBufferSize);
 
         if (B != nullptr) {
-            throw xs_error("[conv fwd] without bias ot implemented yet");
-//            mmpack::MmConv(&p._,
-//                           X[sample].data(), W.data(), B->data(),
-//                           TemporaryBuffer.data(), Y[sample].data());
+            mmpack::MmConv(&p._,
+                           X[sample].data(), W.data(), B->data(),
+                           TemporaryBuffer.data(), Y[sample].data());
         } else {
             mmpack::MmConv(&p._,
                            X[sample].data(), W.data(), nullptr,

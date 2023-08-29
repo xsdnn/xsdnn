@@ -26,6 +26,11 @@ AddTest(
 )
 
 AddTest(
+        mmpack_add_test
+        ${XSDNN_TEST_ROOT}/test_madd.cc
+)
+
+AddTest(
         mmpack_muladd_test
         ${XSDNN_TEST_ROOT}/test_muladd.cc
 )

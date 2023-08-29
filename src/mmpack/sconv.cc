@@ -8,6 +8,45 @@
 namespace mmpack {
 
 void
+MmConvAddBias(
+    const float* Bias,
+    float* Output,
+    size_t M,
+    size_t N,
+    size_t ldc
+)
+/*++
+
+Описание процедуры:
+
+   Добавляет смещение к выходному буферу.
+
+Аргументы:
+
+    Bias - указатель на буфер смещения.
+
+    Output - указатель на выходной буфер.
+
+    M - размер буфера смещения и кол-во строк в выходном буфере.
+
+    N - кол-во столбцов в выходном буфере.
+
+    ldc - лидирующее измерение выходного буфера.
+
+Return Value:
+
+    None.
+
+--*/
+{
+    size_t CountM = 0;
+    while (M-- > 0) {
+        MmAdd(Bias[CountM++], Output, N);
+        Output += ldc;
+    }
+}
+
+void
 MmConvIm2Col(
         const MM_CONV_PARAMS* Parameters,
         const float* Input,
@@ -229,6 +268,10 @@ MmConvOp(
                    SegmentOutput, OutputSize);
 
             beta = 1.0f;
+        }
+
+        if (Bias != nullptr) {
+            MmConvAddBias(Bias, SegmentOutput, FilterCount, CountN, OutputSize);
         }
     }
 }
