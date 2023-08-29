@@ -951,7 +951,7 @@ Return Value:
                 r0_b3 = MmAddFloat32x4(r0_b3, MmLoadFloat32x4<std::false_type>(C + 12));
             }
 
-            MmStoreFloat32x4<std::false_type>(C + 0, r0_b0);
+            MmStoreFloat32x4<std::false_type>(C, r0_b0);
             MmStoreFloat32x4<std::false_type>(C + 4, r0_b1);
             MmStoreFloat32x4<std::false_type>(C + 8, r0_b2);
             MmStoreFloat32x4<std::false_type>(C + 12, r0_b3);

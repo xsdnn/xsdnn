@@ -68,8 +68,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE}
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_FLAGS_DEBUG} -ffast-math")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG} -O0")
 
-include(summary.cmake)
-xsdnn_print_configuration_summary()
 
 include(xsdnn_mmpack.cmake)
 include(xsdnn_common.cmake)
@@ -108,3 +106,6 @@ install(DIRECTORY ${XSROOT}/include/
 if (xsdnn_BUILD_TEST)
     include(xsdnn_unittest.cmake)
 endif (xsdnn_BUILD_TEST)
+
+include(summary.cmake)
+xsdnn_print_configuration_summary()

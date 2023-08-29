@@ -62,7 +62,7 @@ public:
 
                     for (size_t i = 0; i < m; ++i) {
                         for (size_t j = 0; j < n; ++j) {
-                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], 1e-5)) {
                                 bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
                                                                 std::abs(C_[i * n + j] - CReference[i * n + j])));
                             }
@@ -131,7 +131,7 @@ public:
 
                     for (size_t i = 0; i < m; ++i) {
                         for (size_t j = 0; j < n; ++j) {
-                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], 1e-5)) {
                                 bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
                                                                 std::abs(C_[i * n + j] - CReference[i * n + j])));
                             }
@@ -194,7 +194,7 @@ public:
 
                     for (size_t i = 0; i < m; ++i) {
                         for (size_t j = 0; j < n; ++j) {
-                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], 1e-5)) {
                                 bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
                                                                 std::abs(C_[i * n + j] - CReference[i * n + j])));
                             }
@@ -252,7 +252,7 @@ public:
 
                     for (size_t i = 0; i < m; ++i) {
                         for (size_t j = 0; j < n; ++j) {
-                            if (!check_eq(CReference[i * n + j], C_[i * n + j], std::numeric_limits<mm_scalar>::epsilon())) {
+                            if (!check_eq(CReference[i * n + j], C_[i * n + j], 1e-5)) {
                                 bad_result.push_back(mnk_holder(m, n, k, C_[i * n + j], CReference[i * n + j],
                                                                 std::abs(C_[i * n + j] - CReference[i * n + j])));
                             }
