@@ -76,6 +76,7 @@ private:
 
 public:
     MM_CONV_PARAMS _;
+    padding_mode pad_type_;
 };
 
     } // params

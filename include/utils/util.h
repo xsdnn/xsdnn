@@ -58,6 +58,9 @@ size_t calc_conv_padding_shape();
 bool is_1D_tensor(shape3d in);
 bool is_2D_tensor(shape3d in);
 
+std::string convert_pad_to_string(padding_mode mode);
+padding_mode convert_string_to_pad(std::string mode);
+
 }
 
 #endif //XSDNN_UTIL_H

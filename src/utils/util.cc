@@ -102,4 +102,25 @@ bool is_2D_tensor(shape3d in) {
     return in.C > 1 && in.H > 1 && in.W > 1;
 }
 
+std::string convert_pad_to_string(padding_mode mode) {
+    switch (mode) {
+        case padding_mode::notset:
+            return "notset";
+        case padding_mode::valid:
+            return "valid";
+        case padding_mode::same:
+            return "same";
+        default:
+            throw xs_error("[utils] Unsupported padding mode");
+    }
+}
+
+padding_mode convert_string_to_pad(std::string mode) {
+    if (mode == "notset") return padding_mode::notset;
+    if (mode == "valid") return padding_mode::valid;
+    if (mode == "same") return padding_mode::same;
+    throw xs_error("[utils] Unsupported padding mode");
+}
+
+
 } // xsdnn

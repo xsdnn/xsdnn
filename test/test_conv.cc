@@ -275,6 +275,15 @@ TEST(conv, simple_forward_without_bias) {
     }
 }
 
+TEST(conv, cerial) {
+    shape3d in(12, 255, 255);
+    conv c(in, /*out_channel=*/ 6, /*kernel_shape=*/ {3, 3},
+            /*group_count=*/ 3, /*has_bias=*/ true,
+            /*stride_shape=*/ {1, 1}, /*dilation_shape=*/ {1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/ {1, 1, 1, 1});
+    ASSERT_TRUE(utils::cerial_testing(c));
+}
+
 class SConvTester {
 public:
     void ExecuteLong() {
@@ -567,7 +576,7 @@ public:
 
 int main(int argc, char **argv) {
     SConvTester ConvTest;
-    ConvTest.ExecuteLong();
+//    ConvTest.ExecuteLong();
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -68,6 +68,7 @@ bool cerial_testing(T& layer) {
 
     network<sequential> net_saver;
     net_saver << layer;
+    net_saver.init_weight();
     net_saver.save(path);
 
     network<sequential> net_loader;

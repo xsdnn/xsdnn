@@ -21,6 +21,7 @@ conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size
 
     _.GroupCount = group_count;
     _.Bias = has_bias;
+    pad_type_ = pad_type;
 
     if (_.Dimensions == 2) {
         this->_2D(in, out_channel, kernel_shape, stride_shape, dilation_shape, pad_type, pads);
