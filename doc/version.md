@@ -13,10 +13,18 @@
 - [x] fully_connected
 - [x] input
 - [x] output
-- [ ] conv
+- [x] conv
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
+- [ ] matmul
+- [ ] mul
+- [ ] hard_sigmoid
+- [ ] hard_swish
+- [ ] clip
+- [ ] exp
+- [ ] sigmoid
+- [ ] transpose
 
 ### 2. Поддержка сериализации у слоев: 
 - [x] fully_connected
@@ -29,29 +37,21 @@
 - [x] fully_connected
 - [x] input
 - [x] output
-- [ ] conv
+- [x] conv
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
-
-### 3. Поддержка импорта onnx opset-11 у слоев:
-- [ ] fully_connected
-- [ ] abs
-- [ ] acos
-- [ ] add
-- [ ] and
-- [ ] batch_norm2d
-- [ ] flatten
-- [ ] fully_connected
-- [ ] input
-- [ ] output
-- [ ] conv
-- [ ] max_pool
-- [ ] global_average_pool
-- [ ] reshape
+- [ ] matmul
+- [ ] mul
+- [ ] hard_sigmoid
+- [ ] hard_swish
+- [ ] clip
+- [ ] exp
+- [ ] sigmoid
+- [ ] transpose
 
 
-### 4. Рефакторинг скрипта сборки
+### 3. Рефакторинг скрипта сборки
 - [x] Билд динамической библиотеки
 - [x] Возможность установки в /usr/lib
 - [x] Вывод summary информации о билде
@@ -59,16 +59,7 @@
 
 # Критерии выпуска версии 1.1.0 (23-Q4)
 
-### 0. Рефакторинг core-mmpack
-- [ ] Распараллелить GEMM, а не подачу в батчи. 
-- [ ] Задизайнить выбор параллелизма - батч или GEMM only
-
-### 1. Поддержка операций для arm процессоров:
-- [ ] gemm
-- [ ] conv
-- [ ] max_pool
-- [ ] average_pool
-- [ ] global_average_pool
+### 1. Интеграция XNNPACK
 
 ### 2. Автоматический выбор размерности операции (1D, 2D) используя входной shape
 
