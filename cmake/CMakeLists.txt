@@ -17,6 +17,7 @@ set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
 
 include_directories(
         ${XSROOT}/include/
+        ${THIRD_PARTY_ROOT}/gsl/include
 )
 
 if (xsdnn_USE_DOUBLE)

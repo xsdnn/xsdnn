@@ -8,4 +8,5 @@ set(
         "${XSROOT_SRC}/utils/weight_init.cc"
         "${XSROOT_SRC}/utils/xs_error.cc"
         "${XSROOT_SRC}/utils/grad_checker.cc"
+        "${XSROOT_SRC}/utils/broadcaster.cc"
 )

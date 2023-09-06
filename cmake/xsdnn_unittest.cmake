@@ -110,3 +110,7 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_conv.cc
 )
 
+AddTest(
+        xsdnn_broadcast_op_test
+        ${XSDNN_TEST_ROOT}/test_broadcast_op.cc
+)
