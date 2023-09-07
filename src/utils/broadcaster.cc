@@ -287,4 +287,26 @@ bool broadcast::need_more_output() {
     return outputBroadcaster;
 }
 
+void BroadcastKernelLoop(broadcast& bc, BroadcastFuncHolder func_holder) {
+    if (!bc.have_two_tensors()) {
+        throw xs_error("[BroadcastKernelLoop] 2 tensors are not available");
+    }
+    if (bc.input0_scalar()) {
+        while(bc.need_more_output()) {
+            func_holder.input0scalar(bc);
+            bc.next();
+        }
+    } else if (bc.input1_scalar()) {
+        while(bc.need_more_output()) {
+            func_holder.input1scalar(bc);
+            bc.next();
+        }
+    } else {
+        while(bc.need_more_output()) {
+            func_holder.general(bc);
+            bc.next();
+        }
+    }
+}
+
 } // xsdnn

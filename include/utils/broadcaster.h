@@ -118,7 +118,7 @@ public:
     void next();
 
     template<typename T>
-    gsl::span<const T> GetSpanOutput(size_t offset, size_t num_elements) {
+    gsl::span<T> GetSpanOutput(size_t offset, size_t num_elements) {
         assert(offset < span_size_ && (offset + num_elements) <= span_size_);
         return gsl::span<T>(reinterpret_cast<T*>(output_bytes_) + offset, num_elements);
     }
@@ -154,6 +154,12 @@ public:
     gsl::span<const T> GetSpanInput1() { return inputBroadcaster.GetSpan1<T>(input1_offset_, input1_num_elements_); }
 
     template <typename T>
+    const T& GetScalarInput0() { return inputBroadcaster.GetScalar0<T>(); }
+
+    template <typename T>
+    const T& GetScalarInput1() { return inputBroadcaster.GetScalar1<T>(); }
+
+    template <typename T>
     gsl::span<T> GetOutputSpan() { return outputBroadcaster.GetSpanOutput<T>(output_offset_, output_num_elements_); }
 
 private:
@@ -167,6 +173,15 @@ private:
     size_t output_offset_{0};
     size_t output_num_elements_{inputBroadcaster.get_span_size()};
 };
+
+using broadcast_func = void (*)(broadcast&);
+struct BroadcastFuncHolder {
+    broadcast_func input0scalar;
+    broadcast_func input1scalar;
+    broadcast_func general;
+};
+
+void BroadcastKernelLoop(broadcast& bc, BroadcastFuncHolder func_holder);
 
 }
 
