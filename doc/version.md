@@ -17,14 +17,9 @@
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
-- [ ] matmul
-- [ ] mul
 - [ ] hard_sigmoid
-- [ ] hard_swish
-- [ ] clip
-- [ ] exp
-- [ ] sigmoid
-- [ ] transpose
+
+
 
 ### 2. Поддержка сериализации у слоев: 
 - [x] fully_connected
@@ -41,14 +36,9 @@
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
-- [ ] matmul
-- [ ] mul
 - [ ] hard_sigmoid
-- [ ] hard_swish
-- [ ] clip
-- [ ] exp
-- [ ] sigmoid
-- [ ] transpose
+
+
 
 
 ### 3. Рефакторинг скрипта сборки
@@ -62,6 +52,24 @@
 ### 1. Интеграция XNNPACK
 
 ### 2. Автоматический выбор размерности операции (1D, 2D) используя входной shape
+
+### 3. Поддержка broadcasted операций, и fwd pass у слоев: 
+- [ ] matmul
+- [ ] mul
+- [ ] hard_swish
+- [ ] clip
+- [ ] exp
+- [ ] sigmoid
+- [ ] transpose
+
+### 4. Поддержка сериализации у слоев: 
+- [ ] matmul
+- [ ] mul
+- [ ] hard_swish
+- [ ] clip
+- [ ] exp
+- [ ] sigmoid
+- [ ] transpose
 
 # Критерии выпуска версии 1.2.0 (24-Q2)
 
