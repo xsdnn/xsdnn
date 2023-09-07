@@ -112,5 +112,5 @@ AddTest(
 
 AddTest(
         xsdnn_broadcast_op_test
-        ${XSDNN_TEST_ROOT}/test_broadcast_op.cc
+        ${XSDNN_TEST_ROOT}/test_broadcast.cc
 )
