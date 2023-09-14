@@ -114,3 +114,8 @@ AddTest(
         xsdnn_broadcast_op_test
         ${XSDNN_TEST_ROOT}/test_broadcast.cc
 )
+
+AddTest(
+        mmpack_hard_sigmoid_test
+        ${XSDNN_TEST_ROOT}/test_hard_sigmoid.cc
+)

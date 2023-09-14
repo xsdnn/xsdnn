@@ -147,6 +147,25 @@ struct cerial {
     }
 
     /*
+     * Hard Sigmoid
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const hard_sigmoid* layer) {
+        node->set_name("hard_sigmoid");
+        xs::AttributeInfo* alpha = node->add_attribute();
+        xs::AttributeInfo* beta = node->add_attribute();
+
+        alpha->set_name("alpha");
+        alpha->set_type(xs::AttributeInfo_AttributeType_FLOAT);
+        alpha->set_f(layer->activationHolder_.Parameters.HardSigmoid.alpha);
+
+        beta->set_name("beta");
+        beta->set_type(xs::AttributeInfo_AttributeType_FLOAT);
+        beta->set_f(layer->activationHolder_.Parameters.HardSigmoid.beta);
+    }
+
+    /*
     * Abs
     */
     inline
@@ -441,6 +460,17 @@ struct cerial {
     std::shared_ptr<relu> cerial::deserialize(const xs::NodeInfo* node,
                                              const xs::TensorInfo* tensor) {
         std::shared_ptr<relu> l = std::make_shared<relu>();
+        return l;
+    }
+
+    template<>
+    inline
+    std::shared_ptr<hard_sigmoid> cerial::deserialize(const xs::NodeInfo* node,
+                                              const xs::TensorInfo* tensor) {
+        float alpha = node->attribute(0).f();
+        float beta = node->attribute(1).f();
+
+        std::shared_ptr<hard_sigmoid> l = std::make_shared<hard_sigmoid>(alpha, beta);
         return l;
     }
 

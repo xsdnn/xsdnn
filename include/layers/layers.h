@@ -23,5 +23,6 @@
 
 
 #include "activations/relu.h"
+#include "activations/hard_sigmoid.h"
 
 #endif //XSDNN_LAYERS_H
