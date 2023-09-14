@@ -334,6 +334,57 @@ Return Value:
 
 --*/
 
+/*
+ * Activation Routines
+ */
+
+enum MmActivationType {
+    Relu,
+    HardSigmoid
+};
+
+struct MmActivationHolder {
+    MmActivationType ActivationType;
+    union {
+        struct {
+            float alpha;
+            float beta;
+        } HardSigmoid;
+    } Parameters;
+};
+
+void
+MmActivation(
+    MmActivationHolder* Activation,
+    float* C,
+    size_t M,
+    size_t N,
+    size_t ldc
+);
+/*++
+
+Описание процедуры:
+
+    Применяет In-Place функцию активации в входному буферу C.
+
+Аргументы:
+
+    Activation - набор параметров для выполнения активации.
+
+    C - входной буффер.
+
+    M - кол-во строк во входном буффере С.
+
+    N - кол-во столбцов во входном буффере С.
+
+    ldc - лидирующее измерение входного буффера С.
+
+Return Value:
+
+    None.
+
+--*/
+
 template<typename T, std::size_t alignment>
 class aligned_allocator {
 public:

@@ -196,6 +196,18 @@ MmUnpackInterleaveHighFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4&
     return _mm_unpackhi_ps(Vector1, Vector2);
 }
 
+MM_STRONG_INLINE
+Mm_Float32x4
+MmMaximumFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
+    return _mm_max_ps(Vector1, Vector2);
+}
+
+MM_STRONG_INLINE
+Mm_Float32x4
+MmMinimumFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
+    return _mm_min_ps(Vector1, Vector2);
+}
+
 #else
 #error SSE for double type NotImplementedYet
 #endif
