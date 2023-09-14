@@ -8,9 +8,16 @@
 namespace xsdnn {
 
 void relu::forward_activation(const mat_t &in_data, mat_t& out_data) {
-    for (size_t j = 0; j < in_data.size(); ++j) {
-        out_data[j] = std::max(in_data[j], (mm_scalar) 0.0f);
-    }
+//    for (size_t j = 0; j < in_data.size(); ++j) {
+//        out_data[j] = std::max(in_data[j], (mm_scalar) 0.0f);
+//    }
+    shape3d in_shape = this->in_shape()[0];
+    mmpack::MmActivationHolder Holder;
+    Holder.ActivationType = mmpack::Relu;
+
+    std::copy(in_data.begin(), in_data.end(), out_data.begin());
+
+    mmpack::MmActivation(&Holder, out_data.data(), in_shape.H, in_shape.W, in_shape.W);
 }
 
 void relu::back_activation(const mat_t &in_data,
