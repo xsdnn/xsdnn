@@ -12,7 +12,8 @@ void conv::set_params(size_t in_channel, size_t in_height, size_t in_width, size
                       std::vector<size_t> stride_shape,
                       std::vector<size_t> dilation_shape,
                       padding_mode pad_type,
-                      std::vector<size_t> pads) {
+                      std::vector<size_t> pads,
+                      MmActivationType activation_type) {
     if (is_1D_tensor(shape3d(in_channel, in_height, in_width))) {
         params_._.Dimensions = 1;
     } else if (is_2D_tensor(shape3d(in_channel, in_height, in_width))) {
@@ -23,7 +24,7 @@ void conv::set_params(size_t in_channel, size_t in_height, size_t in_width, size
     params_.infer_output_requirement_shape(shape3d(in_channel, in_height, in_width),
                                            out_channel, group_count, has_bias,
                                            kernel_shape, stride_shape,
-                                           dilation_shape, pad_type, pads);
+                                           dilation_shape, pad_type, pads, activation_type);
 }
 
 void conv::init_backend(core::backend_t engine) {

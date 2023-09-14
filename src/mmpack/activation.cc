@@ -120,7 +120,15 @@ MmActivation(
         case (MmActivationType::HardSigmoid):
             MmActivationKernel<HardSigmoid>(Activation, C, M, N, ldc);
             break;
+        case (NotSet):
+            break;
     }
+}
+
+void
+MmSetDefaultActivationParameters(MmActivationHolder* Holder) {
+    Holder->Parameters.HardSigmoid.alpha = 0.2f;
+    Holder->Parameters.HardSigmoid.beta = 0.5f;
 }
 
 } // mmpack

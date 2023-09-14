@@ -14,7 +14,8 @@ void
 conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size_t group_count,
                                      bool has_bias, std::vector<size_t> kernel_shape,
                                      std::vector<size_t> stride_shape, std::vector<size_t> dilation_shape,
-                                     xsdnn::padding_mode pad_type, std::vector<size_t> pads) {
+                                     xsdnn::padding_mode pad_type, std::vector<size_t> pads,
+                                     MmActivationType activation_type) {
     if (!is_init()) {
         throw xs_error("conv param doesn't init");
     }
@@ -22,6 +23,7 @@ conv::infer_output_requirement_shape(xsdnn::shape3d in, size_t out_channel, size
     _.GroupCount = group_count;
     _.Bias = has_bias;
     pad_type_ = pad_type;
+    activation_type_ = activation_type;
 
     if (_.Dimensions == 2) {
         this->_2D(in, out_channel, kernel_shape, stride_shape, dilation_shape, pad_type, pads);

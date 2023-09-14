@@ -57,7 +57,8 @@ public:
                                         std::vector<size_t> stride_shape,
                                         std::vector<size_t> dilation_shape,
                                         padding_mode pad_type,
-                                        std::vector<size_t> pads);
+                                        std::vector<size_t> pads,
+                                        MmActivationType activation_type);
 
 private:
     bool is_init();
@@ -77,6 +78,7 @@ private:
 public:
     MM_CONV_PARAMS _;
     padding_mode pad_type_;
+    MmActivationType activation_type_;
 };
 
     } // params

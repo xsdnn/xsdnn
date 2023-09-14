@@ -26,10 +26,11 @@ public:
                    std::vector<size_t> dilation_shape = {},
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
+                   MmActivationType activation_type = mmpack::MmActivationType::NotSet,
                    core::backend_t engine = core::default_backend_engine())
         : conv(shape3d(in_channel, in_height, in_width), out_channel,
                kernel_shape, group_count, has_bias, stride_shape,
-               dilation_shape, pad_type, pads, engine) {}
+               dilation_shape, pad_type, pads, activation_type, engine) {}
 
     explicit conv (shape3d in_shape,
                    size_t out_channel,
@@ -40,10 +41,11 @@ public:
                    std::vector<size_t> dilation_shape = {},
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
+                   MmActivationType activation_type = mmpack::MmActivationType::NotSet,
                    core::backend_t engine = core::default_backend_engine())
         : layer({define_input_bias_condition(has_bias)}, {tensor_type::data}) {
         set_params(in_shape.C, in_shape.H, in_shape.W, out_channel,
-                   group_count, has_bias, kernel_shape, stride_shape, dilation_shape, pad_type, pads);
+                   group_count, has_bias, kernel_shape, stride_shape, dilation_shape, pad_type, pads, activation_type);
         init_backend(engine);
     }
 
@@ -72,7 +74,8 @@ private:
                     std::vector<size_t> stride_shape,
                     std::vector<size_t> dilation_shape,
                     padding_mode pad_type,
-                    std::vector<size_t> pads);
+                    std::vector<size_t> pads,
+                    MmActivationType activation_type);
 
     void init_backend(core::backend_t engine);
 

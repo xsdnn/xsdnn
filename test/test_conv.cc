@@ -480,7 +480,7 @@ public:
         params::conv Parameters;
         Parameters._.Dimensions = 2;
         Parameters.infer_output_requirement_shape(in_shape, out_channel, GroupCount, HasBias, kernel_shape,
-                                                  stride_shape, dilation_shape, pad_type, pads);
+                                                  stride_shape, dilation_shape, pad_type, pads, MmActivationType::NotSet);
         MmConv(&Parameters._,
                Input,
                Filter, Bias,

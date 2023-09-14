@@ -28,6 +28,15 @@ void conv_fwd_xs_impl(const tensor_t& X,
                            X[sample].data(), W.data(), nullptr,
                            TemporaryBuffer.data(), Y[sample].data());
         }
+
+        // Compute activation if there is
+        if (p.activation_type_ != MmActivationType::NotSet) {
+            MmActivationHolder ActHolder;
+            ActHolder.ActivationType = p.activation_type_;
+            MmSetDefaultActivationParameters(&ActHolder);
+
+            MmActivation(&ActHolder, Y[sample].data(), p._.OutShape[0], p._.OutShape[1], p._.OutShape[1]);
+        }
     });
 }
 

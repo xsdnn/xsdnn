@@ -339,6 +339,7 @@ Return Value:
  */
 
 enum MmActivationType {
+    NotSet,
     Relu,
     HardSigmoid
 };
@@ -352,6 +353,11 @@ struct MmActivationHolder {
         } HardSigmoid;
     } Parameters;
 };
+
+void
+MmSetDefaultActivationParameters(
+        MmActivationHolder* Holder
+);
 
 void
 MmActivation(
