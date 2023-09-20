@@ -17,7 +17,7 @@
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
-- [ ] hard_sigmoid
+- [x] hard_sigmoid
 
 
 
@@ -36,7 +36,7 @@
 - [x] max_pool
 - [x] global_average_pool
 - [x] reshape
-- [ ] hard_sigmoid
+- [x] hard_sigmoid
 
 
 
