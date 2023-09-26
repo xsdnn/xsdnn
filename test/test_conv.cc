@@ -9,6 +9,7 @@
 #include "test_utils.h"
 using namespace xsdnn;
 
+// TODO: проверить этот тест. In Shape для веса выдается некорректно
 TEST(conv, _2D_params_check_1) {
     shape3d in(12, 255, 255);
     conv c(in, /*out_channel=*/ 6, /*kernel_shape=*/ {3, 3},

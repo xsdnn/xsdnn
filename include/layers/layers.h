@@ -19,6 +19,7 @@
 #include "mul.h"
 #include "global_average_pooling.h"
 #include "reshape.h"
+#include "implicit_reshape.h"
 #include "convolution.h"
 
 

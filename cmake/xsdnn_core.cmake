@@ -8,6 +8,9 @@ set(
         "${XSROOT_SRC}/core/framework/op_context.cc"
         "${XSROOT_SRC}/core/framework/op_kernel.cc"
         "${XSROOT_SRC}/core/framework/params.cc"
+        "${XSROOT_SRC}/core/framework/allocator.cc"
+        "${XSROOT_SRC}/core/framework/tensor.cc"
+        "${XSROOT_SRC}/core/framework/tensor_shape.cc"
 )
 
 set(

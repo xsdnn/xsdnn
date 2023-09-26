@@ -42,13 +42,13 @@ std::vector<shape3d> conv::in_shape() const {
         if (params_._.Bias) {
             return {
                     shape3d(in_channel, in_height, in_width),
-                    shape3d(out_channel * f_count, params_._.KernelShape[0], params_._.KernelShape[1]),
+                    shape3d(out_channel * params_._.InChannel, params_._.KernelShape[0], params_._.KernelShape[1]),
                     shape3d(out_channel, 1, 1)
             };
         } else {
             return {
                     shape3d(in_channel, in_height, in_width),
-                    shape3d(out_channel * f_count, params_._.KernelShape[0], params_._.KernelShape[1]),
+                    shape3d(out_channel * params_._.InChannel, params_._.KernelShape[0], params_._.KernelShape[1]),
             };
         }
     } else {
