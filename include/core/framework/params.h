@@ -8,6 +8,8 @@
 
 #include <cstddef>
 #include <unordered_map>
+#include "tensor.h"
+#include "../../mmpack/mmpack.h"
 #include "../../utils/tensor_shape.h"
 #include "../../utils/util.h"
 
@@ -22,10 +24,10 @@ struct fully {
 
 struct bnorm {
     shape3d in_shape_;
-    mm_scalar momentum_;
-    mm_scalar eps_;
+    float momentum_;
+    float eps_;
     op_mode phase_;
-    std::unordered_map<std::string, mat_t> stat_holder;
+    std::unordered_map<std::string, tensor_t> stat_holder;
 
     bool statistic_initialized {false};
 };
@@ -58,7 +60,7 @@ public:
                                         std::vector<size_t> dilation_shape,
                                         padding_mode pad_type,
                                         std::vector<size_t> pads,
-                                        MmActivationType activation_type);
+                                        mmpack::MmActivationType activation_type);
 
 private:
     bool is_init();
@@ -76,9 +78,9 @@ private:
     void computeAlgorithm();
 
 public:
-    MM_CONV_PARAMS _;
+    mmpack::MM_CONV_PARAMS _;
     padding_mode pad_type_;
-    MmActivationType activation_type_;
+    mmpack::MmActivationType activation_type_;
 };
 
     } // params

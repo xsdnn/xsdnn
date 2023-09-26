@@ -7,15 +7,12 @@
 
 namespace xsdnn {
 
-void hard_sigmoid::forward_activation(const xsdnn::mat_t &in_data, xsdnn::mat_t &out_data) {
+void hard_sigmoid::forward_activation(const tensor_t &in_data, tensor_t &out_data) {
     shape3d in_shape = this->in_shape()[0];
-    std::copy(in_data.begin(), in_data.end(), out_data.begin());
-    mmpack::MmActivation(&activationHolder_, out_data.data(), in_shape.H, in_shape.W, in_shape.W);
-}
-
-void hard_sigmoid::back_activation(const xsdnn::mat_t &in_data, const xsdnn::mat_t &out_data,
-                                   const xsdnn::mat_t &out_grad, xsdnn::mat_t &in_grad) {
-    throw xs_error("[hard_sigmoid bwd] NotImplementedYet");
+    gsl::span<const float> X = in_data.GetDataAsSpan<float>();
+    gsl::span<float> Y = in_data.GetMutableDataAsSpan<float>();
+    std::copy(X.begin(), X.end(), Y.begin());
+    mmpack::MmActivation(&activationHolder_, Y.data(), in_shape.H, in_shape.W, in_shape.W);
 }
 
 std::pair<mm_scalar, mm_scalar> hard_sigmoid::out_value_range() const {

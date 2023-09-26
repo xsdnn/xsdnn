@@ -23,14 +23,9 @@ namespace xsdnn {
         return "reshape";
     }
 
-    void reshape::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                      std::vector<tensor_t *> &out_data) {
+    void reshape::forward_propagation(const std::vector<BTensor *> &in_data,
+                                      std::vector<BTensor *> &out_data) {
         *out_data[0] = *in_data[0];
-    }
-
-    void reshape::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                                   std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        throw xs_error("[reshape bwd] NotImplementedYet");
     }
 
 } // xsdnn

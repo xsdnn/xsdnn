@@ -71,18 +71,13 @@ namespace xsdnn {
 
     }
 
-    void max_pooling::forward_propagation(const std::vector<tensor_t *> &in_data, std::vector<tensor_t *> &out_data) {
+    void max_pooling::forward_propagation(const std::vector<BTensor*> &in_data, std::vector<BTensor*> &out_data) {
         fwd_ctx_.set_in_out(in_data, out_data);
         fwd_ctx_.set_engine(this->engine());
         fwd_ctx_.set_parallelize(this->parallelize());
         fwd_ctx_.set_num_threads(this->num_threads_);
 
         fwd_kernel_->compute(fwd_ctx_, params_);
-    }
-
-    void max_pooling::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                                       std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        throw xs_error("[max_pooling bwd] NotImplementedYet");
     }
 
 } // xsdnn

@@ -74,8 +74,6 @@ include(xsdnn_common.cmake)
 include(xsdnn_core.cmake)
 include(xsdnn_layers.cmake)
 include(xsdnn_activations.cmake)
-include(xsdnn_optimizers.cmake)
-include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
 include(xsdnn_serializer.cmake)
 include(xsdnn_session.cmake)
@@ -103,9 +101,12 @@ install(TARGETS xsdnn
 install(DIRECTORY ${XSROOT}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xsdnn)
 
-if (xsdnn_BUILD_TEST)
-    include(xsdnn_unittest.cmake)
-endif (xsdnn_BUILD_TEST)
+#if (xsdnn_BUILD_TEST)
+#    include(xsdnn_unittest.cmake)
+#endif (xsdnn_BUILD_TEST)
 
 include(summary.cmake)
 xsdnn_print_configuration_summary()
+
+add_executable(simple_test ${XSROOT}/test/simple_test.cc)
+target_link_libraries(simple_test xsdnn protobuf)

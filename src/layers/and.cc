@@ -25,57 +25,29 @@ namespace xsdnn {
         return "and_layer";
     }
 
-    bool and_layer::contains_only_one_zero(const tensor_t &mats) {
-        for (auto& mat : mats) {
-            if (!std::all_of(mat.begin(), mat.end(), [](mm_scalar value) {
-                return value == mm_scalar(0.0f) || value == mm_scalar(1.0f);
-            })) {
-                return false;
-            }
-        } return true;
+    bool and_layer::contains_only_one_zero(const BTensor &mats) {
+        // TODO: этот слой должен принимать только булевый тип
     }
 
-    void and_layer::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                   std::vector<tensor_t *> &out_data) {
-        const tensor_t& in1 = *in_data[0];
-        const tensor_t& in2 = *in_data[1];
-        tensor_t& out = *out_data[0];
-
-#ifndef NDEBUG
-        if (!contains_only_one_zero(in1) || !contains_only_one_zero(in2)) {
-            throw xs_error("[And Layer] Input Data Must be only 0/1 tensor.");
-        }
-#endif
-
-        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, in1.size(), [&](size_t sample) {
-            const mat_t& in1_sample = in1[sample];
-            const mat_t& in2_sample = in2[sample];
-            mat_t& out_sample = out[sample];
-
-            mmpack::MmMulAdd(in1_sample.data(), in2_sample.data(), out_sample.data(), in1_sample.size());
-        });
-    }
-
-    void and_layer::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                                std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        XS_UNUSED_PARAMETER(out_data);
-        const tensor_t& in1 = *in_data[0];
-        const tensor_t& in2 = *in_data[1];
-
-        tensor_t& d_in1 = *in_grad[0];
-        tensor_t& d_in2 = *in_grad[1];
-        const tensor_t& dLz = *out_grad[0];
-
-        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, in1.size(), [&](size_t sample) {
-            const mat_t& in1_sample = in1[sample];
-            const mat_t& in2_sample = in2[sample];
-            mat_t& d_in1_sample = d_in1[sample];
-            mat_t& d_in2_sample = d_in2[sample];
-            const mat_t& dLz_sample = dLz[sample];
-
-            mmpack::MmMulAdd(in2_sample.data(), dLz_sample.data(), d_in1_sample.data(), dLz_sample.size());
-            mmpack::MmMulAdd(in1_sample.data(), dLz_sample.data(), d_in2_sample.data(), dLz_sample.size());
-        });
+    void and_layer::forward_propagation(const std::vector<BTensor*> &in_data,
+                                   std::vector<BTensor*> &out_data) {
+//        const tensor_t& in1 = *in_data[0];
+//        const tensor_t& in2 = *in_data[1];
+//        tensor_t& out = *out_data[0];
+//
+//#ifndef NDEBUG
+//        if (!contains_only_one_zero(in1) || !contains_only_one_zero(in2)) {
+//            throw xs_error("[And Layer] Input Data Must be only 0/1 tensor.");
+//        }
+//#endif
+//
+//        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, in1.size(), [&](size_t sample) {
+//            const mat_t& in1_sample = in1[sample];
+//            const mat_t& in2_sample = in2[sample];
+//            mat_t& out_sample = out[sample];
+//
+//            mmpack::MmMulAdd(in1_sample.data(), in2_sample.data(), out_sample.data(), in1_sample.size());
+//        });
     }
 
 } // xsdnn

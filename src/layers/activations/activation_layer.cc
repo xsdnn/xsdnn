@@ -10,12 +10,12 @@ namespace xsdnn {
 
 activation_layer::activation_layer()
     :
-    layer({tensor_type::data}, {tensor_type::data}),
+    layer({TypeHolder(tensor_type::data, XsDtype::F32)}, {TypeHolder(tensor_type::data, XsDtype::F32)}),
     in_shape_(0, 0, 0) {}
 
 activation_layer::activation_layer(const size_t in_size)
     :
-    layer({tensor_type::data}, {tensor_type::data}),
+    layer({TypeHolder(tensor_type::data, XsDtype::F32)}, {TypeHolder(tensor_type::data, XsDtype::F32)}),
     in_shape_(1, 1, in_size) {}
 
 activation_layer::activation_layer(const xsdnn::activation_layer &) = default;
@@ -42,32 +42,16 @@ void activation_layer::set_in_shape(const xsdnn::shape3d in_shape) {
 }
 
 void
-activation_layer::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                      std::vector<tensor_t *> &out_data) {
-    const tensor_t& in_ = *in_data[0];
-    tensor_t& out_ = *out_data[0];
+activation_layer::forward_propagation(const std::vector<BTensor*> &in_data,
+                                      std::vector<BTensor*> &out_data) {
+    const BTensor & in_ = *in_data[0];
+    BTensor& out_ = *out_data[0];
 
     concurrency::TryParallelFor(layer::parallelize_,
                                 layer::num_threads_,
                                 in_.size(),
                                 [&](size_t i) {
             forward_activation(in_[i], out_[i]);
-    });
-}
-
-void
-activation_layer::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                                   std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    const tensor_t& in_data_ = *in_data[0];
-    const tensor_t& out_data_ = *out_data[0];
-    const tensor_t& out_grad_ = *out_grad[0];
-    tensor_t& in_grad_ = *in_grad[0];
-
-    concurrency::TryParallelFor(layer::parallelize_,
-                                layer::num_threads_,
-                                in_data_.size(),
-                                [&](size_t i) {
-        back_activation(in_data_[i], out_data_[i], out_grad_[i], in_grad_[i]);
     });
 }
 

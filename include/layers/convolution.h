@@ -27,10 +27,12 @@ public:
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
                    MmActivationType activation_type = mmpack::MmActivationType::NotSet,
-                   core::backend_t engine = core::default_backend_engine())
+                   core::backend_t engine = core::default_backend_engine(),
+                   std::vector<XsDtype> in_tensor_dtype = {XsDtype::F32, XsDtype::F32, XsDtype::F32},
+                   std::vector<XsDtype> out_tensor_dtype = {XsDtype::F32})
         : conv(shape3d(in_channel, in_height, in_width), out_channel,
                kernel_shape, group_count, has_bias, stride_shape,
-               dilation_shape, pad_type, pads, activation_type, engine) {}
+               dilation_shape, pad_type, pads, activation_type, engine, in_tensor_dtype, out_tensor_dtype) {}
 
     explicit conv (shape3d in_shape,
                    size_t out_channel,
@@ -42,8 +44,10 @@ public:
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
                    MmActivationType activation_type = mmpack::MmActivationType::NotSet,
-                   core::backend_t engine = core::default_backend_engine())
-        : layer({define_input_bias_condition(has_bias)}, {tensor_type::data}) {
+                   core::backend_t engine = core::default_backend_engine(),
+                   std::vector<XsDtype> in_tensor_dtype = {XsDtype::F32, XsDtype::F32, XsDtype::F32},
+                   std::vector<XsDtype> out_tensor_dtype = {XsDtype::F32})
+        : layer({get_typed_holder(has_bias, in_tensor_dtype)}, {TypeHolder(tensor_type::data, out_tensor_dtype[0])}) {
         set_params(in_shape.C, in_shape.H, in_shape.W, out_channel,
                    group_count, has_bias, kernel_shape, stride_shape, dilation_shape, pad_type, pads, activation_type);
         init_backend(engine);
@@ -55,14 +59,8 @@ public:
     std::string layer_type() const;
 
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
+    forward_propagation(const std::vector<BTensor*>& in_data,
+                        std::vector<BTensor*>& out_data);
 
 public:
     params::conv get_params() const;

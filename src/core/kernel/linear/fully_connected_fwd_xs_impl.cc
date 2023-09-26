@@ -10,27 +10,27 @@
 namespace xsdnn {
     namespace kernel {
 
-void fully_connected_fwd_xs_impl(const tensor_t& in,
-                                 const mat_t& W,
-                                 const mat_t& b,
-                                 tensor_t& out,
+void fully_connected_fwd_xs_impl(const BTensor & in,
+                                 const tensor_t& W,
+                                 const tensor_t& b,
+                                 BTensor& out,
                                  const params::fully& p,
                                  bool parallelize,
                                  size_t nthreads) {
     size_t in_size = p.in_size_;
     size_t out_size = p.out_size_;
-    mm_scalar alpha = 1.0;
-    mm_scalar beta = 1.0;
+    float alpha = 1.0;
+    float beta = 1.0;
 
     concurrency::TryParallelFor(parallelize, nthreads, in.size(), [&](size_t sample) {
-        const mm_scalar* in_ptr = in[sample].data();
-        const mm_scalar* w_ptr = W.data();
-        mm_scalar* out_ptr = out[sample].data();
+        const float* in_ptr = in[sample].GetData<float>();
+        const float* w_ptr = W.GetData<float>();
+        float* out_ptr = out[sample].GetMutableData<float>();
 
         if (b.empty()) {
-            memset(out_ptr, 0, sizeof(mm_scalar) * out_size);
+            memset(out_ptr, 0, sizeof(float) * out_size);
         } else {
-            memcpy(out_ptr, b.data(), sizeof(mm_scalar) * out_size);
+            memcpy(out_ptr, b.GetData<float>(), sizeof(float) * out_size);
         }
 
         mmpack::MmGemm(mmpack::CblasNoTrans,

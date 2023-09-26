@@ -16,7 +16,7 @@ namespace xsdnn {
             virtual void compute(OpContext& ctx, params::bnorm& p);
 
         private:
-            void init_statistics(params::bnorm& p);
+            void init_statistics(params::bnorm& p, XsDtype TensorDType);
         };
 
     } // core

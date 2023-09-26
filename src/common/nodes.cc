@@ -16,21 +16,9 @@ namespace xsdnn {
     nodes::nodes() {}
     nodes::~nodes()  {}
 
-    void nodes::update_weights(optimizer *opt) {
-        for (auto l : nodes_) {
-            l->update_weight(opt);
-        }
-    }
-
     void nodes::setup(bool reset_weight) {
         for (auto l : nodes_) {
             l->setup(reset_weight);
-        }
-    }
-
-    void nodes::clear_grads() {
-        for (auto l : nodes_) {
-            l->clear_grads();
         }
     }
 
@@ -132,8 +120,8 @@ namespace xsdnn {
         }
     }
 
-    void nodes::reorder_input(const std::vector<tensor_t> &input,
-                              std::vector<tensor_t> &output) {
+    void nodes::reorder_input(const std::vector<BTensor> &input,
+                              std::vector<BTensor> &output) {
         size_t sample_count  = input.size();
         size_t channel_count = input[0].size();
 
@@ -153,18 +141,8 @@ namespace xsdnn {
     sequential::sequential() {}
     sequential::~sequential() {}
 
-    void sequential::backward(const std::vector<tensor_t> &start) {
-        std::vector<tensor_t> reorder_grad;
-        reorder_input(start, reorder_grad);
-        nodes_.back()->set_out_grads(reorder_grad); // FIXME: проблема может быть здесь
-
-        for (auto l = nodes_.rbegin(); l != nodes_.rend(); ++l) {
-            (*l)->backward();
-        }
-    }
-
-    std::vector<tensor_t> sequential::forward(const std::vector<tensor_t> &start) {
-        std::vector<tensor_t> reorder_data;
+    std::vector<BTensor> sequential::forward(const std::vector<BTensor> &start) {
+        std::vector<BTensor> reorder_data;
         reorder_input(start, reorder_data);
         nodes_.front()->set_in_data(reorder_data);
 
@@ -172,7 +150,7 @@ namespace xsdnn {
             (*l)->forward();
         }
 
-        std::vector<tensor_t> output;
+        std::vector<BTensor> output;
         reorder_output(nodes_.back()->output(), output);
         return output;
     }
@@ -201,9 +179,9 @@ namespace xsdnn {
         throw xs_error(message.c_str());
     }
 
-    void sequential::reorder_output(const std::vector<tensor_t> &input, std::vector<tensor_t> &output) {
+    void sequential::reorder_output(const std::vector<BTensor> &input, std::vector<BTensor> &output) {
         const size_t sample_count = input[0].size();
-        output.resize(sample_count, tensor_t(1));
+        output.resize(sample_count, BTensor(1));
 
         for (size_t sample = 0; sample < sample_count; ++sample) {
             output[sample][0] = (input[0])[sample];
@@ -224,14 +202,14 @@ namespace xsdnn {
     graph::graph() {}
     graph::~graph() {}
 
-    std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
+    std::vector<BTensor> graph::forward(const std::vector<BTensor> &start) {
         size_t input_data_concept_count = start[0].size();
 
         if (input_data_concept_count != input_layers_.size()) {
             throw xs_error("input size mismatch");
         }
 
-        std::vector<tensor_t> reordered_data;
+        std::vector<BTensor> reordered_data;
         reorder_input(start, reordered_data);
         assert(reordered_data.size() == input_data_concept_count);
 
@@ -242,29 +220,9 @@ namespace xsdnn {
         for (auto l : nodes_) {
             l->forward();
         }
-        std::vector<tensor_t> out;
+        std::vector<BTensor> out;
         reorder_output(out);
         return out;
-    }
-
-    void graph::backward(const std::vector<tensor_t> &start) {
-        size_t output_data_concept_count = start[0].size();
-
-        if (output_data_concept_count != output_layers_.size()) {
-            throw xs_error("input size mismatch");
-        }
-
-        std::vector<tensor_t> reordered_grad;
-        reorder_input(start, reordered_grad);
-        assert(reordered_grad.size() == output_data_concept_count);
-
-        for (size_t i = 0; i < output_data_concept_count; i++) {
-            output_layers_[i]->set_out_grads({ reordered_grad[i] });
-        }
-
-        for (auto l = nodes_.rbegin(); l != nodes_.rend(); l++) {
-            (*l)->backward();
-        }
     }
 
     void graph::construct(const std::vector<layer *> &input,
@@ -315,8 +273,8 @@ namespace xsdnn {
         throw xs_error("invalid connection");
     }
 
-    void graph::reorder_output(std::vector<tensor_t> &output) {
-        std::vector<tensor_t> out;
+    void graph::reorder_output(std::vector<BTensor> &output) {
+        std::vector<BTensor> out;
         size_t output_channel_count = output_layers_.size();
         for (size_t output_channel = 0; output_channel < output_channel_count;
              ++output_channel) {
@@ -325,7 +283,7 @@ namespace xsdnn {
             size_t sample_count = out[0].size();
             if (output_channel == 0) {
                 assert(output.empty());
-                output.resize(sample_count, tensor_t(output_channel_count));
+                output.resize(sample_count, BTensor (output_channel_count));
             }
 
             assert(output.size() == sample_count);
@@ -387,6 +345,28 @@ namespace xsdnn {
         for (size_t i = 0; i < Graph->outputs_size(); ++i) {
             output_layers_.push_back(nodes_[Graph->outputs(i)]);
         }
+    }
+
+    std::pair<size_t, size_t> find_data_idx(const std::vector<TypeHolder>& t1,
+                                            const std::vector<TypeHolder>& t2) {
+        auto data_idx = std::pair<size_t, size_t>(-1, -1);
+
+        for (size_t i = 0; i < t1.size(); ++i) {
+            if (t1[i].concept_type() == tensor_type::data) {
+                data_idx.first = i;
+            }
+        }
+
+        for (size_t i = 0; i < t2.size(); ++i) {
+            if (t2[i].concept_type() == tensor_type::data) {
+                data_idx.second = i;
+            }
+        }
+
+        if (data_idx.first == -1 || data_idx.second == -1) {
+            throw xs_error("Not found \'data\' tensor type.");
+        }
+        return data_idx;
     }
 
 } // xsdnn

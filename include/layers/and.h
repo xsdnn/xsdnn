@@ -13,15 +13,22 @@ namespace xsdnn {
 class and_layer : public layer {
 public:
     explicit and_layer()
-            : layer({tensor_type::data, tensor_type::data}, {tensor_type::data}),
+            : layer({TypeHolder(tensor_type::data, XsDtype::F32),
+                     TypeHolder(tensor_type::data, XsDtype::F32)},
+                    {TypeHolder(tensor_type::data, XsDtype::F32)}),
               shape_() {}
 
     explicit and_layer(shape3d shape)
-    : layer({tensor_type::data, tensor_type::data}, {tensor_type::data}),
+    : layer({TypeHolder(tensor_type::data, XsDtype::F32),
+             TypeHolder(tensor_type::data, XsDtype::F32)},
+            {TypeHolder(tensor_type::data, XsDtype::F32)}),
     shape_(shape) {}
 
     explicit and_layer(size_t dim)
-    : layer({tensor_type::data, tensor_type::data}, {tensor_type::data}),
+    : layer({TypeHolder(tensor_type::data, XsDtype::F32),
+             TypeHolder(tensor_type::data, XsDtype::F32)},
+            {TypeHolder(tensor_type::data, XsDtype::F32)}),
+
       shape_(1, 1, dim) {}
 
 public:
@@ -31,16 +38,11 @@ public:
     std::string layer_type() const;
 
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data);
+    forward_propagation(const std::vector<BTensor *>& in_data,
+                        std::vector<BTensor *>& out_data);
 
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 private:
-    bool contains_only_one_zero(const tensor_t& mat);
+    bool contains_only_one_zero(const BTensor & mat);
 
 private:
     shape3d shape_;

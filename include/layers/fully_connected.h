@@ -19,9 +19,11 @@ public:
     fully_connected(size_t in_size,
                     size_t out_size,
                     bool has_bias = true,
-                    core::backend_t engine = core::default_backend_engine())
+                    core::backend_t engine = core::default_backend_engine(),
+                    std::vector<XsDtype> in_tensor_dtype = {XsDtype::F32, XsDtype::F32, XsDtype::F32},
+                    std::vector<XsDtype> out_tensor_dtype = {XsDtype::F32})
             :
-            layer(define_input_bias_condition(has_bias), {tensor_type::data}) {
+            layer(get_typed_holder(has_bias, in_tensor_dtype), {TypeHolder(tensor_type::data, out_tensor_dtype[0])}) {
         set_params(in_size, out_size, has_bias);
         init_backend(engine);
         layer::set_backend(engine);
@@ -34,14 +36,8 @@ public:
     size_t fan_out_size() const;
 
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
+    forward_propagation(const std::vector<BTensor*>& in_data,
+                        std::vector<BTensor*>& out_data);
 
 private:
     void set_params(size_t in_size, size_t out_size, bool has_bias);
@@ -52,7 +48,6 @@ private:
     core::OpContext fwd_ctx_;
     core::OpContext bwd_ctx_;
     std::shared_ptr<core::FullyConnectedFwdKernel> fwd_kernel_;
-    std::shared_ptr<core::FullyConnectedBwdKernel> bwd_kernel_;
 
     friend struct cerial;
 };

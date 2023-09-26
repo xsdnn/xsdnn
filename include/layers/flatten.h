@@ -13,15 +13,15 @@ namespace xsdnn {
 class flatten : public layer {
 public:
     explicit flatten()
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({TypeHolder(tensor_type::data, XsDtype::F32)}, {TypeHolder(tensor_type::data, XsDtype::F32)}),
           in_shape_() {}
 
     explicit flatten(shape3d shape)
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({TypeHolder(tensor_type::data, XsDtype::F32)}, {TypeHolder(tensor_type::data, XsDtype::F32)}),
           in_shape_(shape) {}
 
     explicit flatten(size_t dim)
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({TypeHolder(tensor_type::data, XsDtype::F32)}, {TypeHolder(tensor_type::data, XsDtype::F32)}),
           in_shape_(1, 1, dim) {}
 
 public:
@@ -31,14 +31,8 @@ public:
     std::string layer_type() const;
 
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
+    forward_propagation(const std::vector<BTensor *>& in_data,
+                        std::vector<BTensor *>& out_data);
 
 private:
     shape3d in_shape_;

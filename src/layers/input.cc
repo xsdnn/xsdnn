@@ -20,17 +20,9 @@ std::string Input::layer_type() const {
     return "Input";
 }
 
-void Input::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                std::vector<tensor_t *> &out_data) {
+void Input::forward_propagation(const std::vector<BTensor *> &in_data,
+                                std::vector<BTensor *> &out_data) {
     *out_data[0] = *in_data[0];
-}
-
-void Input::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                             std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    XS_UNUSED_PARAMETER(in_data);
-    XS_UNUSED_PARAMETER(out_data);
-    XS_UNUSED_PARAMETER(out_grad);
-    XS_UNUSED_PARAMETER(in_grad);
 }
 
 } // xsdnn

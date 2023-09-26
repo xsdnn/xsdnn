@@ -9,15 +9,15 @@
 namespace xsdnn {
     namespace kernel {
 
-void global_average_pool_fwd_xs_impl(const tensor_t& in_data,
-                                     tensor_t& out_data,
+void global_average_pool_fwd_xs_impl(const BTensor & in_data,
+                                     BTensor & out_data,
                                      params::global_avg_pool& p,
                                      bool parallelize,
                                      size_t nthreads) {
     // TODO: make it for sse / avx
     concurrency::TryParallelFor(parallelize, nthreads, in_data.size(), [&](size_t sample) {
-       const mat_t& in = in_data[sample];
-       mat_t& out = out_data[sample];
+       gsl::span<const float> in = in_data[sample].GetDataAsSpan<float>();
+       gsl::span<float> out = out_data[sample].GetMutableDataAsSpan<float>();
 
        size_t spatial_size =  p.in_shape_.H * p.in_shape_.W;
        for (size_t c = 0; c < p.in_shape_.C; ++c) {

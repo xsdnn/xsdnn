@@ -8,7 +8,6 @@
 
 #include "node.h"
 #include "../layers/layer.h"
-#include "../optimizers/optimizer_base.h"
 
 namespace xsdnn {
 
@@ -26,22 +25,12 @@ public:
     typedef std::vector<layer*>::const_iterator const_iterator;
 
     virtual
-    void
-    backward(const std::vector<tensor_t>& start) = 0;
-
-    virtual
-    std::vector<tensor_t>
-    forward(const std::vector<tensor_t>& start) = 0;
-
-    virtual
-    void
-    update_weights(optimizer* opt);
+    std::vector<BTensor>
+    forward(const std::vector<BTensor>& start) = 0;
 
     virtual
     void
     setup(bool reset_weight);
-
-    void clear_grads();
 
     void save_model(const std::string& filename, const std::string& network_name_);
     void load_model(const std::string& filename);
@@ -60,8 +49,8 @@ public:
     size_t user_num_threads_ = 0;
 
 protected:
-    void reorder_input(const std::vector<tensor_t> &input,
-                       std::vector<tensor_t> &output);
+    void reorder_input(const std::vector<BTensor> &input,
+                       std::vector<BTensor> &output);
 
 protected:
     std::vector<std::shared_ptr<layer>> owner_nodes_; // for r-value impl
@@ -74,8 +63,7 @@ public:
     virtual ~sequential();
 
 public:
-    virtual void backward(const std::vector<tensor_t>& start);
-    virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
+    virtual std::vector<BTensor> forward(const std::vector<BTensor>& start);
 
     void check_connectivity();
 
@@ -83,8 +71,8 @@ public:
     void load_connections(xs::GraphInfo* Graph);
 
 protected:
-    void reorder_output(const std::vector<tensor_t>& input,
-                        std::vector<tensor_t>& output);
+    void reorder_output(const std::vector<BTensor>& input,
+                        std::vector<BTensor>& output);
     template<typename Net>
     friend class network;
 
@@ -97,8 +85,7 @@ public:
     virtual ~graph();
 
 public:
-    virtual void backward(const std::vector<tensor_t>& start);
-    virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
+    virtual std::vector<BTensor> forward(const std::vector<BTensor>& start);
 
     /*
      * Задача метода построить последовательность отсортированных нод
@@ -111,7 +98,7 @@ public:
     void load_connections(xs::GraphInfo* Graph);
 
 protected:
-    void reorder_output(std::vector<tensor_t>& output);
+    void reorder_output(std::vector<BTensor>& output);
 
     size_t find_index(const std::vector<node *> &nodes, layer *target);
 
@@ -123,6 +110,9 @@ private:
     std::vector<layer*> output_layers_;
     friend class InfSession;
 };
+
+std::pair<size_t, size_t> find_data_idx(const std::vector<TypeHolder>& t1,
+                                        const std::vector<TypeHolder>& t2);
 
 } // xsdnn
 

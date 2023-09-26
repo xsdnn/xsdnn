@@ -193,9 +193,9 @@ size_t broadcaster::get_span_size() const {
 }
 
 input_broadcaster::input_broadcaster(xsdnn::shape3d &s1,
-                                     xsdnn::mat_t &tensor1,
+                                     tensor_t &tensor1,
                                      xsdnn::shape3d *s2,
-                                     xsdnn::mat_t *tensor2)
+                                     tensor_t *tensor2)
     : input0_tensor_(tensor1), input0_shape_(s1), input1_tensor_(tensor2), input1_shape_(*s2) {}
 
 void input_broadcaster::advance_by(size_t offset) {
@@ -234,7 +234,7 @@ void input_broadcaster::next() {
     advance_by(span_size_);
 }
 
-output_broadcaster::output_broadcaster(size_t span_size, xsdnn::mat_t &tensor, xsdnn::shape3d shape,
+output_broadcaster::output_broadcaster(size_t span_size, tensor_t &tensor, xsdnn::shape3d shape,
                                        ptrdiff_t start_offset, ptrdiff_t end_offset)
     : span_size_(span_size) {
     ptrdiff_t len = shape.size();
@@ -243,7 +243,7 @@ output_broadcaster::output_broadcaster(size_t span_size, xsdnn::mat_t &tensor, x
         throw xs_error("[output_broadcasted] NotImplementedYet");
     }
     output_elements_ = real_end - start_offset;
-    output_bytes_ = reinterpret_cast<uint8_t*>(tensor.data()) + (start_offset * element_size_);
+    output_bytes_ = reinterpret_cast<uint8_t*>(tensor.GetMutableDataRaw()) + (start_offset * element_size_);
     output_end_ = output_bytes_ + ((real_end - start_offset) * element_size_);
 }
 

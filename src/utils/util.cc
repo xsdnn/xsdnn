@@ -29,37 +29,6 @@ bool is_trainable_concept(tensor_type type_) {
     return value;
 }
 
-// TODO: решить проблему с типами
-std::pair<size_t, size_t> find_data_idx(const std::vector<tensor_type>& t1,
-                                        const std::vector<tensor_type>& t2) {
-    auto data_idx = std::pair<size_t, size_t>(-1, -1);
-
-    for (size_t i = 0; i < t1.size(); ++i) {
-        if (t1[i] == tensor_type::data) {
-            data_idx.first = i;
-        }
-    }
-
-    for (size_t i = 0; i < t2.size(); ++i) {
-        if (t2[i] == tensor_type::data) {
-            data_idx.second = i;
-        }
-    }
-
-    if (data_idx.first == -1 || data_idx.second == -1) {
-        throw xs_error("Not found \'data\' tensor type.");
-    }
-    return data_idx;
-}
-
-std::vector<tensor_type> define_input_bias_condition(bool has_bias) {
-    if (has_bias) {
-        return {tensor_type::data, tensor_type::weight, tensor_type::bias};
-    } else {
-        return {tensor_type::data, tensor_type::weight};
-    }
-}
-
 std::ostream& operator<<(std::ostream& out, tensor_type type) {
     switch (type) {
         case tensor_type::data:

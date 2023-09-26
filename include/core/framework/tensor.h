@@ -7,57 +7,75 @@
 #define XSDNN_TENSOR_H
 
 #include "allocator.h"
-#include "tensor_shape.h"
+#include "../../utils/tensor_shape.h"
+#include "../../gsl/span"
 
 namespace xsdnn {
 
+static CPUAllocator CPUMalloc;
+
+class tensor_t;
+typedef std::vector<tensor_t> BTensor;
+
 enum XsDtype {
-    F32  = 0,
-    F16  = 1,
-    Int8 = 2,
-    Int4 = 3
+    UND  = 0,   // UNDEFINED
+    F32  = 1,   // FLOAT32
+    F16  = 2,   // FLOAT16
+    Int8 = 3,   // INT8
+    Int4 = 4    // INT4
 };
 
 class tensor_t final {
 public:
-    explicit tensor_t(XsDtype p_type, const tensor_shape& shape, IAllocator* allocator);
+    tensor_t() : shape_(shape3d(0, 0, 0)), dtype_(XsDtype::UND), p_data_(nullptr), allocator_(nullptr) {}
+    explicit tensor_t(XsDtype p_type, const shape3d& shape, IAllocator* allocator);
     explicit tensor_t(XsDtype p_type, const size_t size, IAllocator* allocator)
-        : tensor_t(p_type, tensor_shape({size}), allocator) {}
-    ~tensor_t();
+        : tensor_t(p_type, shape3d(1, 1, size), allocator) {}
+    ~tensor_t() {}
 
 public:
-    tensor_shape shape() { return shape_; }
-    XsDtype dtype() { return dtype_; }
+    shape3d shape() const { return shape_; }
+    XsDtype dtype() const { return dtype_; }
+
+    bool empty() const { return shape_.size() == 0; }
 
     template<typename T>
-    T* GetMutableData(ptrdiff_t byte_offset = 0) {
+    T* GetMutableData(ptrdiff_t byte_offset = 0) const {
         return reinterpret_cast<T*>(static_cast<char*>(p_data_) + byte_offset);
     }
 
     template<typename T>
-    gsl::span<T> GetMutableDataAsSpan(ptrdiff_t byte_offset = 0) {
+    gsl::span<T> GetMutableDataAsSpan(ptrdiff_t byte_offset = 0) const {
         T* data = reinterpret_cast<T*>(static_cast<char*>(p_data_) + byte_offset);
         return gsl::make_span(data, shape_.size());
     }
 
     template<typename T>
-    const T* GetData(ptrdiff_t byte_offset = 0) {
+    const T* GetData(ptrdiff_t byte_offset = 0) const {
         return reinterpret_cast<T*>(static_cast<char*>(p_data_) + byte_offset);
     }
 
     template<typename T>
-    gsl::span<const T> GetDataAsSpan(ptrdiff_t byte_offset = 0) {
+    gsl::span<const T> GetDataAsSpan(ptrdiff_t byte_offset = 0) const {
         T* data = reinterpret_cast<T*>(static_cast<char*>(p_data_) + byte_offset);
         return gsl::make_span(data, shape_.size());
+    }
+
+    const void* GetDataRaw(ptrdiff_t byte_offset = 0) const {
+        return static_cast<char*>(p_data_) + byte_offset;
+    }
+
+    void* GetMutableDataRaw(ptrdiff_t byte_offset = 0) const {
+        return static_cast<char*>(p_data_) + byte_offset;
     }
 
 private:
-    void Init(XsDtype p_type, const tensor_shape& shape, IAllocator* allocator);
+    void Init(XsDtype p_type, const shape3d& shape, IAllocator* allocator);
     void AllocTensor();
     void FreeTensor();
 
 private:
-    tensor_shape shape_;
+    shape3d shape_;
     XsDtype dtype_;
     void* p_data_;
 

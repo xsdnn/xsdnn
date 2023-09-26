@@ -8,47 +8,47 @@
 namespace xsdnn {
     namespace core {
 
-tensor_t &OpContext::input_data(const size_t index) {
+BTensor &OpContext::input_data(const size_t index) {
     return *(*in_data_)[index];
 }
 
-const tensor_t &OpContext::input_data(const size_t index) const {
+const BTensor &OpContext::input_data(const size_t index) const {
     return *(*in_data_)[index];
 }
 
-tensor_t &OpContext::output_data(size_t index) {
+BTensor &OpContext::output_data(size_t index) {
     return *(*out_data_)[index];
 }
 
-const tensor_t &OpContext::output_data(const size_t index) const {
+const BTensor &OpContext::output_data(const size_t index) const {
     return *(*out_data_)[index];
 }
 
-tensor_t &OpContext::input_grad(const size_t index) {
+BTensor &OpContext::input_grad(const size_t index) {
     return *(*in_grad_)[index];
 }
 
-const tensor_t &OpContext::input_grad(const size_t index) const {
+const BTensor &OpContext::input_grad(const size_t index) const {
     return *(*in_grad_)[index];
 }
 
-tensor_t &OpContext::output_grad(const size_t index) {
+BTensor &OpContext::output_grad(const size_t index) {
     return *(*out_grad_)[index];
 }
 
-const tensor_t &OpContext::output_grad(const size_t index) const {
+const BTensor &OpContext::output_grad(const size_t index) const {
     return *(*out_grad_)[index];
 }
 
-void OpContext::set_in_out(const std::vector<tensor_t *>& in_data, std::vector<tensor_t *> &out_data) {
-    in_data_ = const_cast<std::vector<tensor_t*>*>(&in_data);
+void OpContext::set_in_out(const std::vector<BTensor *>& in_data, std::vector<BTensor *> &out_data) {
+    in_data_ = const_cast<std::vector<BTensor*>*>(&in_data);
     out_data_ = &out_data;
 }
 
-void OpContext::set_in_out(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                           std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    in_data_ = const_cast<std::vector<tensor_t*>*>(&in_data);
-    out_data_ = const_cast<std::vector<tensor_t*>*>(&out_data);
+void OpContext::set_in_out(const std::vector<BTensor *> &in_data, const std::vector<BTensor *> &out_data,
+                           std::vector<BTensor *> &out_grad, std::vector<BTensor *> &in_grad) {
+    in_data_ = const_cast<std::vector<BTensor*>*>(&in_data);
+    out_data_ = const_cast<std::vector<BTensor*>*>(&out_data);
     in_grad_ = &in_grad;
     out_grad_ = &out_grad;
 }

@@ -25,30 +25,16 @@ namespace xsdnn {
         return "acos";
     }
 
-    void acos::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                  std::vector<tensor_t *> &out_data) {
-        const tensor_t& in = *in_data[0];
-        tensor_t& out = *out_data[0];
+    void acos::forward_propagation(const std::vector<BTensor *> &in_data,
+                                  std::vector<BTensor *> &out_data) {
+        const BTensor& in = *in_data[0];
+        BTensor& out = *out_data[0];
 
         concurrency::TryParallelFor(this->parallelize_, this->num_threads_, in.size(), [&](size_t sample) {
-            for (size_t j = 0; j < in[sample].size(); ++j) {
-                out[sample][j] = std::acos(in[sample][j]);
-            }
-        });
-    }
-
-    void acos::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                               std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        XS_UNUSED_PARAMETER(in_data);
-        XS_UNUSED_PARAMETER(out_data);
-
-        tensor_t& in = *in_data[0];
-        tensor_t& dx = *in_grad[0];
-        const tensor_t& dLz = *out_grad[0];
-
-        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, dx.size(), [&](size_t sample) {
-            for (size_t j = 0; j < dx[sample].size(); ++j) {
-                dx[sample][j] = - dLz[sample][j] / (std::sqrt(1 - in[sample][j] * in[sample][j]));
+            gsl::span<const float> in_sample = in[sample].GetDataAsSpan<float>();
+            gsl::span<float> out_sample = out[sample].GetMutableDataAsSpan<float>();
+            for (size_t j = 0; j < in_sample.size(); ++j) {
+                out_sample[j] = std::acos(in_sample[j]);
             }
         });
     }

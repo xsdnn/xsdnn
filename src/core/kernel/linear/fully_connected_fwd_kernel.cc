@@ -12,17 +12,17 @@ namespace xsdnn {
     namespace core {
 
 void FullyConnectedFwdKernel::compute(OpContext &ctx, params::fully &p) {
-    const tensor_t& in = ctx.input_data(0);
-    const tensor_t& W = ctx.input_data(1);
-    const tensor_t* b = p.has_bias_ ? &ctx.input_data(2) : nullptr;
-    tensor_t& out = ctx.output_data(0);
+    const BTensor & in = ctx.input_data(0);
+    const BTensor & W = ctx.input_data(1);
+    const BTensor * b = p.has_bias_ ? &ctx.input_data(2) : nullptr;
+    BTensor & out = ctx.output_data(0);
 
     core::backend_t engine = ctx.engine();
 
     if (engine == core::backend_t::xs) {
         kernel::fully_connected_fwd_xs_impl(in,
                                             W[0],
-                                            p.has_bias_ ? (*b)[0] : mat_t(),
+                                            p.has_bias_ ? (*b)[0] : tensor_t(),
                                             out, p, ctx.parallelize(), ctx.num_threads());
     } else {
         throw xs_error("[fully_connected forward] unsuported engine type");

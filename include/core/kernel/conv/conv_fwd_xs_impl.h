@@ -7,15 +7,15 @@
 #define XSDNN_CONV_FWD_XS_IMPL_H
 
 #include "../../framework/params.h"
-#include "../../../utils/tensor.h"
+#include "../../../core/framework/tensor.h"
 
 namespace xsdnn {
     namespace kernel {
 
-        void conv_fwd_xs_impl(const tensor_t& X,
-                            const mat_t& W,
-                            const mat_t* B,
-                            tensor_t& Y,
+        void conv_fwd_xs_impl(const BTensor & X,
+                            const tensor_t& W,
+                            const tensor_t* B,
+                            BTensor & Y,
                             params::conv& p,
                             bool parallelize,
                             size_t nthreads);

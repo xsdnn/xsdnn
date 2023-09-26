@@ -6,21 +6,23 @@
 #include "xsdnn.h"
 #include <gtest/gtest.h>
 #include "test_utils.h"
-#include "../include/utils/grad_checker.h"
 using namespace xsdnn;
 
 TEST(acos, forward) {
     shape3d shape_(3, 224, 224);
     xsdnn::acos acos1(shape_);
-    mat_t in_data(shape_.size());
-    utils::random_init(in_data.data(), shape_.size());
+    tensor_t in_data(XsDtype::F32, shape_.size(), nullptr);
+    utils::random_init(in_data.GetMutableData<float>(), shape_.size());
 
     acos1.set_in_data({{ in_data }});
     acos1.set_parallelize(false);
     acos1.setup(false);
 
     acos1.forward();
-    mat_t out = acos1.output()[0][0];
+    tensor_t out = acos1.output()[0][0];
+
+    gsl::span<const float> InSpan = in_data.GetDataAsSpan<float>();
+    gsl::span<const float> OutSpan = out.GetDataAsSpan<float>();
 
     for (size_t h = 0; h < shape_.H; ++h) {
         for (size_t w = 0; w < shape_.W; ++w) {
@@ -28,31 +30,13 @@ TEST(acos, forward) {
 #ifdef MM_USE_DOUBLE
 #error NotImplementedYet
 #else
-                ASSERT_FLOAT_EQ(std::acos(in_data[shape_(c, h, w)]), out[shape_(c, h, w)]);
+                ASSERT_FLOAT_EQ(std::acos(InSpan[shape_(c, h, w)]), OutSpan[shape_(c, h, w)]);
 #endif
             }
         }
     }
 }
 
-TEST(acos, backward) {
-    shape3d shape_(1, 64, 64);
-    xsdnn::acos acos1(shape_);
-    acos1.set_parallelize(false);
-    GradChecker checker(&acos1, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
-}
-
-TEST(acos, backward_parallel) {
-    shape3d shape_(1, 64, 64);
-    xsdnn::acos acos1(shape_);
-    acos1.set_parallelize(true);
-    acos1.set_num_threads(std::thread::hardware_concurrency());
-    GradChecker checker(&acos1, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
-}
 TEST(acos, cerial) {
     shape3d shape_(3, 64, 64);
     xsdnn::acos acos1(shape_);

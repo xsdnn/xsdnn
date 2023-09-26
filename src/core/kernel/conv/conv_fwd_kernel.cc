@@ -10,11 +10,11 @@ namespace xsdnn {
     namespace core {
 
 void ConvFwdKernel::compute(xsdnn::core::OpContext &ctx, params::conv &p) {
-    const tensor_t& X = ctx.input_data(0);
-    const tensor_t& W = ctx.input_data(1);
-    const mat_t* B = p._.Bias ? &ctx.input_data(2).at(0) : nullptr;
+    const BTensor & X = ctx.input_data(0);
+    const BTensor & W = ctx.input_data(1);
+    const tensor_t* B = p._.Bias ? &ctx.input_data(2).at(0) : nullptr;
 
-    tensor_t& Y = ctx.output_data(0);
+    BTensor& Y = ctx.output_data(0);
 
     backend_t engine = ctx.engine();
 

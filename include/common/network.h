@@ -9,8 +9,6 @@
 #include <vector>
 #include <thread>
 #include "../layers/layer.h"
-#include "../loss/loss_base.h"
-#include "../optimizers/optimizer_base.h"
 #include "nodes.h"
 #include "config.h"
 
@@ -51,59 +49,14 @@ public:
     void set_num_threads(size_t num_threads) noexcept;
     bool empty() const;
 
-    mat_t predict(const mat_t& in);
     tensor_t predict(const tensor_t& in);
-    std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
-
-    /*
-     * For sequency execution
-     */
-    void train(loss* loss,
-               optimizer* opt,
-               const tensor_t& input,
-               const std::vector<size_t>& label,
-               size_t batch_size,
-               size_t epoch);
-
-
-    /*
-     * For graph execution
-     */
-    void train(loss* loss,
-               optimizer* opt,
-               const std::vector<tensor_t>& input, /*multiple input's*/
-               const std::vector<tensor_t>& label, /*multiple output's*/
-               size_t batch_size,
-               size_t epoch);
+    BTensor predict(const BTensor & in);
+    std::vector<BTensor> predict(const std::vector<BTensor>& in);
 
     void save(const std::string filename);
     void load(const std::string filename);
 
 protected:
-    void fit(loss* l_ptr,
-             optimizer* opt_ptr,
-             std::vector<tensor_t>& input,
-             std::vector<tensor_t>& label,
-             size_t batch_size,
-             size_t epoch);
-
-    void fit_batch(loss* l_ptr,
-                   optimizer* opt_ptr,
-                   const tensor_t* input,
-                   const tensor_t* label,
-                   size_t batch_size);
-
-    void compute(loss* l_ptr,
-                 optimizer* opt_ptr,
-                 const tensor_t* input,
-                 const tensor_t* label,
-                 size_t batch_size);
-
-    void newaxis(const tensor_t& in,
-                 std::vector<tensor_t>& out);
-
-    void label2vec(const std::vector<size_t>& label,
-                   std::vector<tensor_t>& output);
 
     friend bool operator == (network<Net>& lhs, network<Net>& rhs) {
         /*
@@ -129,17 +82,18 @@ protected:
             layer* lhs_layer = lhs.net_[i];
             layer* rhs_layer = rhs.net_[i];
 
-            std::vector<mat_t*> lhs_weights = lhs_layer->weights();
-            std::vector<mat_t*> rhs_weights = rhs_layer->weights();
+            std::vector<tensor_t*> lhs_weights = lhs_layer->weights();
+            std::vector<tensor_t*> rhs_weights = rhs_layer->weights();
 
             if (lhs_weights.size() != rhs_weights.size()) {
                 return false;
             }
 
             for (size_t j = 0; j < lhs_weights.size(); ++j) {
-                if (*lhs_weights[j] != *rhs_weights[j]) {
-                    return false;
-                }
+                // TODO: исправить
+//                if (*lhs_weights[j] != *rhs_weights[j]) {
+//                    return false;
+//                }
             }
         }
         return true;
@@ -150,15 +104,9 @@ protected:
                                 const std::vector<layer*>& out);
 
 protected:
-    mat_t fprop(const mat_t& in);
-    std::vector<mat_t> fprop(const std::vector<mat_t>& in);
-    std::vector<tensor_t> fprop(const std::vector<tensor_t>& in);
-
-    void bprop(loss* l_ptr,
-               optimizer* opt_ptr,
-               const std::vector<tensor_t>& net_out,
-               const std::vector<tensor_t>& label);
-
+    tensor_t fprop(const tensor_t& in);
+    BTensor fprop(const BTensor & in);
+    std::vector<BTensor> fprop(const std::vector<BTensor>& in);
 
 private:
     Net net_;

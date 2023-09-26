@@ -10,17 +10,11 @@
 #include "session/inference_options.h"
 
 #include "common/network.h"
-#include "utils/tensor.h"
+#include "core/framework/tensor.h"
 #include "utils/xs_visualizer.h"
 
 #include "layers/layer.h"
 #include "layers/activations/activation_layer.h"
 #include "layers/layers.h"
-
-#include "loss/loss_base.h"
-#include "loss/mse_loss.h"
-
-#include "optimizers/optimizer_base.h"
-#include "optimizers/sgd.h"
 
 #endif //XSDNN_XSDNN_H

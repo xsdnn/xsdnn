@@ -15,10 +15,8 @@ void fill(mm_scalar* p_, size_t size, mm_scalar val) {
     }
 }
 
-void fill(tensor_t& t_, mm_scalar val) {
-    for (auto& m : t_) {
-        fill(m.data(), m.size(), val);
-    }
+void fill(BTensor& t_, mm_scalar val) {
+
 }
 
 

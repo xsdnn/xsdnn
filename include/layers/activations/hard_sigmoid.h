@@ -30,12 +30,7 @@ public:
     }
 
 public:
-    void forward_activation(const mat_t& in_data, mat_t& out_data) override;
-
-    void back_activation(const mat_t& in_data,
-                         const mat_t& out_data,
-                         const mat_t& out_grad,
-                         mat_t&       in_grad) override;
+    void forward_activation(const tensor_t& in_data, tensor_t& out_data) override;
 
     std::pair<mm_scalar, mm_scalar> out_value_range() const override;
 

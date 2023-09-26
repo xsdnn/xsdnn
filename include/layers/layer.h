@@ -8,7 +8,6 @@
 
 #include "../common/node.h"
 #include "../utils/weight_init.h"
-#include "../optimizers/optimizer_base.h"
 #include "../core/backend.h"
 #include "../utils/tensor_shape.h"
 #include "../serializer/xs.proto3.pb.h"
@@ -16,10 +15,24 @@
 
 namespace xsdnn {
 
+class TypeHolder {
+public:
+    TypeHolder() {}
+    TypeHolder(tensor_type T, XsDtype D) : T_(T), D_(D) {}
+    tensor_type concept_type() const { return T_; }
+    XsDtype     tensor_dtype() const { return D_; }
+
+private:
+    tensor_type T_;
+    XsDtype D_;
+};
+
+std::vector<TypeHolder> get_typed_holder(bool has_bias, std::vector<XsDtype> dtype);
+
 class layer : public node {
 public:
-    layer(const std::vector<tensor_type>& in_type,
-          const std::vector<tensor_type>& out_type);
+    layer(const std::vector<TypeHolder>& in_type,
+          const std::vector<TypeHolder>& out_type);
     virtual ~layer();
 
 
@@ -38,9 +51,8 @@ public:
     std::vector<shape3d> in_data_shape() const;
     std::vector<shape3d> out_data_shape() const;
 
-    std::vector<const mat_t*> weights() const;
-    std::vector<mat_t*> weights();
-    std::vector<tensor_t*> weights_grads();
+    std::vector<const tensor_t*> weights() const;
+    std::vector<tensor_t*> weights();
 
     std::vector<edgeptr_t> inputs();
     std::vector<edgeptr_t> outputs();
@@ -48,48 +60,49 @@ public:
 
     virtual
     void save(xs::TensorInfo* dst) const {
-        const auto all_w = weights();
-        for (auto& weight : all_w) {
-            for (auto& w : *weight) {
-                dst->add_float_data(w);
-            }
-            dst->add_dims(weight->size());
-        }
+        // TODO: исправить
+//        const auto all_w = weights();
+//        for (auto& weight : all_w) {
+//            for (auto& w : *weight) {
+//                dst->add_float_data(w);
+//            }
+//            dst->add_dims(weight->size());
+//        }
     }
 
     virtual
     void load(const xs::TensorInfo* src) {
-        auto all_w = weights();
-
-        /*
-         * Проверим, что размеры входного тензора равны размерам весов.
-         */
-        assert(src->dims_size() == static_cast<int>(all_w.size()));
-        size_t src_size = 0;
-        size_t all_w_size = 0;
-        for (size_t d = 0; d < static_cast<size_t>(src->dims_size()); ++d) {
-            src_size += src->dims(d);
-            all_w_size += all_w[d]->size();
-        }
-        assert(src_size == all_w_size);
-
-        size_t idx = 0;
-        for (size_t i = 0; i < all_w.size(); ++i) {
-            for (size_t j = 0; j < all_w[i]->size(); ++j) {
-                (*all_w[i])[j] = src->float_data(idx++); // FIXME: а если будет не float?
-            }
-        }
-        initialized_ = true;
+        // TODO: исправить
+//        auto all_w = weights();
+//
+//        /*
+//         * Проверим, что размеры входного тензора равны размерам весов.
+//         */
+//        assert(src->dims_size() == static_cast<int>(all_w.size()));
+//        size_t src_size = 0;
+//        size_t all_w_size = 0;
+//        for (size_t d = 0; d < static_cast<size_t>(src->dims_size()); ++d) {
+//            src_size += src->dims(d);
+//            all_w_size += all_w[d]->size();
+//        }
+//        assert(src_size == all_w_size);
+//
+//        size_t idx = 0;
+//        for (size_t i = 0; i < all_w.size(); ++i) {
+//            for (size_t j = 0; j < all_w[i]->size(); ++j) {
+//                (*all_w[i])[j] = src->float_data(idx++); // FIXME: а если будет не float?
+//            }
+//        }
+//        initialized_ = true;
     }
 
-    void set_in_data(const std::vector<tensor_t>& data);
-    void set_out_grads(const std::vector<tensor_t>& grad);
+    void set_in_data(const std::vector<BTensor>& data);
     void set_trainable(bool trainable);
 
-    std::vector<tensor_t> output() const;
+    std::vector<BTensor> output() const;
 
-    std::vector<tensor_type> in_types() const;
-    std::vector<tensor_type> out_types() const;
+    std::vector<TypeHolder> in_types() const;
+    std::vector<TypeHolder> out_types() const;
 
     template<typename WeightInit>
     void weight_init(const WeightInit& f) {
@@ -143,28 +156,13 @@ public:
 
     virtual
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data) = 0;
-
-    virtual
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad) = 0;
+    forward_propagation(const std::vector<BTensor*>& in_data,
+                        std::vector<BTensor*>& out_data) = 0;
 
 
     void forward();
 
-    void backward();
-
     void setup(bool reset_weight);
-
-    void init_weight();
-
-    void clear_grads();
-
-    void update_weight(optimizer* opt);
 
     virtual
     void set_sample_count(size_t sample_count);
@@ -178,8 +176,8 @@ private:
     void alloc_output(size_t i) const;
     edgeptr_t ith_in_node(size_t i);
     edgeptr_t ith_out_node(size_t i);
-    mat_t* get_weight_data(size_t i);
-    const mat_t* get_weight_data(size_t i) const;
+    tensor_t* get_weight_data(size_t i);
+    const tensor_t* get_weight_data(size_t i) const;
 
 protected:
     bool initialized_;
@@ -187,22 +185,17 @@ protected:
     size_t num_threads_;
     size_t in_concept_;
     size_t out_concept_;
-    std::vector<tensor_type> in_type_;
-    std::vector<tensor_type> out_type_;
+    std::vector<TypeHolder> in_type_;
+    std::vector<TypeHolder> out_type_;
 
 private:
     bool trainable_;
-    mat_t weight_diff_helper_;
     core::backend_t engine_;
     std::shared_ptr<weight_init::function> weight_init_;
     std::shared_ptr<weight_init::function> bias_init_;
 
-    std::vector<tensor_t*> fwd_in_data;
-    std::vector<tensor_t*> fwd_out_data;
-    std::vector<tensor_t*> bwd_in_data;
-    std::vector<tensor_t*> bwd_in_grad;
-    std::vector<tensor_t*> bwd_out_data;
-    std::vector<tensor_t*> bwd_out_grad;
+    std::vector<BTensor *> fwd_in_data;
+    std::vector<BTensor *> fwd_out_data;
 
     friend class GradChecker;
 };

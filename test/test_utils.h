@@ -10,6 +10,7 @@
 #include <fstream>
 #include <filesystem>
 #include <sys/mman.h>
+#include <gtest/gtest.h>
 namespace fs = std::filesystem;
 using namespace mmpack;
 using namespace xsdnn;
@@ -34,6 +35,26 @@ void init(mm_scalar* ptr, size_t rows, size_t cols) {
     }
 }
 
+void ContainerEqual(tensor_t T1, tensor_t T2) {
+    if (T1.dtype() == T2.dtype() == XsDtype::F32) {
+        gsl::span<const float> T1Span = T1.GetDataAsSpan<float>();
+        gsl::span<const float> T2Span = T2.GetDataAsSpan<float>();
+        ASSERT_EQ(T1Span.size(), T2Span.size());
+        for (size_t i = 0; i < T1Span.size(); ++i) {
+            ASSERT_FLOAT_EQ(T1Span[i], T2Span[i]);
+        }
+    } else {
+        throw xs_error("Unregonized Tensot Dtype");
+    }
+}
+
+template<typename T>
+void vector_init(T* ptr, std::vector<T> data) {
+    for (size_t i = 0; i < data.size(); ++i) {
+        *ptr++ = data[i];
+    }
+}
+
 void value_init(mm_scalar* ptr, mm_scalar value, size_t size) {
     for (size_t i = 0; i < size; ++i) {
         *ptr = value;
@@ -41,24 +62,12 @@ void value_init(mm_scalar* ptr, mm_scalar value, size_t size) {
     }
 }
 
-void random_init(mm_scalar* ptr, size_t size) {
+void random_init(float* ptr, size_t size) {
     for (size_t i = 0; i < size; ++i) {
-        mm_scalar value = static_cast <mm_scalar> (rand()) / static_cast <mm_scalar> (RAND_MAX);
+        float value = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         *ptr = value;
         ptr += 1;
     }
-}
-
-std::vector<tensor_t> generate_fwd_data(const size_t num_concept,
-                                               const std::vector<size_t> sizes) {
-    std::vector<tensor_t> data;
-    data.resize(num_concept);
-    for (size_t i = 0; i < num_concept; ++i) {
-        data[i].resize(1);
-        data[i][0].resize(sizes[i]);
-        uniform_rand(&data[i][0][0], sizes[i], -10.0f, 10.0f);
-    }
-    return data;
 }
 
 template<typename T>

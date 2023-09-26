@@ -17,26 +17,26 @@ public:
      * dim: размерность каждого вектора
      */
     explicit add(size_t n_input, size_t dim)
-        : layer(std::vector<tensor_type>(n_input, tensor_type::data),
-                {tensor_type::data}),
+        : layer(std::vector<TypeHolder>(n_input, TypeHolder(tensor_type::data, XsDtype::F32)),
+                {TypeHolder(tensor_type::data, XsDtype::F32)}),
         n_input_(n_input), shape_(1, 1, dim) {}
 
     explicit add(size_t n_input, shape3d shape)
-        : layer(std::vector<tensor_type>(n_input, tensor_type::data),
-                {tensor_type::data}),
+        : layer(std::vector<TypeHolder>(n_input, TypeHolder(tensor_type::data, XsDtype::F32)),
+                {TypeHolder(tensor_type::data, XsDtype::F32)}),
           n_input_(n_input), shape_(shape) {}
 
     /*
      * Binary add operator
      */
     explicit add(size_t dim)
-        : layer(std::vector<tensor_type>(2, tensor_type::data),
-                {tensor_type::data}),
+        : layer(std::vector<TypeHolder>(2, TypeHolder(tensor_type::data, XsDtype::F32)),
+                {TypeHolder(tensor_type::data, XsDtype::F32)}),
         n_input_(2), shape_(1, 1, dim) {}
 
     explicit add(shape3d shape)
-        : layer(std::vector<tensor_type>(2, tensor_type::data),
-                {tensor_type::data}),
+        : layer(std::vector<TypeHolder>(2, TypeHolder(tensor_type::data, XsDtype::F32)),
+                {TypeHolder(tensor_type::data, XsDtype::F32)}),
           n_input_(2), shape_(shape) {}
 
     std::vector<shape3d> in_shape() const;
@@ -44,14 +44,8 @@ public:
     std::string layer_type() const;
 
     void
-    forward_propagation(const std::vector<tensor_t*>& in_data,
-                        std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
+    forward_propagation(const std::vector<BTensor*>& in_data,
+                        std::vector<BTensor*>& out_data);
 
 private:
     size_t n_input_;

@@ -8,28 +8,27 @@
 
 namespace xsdnn {
 
-tensor_t::tensor_t(XsDtype p_type, const tensor_shape &shape,
+tensor_t::tensor_t(XsDtype p_type, const shape3d& shape,
                    IAllocator *allocator) {
+    if (allocator == nullptr) allocator_ = &CPUMalloc;
     Init(p_type, shape, allocator);
 }
 
-tensor_t::~tensor_t() {
-    FreeTensor();
-}
-
-void tensor_t::Init(XsDtype p_type, const tensor_shape &shape,
+void tensor_t::Init(XsDtype p_type, const shape3d& shape,
                     IAllocator *allocator) {
     size_t shape_size = shape.size();
     if (shape_size <= 0)
         xs_error("Tensor Shape size must be greater than zero.");
     dtype_ = p_type;
     shape_ = shape;
-    allocator_ = allocator;
+    if (!allocator_)
+        allocator_ = allocator;
     AllocTensor();
 }
 
 void tensor_t::AllocTensor() {
-    p_data_ = allocator_->Alloc(shape_.size());
+    // Выделим место под максимальной большой POD данных
+    p_data_ = allocator_->Alloc(shape_.size() * sizeof(float));
 }
 
 void tensor_t::FreeTensor() {

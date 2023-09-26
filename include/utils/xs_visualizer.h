@@ -97,10 +97,10 @@ private:
 
     void generate_layer_channels(std::ostream &stream,
                                  const std::vector<shape3d> &shapes,
-                                 const std::vector<tensor_type> &ttypes,
+                                 const std::vector<TypeHolder> &ttypes,
                                  const std::string &port_prefix) {
         for (size_t i = 0; i < shapes.size(); i++) {
-            stream << "|<" << port_prefix << i << ">" << shapes[i] << "(" << ttypes[i]
+            stream << "|<" << port_prefix << i << ">" << shapes[i] << "(" << ttypes[i].concept_type()
                    << ")";
         }
     }

@@ -7,13 +7,13 @@
 #define XSDNN_MP_FWD_XS_IMPL_H
 
 #include "../../framework/params.h"
-#include "../../../utils/tensor.h"
+#include "../../../core/framework//tensor.h"
 
 namespace xsdnn {
     namespace kernel {
 
-        void max_pool_fwd_xs_impl(const tensor_t& in,
-                                  tensor_t& out,
+        void max_pool_fwd_xs_impl(const BTensor& in,
+                                  BTensor& out,
                                   params::max_pool& p,
                                   bool parallelize,
                                   size_t nthreads);

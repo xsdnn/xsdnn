@@ -21,31 +21,24 @@ std::string add::layer_type() const {
     return "add";
 }
 
-void add::forward_propagation(const std::vector<tensor_t *> &in_data,
-                              std::vector<tensor_t *> &out_data) {
-    const tensor_t& in = *in_data[0];
-    tensor_t& out = *out_data[0];
-    out = in;
+void add::forward_propagation(const std::vector<BTensor *> &in_data,
+                              std::vector<BTensor *> &out_data) {
+    const BTensor& In = *in_data[0];
+    BTensor& Out = *out_data[0];
+    std::copy(In.begin(), In.end(), Out.begin());
 
-    for (size_t sample = 0; sample < in.size(); ++sample) {
+    for (size_t sample = 0; sample < In.size(); ++sample) {
         for (size_t i = 1; i < n_input_; i++) {
-            std::transform((*in_data[i])[sample].begin(),
-                           (*in_data[i])[sample].end(),
-                           out[sample].begin(),
-                           out[sample].begin(),
+            gsl::span<const float> in_sample = (*in_data[i])[sample].GetDataAsSpan<float>();
+            gsl::span<float> out_sample = Out[sample].GetMutableDataAsSpan<float>();
+            std::transform(in_sample.begin(),
+                           in_sample.end(),
+                           out_sample.begin(),
+                           out_sample.begin(),
                            [](float_t x, float_t y){ return x + y; });
         }
     }
 }
-
-void add::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                           std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    XS_UNUSED_PARAMETER(in_data);
-    XS_UNUSED_PARAMETER(out_data);
-    for (size_t i = 0; i < n_input_; i++)
-        *in_grad[i] = *out_grad[0];
-}
-
 
 
 } // xsdnn

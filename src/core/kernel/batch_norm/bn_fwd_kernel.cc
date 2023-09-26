@@ -9,16 +9,14 @@
 namespace xsdnn {
     namespace core {
 
-
-
 void BatchNormalizationFwdKernel::compute(xsdnn::core::OpContext &ctx, params::bnorm &p) {
-    const tensor_t& in = ctx.input_data(0);
-    const tensor_t& gamma = ctx.input_data(1);
-    const tensor_t& beta = ctx.input_data(2);
-    tensor_t& out = ctx.output_data(0);
+    const BTensor& in = ctx.input_data(0);
+    const BTensor& gamma = ctx.input_data(1);
+    const BTensor& beta = ctx.input_data(2);
+    BTensor& out = ctx.output_data(0);
 
     if (!p.statistic_initialized) {
-        init_statistics(p);
+        init_statistics(p, in[0].dtype());
     }
 
     backend_t engine = ctx.engine();
@@ -31,13 +29,13 @@ void BatchNormalizationFwdKernel::compute(xsdnn::core::OpContext &ctx, params::b
     }
 }
 
-void BatchNormalizationFwdKernel::init_statistics(params::bnorm &p) {
+void BatchNormalizationFwdKernel::init_statistics(params::bnorm &p, XsDtype TensorDtype) {
     size_t in_channels = p.in_shape_.C;
 
-    p.stat_holder["mean_running_"] = mat_t(in_channels);
-    p.stat_holder["stddev_running_"] = mat_t(in_channels);
-    p.stat_holder["mean_"] = mat_t(in_channels);
-    p.stat_holder["stddev_"] = mat_t(in_channels);
+    p.stat_holder["mean_running_"] = tensor_t(TensorDtype, in_channels, nullptr);
+    p.stat_holder["stddev_running_"] = tensor_t(TensorDtype, in_channels, nullptr);
+    p.stat_holder["mean_"] = tensor_t(TensorDtype, in_channels, nullptr);
+    p.stat_holder["stddev_"] = tensor_t(TensorDtype, in_channels, nullptr);
 
     p.statistic_initialized = true;
 }

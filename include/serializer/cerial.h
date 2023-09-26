@@ -50,7 +50,7 @@ struct cerial {
         has_bias->set_type(xs::AttributeInfo_AttributeType_INT);
         has_bias->set_i(layer->params_.has_bias_);
 
-        std::vector<const mat_t*> wb = layer->weights();
+        std::vector<const tensor_t*> wb = layer->weights();
         tensor->set_name("w&b fully_connected");
 #ifdef XS_USE_DOUBLE
 #error NotImplementedYet
@@ -394,7 +394,7 @@ struct cerial {
             PadRightWidth->set_type(xs::AttributeInfo_AttributeType_INT);
             PadRightWidth->set_i(Parameters.Padding[3]);
 
-            std::vector<const mat_t*> wb = layer->weights();
+            std::vector<const tensor_t*> wb = layer->weights();
             tensor->set_name("w&b conv");
 #ifdef XS_USE_DOUBLE
 #error NotImplementedYet

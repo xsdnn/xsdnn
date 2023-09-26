@@ -9,18 +9,18 @@
 namespace xsdnn {
     namespace kernel {
 
-void max_pool_fwd_xs_impl(const tensor_t& in_data,
-                          tensor_t& out_data,
+void max_pool_fwd_xs_impl(const BTensor & in_data,
+                          BTensor & out_data,
                           params::max_pool& p,
                           bool parallelize,
                           size_t nthreads) {
     concurrency::TryParallelFor(parallelize, nthreads, in_data.size(), [&](size_t sample){
-        const mat_t& in = in_data[sample];
-        mat_t& out = out_data[sample];
+        gsl::span<const float> in = in_data[sample].GetDataAsSpan<float>();
+        gsl::span<float> out = out_data[sample].GetMutableDataAsSpan<float>();
 
         for (size_t i = 0; i < p.out2in.size(); ++i) {
             const auto& in_idx = p.out2in[i];
-            mm_scalar max_value = std::numeric_limits<mm_scalar>::lowest();
+            float max_value = std::numeric_limits<float>::lowest();
             for (const auto& j : in_idx) {
                 max_value = std::max(max_value, in[j]);
             }

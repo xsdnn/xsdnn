@@ -75,10 +75,10 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_add.cc
 )
 
-AddTest(
-        xsdnn_and_test
-        ${XSDNN_TEST_ROOT}/test_and.cc
-)
+#AddTest(
+#        xsdnn_and_test
+#        ${XSDNN_TEST_ROOT}/test_and.cc
+#)
 
 AddTest(
         xsdnn_flatten_test

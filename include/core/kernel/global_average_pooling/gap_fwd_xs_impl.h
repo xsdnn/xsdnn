@@ -7,13 +7,13 @@
 #define XSDNN_GAP_FWD_XS_IMPL_H
 
 #include "../../framework/params.h"
-#include "../../../utils/tensor.h"
+#include "../../../core/framework//tensor.h"
 
 namespace xsdnn {
     namespace kernel {
 
-        void global_average_pool_fwd_xs_impl(const tensor_t& in,
-                                  tensor_t& out,
+        void global_average_pool_fwd_xs_impl(const BTensor & in,
+                                  BTensor & out,
                                   params::global_avg_pool& p,
                                   bool parallelize,
                                   size_t nthreads);

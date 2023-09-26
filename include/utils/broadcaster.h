@@ -10,6 +10,7 @@
 #include <vector>
 #include "../gsl/span"
 #include "tensor_shape.h"
+#include "../core/framework/tensor.h"
 
 namespace xsdnn {
 
@@ -56,8 +57,8 @@ public:
 
 class input_broadcaster {
 public:
-    explicit input_broadcaster(shape3d& s1, mat_t& tensor1,
-                               shape3d* s2 = nullptr, mat_t* tensor2 = nullptr);
+    explicit input_broadcaster(shape3d& s1, tensor_t& tensor1,
+                               shape3d* s2 = nullptr, tensor_t* tensor2 = nullptr);
 
 public:
     void advance_by(size_t offset);
@@ -94,13 +95,13 @@ public:
     }
 
 private:
-    const mat_t& input0_tensor_;
+    const tensor_t& input0_tensor_;
     const shape3d& input0_shape_;
-    const mat_t* input1_tensor_;
+    const tensor_t* input1_tensor_;
     const shape3d& input1_shape_;
-    const size_t input_element_size_{sizeof(mm_scalar)};
-    const void* input0_bytes_{input0_tensor_.data()};
-    const void* input1_bytes_{input1_tensor_ ? input1_tensor_->data(): nullptr};
+    const size_t input_element_size_{sizeof(float)};
+    const void* input0_bytes_{input0_tensor_.GetDataRaw()};
+    const void* input1_bytes_{input1_tensor_ ? input1_tensor_->GetDataRaw() : nullptr};
 
     broadcaster broadcaster_{input0_shape_, input1_shape_};
     size_t span_size_{broadcaster_.get_span_size()};
@@ -108,7 +109,7 @@ private:
 
 class output_broadcaster {
 public:
-    explicit output_broadcaster(size_t span_size, mat_t& tensor, shape3d shape,
+    explicit output_broadcaster(size_t span_size, tensor_t& tensor, shape3d shape,
                                 ptrdiff_t start_offset = 0, ptrdiff_t end_offset = 0);
 
 public:
@@ -127,7 +128,7 @@ public:
 private:
     const size_t span_size_;
     size_t output_elements_;
-    const size_t element_size_{sizeof(mm_scalar)};
+    const size_t element_size_{sizeof(float)};
     uint8_t* output_bytes_;
     const void* output_end_;
 };

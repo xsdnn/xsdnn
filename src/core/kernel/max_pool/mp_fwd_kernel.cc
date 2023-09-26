@@ -10,8 +10,8 @@ namespace xsdnn {
     namespace core {
 
 void MaxPoolingFwdKernel::compute(xsdnn::core::OpContext &ctx, params::max_pool &p) {
-    const tensor_t& in_data = ctx.input_data(0);
-    tensor_t& out_data = ctx.output_data(0);
+    const BTensor& in_data = ctx.input_data(0);
+    BTensor& out_data = ctx.output_data(0);
 
     backend_t engine = ctx.engine();
 

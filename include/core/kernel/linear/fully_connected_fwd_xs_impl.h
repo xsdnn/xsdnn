@@ -7,15 +7,15 @@
 #define XSDNN_FULLY_CONNECTED_FWD_XS_IMPL_H
 
 #include "../../framework/params.h"
-#include "../../../utils/tensor.h"
+#include "../../framework/tensor.h"
 
 namespace xsdnn {
     namespace kernel {
 
-void fully_connected_fwd_xs_impl(const tensor_t& in,
-                                 const mat_t& W,
-                                 const mat_t& b,
-                                 tensor_t& out,
+void fully_connected_fwd_xs_impl(const BTensor & in,
+                                 const tensor_t& W,
+                                 const tensor_t& b,
+                                 BTensor& out,
                                  const params::fully& p,
                                  bool parallelize,
                                  size_t nthreads);

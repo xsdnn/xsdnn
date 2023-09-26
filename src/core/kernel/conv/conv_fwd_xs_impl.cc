@@ -9,33 +9,33 @@
 namespace xsdnn {
     namespace kernel {
 
-void conv_fwd_xs_impl(const tensor_t& X,
-                      const mat_t& W,
-                      const mat_t* B,
-                      tensor_t& Y,
+void conv_fwd_xs_impl(const BTensor & X,
+                      const tensor_t& W,
+                      const tensor_t* B,
+                      BTensor & Y,
                       params::conv& p,
                       bool parallelize,
                       size_t nthreads) {
     concurrency::TryParallelFor(parallelize, nthreads, X.size(), [&](size_t sample) {
-        mat_t TemporaryBuffer(p._.TemproraryBufferSize);
+        tensor_t TemporaryBuffer(X[0].dtype(), p._.TemproraryBufferSize, nullptr);
 
         if (B != nullptr) {
             mmpack::MmConv(&p._,
-                           X[sample].data(), W.data(), B->data(),
-                           TemporaryBuffer.data(), Y[sample].data());
+                           X[sample].GetData<float>(), W.GetData<float>(), B->GetData<float>(),
+                           TemporaryBuffer.GetMutableData<float>(), Y[sample].GetMutableData<float>());
         } else {
             mmpack::MmConv(&p._,
-                           X[sample].data(), W.data(), nullptr,
-                           TemporaryBuffer.data(), Y[sample].data());
+                           X[sample].GetData<float>(), W.GetData<float>(), nullptr,
+                           TemporaryBuffer.GetMutableData<float>(), Y[sample].GetMutableData<float>());
         }
 
         // Compute activation if there is
-        if (p.activation_type_ != MmActivationType::NotSet) {
-            MmActivationHolder ActHolder;
+        if (p.activation_type_ != mmpack::MmActivationType::NotSet) {
+            mmpack::MmActivationHolder ActHolder;
             ActHolder.ActivationType = p.activation_type_;
             MmSetDefaultActivationParameters(&ActHolder);
 
-            MmActivation(&ActHolder, Y[sample].data(), p._.OutShape[0], p._.OutShape[1], p._.OutShape[1]);
+            MmActivation(&ActHolder, Y[sample].GetMutableData<float>(), p._.OutShape[0], p._.OutShape[1], p._.OutShape[1]);
         }
     });
 }

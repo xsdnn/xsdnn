@@ -37,14 +37,13 @@ void batch_norm::set_params(mmpack::mm_scalar momentum,
 
 void batch_norm::init_backend(core::backend_t engine) {
     fwd_kernel_.reset(new core::BatchNormalizationFwdKernel);
-    bwd_kernel_.reset(new core::BatchNormalizationBwdKernel);
     this->weight_init(weight_init::constant(1.0f));
     this->bias_init(weight_init::constant(0.0f));
     set_backend(engine);
 }
 
-void batch_norm::forward_propagation(const std::vector<tensor_t *> &in_data,
-                                     std::vector<tensor_t *> &out_data) {
+void batch_norm::forward_propagation(const std::vector<BTensor*> &in_data,
+                                     std::vector<BTensor*> &out_data) {
     fwd_ctx_.set_in_out(in_data, out_data);
     fwd_ctx_.set_engine(engine());
     fwd_ctx_.set_parallelize(parallelize());
@@ -53,22 +52,12 @@ void batch_norm::forward_propagation(const std::vector<tensor_t *> &in_data,
     fwd_kernel_->compute(fwd_ctx_, params_);
 }
 
-void batch_norm::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                                  std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    bwd_ctx_.set_in_out(in_data, out_data, out_grad, in_grad);
-    bwd_ctx_.set_engine(engine());
-    bwd_ctx_.set_parallelize(parallelize());
-    bwd_ctx_.set_num_threads(this->num_threads_);
-
-    bwd_kernel_->compute(bwd_ctx_, params_);
-}
-
 void batch_norm::post_update() {
-    mat_t& mean_ = params_.stat_holder["mean_"];
-    mat_t& stddev_ = params_.stat_holder["stddev_"];
-    mat_t& mean_running_ = params_.stat_holder["mean_running_"];
-    mat_t& stddev_running_ = params_.stat_holder["stddev_running_"];
-    mm_scalar momentum_ = params_.momentum_;
+    gsl::span<float> mean_ = params_.stat_holder["mean_"].GetMutableDataAsSpan<float>();
+    gsl::span<float> stddev_ = params_.stat_holder["stddev_"].GetMutableDataAsSpan<float>();
+    gsl::span<const float> mean_running_ = params_.stat_holder["mean_running_"].GetDataAsSpan<float>();
+    gsl::span<const float> stddev_running_ = params_.stat_holder["stddev_running_"].GetDataAsSpan<float>();
+    float momentum_ = params_.momentum_;
 
     for (size_t i = 0; i < mean_.size(); i++) {
         mean_[i] = momentum_ * mean_[i] + (1 - momentum_) * mean_running_[i];
