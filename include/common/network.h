@@ -90,10 +90,12 @@ protected:
             }
 
             for (size_t j = 0; j < lhs_weights.size(); ++j) {
-                // TODO: исправить
-//                if (*lhs_weights[j] != *rhs_weights[j]) {
-//                    return false;
-//                }
+                gsl::span<const float> LhsWeightsSpan = lhs_weights[j]->template GetDataAsSpan<float>();
+                gsl::span<const float> RhsWeightsSpan = rhs_weights[j]->template GetDataAsSpan<float>();
+
+                if (LhsWeightsSpan != RhsWeightsSpan) {
+                    return false;
+                }
             }
         }
         return true;

@@ -12,10 +12,12 @@ TEST(flatten, forward) {
     shape3d in_shape(3, 128, 224);
     flatten fl(in_shape);
 
-    mat_t in_data(in_shape.size());
+    std::vector<float> in_data(in_shape.size());
     utils::random_init(in_data.data(), in_data.size());
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
 
-    fl.set_in_data({{ in_data }});
+    fl.set_in_data({{ Tensor }});
     fl.set_parallelize(false);
     fl.setup(false);
 

@@ -46,7 +46,10 @@ TEST(conv, _2D_params_check_1) {
 }
 
 TEST(conv, simple_forward) {
-    const mat_t Input = {
+    shape3d in_shape(3, 4, 4);
+    conv c(in_shape, 3, {2, 2}, 3, true);
+
+    const std::vector<float> Input = {
             -1.8776015043258667,
             -0.2049034833908081,
             -0.13616761565208435,
@@ -96,7 +99,7 @@ TEST(conv, simple_forward) {
             -0.8146375417709351,
             -0.9757303595542908
     };
-    const mat_t Output = {
+    const std::vector<float> Output = {
             0.8995431065559387,
             0.38253235816955566,
             0.2557677626609802,
@@ -125,44 +128,48 @@ TEST(conv, simple_forward) {
             0.20843656361103058,
             0.011137520894408226
     };
-    shape3d in(3, 4, 4);
 
-    conv c(in, 3, {2, 2}, 3, true);
+    std::vector<float> Weights = {
+        -0.4036754369735718,
+        0.12995994091033936,
+        0.0194014310836792,
+        -0.08908277750015259,
+        0.16426432132720947,
+        -0.08304166793823242,
+        -0.17363417148590088,
+        0.2517896294593811,
+        -0.2612036466598511,
+        -0.3790665864944458,
+        0.2879072427749634,
+        -0.14387822151184082
+    };
+
+    std::vector<float> Bias = {
+            0.1293, -0.0422, -0.2675
+    };
+    tensor_t TensorInput(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(TensorInput.GetMutableData<float>(), Input);
+    tensor_t TensorExpected(XsDtype::F32, c.out_shape()[0], nullptr);
+    utils::vector_init(TensorExpected.GetMutableData<float>(), Output);
 
     c.set_parallelize(false);
     c.setup(false);
 
-    c.prev()[1]->get_data()->at(0) = {
-            -0.4036754369735718,
-            0.12995994091033936,
-            0.0194014310836792,
-            -0.08908277750015259,
-            0.16426432132720947,
-            -0.08304166793823242,
-            -0.17363417148590088,
-            0.2517896294593811,
-            -0.2612036466598511,
-            -0.3790665864944458,
-            0.2879072427749634,
-            -0.14387822151184082
-    };
-    c.prev()[2]->get_data()->at(0) = {
-            0.1293, -0.0422, -0.2675
-    };
+    utils::vector_init(c.prev()[1]->get_data()->at(0).GetMutableData<float>(), Weights);
+    utils::vector_init(c.prev()[2]->get_data()->at(0).GetMutableData<float>(), Bias);
 
-    c.set_in_data({{ Input }});
+    c.set_in_data({{ TensorInput }});
     c.forward();
 
-    mat_t out = c.output()[0][0];
-
-    ASSERT_EQ(out.size(), Output.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-        EXPECT_NEAR(out[i], Output[i], 1e-3);
-    }
+    tensor_t OutTensor = c.output()[0][0];
+    utils::ContainerNear(OutTensor, TensorExpected, 1e-3);
 }
 
 TEST(conv, simple_forward_without_bias) {
-    const mat_t Input = {
+    shape3d in_shape(3, 4, 4);
+    conv c(in_shape, 3, {2, 2}, 3, false);
+
+    const std::vector<float> Input = {
             -0.8597232699394226,
             -0.016536127775907516,
             -1.067084789276123,
@@ -243,14 +250,7 @@ TEST(conv, simple_forward_without_bias) {
             -0.2617749273777008,
     };
 
-    shape3d in(3, 4, 4);
-
-    conv c(in, 3, {2, 2}, 3, false);
-
-    c.set_parallelize(false);
-    c.setup(false);
-
-    c.prev()[1]->get_data()->at(0) = {
+    std::vector<float> Weights = {
             0.2444877028465271,
             0.09724676609039307,
             -0.0643761157989502,
@@ -265,15 +265,20 @@ TEST(conv, simple_forward_without_bias) {
             -0.44954395294189453
     };
 
-    c.set_in_data({{ Input }});
+    tensor_t TensorInput(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(TensorInput.GetMutableData<float>(), Input);
+
+    tensor_t TensorExpected(XsDtype::F32, c.out_shape()[0], nullptr);
+    utils::vector_init(TensorExpected.GetMutableData<float>(), Output);
+
+    c.set_parallelize(false);
+    c.setup(false);
+    utils::vector_init(c.prev()[1]->get_data()->at(0).GetMutableData<float>(), Weights);
+    c.set_in_data({{ TensorInput }});
     c.forward();
 
-    mat_t out = c.output()[0][0];
-
-    ASSERT_EQ(out.size(), Output.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-        EXPECT_NEAR(out[i], Output[i], 1e-5);
-    }
+    tensor_t OutTensor = c.output()[0][0];
+    utils::ContainerNear(OutTensor, TensorExpected, 1e-5);
 }
 
 TEST(conv, cerial) {

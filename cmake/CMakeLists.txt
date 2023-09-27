@@ -101,12 +101,9 @@ install(TARGETS xsdnn
 install(DIRECTORY ${XSROOT}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xsdnn)
 
-#if (xsdnn_BUILD_TEST)
-#    include(xsdnn_unittest.cmake)
-#endif (xsdnn_BUILD_TEST)
+if (xsdnn_BUILD_TEST)
+    include(xsdnn_unittest.cmake)
+endif (xsdnn_BUILD_TEST)
 
 include(summary.cmake)
 xsdnn_print_configuration_summary()
-
-add_executable(simple_test ${XSROOT}/test/simple_test.cc)
-target_link_libraries(simple_test xsdnn protobuf)

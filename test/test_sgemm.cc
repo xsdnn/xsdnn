@@ -13,10 +13,12 @@ using namespace mmpack;
 #define N 6
 #define K 4
 
+using mat_t = std::vector<float, aligned_allocator<float, 64>>;
+
 TEST(sgemm, NoTrans_NoTrans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    mat_t A; A.reserve(M * K);
+    mat_t B; B.reserve(K * N);
+    mat_t C; C.reserve(M * N);
 
     utils::init(A.data(), M, K);
     utils::init(B.data(), K, N);
@@ -45,9 +47,9 @@ TEST(sgemm, NoTrans_NoTrans) {
 }
 
 TEST(sgemm, NoTrans_Trans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    mat_t A; A.reserve(M * K);
+    mat_t B; B.reserve(K * N);
+    mat_t C; C.reserve(M * N);
 
     utils::init(A.data(), M, K);
     utils::init(B.data(), N, K);
@@ -75,9 +77,9 @@ TEST(sgemm, NoTrans_Trans) {
 }
 
 TEST(sgemm, Trans_NoTrans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    mat_t A; A.reserve(M * K);
+    mat_t B; B.reserve(K * N);
+    mat_t C; C.reserve(M * N);
 
     utils::init(A.data(), K, M);
     utils::init(B.data(), K, N);
@@ -106,9 +108,9 @@ TEST(sgemm, Trans_NoTrans) {
 }
 
 TEST(sgemm, Trans_Trans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    mat_t A; A.reserve(M * K);
+    mat_t B; B.reserve(K * N);
+    mat_t C; C.reserve(M * N);
 
     utils::init(A.data(), K, M);
     utils::init(B.data(), N, K);

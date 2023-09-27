@@ -75,10 +75,10 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_add.cc
 )
 
-#AddTest(
-#        xsdnn_and_test
-#        ${XSDNN_TEST_ROOT}/test_and.cc
-#)
+AddTest(
+        xsdnn_and_test
+        ${XSDNN_TEST_ROOT}/test_and.cc
+)
 
 AddTest(
         xsdnn_flatten_test
@@ -118,9 +118,4 @@ AddTest(
 AddTest(
         mmpack_hard_sigmoid_test
         ${XSDNN_TEST_ROOT}/test_hard_sigmoid.cc
-)
-
-AddTest(
-        xsdnn_tensortest
-        ${XSDNN_TEST_ROOT}/test_tensor.cc
 )

@@ -9,6 +9,9 @@
 #include <random>
 using namespace mmpack;
 
+using mat_t = std::vector<float, aligned_allocator<float, 64>>;
+
+
 bool check_eq(float x1, float x2, float eps) {
     return std::abs(x1 - x2) < eps;
 }
@@ -395,10 +398,10 @@ private:
     }
 
 private:
-    xsdnn::mat_t A_;
-    xsdnn::mat_t B_;
-    xsdnn::mat_t C_;
-    xsdnn::mat_t CReference;
+    mat_t A_;
+    mat_t B_;
+    mat_t C_;
+    mat_t CReference;
 };
 
 int main() {

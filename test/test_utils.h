@@ -44,7 +44,21 @@ void ContainerEqual(tensor_t T1, tensor_t T2) {
             ASSERT_FLOAT_EQ(T1Span[i], T2Span[i]);
         }
     } else {
-        throw xs_error("Unregonized Tensot Dtype");
+        throw xs_error("Unregonized Tensor Dtype");
+    }
+}
+
+template<typename T>
+void ContainerNear(tensor_t T1, tensor_t T2, T eps) {
+    if (T1.dtype() == T2.dtype() == XsDtype::F32) {
+        gsl::span<const float> T1Span = T1.GetDataAsSpan<float>();
+        gsl::span<const float> T2Span = T2.GetDataAsSpan<float>();
+        ASSERT_EQ(T1Span.size(), T2Span.size());
+        for (size_t i = 0; i < T1Span.size(); ++i) {
+            ASSERT_NEAR(T1Span[i], T2Span[i], eps);
+        }
+    } else {
+        throw xs_error("Unregonized Tensor Dtype");
     }
 }
 

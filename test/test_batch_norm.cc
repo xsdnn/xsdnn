@@ -13,6 +13,7 @@ using namespace xsdnn;
 TEST(batch_norm, simple_forward) {
     batch_norm bn;
     shape3d InShape(1, 1, 6);
+
     std::vector<float> InDataVector = {0, 1, 2, 3, 4, 5};
     tensor_t InTensor(XsDtype::F32, InShape, nullptr);
     utils::vector_init(InTensor.GetMutableData<float>(), InDataVector);

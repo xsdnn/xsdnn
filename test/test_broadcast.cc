@@ -6,26 +6,36 @@
 #include <gtest/gtest.h>
 #include "../include/xsdnn.h"
 #include "../include/utils/broadcaster.h"
+#include "test_utils.h"
 using namespace xsdnn;
 
 TEST(broadcast, simple_1D_input0scalar) {
     shape3d shape1(1, 1, 1);
     shape3d shape2(1, 1, 3);
 
-    mat_t input0 = {2};
-    mat_t input1 = {1, 2, 3};
-    mat_t output = {0, 0, 0};
+    std::vector<float> input0 = {2};
+    std::vector<float> input1 = {1, 2, 3};
+    std::vector<float> output = {0, 0, 0};
 
-    input_broadcaster in_bc(shape1, input0, &shape2, &input1);
-    output_broadcaster out_bc(in_bc.get_span_size(), output, in_bc.get_output_shape());
+    tensor_t TensorInput0(XsDtype::F32, shape3d(1, 1, 1), nullptr);
+    utils::vector_init(TensorInput0.GetMutableData<float>(), input0);
+
+    tensor_t TensorInput1(XsDtype::F32, shape3d(1, 1, 3), nullptr);
+    utils::vector_init(TensorInput1.GetMutableData<float>(), input1);
+
+    tensor_t TensorOutput(XsDtype::F32, shape3d(1, 1, 3), nullptr);
+    utils::vector_init(TensorOutput.GetMutableData<float>(), output);
+
+    input_broadcaster in_bc(shape1, TensorInput0, &shape2, &TensorInput1);
+    output_broadcaster out_bc(in_bc.get_span_size(), TensorOutput, in_bc.get_output_shape());
 
     broadcast bc(in_bc, out_bc);
 
     BroadcastFuncHolder func {
             [](broadcast& bc) {
-                gsl::span<mm_scalar> Output = bc.GetOutputSpan<mm_scalar>();
-                gsl::span<const mm_scalar> Input = bc.GetSpanInput1<mm_scalar>();
-                const mm_scalar Value = bc.GetScalarInput0<mm_scalar>();
+                gsl::span<float> Output = bc.GetOutputSpan<float>();
+                gsl::span<const float> Input = bc.GetSpanInput1<float>();
+                const float Value = bc.GetScalarInput0<float>();
                 std::copy(Input.begin(), Input.end(), Output.begin());
                 MmAdd(Value, Output.data(), Output.size());
             },
@@ -38,21 +48,31 @@ TEST(broadcast, simple_1D_input0scalar) {
     };
 
     BroadcastKernelLoop(bc, func);
-    ASSERT_EQ(output[0], 3);
-    ASSERT_EQ(output[1], 4);
-    ASSERT_EQ(output[2], 5);
+    gsl::span<const float> TensorOutputSpan = TensorOutput.GetDataAsSpan<float>();
+    ASSERT_EQ(TensorOutputSpan[0], 3);
+    ASSERT_EQ(TensorOutputSpan[1], 4);
+    ASSERT_EQ(TensorOutputSpan[2], 5);
 }
 
 TEST(broadcast, simple_1D_input1scalar) {
     shape3d shape1(1, 1, 3);
     shape3d shape2(1, 1, 1);
 
-    mat_t input0 = {1, 2, 3};
-    mat_t input1 = {2};
-    mat_t output = {0, 0, 0};
+    std::vector<float> input0 = {1, 2, 3};
+    std::vector<float> input1 = {2};
+    std::vector<float> output = {0, 0, 0};
 
-    input_broadcaster in_bc(shape1, input0, &shape2, &input1);
-    output_broadcaster out_bc(in_bc.get_span_size(), output, in_bc.get_output_shape());
+    tensor_t TensorInput0(XsDtype::F32, shape3d(1, 1, 3), nullptr);
+    utils::vector_init(TensorInput0.GetMutableData<float>(), input0);
+
+    tensor_t TensorInput1(XsDtype::F32, shape3d(1, 1, 1), nullptr);
+    utils::vector_init(TensorInput1.GetMutableData<float>(), input1);
+
+    tensor_t TensorOutput(XsDtype::F32, shape3d(1, 1, 3), nullptr);
+    utils::vector_init(TensorOutput.GetMutableData<float>(), output);
+
+    input_broadcaster in_bc(shape1, TensorInput0, &shape2, &TensorInput1);
+    output_broadcaster out_bc(in_bc.get_span_size(), TensorOutput, in_bc.get_output_shape());
 
     broadcast bc(in_bc, out_bc);
 
@@ -73,22 +93,31 @@ TEST(broadcast, simple_1D_input1scalar) {
     };
 
     BroadcastKernelLoop(bc, func);
-
-    ASSERT_EQ(output[0], 3);
-    ASSERT_EQ(output[1], 4);
-    ASSERT_EQ(output[2], 5);
+    gsl::span<const float> TensorOutputSpan = TensorOutput.GetDataAsSpan<float>();
+    ASSERT_EQ(TensorOutputSpan[0], 3);
+    ASSERT_EQ(TensorOutputSpan[1], 4);
+    ASSERT_EQ(TensorOutputSpan[2], 5);
 }
 
 TEST(broadcast, simple3D_1D) {
     shape3d shape1(3, 64, 64);
     shape3d shape2(3, 1, 1);
 
-    mat_t in1(shape1.size(), 1);
-    mat_t in2(shape2.size(), 2);
-    mat_t out(shape1.size(), 0);
+    std::vector<float> input0(shape1.size(), 1);
+    std::vector<float> input1(shape2.size(), 2);
+    std::vector<float> output(shape1.size(), 0);
 
-    input_broadcaster in_bc(shape1, in1, &shape2, &in2);
-    output_broadcaster out_bc(in_bc.get_span_size(), out, in_bc.get_output_shape());
+    tensor_t TensorInput0(XsDtype::F32, shape1, nullptr);
+    utils::vector_init(TensorInput0.GetMutableData<float>(), input0);
+
+    tensor_t TensorInput1(XsDtype::F32, shape2, nullptr);
+    utils::vector_init(TensorInput1.GetMutableData<float>(), input1);
+
+    tensor_t TensorOutput(XsDtype::F32, shape1, nullptr);
+    utils::vector_init(TensorOutput.GetMutableData<float>(), output);
+
+    input_broadcaster in_bc(shape1, TensorInput0, &shape2, &TensorInput1);
+    output_broadcaster out_bc(in_bc.get_span_size(), TensorOutput, in_bc.get_output_shape());
 
     broadcast bc(in_bc, out_bc);
 
@@ -111,8 +140,9 @@ TEST(broadcast, simple3D_1D) {
     };
 
     BroadcastKernelLoop(bc, func);
-    for (size_t i = 0; i < out.size(); ++i) {
-        ASSERT_EQ(out[i], 2);
+    gsl::span<const float> OutSpan = TensorOutput.GetDataAsSpan<float>();
+    for (size_t i = 0; i < OutSpan.size(); ++i) {
+        ASSERT_EQ(OutSpan[i], 2);
     }
 }
 
@@ -120,24 +150,36 @@ TEST(broadcast, general) {
     shape3d shape1(1, 4, 3);
     shape3d shape2(1, 1, 3);
 
-    mat_t in1 = {
+    std::vector<float> input0 = {
             0,  0,  0,
             10, 10, 10,
             20, 20, 20,
             30, 30, 30
     };
-    mat_t in2 = {1, 2, 3};
-    mat_t out(shape1.area(), 0);
+    std::vector<float> input1 = {1, 2, 3};
+    std::vector<float> output(shape1.area(), 0);
 
-    mat_t expected = {
+    std::vector<float> expected = {
             1,  2,  3,
             11, 12, 13,
             21, 22, 23,
             31, 32, 33
     };
 
-    input_broadcaster in_bc(shape1, in1, &shape2, &in2);
-    output_broadcaster out_bc(in_bc.get_span_size(), out, in_bc.get_output_shape());
+    tensor_t TensorInput0(XsDtype::F32, shape3d(1, 4, 3), nullptr);
+    utils::vector_init(TensorInput0.GetMutableData<float>(), input0);
+
+    tensor_t TensorInput1(XsDtype::F32, shape3d(1, 1, 3), nullptr);
+    utils::vector_init(TensorInput1.GetMutableData<float>(), input1);
+
+    tensor_t TensorOutput(XsDtype::F32, shape3d(1, 4, 3), nullptr);
+    utils::vector_init(TensorOutput.GetMutableData<float>(), output);
+
+    tensor_t TensorExpected(XsDtype::F32, shape3d(1, 4, 3), nullptr);
+    utils::vector_init(TensorExpected.GetMutableData<float>(), expected);
+
+    input_broadcaster in_bc(shape1, TensorInput0, &shape2, &TensorInput1);
+    output_broadcaster out_bc(in_bc.get_span_size(), TensorOutput, in_bc.get_output_shape());
 
     broadcast bc(in_bc, out_bc);
 
@@ -159,9 +201,7 @@ TEST(broadcast, general) {
     };
 
     BroadcastKernelLoop(bc, func);
-    for (size_t i = 0; i < out.size(); ++i) {
-        ASSERT_EQ(out[i], expected[i]);
-    }
+    utils::ContainerEqual(TensorOutput, TensorExpected);
 }
 
 

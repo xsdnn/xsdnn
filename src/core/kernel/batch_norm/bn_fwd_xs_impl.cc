@@ -18,6 +18,7 @@ void compute_mean(const BTensor & in, size_t channels, size_t spatial_size, tens
         gsl::span<const float> InSampleSpan = in[sample].GetDataAsSpan<float>();
         for (size_t c = 0; c < channels; ++c) {
             float& m = MeanSpan[c];
+            if (m != 0) m = 0;
             const auto start = InSampleSpan.begin() + (c * spatial_size);
             m = std::accumulate(start, start + spatial_size, m);
         }
@@ -34,6 +35,7 @@ void compute_stddev(const BTensor& in, size_t channels, size_t spatial_size,
         gsl::span<const float> InSampleSpan = in[i].GetDataAsSpan<float>();
         for (size_t j = 0; j < channels; j++) {
             float& rstddev    = StddevSpan[j];
+            if (rstddev != 0) rstddev = 0;
             const auto it    = InSampleSpan.begin() + (j * spatial_size);
             const float ex = MeanSpan[j];
             rstddev             = std::accumulate(it, it + spatial_size, rstddev,

@@ -20,10 +20,9 @@ public:
                     size_t out_size,
                     bool has_bias = true,
                     core::backend_t engine = core::default_backend_engine(),
-                    std::vector<XsDtype> in_tensor_dtype = {XsDtype::F32, XsDtype::F32, XsDtype::F32},
-                    std::vector<XsDtype> out_tensor_dtype = {XsDtype::F32})
+                    XsDtype dtype = XsDtype::F32)
             :
-            layer(get_typed_holder(has_bias, in_tensor_dtype), {TypeHolder(tensor_type::data, out_tensor_dtype[0])}) {
+            layer(get_typed_holder(has_bias, dtype), {TypeHolder(tensor_type::data, dtype)}) {
         set_params(in_size, out_size, has_bias);
         init_backend(engine);
         layer::set_backend(engine);

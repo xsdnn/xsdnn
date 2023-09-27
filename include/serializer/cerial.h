@@ -20,9 +20,73 @@ namespace xsdnn {
  *      3. Сигнатура функции загрузки - void load(const node/tensor* n, layer_type* l);
  */
 
-// TODO: сохранять движок
-
 struct cerial {
+    static size_t convert_engine_to_xsformat(core::backend_t engine) {
+        switch (engine) {
+            case core::backend_t::xs:
+                return 0;
+            default:
+                throw xs_error("Unsupported engine type in serialization");
+        }
+    }
+
+    static core::backend_t convert_xsformatEngine_to_engine(size_t engine) {
+        switch (engine) {
+            case 0:
+                return core::backend_t::xs;
+            default:
+                throw xs_error("Unsupported engine type in serialization");
+        }
+    }
+
+    static size_t convert_node_dtype_to_xsformat(XsDtype dtype) {
+        switch (dtype) {
+            case XsDtype::F32:
+                return 0;
+            case XsDtype::F16:
+                return 1;
+            default:
+                throw xs_error("Unsupported dtype in serialization");
+        }
+    }
+
+    static XsDtype convert_xsformatDtype_to_node_dtype(size_t dtype) {
+        switch (dtype) {
+            case 0:
+                return XsDtype::F32;
+            case 1:
+                return XsDtype::F16;
+            default:
+                throw xs_error("Unsupported dtype in serialization");
+        }
+    }
+
+    static size_t convert_mmpack_activation_to_xsformat(MmActivationType activationType) {
+        switch (activationType) {
+            case MmActivationType::NotSet:
+                return 0;
+            case MmActivationType::Relu:
+                return 1;
+            case MmActivationType::HardSigmoid:
+                return 2;
+            default:
+                throw xs_error("Unsupported activation at serialization");
+        }
+    }
+
+    static MmActivationType convert_xsformatActivation_to_node_activation(size_t activationType) {
+        switch (activationType) {
+            case 0:
+                return MmActivationType::NotSet;
+            case 1:
+                return MmActivationType::Relu;
+            case 2:
+                return MmActivationType::HardSigmoid;
+            default:
+                throw xs_error("Unsupported activation at serialization");
+        }
+    }
+
     template<typename T>
     inline
     std::shared_ptr<T> deserialize(const xs::NodeInfo* node,
@@ -37,6 +101,8 @@ struct cerial {
         xs::AttributeInfo* in_size = node->add_attribute();
         xs::AttributeInfo* out_size = node->add_attribute();
         xs::AttributeInfo* has_bias = node->add_attribute();
+        xs::AttributeInfo* engine = node->add_attribute();
+        xs::AttributeInfo* dtype = node->add_attribute();
 
         in_size->set_name("in_size");
         in_size->set_type(xs::AttributeInfo_AttributeType_INT);
@@ -50,13 +116,16 @@ struct cerial {
         has_bias->set_type(xs::AttributeInfo_AttributeType_INT);
         has_bias->set_i(layer->params_.has_bias_);
 
+        engine->set_name("engine");
+        engine->set_type(xs::AttributeInfo_AttributeType_INT);
+        engine->set_i(convert_engine_to_xsformat(layer->engine()));
+
+        dtype->set_name("dtype");
+        dtype->set_type(xs::AttributeInfo_AttributeType_INT);
+        dtype->set_i(convert_node_dtype_to_xsformat(layer->in_types()[0].tensor_dtype()));
+
         std::vector<const tensor_t*> wb = layer->weights();
         tensor->set_name("w&b fully_connected");
-#ifdef XS_USE_DOUBLE
-#error NotImplementedYet
-#else
-        tensor->set_type(xs::TensorInfo_TensorType_FLOAT);
-#endif
         layer->save(tensor);
     }
 
@@ -216,6 +285,7 @@ struct cerial {
         xs::AttributeInfo* stride_x = node->add_attribute();
         xs::AttributeInfo* stride_y = node->add_attribute();
         xs::AttributeInfo* pad_type = node->add_attribute();
+        xs::AttributeInfo* engine = node->add_attribute();
 
         C->set_name("channel");
         C->set_type(xs::AttributeInfo_AttributeType_INT);
@@ -248,6 +318,10 @@ struct cerial {
         pad_type->set_name("pad_type");
         pad_type->set_type(xs::AttributeInfo_AttributeType_STRING);
         pad_type->set_name((layer->params_.pad_type_ == padding_mode::same) ? "same" : "valid");
+
+        engine->set_name("engine");
+        engine->set_type(xs::AttributeInfo_AttributeType_INT);
+        engine->set_i(convert_engine_to_xsformat(layer->engine()));
     }
 
     /*
@@ -260,6 +334,7 @@ struct cerial {
         xs::AttributeInfo* C = node->add_attribute();
         xs::AttributeInfo* H = node->add_attribute();
         xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* engine = node->add_attribute();
 
         C->set_name("channel");
         C->set_type(xs::AttributeInfo_AttributeType_INT);
@@ -272,6 +347,10 @@ struct cerial {
         W->set_name("width");
         W->set_type(xs::AttributeInfo_AttributeType_INT);
         W->set_i(layer->params_.in_shape_.W);
+
+        engine->set_name("engine");
+        engine->set_type(xs::AttributeInfo_AttributeType_INT);
+        engine->set_i(convert_engine_to_xsformat(layer->engine()));
     }
 
     /*
@@ -322,6 +401,9 @@ struct cerial {
         xs::AttributeInfo* PadLeftWidth = node->add_attribute();
         xs::AttributeInfo* PadRightHeight = node->add_attribute();
         xs::AttributeInfo* PadRightWidth = node->add_attribute();
+        xs::AttributeInfo* activationType = node->add_attribute();
+        xs::AttributeInfo* engine = node->add_attribute();
+        xs::AttributeInfo* dtype = node->add_attribute();
 
         mmpack::MM_CONV_PARAMS Parameters = layer->get_params()._;
 
@@ -394,13 +476,20 @@ struct cerial {
             PadRightWidth->set_type(xs::AttributeInfo_AttributeType_INT);
             PadRightWidth->set_i(Parameters.Padding[3]);
 
+            activationType->set_name("activation_type");
+            activationType->set_type(xs::AttributeInfo_AttributeType_INT);
+            activationType->set_i(convert_mmpack_activation_to_xsformat(layer->params_.activation_type_));
+
+            engine->set_name("engine");
+            engine->set_type(xs::AttributeInfo_AttributeType_INT);
+            engine->set_i(convert_engine_to_xsformat(layer->engine()));
+
+            dtype->set_name("dtype");
+            dtype->set_type(xs::AttributeInfo_AttributeType_INT);
+            dtype->set_i(convert_node_dtype_to_xsformat(layer->in_types()[0].tensor_dtype()));
+
             std::vector<const tensor_t*> wb = layer->weights();
             tensor->set_name("w&b conv");
-#ifdef XS_USE_DOUBLE
-#error NotImplementedYet
-#else
-            tensor->set_type(xs::TensorInfo_TensorType_FLOAT);
-#endif
             layer->save(tensor);
         } else {
             throw xs_error("[conv serialization] Unsupported dimensions");
@@ -416,7 +505,10 @@ struct cerial {
         size_t in_size = node->attribute(0).i();
         size_t out_size = node->attribute(1).i();
         bool has_bias = node->attribute(2).i();
-        std::shared_ptr<fully_connected> l = std::make_shared<fully_connected>(in_size, out_size, has_bias);
+        core::backend_t engine = convert_xsformatEngine_to_engine(node->attribute(3).i());
+        XsDtype dtype = convert_xsformatDtype_to_node_dtype(node->attribute(4).i());
+
+        std::shared_ptr<fully_connected> l = std::make_shared<fully_connected>(in_size, out_size, has_bias, engine, dtype);
         l->load(tensor);
         return l;
     }
@@ -517,11 +609,12 @@ struct cerial {
         size_t kernel_y = node->attribute(4).i();
         size_t stride_x = node->attribute(5).i();
         size_t stride_y = node->attribute(6).i();
-        padding_mode pad_type = node->attribute(0).s() == "same"
+        padding_mode pad_type = node->attribute(7).s() == "same"
                             ? padding_mode::same : padding_mode::valid;
+        core::backend_t engine = convert_xsformatEngine_to_engine(node->attribute(8).i());
 
         std::shared_ptr<xsdnn::max_pooling> l = std::make_shared<xsdnn::max_pooling>(
-                shape3d(C, H, W), kernel_x, kernel_y, stride_x, stride_y, pad_type
+                shape3d(C, H, W), kernel_x, kernel_y, stride_x, stride_y, pad_type, false, engine
                 );
         return l;
     }
@@ -533,7 +626,8 @@ struct cerial {
         size_t C = node->attribute(0).i();
         size_t H = node->attribute(1).i();
         size_t W = node->attribute(2).i();
-        std::shared_ptr<global_average_pooling> l = std::make_shared<global_average_pooling>(shape3d(C, H, W));
+        core::backend_t engine= convert_xsformatEngine_to_engine(node->attribute(3).i());
+        std::shared_ptr<global_average_pooling> l = std::make_shared<global_average_pooling>(shape3d(C, H, W), engine);
         return l;
     }
 
@@ -569,6 +663,9 @@ struct cerial {
         size_t PadLeftWidth = node->attribute(14).i();
         size_t PadRightHeight = node->attribute(15).i();
         size_t PadRightWidth = node->attribute(16).i();
+        MmActivationType activationType = convert_xsformatActivation_to_node_activation(node->attribute(17).i());
+        core::backend_t engine = convert_xsformatEngine_to_engine(node->attribute(18).i());
+        XsDtype dtype = convert_xsformatDtype_to_node_dtype(node->attribute(19).i());
 
         shape3d in_shape(C, H, W);
         std::vector<size_t> kernel_shape = {Kernel_H, Kernel_W};
@@ -577,7 +674,8 @@ struct cerial {
         std::vector<size_t> pads = {PadLeftHeight, PadLeftWidth, PadRightHeight, PadRightWidth};
 
         std::shared_ptr<conv> l = std::make_shared<conv>(in_shape, OutChannel, kernel_shape, GroupCount,
-                                                         Bias, stride_shape, dilation_shape, PadType, pads);
+                                                         Bias, stride_shape, dilation_shape, PadType,
+                                                         pads, activationType, engine, dtype);
         l->load(tensor);
         return l;
     }

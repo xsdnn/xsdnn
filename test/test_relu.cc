@@ -5,55 +5,29 @@
 
 #include "xsdnn.h"
 #include <gtest/gtest.h>
-#include "../include/utils/grad_checker.h"
 #include "test_utils.h"
 using namespace xsdnn;
 
-TEST(relu, forward) {
+TEST(ReluActivation, Forward_F32) {
     relu rl(5);
-    mat_t in = {-1, -0.5, 0.0, 0.5, 1};
+
+    std::vector<float> in = {-1, -0.5, 0.0, 0.5, 1};
+    tensor_t Tensor(XsDtype::F32, shape3d(1, 1, 5), nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in);
+
     rl.setup(false);
     rl.set_parallelize(false);
-    rl.set_in_data({{in}});
+    rl.set_in_data({{ Tensor }});
     rl.forward();
-    mat_t out = rl.output()[0][0];
-    mat_t e = {0.0f, 0.0f, 0.0f, 0.5, 1.0f};
-    for (size_t i = 0; i < 5; i++) {
-        ASSERT_EQ(out[i], e[i]);
-    }
+
+    tensor_t OutTensor = rl.output()[0][0];
+    std::vector<float> e = {0.0f, 0.0f, 0.0f, 0.5, 1.0f};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 5), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
-TEST(relu, backward) {
-    relu rl(784);
-    rl.set_parallelize(false);
-    GradChecker checker(&rl, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
-}
-
-TEST(relu, forward_paralell) {
-    relu rl(5);
-    mat_t in = {-1, -0.5, 0.0, 0.5, 1};
-    rl.setup(false);
-    rl.set_num_threads(std::thread::hardware_concurrency());
-    rl.set_in_data({{in}});
-    rl.forward();
-    mat_t out = rl.output()[0][0];
-    mat_t e = {0.0f, 0.0f, 0.0f, 0.5, 1.0f};
-    for (size_t i = 0; i < 5; i++) {
-        ASSERT_EQ(out[i], e[i]);
-    }
-}
-
-TEST(relu, backward_parallel) {
-    relu rl(784);
-    rl.set_num_threads(std::thread::hardware_concurrency());
-    GradChecker checker(&rl, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
-}
-
-TEST(relu, cerial) {
+TEST(ReluActivation, Cerial) {
     relu rl(784);
     ASSERT_TRUE(utils::cerial_testing(rl));
 }

@@ -10,12 +10,12 @@ using namespace xsdnn;
 
 tensor_t make_expected(const BTensor & in_data) {
     tensor_t out(in_data[0].dtype(), in_data[0].shape().size(), nullptr);
-    tensorize::fill(out.GetMutableData<float>(), out.shape().size(), 0.0f);
+    tensorize::fill(&out, 0.0f);
 
     gsl::span<float> OutSpan = out.GetMutableDataAsSpan<float>();
 
     for (size_t i = 0; i < in_data.size(); ++i) {
-        gsl::span<const float> InSpan = in_data[i].GetDataAsSpan<float>();
+        gsl::span<float> InSpan = in_data[i].GetMutableDataAsSpan<float>();
         for (size_t j = 0; j < InSpan.size(); ++j) {
             OutSpan[j] += InSpan[j];
         }
@@ -37,7 +37,9 @@ TEST(add, forward) {
     utils::random_init(in4.GetMutableData<float>(), shape_.size());
 
     add1.set_in_data({{in1}, {in2}, {in3}, {in4}});
+    auto gsl_test = in1.GetDataAsSpan<float>();
     add1.forward();
+
     auto out = add1.output()[0][0];
     auto expected = make_expected({in1, in2, in3, in4});
 

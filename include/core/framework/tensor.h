@@ -17,13 +17,19 @@ static CPUAllocator CPUMalloc;
 class tensor_t;
 typedef std::vector<tensor_t> BTensor;
 
+// TODO: добавить операторы сравнения, копирования (оператор + конструктор)
+// TODO: продумать логику установки тензоров в качестве весов
+
+
 enum XsDtype {
     UND  = 0,   // UNDEFINED
     F32  = 1,   // FLOAT32
     F16  = 2,   // FLOAT16
-    Int8 = 3,   // INT8
-    Int4 = 4    // INT4
+    INT8 = 3,   // INT8
+    INT4 = 4    // INT4
 };
+
+size_t sizeofDtype(XsDtype dtype);
 
 class tensor_t final {
 public:

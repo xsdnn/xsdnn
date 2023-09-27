@@ -25,7 +25,12 @@ void add::forward_propagation(const std::vector<BTensor *> &in_data,
                               std::vector<BTensor *> &out_data) {
     const BTensor& In = *in_data[0];
     BTensor& Out = *out_data[0];
-    std::copy(In.begin(), In.end(), Out.begin());
+
+    for (size_t sample = 0; sample < In.size(); ++sample) {
+        gsl::span<const float> InSpan = In[sample].GetDataAsSpan<float>();
+        gsl::span<float> OutSpan = Out[sample].GetMutableDataAsSpan<float>();
+        std::copy(InSpan.begin(), InSpan.end(), OutSpan.begin());
+    }
 
     for (size_t sample = 0; sample < In.size(); ++sample) {
         for (size_t i = 1; i < n_input_; i++) {
@@ -35,7 +40,7 @@ void add::forward_propagation(const std::vector<BTensor *> &in_data,
                            in_sample.end(),
                            out_sample.begin(),
                            out_sample.begin(),
-                           [](float_t x, float_t y){ return x + y; });
+                           [](float x, float y){ return x + y; });
         }
     }
 }

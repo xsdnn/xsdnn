@@ -12,28 +12,30 @@ TEST(global_average_pooling, forward) {
     shape3d in_shape(1, 4, 4);
     global_average_pooling pool(in_shape);
 
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{ in_data }});
+    pool.set_in_data({{ Tensor }});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-    ASSERT_FLOAT_EQ(out[0], 3.1875f);
-#endif
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {3.1875f};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 1), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(global_average_pooling, forward_two_channels) {
     shape3d in_shape(2, 4, 4);
     global_average_pooling pool(in_shape);
 
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8,
@@ -41,18 +43,19 @@ TEST(global_average_pooling, forward_two_channels) {
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{ in_data }});
+    pool.set_in_data({{ Tensor }});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-    ASSERT_FLOAT_EQ(out[0], 3.1875f);
-    ASSERT_FLOAT_EQ(out[1], 3.1875f);
-#endif
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {3.1875f, 3.1875f};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 2), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(global_average_pooling, cerial) {

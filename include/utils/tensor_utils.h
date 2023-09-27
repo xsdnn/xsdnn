@@ -13,8 +13,17 @@ using namespace mmpack;
 namespace xsdnn {
     namespace tensorize {
 
-void fill(mm_scalar* p_, size_t size, mm_scalar val);
-void fill(BTensor& t_, mm_scalar val);
+template<typename T>
+void fill(tensor_t* data, T value) {
+    if (data->dtype() == XsDtype::F32) {
+        gsl::span<float> TensorSpan = data->template GetMutableDataAsSpan<float>();
+        for (size_t i = 0; i < TensorSpan.size(); ++i) {
+            TensorSpan[i] = value;
+        }
+    } else {
+        throw xs_error("[tensorize fill] Unsupported tensor dtype");
+    }
+}
 
     } // tensorize
 } // xsdnn

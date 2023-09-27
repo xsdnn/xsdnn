@@ -27,7 +27,7 @@ private:
     XsDtype D_;
 };
 
-std::vector<TypeHolder> get_typed_holder(bool has_bias, std::vector<XsDtype> dtype);
+std::vector<TypeHolder> get_typed_holder(bool has_bias, XsDtype dtype);
 
 class layer : public node {
 public:
@@ -58,42 +58,68 @@ public:
     std::vector<edgeptr_t> outputs();
     std::vector<edgeptr_t> outputs() const;
 
+    /*
+     * 1. Создается временный буффер, в который последовательно копируются
+     * значения из всех тензоров весов \ смещений для данного слоя.
+     *
+     * 2. Временный буффер копируется в структуру для сериализации.
+     *
+     * 3. Сохраняются shape тензора и тип его данных для последующей десериализации.
+     */
     virtual
     void save(xs::TensorInfo* dst) const {
-        // TODO: исправить
-//        const auto all_w = weights();
-//        for (auto& weight : all_w) {
-//            for (auto& w : *weight) {
-//                dst->add_float_data(w);
-//            }
-//            dst->add_dims(weight->size());
-//        }
+        std::vector<const tensor_t*> Weights = weights();
+        size_t WBSizeWithDtype = 1;
+        for (const tensor_t* weight : Weights)
+            WBSizeWithDtype *= weight->shape().size() * sizeofDtype(weight->dtype());
+
+        std::string TmpBuffer;
+        TmpBuffer.reserve(WBSizeWithDtype);
+        for (const tensor_t* weight : Weights) {
+            size_t TensorSizeWithDtype = weight->shape().size() * sizeofDtype(weight->dtype());
+            std::string_view TensorMutableData = std::string_view(static_cast<char*>(weight->GetMutableDataRaw()), TensorSizeWithDtype);
+            TmpBuffer += TensorMutableData;
+        }
+
+        std::string* MutableRawData  = dst->mutable_raw_data();
+        MutableRawData->assign(TmpBuffer.data(), WBSizeWithDtype);
+
+        for (const tensor_t* weight : Weights) {
+            dst->add_dims(weight->shape().size());
+        }
+
+        XsDtype tensor0_dtype = Weights[0]->dtype();
+        dst->set_type(get_xsttype_from_dtype(tensor0_dtype));
     }
 
+    /*
+     * 1. Проверка на правильность размеров по всем измерениям.
+     *
+     * 2. Побайтовое копирование в тензор слоя.
+     */
     virtual
     void load(const xs::TensorInfo* src) {
-        // TODO: исправить
-//        auto all_w = weights();
-//
-//        /*
-//         * Проверим, что размеры входного тензора равны размерам весов.
-//         */
-//        assert(src->dims_size() == static_cast<int>(all_w.size()));
-//        size_t src_size = 0;
-//        size_t all_w_size = 0;
-//        for (size_t d = 0; d < static_cast<size_t>(src->dims_size()); ++d) {
-//            src_size += src->dims(d);
-//            all_w_size += all_w[d]->size();
-//        }
-//        assert(src_size == all_w_size);
-//
-//        size_t idx = 0;
-//        for (size_t i = 0; i < all_w.size(); ++i) {
-//            for (size_t j = 0; j < all_w[i]->size(); ++j) {
-//                (*all_w[i])[j] = src->float_data(idx++); // FIXME: а если будет не float?
-//            }
-//        }
-//        initialized_ = true;
+        std::vector<tensor_t*> Weights = weights();
+        assert(src->dims_size() == Weights.size());
+        size_t src_size = 0, weights_size = 0;
+        for (size_t d = 0; d < src->dims_size(); ++d) {
+            src_size += src->dims(d);
+            weights_size += Weights[d]->shape().size();
+        }
+        assert(src_size == weights_size);
+
+        const std::string& DataRaw = src->raw_data();
+        size_t PrevTensorSizeWithDtype = 0;
+        for (tensor_t* weight : Weights) {
+            size_t TensorSizeWithDtype = weight->shape().size() * sizeofDtype(weight->dtype());
+
+            auto DataRawStartPos = DataRaw.begin() + PrevTensorSizeWithDtype;
+            auto DataRawStopPos = DataRawStartPos + TensorSizeWithDtype;
+            std::copy(DataRawStartPos, DataRawStopPos, static_cast<char*>(weight->GetMutableDataRaw()));
+            PrevTensorSizeWithDtype += TensorSizeWithDtype;
+        }
+
+        initialized_ = true;
     }
 
     void set_in_data(const std::vector<BTensor>& data);
@@ -163,6 +189,7 @@ public:
     void forward();
 
     void setup(bool reset_weight);
+    void init_weight();
 
     virtual
     void set_sample_count(size_t sample_count);
@@ -178,6 +205,8 @@ private:
     edgeptr_t ith_out_node(size_t i);
     tensor_t* get_weight_data(size_t i);
     const tensor_t* get_weight_data(size_t i) const;
+    xs::TensorInfo::TensorType get_xsttype_from_dtype(XsDtype dtype) const;
+    XsDtype get_dtype_from_xsttype(xs::TensorInfo::TensorType xsttype) const;
 
 protected:
     bool initialized_;

@@ -37,4 +37,17 @@ void tensor_t::FreeTensor() {
     }
 }
 
+size_t sizeofDtype(XsDtype dtype) {
+    switch (dtype) {
+        case F32:
+            return sizeof(float);
+        case F16:
+            return sizeof(uint16_t);
+        case INT8:
+            return sizeof(int8_t);
+        default:
+            throw std::runtime_error("Unsupported tensor dtype");
+    }
+}
+
 } // xsdnn

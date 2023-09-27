@@ -236,6 +236,31 @@ namespace xsdnn {
                                                   out_type_[i].tensor_dtype());
             }
         }
+
+        if (reset_weight || !initialized_) {
+            init_weight();
+        }
+    }
+
+    void layer::init_weight() {
+        if (!trainable_) {
+            initialized_ = true;
+            return;
+        }
+
+        for (size_t i = 0; i < in_concept_; ++i) {
+            if (in_type_[i].concept_type() == tensor_type::weight) {
+                auto* w = get_weight_data(i);
+                weight_init_->fill(
+                        w, fan_in_size(), fan_out_size());
+            } else if (in_type_[i].concept_type() == tensor_type::bias) {
+                auto* b = get_weight_data(i);
+                bias_init_->fill(
+                        b, fan_in_size(), fan_out_size());
+            }
+        }
+
+        initialized_ = true;
     }
 
     void layer::set_sample_count(size_t sample_count) {
@@ -290,6 +315,28 @@ namespace xsdnn {
         return { mm_scalar(0.0f), mm_scalar(1.0f) };
     }
 
+    xs::TensorInfo::TensorType layer::get_xsttype_from_dtype(xsdnn::XsDtype dtype) const {
+        switch (dtype) {
+            case F32:
+                return xs::TensorInfo_TensorType_FLOAT;
+            case F16:
+                return xs::TensorInfo_TensorType_UINT16;
+            default:
+                xs_error("Unsupported Tensor Dtype");
+        }
+    }
+
+    XsDtype layer::get_dtype_from_xsttype(xs::TensorInfo::TensorType xsttype) const {
+        switch (xsttype) {
+            case xs::TensorInfo_TensorType_FLOAT:
+                return XsDtype::F32;
+            case xs::TensorInfo_TensorType_UINT16:
+                return XsDtype::F16;
+            default:
+                xs_error("Unsupported Tensor Dtype");
+        }
+    }
+
     void connect(layer* last_node,
                         layer* next_node,
                         size_t last_node_data_concept_idx = 0,
@@ -331,16 +378,14 @@ namespace xsdnn {
         throw xs_error(message.c_str());
     }
 
-    std::vector<TypeHolder> get_typed_holder(bool has_bias, std::vector<XsDtype> dtype) {
+    std::vector<TypeHolder> get_typed_holder(bool has_bias, XsDtype dtype) {
         if (has_bias) {
-            assert(dtype.size() == 3);
-            return {TypeHolder(tensor_type::data, dtype[0]),
-                    TypeHolder(tensor_type::weight, dtype[1]),
-                    TypeHolder(tensor_type::bias, dtype[2])};
+            return {TypeHolder(tensor_type::data, dtype),
+                    TypeHolder(tensor_type::weight, dtype),
+                    TypeHolder(tensor_type::bias, dtype)};
         } else {
-            assert(dtype.size() == 2);
-            return {TypeHolder(tensor_type::data, dtype[0]),
-                    TypeHolder(tensor_type::weight, dtype[1])};
+            return {TypeHolder(tensor_type::data, dtype),
+                    TypeHolder(tensor_type::weight, dtype)};
         }
     }
 

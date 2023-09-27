@@ -9,244 +9,225 @@
 using namespace xsdnn;
 
 
-TEST(max_pool, forward) {
+TEST(MaxPool, Forward1_F32) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 2);
-    mat_t in_data = {1, 2, 6, 3,
-                     3, 5, 2, 1,
-                     1, 2, 2, 1,
-                     7, 3, 4, 8};
+    std::vector<float> in_data = {1, 2, 6, 3,
+                                 3, 5, 2, 1,
+                                 1, 2, 2, 1,
+                                 7, 3, 4, 8};
+
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{ in_data }});
+    pool.set_in_data({{ Tensor }});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6, 7, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-        #error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6, 7, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 4), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_stride_x) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 2, 1, 2);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6, 6, 7, 4, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6, 6, 7, 4, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 6), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_stride_y) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 2, 2, 1);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6, 5, 2, 7, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6, 5, 2, 7, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 6), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_stride_xy) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 2, 1, 1);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6, 6, 5, 5, 2, 7, 4, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6, 6, 5, 5, 2, 7, 4, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 9), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_x) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 4, 2, 2, 2);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {6, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {6, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 2), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_x2) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 3, 2, 2, 2);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {6, 7};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {6, 7};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 2), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_x3_padding_same) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 3, 2, 2, 2, padding_mode::same);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {6, 6, 7, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {6, 6, 7, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 4), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_y) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 3, 2, 2);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 2), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_y2) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 4, 2, 2);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {7, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {7, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 2), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, forward_kernel_y3_padding_same) {
     shape3d in_shape(1, 4, 4);
     max_pooling pool(in_shape, 2, 3, 2, 2, padding_mode::same);
-    mat_t in_data = {1, 2, 6, 3,
+    std::vector<float> in_data = {1, 2, 6, 3,
                      3, 5, 2, 1,
                      1, 2, 2, 1,
                      7, 3, 4, 8};
+    tensor_t Tensor(XsDtype::F32, in_shape, nullptr);
+    utils::vector_init(Tensor.GetMutableData<float>(), in_data);
+
     pool.setup(false);
     pool.set_parallelize(false);
-    pool.set_in_data({{in_data}});
+    pool.set_in_data({{Tensor}});
     pool.forward();
 
-    const auto out = pool.output()[0][0];
-    mat_t exp = {5, 6, 7, 8};
-    ASSERT_TRUE(out.size() == exp.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-#ifdef MM_USE_DOUBLE
-#error NotImpl
-#else
-        ASSERT_FLOAT_EQ(out[i], exp[i]);
-#endif
-    }
+    tensor_t OutTensor = pool.output()[0][0];
+    std::vector<float> e = {5, 6, 7, 8};
+    tensor_t ExpectedTensor(XsDtype::F32, shape3d(1, 1, 4), nullptr);
+    utils::vector_init(ExpectedTensor.GetMutableData<float>(), e);
+    utils::ContainerEqual(OutTensor, ExpectedTensor);
 }
 
 TEST(max_pool, cerial) {
