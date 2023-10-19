@@ -21,6 +21,7 @@ public:
             out_data_(nullptr),
             in_grad_(nullptr),
             out_grad_(nullptr),
+            dtype_(kXsUndefined),
             engine_(core::backend_t::xs),
             parallelize_(true),
             num_threads_(0) {}
@@ -42,10 +43,8 @@ public:
     void set_in_out(const std::vector<tensor_t*>& in_data,
                     std::vector<tensor_t*>& out_data);
 
-    void set_in_out(const std::vector<tensor_t*>& in_data,
-                    const std::vector<tensor_t*>& out_data,
-                    std::vector<tensor_t*>&       out_grad,
-                    std::vector<tensor_t*>&       in_grad);
+    void set_dtype(xsDtype dtype);
+    xsDtype dtype() const;
 
     void set_engine(core::backend_t engine);
     core::backend_t engine() const;
@@ -62,6 +61,7 @@ private:
     std::vector<tensor_t*>* in_grad_;
     std::vector<tensor_t*>* out_grad_;
 
+    xsDtype dtype_;
     core::backend_t engine_;
     bool parallelize_;
     size_t num_threads_;

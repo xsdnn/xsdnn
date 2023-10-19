@@ -7,7 +7,7 @@
 #define XSDNN_GLOBAL_AVERAGE_POOLING_H
 
 #include "layer.h"
-#include "../core/kernel/global_average_pooling/gap_fwd_kernel.h"
+#include "../core/kernel/global_avg_pool_fwd.h"
 
 namespace xsdnn {
 

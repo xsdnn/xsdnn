@@ -9,7 +9,7 @@
 #include "layer.h"
 #include "../utils/util.h"
 #include "../core/framework/params.h"
-#include "../core/kernel/conv/conv_fwd_kernel.h"
+#include "../core/kernel/conv_fwd.h"
 
 namespace xsdnn {
 

@@ -45,12 +45,12 @@ void OpContext::set_in_out(const std::vector<tensor_t *>& in_data, std::vector<t
     out_data_ = &out_data;
 }
 
-void OpContext::set_in_out(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                           std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    in_data_ = const_cast<std::vector<tensor_t*>*>(&in_data);
-    out_data_ = const_cast<std::vector<tensor_t*>*>(&out_data);
-    in_grad_ = &in_grad;
-    out_grad_ = &out_grad;
+void OpContext::set_dtype(xsdnn::xsDtype dtype) {
+    dtype_ = dtype;
+}
+
+xsDtype OpContext::dtype() const {
+    return dtype_;
 }
 
 void OpContext::set_engine(core::backend_t engine) {

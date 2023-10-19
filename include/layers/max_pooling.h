@@ -7,7 +7,7 @@
 #define XSDNN_MAX_POOLING_H
 
 #include "layer.h"
-#include "../core/kernel/max_pool/mp_fwd_kernel.h"
+#include "../core/kernel/max_pool_fwd.h"
 
 namespace xsdnn {
 
