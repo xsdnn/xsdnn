@@ -26,22 +26,12 @@ public:
     typedef std::vector<layer*>::const_iterator const_iterator;
 
     virtual
-    void
-    backward(const std::vector<tensor_t>& start) = 0;
-
-    virtual
     std::vector<tensor_t>
     forward(const std::vector<tensor_t>& start) = 0;
 
     virtual
     void
-    update_weights(optimizer* opt);
-
-    virtual
-    void
     setup(bool reset_weight);
-
-    void clear_grads();
 
     void save_model(const std::string& filename, const std::string& network_name_);
     void load_model(const std::string& filename);
@@ -74,7 +64,6 @@ public:
     virtual ~sequential();
 
 public:
-    virtual void backward(const std::vector<tensor_t>& start);
     virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
 
     void check_connectivity();
@@ -97,7 +86,6 @@ public:
     virtual ~graph();
 
 public:
-    virtual void backward(const std::vector<tensor_t>& start);
     virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
 
     /*

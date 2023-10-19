@@ -17,11 +17,6 @@ public:
 public:
     void forward_activation(const mat_t& in_data, mat_t& out_data) override;
 
-    void back_activation(const mat_t& in_data,
-                         const mat_t& out_data,
-                         const mat_t& out_grad,
-                         mat_t&       in_grad) override;
-
     std::pair<mm_scalar, mm_scalar> out_value_range() const override;
 
     std::string layer_type() const override;

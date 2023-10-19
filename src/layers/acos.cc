@@ -37,20 +37,4 @@ namespace xsdnn {
         });
     }
 
-    void acos::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                               std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        XS_UNUSED_PARAMETER(in_data);
-        XS_UNUSED_PARAMETER(out_data);
-
-        tensor_t& in = *in_data[0];
-        tensor_t& dx = *in_grad[0];
-        const tensor_t& dLz = *out_grad[0];
-
-        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, dx.size(), [&](size_t sample) {
-            for (size_t j = 0; j < dx[sample].size(); ++j) {
-                dx[sample][j] = - dLz[sample][j] / (std::sqrt(1 - in[sample][j] * in[sample][j]));
-            }
-        });
-    }
-
 } // xsdnn

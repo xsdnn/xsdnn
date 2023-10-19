@@ -8,6 +8,7 @@
 
 #include <vector>
 #include "../mmpack/mmpack.h"
+#include "../utils/xs_error.h"
 #include "../gsl/span"
 
 using namespace mmpack;
@@ -22,22 +23,39 @@ namespace xsdnn {
         kXsFloat16 = 2
     } xsDtype;
 
-    template<typename T>
-    gsl::span<T> GetMutableDataAsSpan(mat_t* data) {
-        return gsl::span<T>(reinterpret_cast<T*>(data->data(), data->size()));
+    size_t dtype2sizeof(xsDtype dtype) {
+        switch(dtype) {
+            case kXsFloat32:
+                return sizeof(float);
+            case kXsFloat16:
+                return sizeof(uint16_t);
+            default:
+                throw xs_error("Unsupported dtype when converting to sizeof(...)");
+        }
+    }
+
+    void AllocateMat_t(mat_t* data, size_t size, xsDtype dtype) {
+        data->resize(size * dtype2sizeof(dtype));
     }
 
     template<typename T>
-    gsl::span<const T> GetDataAsSpan(mat_t* data) {
-        return gsl::span<const T>(reinterpret_cast<T*>(data->data(), data->size()));
+    gsl::span<T> GetMutableDataAsSpan(mat_t* data, ptrdiff_t byte_offset = 0) {
+        T* ptr = reinterpret_cast<T*>(data->data() + byte_offset);
+        return gsl::make_span(ptr, data->size());
     }
 
-    char* GetMutableDataRaw(mat_t* data) {
-        return data->data();
+    template<typename T>
+    gsl::span<const T> GetDataAsSpan(mat_t* data, ptrdiff_t byte_offset = 0) {
+        T* ptr = reinterpret_cast<T*>(data->data() + byte_offset);
+        return gsl::make_span(ptr, data->size());
     }
 
-    const char* GetDataRaw(mat_t* data) {
-        return data->data();
+    char* GetMutableDataRaw(mat_t* data, ptrdiff_t byte_offset = 0) {
+        return data->data() + byte_offset;
+    }
+
+    const char* GetDataRaw(mat_t* data, ptrdiff_t byte_offset = 0) {
+        return data->data() + byte_offset;
     }
 }
 

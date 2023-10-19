@@ -9,10 +9,10 @@
 namespace xsdnn {
     namespace weight_init {
 
-void constant::fill(xsDtype dtype, mat_t* data, size_t size, size_t fan_in, size_t fan_out) {
+void constant::fill(xsDtype dtype, mat_t* data, size_t fan_in, size_t fan_out) {
     XS_UNUSED_PARAMETER(fan_in);
     XS_UNUSED_PARAMETER(fan_out);
-    tensorize::fill(dtype, data, size, scale_);
+    tensorize::fill(dtype, data, scale_);
 }
 
 } // weight_init

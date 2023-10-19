@@ -71,7 +71,6 @@ public:
     edge(node* prev, const shape3d& shape, tensor_type ttype)
         :   shape_(shape), ttype_(ttype),
             data_({ mat_t(shape.size()) }),
-            grad_({ mat_t(shape.size()) }),
             prev_(prev) {}
 
     tensor_t* get_data();
@@ -89,15 +88,12 @@ public:
     std::vector<node*> next();
     const std::vector<node*> next() const;
 
-    void clear_grads();
     void add_next_node(node* nd);
-    void accumulate_grads(mat_t* dst);
 
 private:
     shape3d shape_;
     tensor_type ttype_;
     tensor_t data_;
-    tensor_t grad_;
     node* prev_;                // 'producer'
     std::vector<node*> next_;   // 'consumer'
 };

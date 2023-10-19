@@ -38,14 +38,4 @@ void add::forward_propagation(const std::vector<tensor_t *> &in_data,
     }
 }
 
-void add::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                           std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-    XS_UNUSED_PARAMETER(in_data);
-    XS_UNUSED_PARAMETER(out_data);
-    for (size_t i = 0; i < n_input_; i++)
-        *in_grad[i] = *out_grad[0];
-}
-
-
-
 } // xsdnn

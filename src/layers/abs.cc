@@ -37,19 +37,4 @@ namespace xsdnn {
         });
     }
 
-    void abs::back_propagation(const std::vector<tensor_t *> &in_data, const std::vector<tensor_t *> &out_data,
-                               std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        XS_UNUSED_PARAMETER(in_data);
-        XS_UNUSED_PARAMETER(out_data);
-
-        tensor_t& dx = *in_grad[0];
-        const tensor_t& dLz = *out_grad[0];
-
-        concurrency::TryParallelFor(this->parallelize_, this->num_threads_, dx.size(), [&](size_t sample) {
-            for (size_t j = 0; j < dx[sample].size(); ++j) {
-                dx[sample][j] = (mm_scalar(0.0f) < dLz[sample][j]) - (dLz[sample][j] < mm_scalar(0.0f));
-            }
-        });
-    }
-
 }

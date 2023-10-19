@@ -18,7 +18,7 @@ public:
     explicit reshape(size_t channel,
                      size_t height,
                      size_t width)
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
         in_shape_(0, 0, 0), out_shape_(channel, height, width) {}
 
 public:
@@ -30,12 +30,6 @@ public:
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 private:
     shape3d in_shape_;

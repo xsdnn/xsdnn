@@ -13,11 +13,6 @@ void hard_sigmoid::forward_activation(const xsdnn::mat_t &in_data, xsdnn::mat_t 
     mmpack::MmActivation(&activationHolder_, out_data.data(), in_shape.H, in_shape.W, in_shape.W);
 }
 
-void hard_sigmoid::back_activation(const xsdnn::mat_t &in_data, const xsdnn::mat_t &out_data,
-                                   const xsdnn::mat_t &out_grad, xsdnn::mat_t &in_grad) {
-    throw xs_error("[hard_sigmoid bwd] NotImplementedYet");
-}
-
 std::pair<mm_scalar, mm_scalar> hard_sigmoid::out_value_range() const {
     return std::make_pair(mm_scalar (0.1), mm_scalar (0.9));
 }

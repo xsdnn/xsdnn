@@ -27,10 +27,11 @@ public:
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
                    MmActivationType activation_type = mmpack::MmActivationType::NotSet,
-                   core::backend_t engine = core::default_backend_engine())
+                   core::backend_t engine = core::default_backend_engine(),
+                   xsDtype dtype = kXsFloat32)
         : conv(shape3d(in_channel, in_height, in_width), out_channel,
                kernel_shape, group_count, has_bias, stride_shape,
-               dilation_shape, pad_type, pads, activation_type, engine) {}
+               dilation_shape, pad_type, pads, activation_type, engine, dtype) {}
 
     explicit conv (shape3d in_shape,
                    size_t out_channel,
@@ -42,8 +43,9 @@ public:
                    padding_mode pad_type = padding_mode::valid,
                    std::vector<size_t> pads = {},
                    MmActivationType activation_type = mmpack::MmActivationType::NotSet,
-                   core::backend_t engine = core::default_backend_engine())
-        : layer({define_input_bias_condition(has_bias)}, {tensor_type::data}) {
+                   core::backend_t engine = core::default_backend_engine(),
+                   xsDtype dtype = kXsFloat32)
+        : layer({define_input_bias_condition(has_bias)}, {tensor_type::data}, dtype) {
         set_params(in_shape.C, in_shape.H, in_shape.W, out_channel,
                    group_count, has_bias, kernel_shape, stride_shape, dilation_shape, pad_type, pads, activation_type);
         init_backend(engine);
@@ -57,12 +59,6 @@ public:
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 public:
     params::conv get_params() const;

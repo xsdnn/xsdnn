@@ -54,14 +54,6 @@ namespace xsdnn {
         return &data_;
     }
 
-    tensor_t* edge::get_gradient() {
-        return &grad_;
-    }
-
-    const tensor_t* edge::get_gradient() const {
-        return &grad_;
-    }
-
     tensor_type edge::ttype() const {
         return ttype_;
     }
@@ -86,29 +78,8 @@ namespace xsdnn {
         return next_;
     }
 
-    void edge::clear_grads() {
-        for (size_t i = 0; i < grad_.size(); ++i) {
-            tensorize::fill(grad_[i].data(), grad_[i].size(), 0.0f);
-        }
-    }
-
     void edge::add_next_node(node *nd) {
         next_.push_back(nd);
     }
 
-    void edge::accumulate_grads(mat_t* dst) {
-        assert(!grad_.empty());
-        size_t sample_count = grad_.size();
-        size_t size = grad_[0].size();
-
-        if (dst->empty()) (*dst).resize(size);
-        tensorize::fill(dst->data(), size, 0.0f);
-
-        for (size_t sample = 0; sample < sample_count; ++sample) {
-            const auto& grad_sample = grad_[sample];
-            for (size_t i = 0; i < size; ++i) {
-                (*dst)[i] += grad_sample[i];
-            }
-        }
-    }
 }

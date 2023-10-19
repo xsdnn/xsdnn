@@ -18,7 +18,7 @@ public:
      */
     explicit add(size_t n_input, size_t dim)
         : layer(std::vector<tensor_type>(n_input, tensor_type::data),
-                {tensor_type::data}),
+                {tensor_type::data}, xsDtype::kXsFloat32),
         n_input_(n_input), shape_(1, 1, dim) {}
 
     explicit add(size_t n_input, shape3d shape)
@@ -31,12 +31,12 @@ public:
      */
     explicit add(size_t dim)
         : layer(std::vector<tensor_type>(2, tensor_type::data),
-                {tensor_type::data}),
+                {tensor_type::data}, xsDtype::kXsFloat32),
         n_input_(2), shape_(1, 1, dim) {}
 
     explicit add(shape3d shape)
         : layer(std::vector<tensor_type>(2, tensor_type::data),
-                {tensor_type::data}),
+                {tensor_type::data}, xsDtype::kXsFloat32),
           n_input_(2), shape_(shape) {}
 
     std::vector<shape3d> in_shape() const;
@@ -46,12 +46,6 @@ public:
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 private:
     size_t n_input_;

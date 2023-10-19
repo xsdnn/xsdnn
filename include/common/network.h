@@ -55,27 +55,6 @@ public:
     tensor_t predict(const tensor_t& in);
     std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
 
-    /*
-     * For sequency execution
-     */
-    void train(loss* loss,
-               optimizer* opt,
-               const tensor_t& input,
-               const std::vector<size_t>& label,
-               size_t batch_size,
-               size_t epoch);
-
-
-    /*
-     * For graph execution
-     */
-    void train(loss* loss,
-               optimizer* opt,
-               const std::vector<tensor_t>& input, /*multiple input's*/
-               const std::vector<tensor_t>& label, /*multiple output's*/
-               size_t batch_size,
-               size_t epoch);
-
     void save(const std::string filename);
     void load(const std::string filename);
 
@@ -86,24 +65,6 @@ protected:
              std::vector<tensor_t>& label,
              size_t batch_size,
              size_t epoch);
-
-    void fit_batch(loss* l_ptr,
-                   optimizer* opt_ptr,
-                   const tensor_t* input,
-                   const tensor_t* label,
-                   size_t batch_size);
-
-    void compute(loss* l_ptr,
-                 optimizer* opt_ptr,
-                 const tensor_t* input,
-                 const tensor_t* label,
-                 size_t batch_size);
-
-    void newaxis(const tensor_t& in,
-                 std::vector<tensor_t>& out);
-
-    void label2vec(const std::vector<size_t>& label,
-                   std::vector<tensor_t>& output);
 
     friend bool operator == (network<Net>& lhs, network<Net>& rhs) {
         /*
@@ -153,12 +114,6 @@ protected:
     mat_t fprop(const mat_t& in);
     std::vector<mat_t> fprop(const std::vector<mat_t>& in);
     std::vector<tensor_t> fprop(const std::vector<tensor_t>& in);
-
-    void bprop(loss* l_ptr,
-               optimizer* opt_ptr,
-               const std::vector<tensor_t>& net_out,
-               const std::vector<tensor_t>& label);
-
 
 private:
     Net net_;

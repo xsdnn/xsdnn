@@ -16,21 +16,9 @@ namespace xsdnn {
     nodes::nodes() {}
     nodes::~nodes()  {}
 
-    void nodes::update_weights(optimizer *opt) {
-        for (auto l : nodes_) {
-            l->update_weight(opt);
-        }
-    }
-
     void nodes::setup(bool reset_weight) {
         for (auto l : nodes_) {
             l->setup(reset_weight);
-        }
-    }
-
-    void nodes::clear_grads() {
-        for (auto l : nodes_) {
-            l->clear_grads();
         }
     }
 
@@ -153,16 +141,6 @@ namespace xsdnn {
     sequential::sequential() {}
     sequential::~sequential() {}
 
-    void sequential::backward(const std::vector<tensor_t> &start) {
-        std::vector<tensor_t> reorder_grad;
-        reorder_input(start, reorder_grad);
-        nodes_.back()->set_out_grads(reorder_grad); // FIXME: проблема может быть здесь
-
-        for (auto l = nodes_.rbegin(); l != nodes_.rend(); ++l) {
-            (*l)->backward();
-        }
-    }
-
     std::vector<tensor_t> sequential::forward(const std::vector<tensor_t> &start) {
         std::vector<tensor_t> reorder_data;
         reorder_input(start, reorder_data);
@@ -245,26 +223,6 @@ namespace xsdnn {
         std::vector<tensor_t> out;
         reorder_output(out);
         return out;
-    }
-
-    void graph::backward(const std::vector<tensor_t> &start) {
-        size_t output_data_concept_count = start[0].size();
-
-        if (output_data_concept_count != output_layers_.size()) {
-            throw xs_error("input size mismatch");
-        }
-
-        std::vector<tensor_t> reordered_grad;
-        reorder_input(start, reordered_grad);
-        assert(reordered_grad.size() == output_data_concept_count);
-
-        for (size_t i = 0; i < output_data_concept_count; i++) {
-            output_layers_[i]->set_out_grads({ reordered_grad[i] });
-        }
-
-        for (auto l = nodes_.rbegin(); l != nodes_.rend(); l++) {
-            (*l)->backward();
-        }
     }
 
     void graph::construct(const std::vector<layer *> &input,

@@ -53,7 +53,6 @@ public:
 
     std::vector<const mat_t*> weights() const;
     std::vector<mat_t*> weights();
-    std::vector<tensor_t*> weights_grads();
 
     std::vector<edgeptr_t> inputs();
     std::vector<edgeptr_t> outputs();
@@ -96,7 +95,6 @@ public:
     }
 
     void set_in_data(const std::vector<tensor_t>& data);
-    void set_out_grads(const std::vector<tensor_t>& grad);
     void set_trainable(bool trainable);
 
     std::vector<tensor_t> output() const;
@@ -113,10 +111,6 @@ public:
     void bias_init(const BiasInit& f) {
         bias_init_ = std::make_shared<BiasInit>(f);
     }
-
-    virtual
-    void
-    post_update() {}
 
     virtual
     std::vector<shape3d>
@@ -159,25 +153,11 @@ public:
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data) = 0;
 
-    virtual
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad) = 0;
-
-
     void forward();
-
-    void backward();
 
     void setup(bool reset_weight);
 
     void init_weight();
-
-    void clear_grads();
-
-    void update_weight(optimizer* opt);
 
     virtual
     void set_sample_count(size_t sample_count);
@@ -204,20 +184,12 @@ protected:
     std::vector<tensor_type> out_type_;
 
 private:
-    bool trainable_;
-    mat_t weight_diff_helper_;
     core::backend_t engine_;
     std::shared_ptr<weight_init::function> weight_init_;
     std::shared_ptr<weight_init::function> bias_init_;
 
     std::vector<tensor_t*> fwd_in_data;
     std::vector<tensor_t*> fwd_out_data;
-    std::vector<tensor_t*> bwd_in_data;
-    std::vector<tensor_t*> bwd_in_grad;
-    std::vector<tensor_t*> bwd_out_data;
-    std::vector<tensor_t*> bwd_out_grad;
-
-    friend class GradChecker;
 };
 
 void connect(layer* last_node,

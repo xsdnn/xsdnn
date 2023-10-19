@@ -39,10 +39,4 @@ namespace xsdnn {
         fwd_kernel_->compute(fwd_ctx_, params_);
     }
 
-    void global_average_pooling::back_propagation(const std::vector<tensor_t *> &in_data,
-                                                  const std::vector<tensor_t *> &out_data,
-                                                  std::vector<tensor_t *> &out_grad, std::vector<tensor_t *> &in_grad) {
-        throw xs_error("[global_average_pooling bwd] NotImplementedYet");
-    }
-
 } // xsdnn

@@ -74,8 +74,6 @@ include(xsdnn_common.cmake)
 include(xsdnn_core.cmake)
 include(xsdnn_layers.cmake)
 include(xsdnn_activations.cmake)
-include(xsdnn_optimizers.cmake)
-include(xsdnn_loss.cmake)
 include(xsdnn_utils.cmake)
 include(xsdnn_serializer.cmake)
 include(xsdnn_session.cmake)
@@ -88,8 +86,6 @@ add_library(xsdnn
         ${xsdnn_core_kernel_src}
         ${xsdnn_layers_src}
         ${xsdnn_activations_src}
-        ${xsdnn_optimizers_src}
-        ${xsdnn_loss_src}
         ${xsdnn_utils_src}
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})

@@ -13,15 +13,15 @@ namespace xsdnn {
 class abs : public layer {
 public:
     explicit abs()
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
             shape_() {}
 
     explicit abs(shape3d shape)
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
             shape_(shape) {}
 
     explicit abs(size_t dim)
-        : layer({tensor_type::data}, {tensor_type::data}),
+        : layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
           shape_(1, 1, dim) {}
 
 public:
@@ -33,12 +33,6 @@ public:
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 private:
     shape3d shape_;

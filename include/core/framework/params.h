@@ -20,16 +20,6 @@ struct fully {
     bool   has_bias_;
 };
 
-struct bnorm {
-    shape3d in_shape_;
-    mm_scalar momentum_;
-    mm_scalar eps_;
-    op_mode phase_;
-    std::unordered_map<std::string, mat_t> stat_holder;
-
-    bool statistic_initialized {false};
-};
-
 struct max_pool {
     shape3d in_shape_;
     shape3d out_shape_;

@@ -19,9 +19,10 @@ public:
     fully_connected(size_t in_size,
                     size_t out_size,
                     bool has_bias = true,
-                    core::backend_t engine = core::default_backend_engine())
+                    core::backend_t engine = core::default_backend_engine(),
+                    xsDtype dtype = kXsFloat32)
             :
-            layer(define_input_bias_condition(has_bias), {tensor_type::data}) {
+            layer(define_input_bias_condition(has_bias), {tensor_type::data}, dtype) {
         set_params(in_size, out_size, has_bias);
         init_backend(engine);
         layer::set_backend(engine);
@@ -37,11 +38,6 @@ public:
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
 
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 private:
     void set_params(size_t in_size, size_t out_size, bool has_bias);
@@ -50,9 +46,7 @@ private:
 private:
     params::fully params_;
     core::OpContext fwd_ctx_;
-    core::OpContext bwd_ctx_;
     std::shared_ptr<core::FullyConnectedFwdKernel> fwd_kernel_;
-    std::shared_ptr<core::FullyConnectedBwdKernel> bwd_kernel_;
 
     friend struct cerial;
 };

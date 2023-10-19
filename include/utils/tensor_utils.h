@@ -13,8 +13,7 @@ using namespace mmpack;
 namespace xsdnn {
     namespace tensorize {
 
-void fill(xsDtype dtype, mat_t* p_, size_t size, mm_scalar val);
-void fill(tensor_t& t_, mm_scalar val);
+void fill(xsDtype dtype, mat_t* p_, float val);
 
     } // tensorize
 } // xsdnn

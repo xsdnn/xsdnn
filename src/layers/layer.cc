@@ -16,9 +16,8 @@ namespace xsdnn {
                 out_concept_(out_type.size()),
                 in_type_(in_type),
                 out_type_(out_type) {
-            weight_init_ = std::make_shared<weight_init::xavier>();
-            bias_init_ = std::make_shared<weight_init::xavier>();
-            trainable_ = true;
+            weight_init_ = std::make_shared<weight_init::constant>();
+            bias_init_ = std::make_shared<weight_init::constant>();
     }
 
     layer::~layer() {}
@@ -121,16 +120,6 @@ namespace xsdnn {
         return v;
     }
 
-    std::vector<tensor_t *> layer::weights_grads() {
-        std::vector<tensor_t*> v;
-        for (size_t i = 0; i < in_concept_; ++i) {
-            if (is_trainable_concept(in_type_[i])) {
-                v.push_back(ith_in_node(i)->get_gradient());
-            }
-        }
-        return v;
-    }
-
     std::vector<edgeptr_t> layer::inputs() {
         std::vector<edgeptr_t> nodes;
         for (size_t i = 0; i < in_concept_; ++i) {
@@ -153,15 +142,6 @@ namespace xsdnn {
             nodes.push_back(const_cast<layer*>(this)->ith_out_node(i));
         }
         return nodes;
-    }
-
-    void layer::set_out_grads(const std::vector<tensor_t> &grad) {
-        size_t grad_idx = 0;
-        for (size_t i = 0; i < out_concept_; ++i) {
-            if (out_type_[i] != tensor_type::data) continue;
-            assert(grad_idx < grad.size());
-            *ith_out_node(i)->get_gradient() = grad[grad_idx++];
-        }
     }
 
     void layer::set_in_data(const std::vector<tensor_t> &data) {
@@ -192,14 +172,6 @@ namespace xsdnn {
         return out_type_;
     }
 
-    void layer::set_trainable(bool trainable) {
-        trainable_ = trainable;
-    }
-
-    bool layer::trainable() const {
-        return trainable_;
-    }
-
     void layer::forward() {
         fwd_in_data.reserve(in_concept_);
         fwd_out_data.reserve(out_concept_);
@@ -222,31 +194,9 @@ namespace xsdnn {
 
         for (size_t i = 0; i < out_concept_; ++i) {
             fwd_out_data.emplace_back(ith_out_node(i)->get_data());
-            ith_out_node(i)->clear_grads();
         }
 
         forward_propagation(fwd_in_data, fwd_out_data);
-    }
-
-    void layer::backward() {
-        bwd_in_data.reserve(in_concept_);
-        bwd_in_grad.reserve(in_concept_);
-        bwd_out_data.reserve(out_concept_);
-        bwd_out_grad.reserve(out_concept_);
-
-        for (size_t i = 0; i < in_concept_; ++i) {
-            const auto& nd = ith_in_node(i);
-            bwd_in_data.emplace_back(nd->get_data());
-            bwd_in_grad.emplace_back(nd->get_gradient());
-        }
-
-        for (size_t i = 0; i < out_concept_; ++i) {
-            const auto& nd = ith_out_node(i);
-            bwd_out_data.emplace_back(nd->get_data());
-            bwd_out_grad.emplace_back(nd->get_gradient());
-        }
-
-        back_propagation(bwd_in_data, bwd_out_data, bwd_out_grad, bwd_in_grad);
     }
 
     void layer::setup(bool reset_weight) {
@@ -269,54 +219,19 @@ namespace xsdnn {
     }
 
     void layer::init_weight() {
-        if (!trainable_) {
-            initialized_ = true;
-            return;
-        }
-
         for (size_t i = 0; i < in_concept_; ++i) {
             if (in_type_[i] == tensor_type::weight) {
                 auto* w = get_weight_data(i);
-                weight_init_->fill(
-                        w->data(),
-                        w->size(),
+                weight_init_->fill(this->dtype(), w,
                         fan_in_size(), fan_out_size());
             } else if (in_type_[i] == tensor_type::bias) {
                 auto* b = get_weight_data(i);
-                bias_init_->fill(
-                        b->data(),
-                        b->size(),
+                bias_init_->fill(this->dtype(), b,
                         fan_in_size(), fan_out_size());
             }
         }
 
         initialized_ = true;
-    }
-
-    void layer::clear_grads() {
-        for(size_t i = 0; i < in_concept_; ++i) {
-            ith_in_node(i)->clear_grads();
-        }
-    }
-
-    void layer::update_weight(optimizer *opt) {
-        auto& dw = weight_diff_helper_;
-        for (size_t i = 0; i < in_concept_; ++i) {
-            if (trainable_ && is_trainable_concept(in_type_[i])) {
-                mat_t& w = *get_weight_data(i);
-                ith_in_node(i)->accumulate_grads(&dw);
-                mm_scalar rcp_batch_size =
-                        (mm_scalar) 1.0 / (mm_scalar) ith_in_node(i)->get_data()->size();
-
-                for (size_t j = 0; j < dw.size(); ++j) {
-                    dw[j] *= rcp_batch_size;
-                }
-
-                opt->update(dw, w);
-            }
-        }
-        clear_grads();
-        post_update();
     }
 
     void layer::set_sample_count(size_t sample_count) {

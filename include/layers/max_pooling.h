@@ -51,7 +51,7 @@ public:
                          padding_mode pad_type = padding_mode::valid,
                          bool   ceil = false,
                          core::backend_t engine = core::default_backend_engine())
-        : layer({tensor_type::data}, {tensor_type::data}) {
+        : layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32) {
         set_params(channels, height, width, kernel_x, kernel_y, stride_x, stride_y, pad_type, ceil);
         init_backend(engine);
     }
@@ -64,12 +64,6 @@ public:
     void
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
-
-    void
-    back_propagation(const std::vector<tensor_t*>& in_data,
-                     const std::vector<tensor_t*>& out_data,
-                     std::vector<tensor_t*>&       out_grad,
-                     std::vector<tensor_t*>&       in_grad);
 
 private:
     void set_params(size_t channels,

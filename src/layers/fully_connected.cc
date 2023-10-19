@@ -52,19 +52,6 @@ void fully_connected::forward_propagation(
     fwd_kernel_->compute(fwd_ctx_, params_);
 }
 
-void fully_connected::back_propagation(
-        const std::vector<tensor_t *> &in_data,
-        const std::vector<tensor_t *> &out_data,
-        std::vector<tensor_t *> &out_grad,
-        std::vector<tensor_t *> &in_grad) {
-    bwd_ctx_.set_in_out(in_data, out_data, out_grad, in_grad);
-    bwd_ctx_.set_engine(layer::engine());
-    bwd_ctx_.set_parallelize(layer::parallelize());
-    bwd_ctx_.set_num_threads(layer::num_threads_);
-
-    bwd_kernel_->compute(bwd_ctx_, params_);
-}
-
 void fully_connected::set_params(size_t in_size,
                                  size_t out_size,
                                  bool has_bias) {
@@ -75,7 +62,6 @@ void fully_connected::set_params(size_t in_size,
 
 void fully_connected::init_backend(core::backend_t engine) {
     fwd_kernel_.reset(new core::FullyConnectedFwdKernel);
-    bwd_kernel_.reset(new core::FullyConnectedBwdKernel);
 }
 
 } // xsdnn
