@@ -22,6 +22,8 @@ void ComputeFullyConnectedKernelFP32(const tensor_t& in,
     float beta = 1.0;
 
     concurrency::TryParallelFor(parallelize, nthreads, in.size(), [&](size_t sample) {
+        const mat_t* IntoSpan = &in[sample];
+        gsl::span<const float> InSpan = gsl::make_span(reinterpret_cast<float*>(IntoSpan->data()), IntoSpan->size());
         gsl::span<const float> InSpan = GetDataAsSpan<float>(&in[sample]);
         const mm_scalar* in_ptr = in[sample].data();
         const mm_scalar* w_ptr = W.data();

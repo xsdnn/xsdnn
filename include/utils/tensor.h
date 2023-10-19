@@ -45,8 +45,8 @@ namespace xsdnn {
     }
 
     template<typename T>
-    gsl::span<const T> GetDataAsSpan(mat_t* data, ptrdiff_t byte_offset = 0) {
-        T* ptr = reinterpret_cast<T*>(data->data() + byte_offset);
+    gsl::span<const T> GetDataAsSpan(const mat_t* data, ptrdiff_t byte_offset = 0) {
+        T* ptr = reinterpret_cast<const T*>(data->data() + byte_offset);
         return gsl::make_span(ptr, data->size());
     }
 
