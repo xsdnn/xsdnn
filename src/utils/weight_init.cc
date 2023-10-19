@@ -9,15 +9,10 @@
 namespace xsdnn {
     namespace weight_init {
 
-void xavier::fill(mmpack::mm_scalar *data, size_t size, size_t fan_in, size_t fan_out) {
-    const mm_scalar bias = std::sqrt(scale_ / (fan_in + fan_out));
-    uniform_rand(data, size, -bias, bias);
-}
-
-void constant::fill(mmpack::mm_scalar *data, size_t size, size_t fan_in, size_t fan_out) {
+void constant::fill(xsDtype dtype, mat_t* data, size_t size, size_t fan_in, size_t fan_out) {
     XS_UNUSED_PARAMETER(fan_in);
     XS_UNUSED_PARAMETER(fan_out);
-    tensorize::fill(data, size, scale_);
+    tensorize::fill(dtype, data, size, scale_);
 }
 
 } // weight_init

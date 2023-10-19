@@ -16,10 +16,23 @@
 
 namespace xsdnn {
 
+struct TypedHolder {
+    TypedHolder() : T_(tensor_type::data), D_(xsDtype::kXsUndefined) {}
+    TypedHolder(tensor_type type, xsDtype dtype) : T_(type), D_(dtype) {}
+
+    tensor_type ttype() const noexcept { return T_; }
+    xsDtype dtype() const noexcept { return D_; }
+
+private:
+    tensor_type T_;
+    xsDtype D_;
+};
+
 class layer : public node {
 public:
     layer(const std::vector<tensor_type>& in_type,
-          const std::vector<tensor_type>& out_type);
+          const std::vector<tensor_type>& out_type,
+          const xsDtype dtype);
     virtual ~layer();
 
 

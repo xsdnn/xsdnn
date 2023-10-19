@@ -4,11 +4,13 @@
 //
 
 #include <utils/tensor_utils.h>
-
 namespace xsdnn {
     namespace tensorize {
 
-void fill(mm_scalar* p_, size_t size, mm_scalar val) {
+void fill(xsDtype dtype, mat_t* p_, size_t size, mm_scalar val) {
+    if (dtype == kXsFloat32) {
+        gsl::span<float> p_span = GetMutableDataAsSpan<float>(p_);
+    }
     for (size_t i = 0; i < size; ++i) {
         *p_ = val;
         p_ += 1;

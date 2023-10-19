@@ -25,7 +25,7 @@ class layer;
 */
 class node {
 public:
-    node (size_t in_concept, size_t out_concept) : prev_(in_concept), next_(out_concept) {}
+    node (size_t in_concept, size_t out_concept, xsDtype dtype) : dtype_(dtype), prev_(in_concept), next_(out_concept) {}
     virtual ~node();
 
     std::vector<edgeptr_t>& prev();
@@ -51,12 +51,14 @@ public:
     std::vector<node*> prev_nodes() const;
     std::vector<node*> next_nodes() const;
 
+    xsDtype dtype() const noexcept { return dtype_; }
+
 protected:
     node() = delete;
 
     friend void connect(layer* last_node, layer* next_node,
                         size_t last_node_data_concept_idx, size_t next_node_data_concept_idx);
-
+    xsDtype dtype_;
     mutable std::vector<edgeptr_t> prev_; // can be weight & bias & data
     mutable std::vector<edgeptr_t> next_; // output
 };

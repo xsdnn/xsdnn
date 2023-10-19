@@ -8,8 +8,8 @@
 
 namespace xsdnn {
 
-    layer::layer(const std::vector<tensor_type> &in_type, const std::vector<tensor_type> &out_type)
-        : node(in_type.size(), out_type.size()),
+    layer::layer(const std::vector<tensor_type> &in_type, const std::vector<tensor_type> &out_type, const xsDtype dtype)
+        : node(in_type.size(), out_type.size(), dtype),
                 initialized_(false),
                 parallelize_(true),
                 in_concept_(in_type.size()),
@@ -19,7 +19,6 @@ namespace xsdnn {
             weight_init_ = std::make_shared<weight_init::xavier>();
             bias_init_ = std::make_shared<weight_init::xavier>();
             trainable_ = true;
-
     }
 
     layer::~layer() {}

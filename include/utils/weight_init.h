@@ -20,24 +20,17 @@ class function {
 public:
     function(mm_scalar scale) : scale_(scale) {}
     virtual ~function() {}
-    virtual void fill(mm_scalar* data, size_t size, size_t fan_in, size_t fan_out) = 0;
+    virtual void fill(xsDtype dtype, mat_t* data, size_t size, size_t fan_in, size_t fan_out) = 0;
 
 protected:
     mm_scalar scale_;
-};
-
-class xavier : public function {
-public:
-    xavier() : function(mm_scalar(6.0)) {}
-    explicit xavier(mm_scalar scale) : function(scale) {}
-    virtual void fill(mm_scalar* data, size_t size, size_t fan_in, size_t fan_out) override;
 };
 
 class constant : public function {
 public:
     constant() : function(mm_scalar(0.0)) {}
     explicit constant(mm_scalar scale) : function(scale) {}
-    virtual void fill(mm_scalar* data, size_t size, size_t fan_in, size_t fan_out) override;
+    virtual void fill(xsDtype dtype, mat_t* data, size_t size, size_t fan_in, size_t fan_out) override;
 };
 
     } // weight_init
