@@ -9,8 +9,6 @@
 #include <vector>
 #include <thread>
 #include "../layers/layer.h"
-#include "../loss/loss_base.h"
-#include "../optimizers/optimizer_base.h"
 #include "nodes.h"
 #include "config.h"
 
@@ -59,13 +57,6 @@ public:
     void load(const std::string filename);
 
 protected:
-    void fit(loss* l_ptr,
-             optimizer* opt_ptr,
-             std::vector<tensor_t>& input,
-             std::vector<tensor_t>& label,
-             size_t batch_size,
-             size_t epoch);
-
     friend bool operator == (network<Net>& lhs, network<Net>& rhs) {
         /*
          * Check topological sorted vector

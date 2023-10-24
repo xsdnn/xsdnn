@@ -158,11 +158,11 @@ struct cerial {
 
         alpha->set_name("alpha");
         alpha->set_type(xs::AttributeInfo_AttributeType_FLOAT);
-        alpha->set_f(layer->activationHolder_.Parameters.HardSigmoid.alpha);
+        alpha->set_f(layer->alpha_);
 
         beta->set_name("beta");
         beta->set_type(xs::AttributeInfo_AttributeType_FLOAT);
-        beta->set_f(layer->activationHolder_.Parameters.HardSigmoid.beta);
+        beta->set_f(layer->beta_);
     }
 
     /*
@@ -181,15 +181,6 @@ struct cerial {
     static
     void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::acos* layer) {
         node->set_name("acos");
-    }
-
-    /*
-    * And
-    */
-    inline
-    static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::and_layer* layer) {
-        node->set_name("and_layer");
     }
 
     /*
@@ -487,14 +478,6 @@ struct cerial {
     std::shared_ptr<xsdnn::acos> cerial::deserialize(const xs::NodeInfo* node,
                                                     const xs::TensorInfo* tensor) {
         std::shared_ptr<xsdnn::acos> l = std::make_shared<xsdnn::acos>();
-        return l;
-    }
-
-    template<>
-    inline
-    std::shared_ptr<xsdnn::and_layer> cerial::deserialize(const xs::NodeInfo* node,
-                                                     const xs::TensorInfo* tensor) {
-        std::shared_ptr<xsdnn::and_layer> l = std::make_shared<xsdnn::and_layer>();
         return l;
     }
 

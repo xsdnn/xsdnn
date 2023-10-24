@@ -23,7 +23,7 @@ public:
 
     explicit add(size_t n_input, shape3d shape)
         : layer(std::vector<tensor_type>(n_input, tensor_type::data),
-                {tensor_type::data}),
+                {tensor_type::data}, xsDtype::kXsFloat32),
           n_input_(n_input), shape_(shape) {}
 
     /*

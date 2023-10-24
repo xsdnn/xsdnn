@@ -23,6 +23,7 @@ public:
     virtual void Compute(core::OpContext& ctx, params::fully& p) {}
     virtual void Compute(core::OpContext& ctx, params::max_pool& p) {}
     virtual void Compute(core::OpContext& ctx, params::conv& p) {}
+    virtual void Compute(core::OpContext& ctx, params::activation& p) {}
 };
 
     } // core

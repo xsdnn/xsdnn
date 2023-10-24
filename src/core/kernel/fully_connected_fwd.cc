@@ -5,6 +5,7 @@
 
 #include <core/kernel/fully_connected_fwd.h>
 #include <core/framework/threading.h>
+#include <cstring>
 
 namespace xsdnn {
     namespace core {
@@ -22,17 +23,19 @@ void ComputeFullyConnectedKernelFP32(const tensor_t& in,
     float beta = 1.0;
 
     concurrency::TryParallelFor(parallelize, nthreads, in.size(), [&](size_t sample) {
-        const mat_t* IntoSpan = &in[sample];
-        gsl::span<const float> InSpan = gsl::make_span(reinterpret_cast<float*>(IntoSpan->data()), IntoSpan->size());
-        gsl::span<const float> InSpan = GetDataAsSpan<float>(&in[sample]);
-        const mm_scalar* in_ptr = in[sample].data();
-        const mm_scalar* w_ptr = W.data();
-        mm_scalar* out_ptr = out[sample].data();
+        gsl::span<const float> InSpan = GetDataAsSpan<const float>(&in[sample]);
+        gsl::span<const float> WSpan = GetDataAsSpan<const float>(&W);
+        gsl::span<float> OutSpan = GetMutableDataAsSpan<float>(&out[sample]);
+
+        const float* in_ptr = InSpan.data();
+        const float* w_ptr = WSpan.data();
+        float* out_ptr = OutSpan.data();
 
         if (b.empty()) {
             memset(out_ptr, 0, sizeof(mm_scalar) * out_size);
         } else {
-            memcpy(out_ptr, b.data(), sizeof(mm_scalar) * out_size);
+            gsl::span<const float> BSpan = GetDataAsSpan<const float>(&b); // FIXME: здесь все ок?
+            memcpy(out_ptr, BSpan.data(), sizeof(float) * out_size);
         }
 
         mmpack::MmGemm(mmpack::CblasNoTrans,
@@ -56,8 +59,11 @@ void FullyConnectedFwdKernel::Compute(xsdnn::core::OpContext &ctx, params::fully
     xsDtype dtype = ctx.dtype();
 
     if (engine == core::backend_t::xs) {
-        if (dtype == kXsFloat32) ComputeFullyConnectedKernelFP32();
-        throw xs_error("[fully_connected forward] unsupported dtype for xs engine");
+        if (dtype == kXsFloat32) ComputeFullyConnectedKernelFP32(in,
+                                                                 W[0],
+                                                                 p.has_bias_ ? (*b)[0] : mat_t(),
+                                                                 out, p, ctx.parallelize(), ctx.num_threads());
+        else throw xs_error("[fully_connected forward] unsupported dtype for xs engine");
     } else {
         throw xs_error("[fully_connected forward] unsupported engine type");
     }

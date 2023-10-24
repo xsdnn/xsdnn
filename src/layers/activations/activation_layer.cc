@@ -4,19 +4,18 @@
 //
 
 #include <layers/activations/activation_layer.h>
-#include <core/framework/threading.h>
 
 namespace xsdnn {
 
 activation_layer::activation_layer()
     :
     layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
-    in_shape_(0, 0, 0) {}
+    in_shape_(0, 0, 0), initialized_(false) { init_backend(); }
 
 activation_layer::activation_layer(const size_t in_size)
     :
     layer({tensor_type::data}, {tensor_type::data}, xsDtype::kXsFloat32),
-    in_shape_(1, 1, in_size) {}
+    in_shape_(1, 1, in_size), initialized_(false) { init_backend(); }
 
 activation_layer::activation_layer(const xsdnn::activation_layer &) = default;
 activation_layer &activation_layer::operator=(const xsdnn::activation_layer &) = default;
@@ -41,18 +40,22 @@ void activation_layer::set_in_shape(const xsdnn::shape3d in_shape) {
     in_shape_ = in_shape;
 }
 
+void activation_layer::init_backend() {
+    fwd_kernel_.reset(new core::ActivationFwdKernel);
+}
+
+// TODO: сделать проход вперед через ctx, для передачи типа данных
 void
 activation_layer::forward_propagation(const std::vector<tensor_t *> &in_data,
                                       std::vector<tensor_t *> &out_data) {
-    const tensor_t& in_ = *in_data[0];
-    tensor_t& out_ = *out_data[0];
+    fwd_ctx_.set_in_out(in_data, out_data);
+    fwd_ctx_.set_engine(layer::engine());               // TODO: сделать поддержку разных движков на активации
+    fwd_ctx_.set_parallelize(layer::parallelize());
+    fwd_ctx_.set_num_threads(layer::num_threads_);
+    fwd_ctx_.set_dtype(layer::dtype());
 
-    concurrency::TryParallelFor(layer::parallelize_,
-                                layer::num_threads_,
-                                in_.size(),
-                                [&](size_t i) {
-            forward_activation(in_[i], out_[i]);
-    });
+    if (!initialized_) init_params();
+    fwd_kernel_->Compute(fwd_ctx_, p_);
 }
 
 } // xsdnn

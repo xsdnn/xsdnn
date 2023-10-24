@@ -14,6 +14,11 @@
 namespace xsdnn {
     namespace params {
 
+struct activation {
+    mmpack::MmActivationHolder params;
+    shape3d shape;
+};
+
 struct fully {
     size_t in_size_;
     size_t out_size_;

@@ -23,20 +23,9 @@ namespace xsdnn {
         kXsFloat16 = 2
     } xsDtype;
 
-    size_t dtype2sizeof(xsDtype dtype) {
-        switch(dtype) {
-            case kXsFloat32:
-                return sizeof(float);
-            case kXsFloat16:
-                return sizeof(uint16_t);
-            default:
-                throw xs_error("Unsupported dtype when converting to sizeof(...)");
-        }
-    }
+    size_t dtype2sizeof(xsDtype dtype);
 
-    void AllocateMat_t(mat_t* data, size_t size, xsDtype dtype) {
-        data->resize(size * dtype2sizeof(dtype));
-    }
+    void AllocateMat_t(mat_t* data, size_t size, xsDtype dtype);
 
     template<typename T>
     gsl::span<T> GetMutableDataAsSpan(mat_t* data, ptrdiff_t byte_offset = 0) {
@@ -46,17 +35,12 @@ namespace xsdnn {
 
     template<typename T>
     gsl::span<const T> GetDataAsSpan(const mat_t* data, ptrdiff_t byte_offset = 0) {
-        T* ptr = reinterpret_cast<const T*>(data->data() + byte_offset);
+        T* ptr = reinterpret_cast<T*>(data->data() + byte_offset);
         return gsl::make_span(ptr, data->size());
     }
 
-    char* GetMutableDataRaw(mat_t* data, ptrdiff_t byte_offset = 0) {
-        return data->data() + byte_offset;
-    }
-
-    const char* GetDataRaw(mat_t* data, ptrdiff_t byte_offset = 0) {
-        return data->data() + byte_offset;
-    }
+    char* GetMutableDataRaw(mat_t* data, ptrdiff_t byte_offset = 0);
+    const char* GetDataRaw(mat_t* data, ptrdiff_t byte_offset = 0);
 }
 
 

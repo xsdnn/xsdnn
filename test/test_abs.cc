@@ -6,9 +6,7 @@
 #include "xsdnn.h"
 #include <gtest/gtest.h>
 #include "test_utils.h"
-#include "../include/utils/grad_checker.h"
 using namespace xsdnn;
-
 
 
 TEST(abs, forward) {

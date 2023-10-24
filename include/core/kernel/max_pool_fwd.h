@@ -13,7 +13,7 @@ namespace xsdnn {
 
         class MaxPoolingFwdKernel : public OpKernel {
         public:
-            void compute(OpContext& ctx, params::max_pool& p);
+            void Compute(OpContext& ctx, params::max_pool& p);
         };
 
     } // core

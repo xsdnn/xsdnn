@@ -359,6 +359,16 @@ MmSetDefaultActivationParameters(
         MmActivationHolder* Holder
 );
 
+template<MmActivationType ActivationType>
+void
+MmActivationKernel(
+        MmActivationHolder* Activation,
+        float* C,
+        size_t M,
+        size_t N,
+        size_t ldc
+);
+
 void
 MmActivation(
     MmActivationHolder* Activation,

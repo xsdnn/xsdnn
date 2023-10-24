@@ -8,7 +8,6 @@
 
 #include "node.h"
 #include "../layers/layer.h"
-#include "../optimizers/optimizer_base.h"
 
 namespace xsdnn {
 

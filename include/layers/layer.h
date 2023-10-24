@@ -8,7 +8,6 @@
 
 #include "../common/node.h"
 #include "../utils/weight_init.h"
-#include "../optimizers/optimizer_base.h"
 #include "../core/backend.h"
 #include "../utils/tensor_shape.h"
 #include "../serializer/xs.proto3.pb.h"

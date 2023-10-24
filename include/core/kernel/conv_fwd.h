@@ -13,7 +13,7 @@ namespace xsdnn {
 
         class ConvFwdKernel : public OpKernel {
         public:
-            void compute(OpContext& ctx, params::conv& p);
+            void Compute(OpContext& ctx, params::conv& p);
         };
 
     } // core

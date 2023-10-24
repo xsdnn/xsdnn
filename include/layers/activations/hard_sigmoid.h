@@ -15,29 +15,22 @@ public:
     explicit hard_sigmoid(const size_t in_size,
                           const float alpha = 0.2f,
                           const float beta = 0.5f)
-            : activation_layer(in_size) {
-        activationHolder_.ActivationType = mmpack::HardSigmoid;
-        activationHolder_.Parameters.HardSigmoid.alpha = alpha;
-        activationHolder_.Parameters.HardSigmoid.beta = beta;
-    }
+            : activation_layer(in_size), alpha_(alpha), beta_(beta) {}
 
     explicit hard_sigmoid(const float alpha = 0.2f,
                           const float beta = 0.5f)
-        : activation_layer() {
-        activationHolder_.ActivationType = mmpack::HardSigmoid;
-        activationHolder_.Parameters.HardSigmoid.alpha = alpha;
-        activationHolder_.Parameters.HardSigmoid.beta = beta;
-    }
+        : activation_layer(), alpha_(alpha), beta_(beta) {}
 
 public:
-    void forward_activation(const mat_t& in_data, mat_t& out_data) override;
-
     std::pair<mm_scalar, mm_scalar> out_value_range() const override;
-
     std::string layer_type() const override;
 
+protected:
+    virtual void init_params() override;
+
 private:
-    mmpack::MmActivationHolder activationHolder_;
+    float alpha_;
+    float beta_;
     friend struct cerial;
 };
 
