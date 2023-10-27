@@ -1,98 +1,100 @@
 cmake_minimum_required(VERSION 3.0.0)
-set(CMAKE_CXX_STANDARD 17)
-project(xsdnn VERSION 1.0.0 LANGUAGES C CXX)
+SET(CMAKE_CXX_STANDARD 17)
+PROJECT(xsdnn VERSION 1.0.0 LANGUAGES C CXX)
 
-option(xsdnn_BUILD_TEST OFF)
-option(xsdnn_USE_DOUBLE OFF)
-option(xsdnn_USE_DETERMENISTIC_GEN OFF)
-option(xsdnn_USE_SSE OFF)
-option(xsdnn_USE_OPENMP OFF)
-option(xsdnn_BUILD_XNNPACK_ENGINE OFF)
+OPTION(xsdnn_BUILD_TEST OFF)
+OPTION(xsdnn_USE_DOUBLE OFF)
+OPTION(xsdnn_USE_DETERMENISTIC_GEN OFF)
+OPTION(xsdnn_USE_SSE OFF)
+OPTION(xsdnn_USE_OPENMP OFF)
+OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 
-set(XSROOT .)
-set(XSROOT_SRC ${XSROOT}/src)
-set(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
-set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
+SET(XSROOT .)
+SET(XSROOT_SRC ${XSROOT}/src)
+SET(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
+SET(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
 
-include_directories(
-        ${XSROOT}/include/
+INCLUDE_directories(
+        ${XSROOT}/INCLUDE/
 )
 
-if (xsdnn_USE_DOUBLE)
-    add_compile_definitions(MM_USE_DOUBLE)
-endif (xsdnn_USE_DOUBLE)
+IF (xsdnn_USE_DOUBLE)
+    ADD_COMPILE_DEFINITIONS(MM_USE_DOUBLE)
+ENDIF (xsdnn_USE_DOUBLE)
 
-if (NOT xsdnn_USE_DETERMENISTIC_GEN)
-    add_compile_definitions(XS_NO_DTRMNST)
-endif()
+IF (NOT xsdnn_USE_DETERMENISTIC_GEN)
+    ADD_COMPILE_DEFINITIONS(XS_NO_DTRMNST)
+ENDIF()
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_VERBOSE_MAKEFILE ON)
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    SET(CMAKE_VERBOSE_MAKEFILE ON)
+ENDIF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
-find_package(OpenMP QUIET)
-if(xsdnn_USE_OPENMP AND OPENMP_FOUND)
-    message(STATUS "Found OpenMP")
-    add_compile_definitions(XS_USE_OMP)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-elseif(xsdnn_USE_OPENMP AND NOT OPENMP_FOUND)
-    message(FATAL_ERROR "Can't find OpenMP. Please set OpenMP_C_FLAGS & "
+FIND_PACKAGE(OpenMP QUIET)
+IF(xsdnn_USE_OPENMP AND OPENMP_FOUND)
+    MESSAGE(STATUS "Found OpenMP")
+    ADD_COMPILE_DEFINITIONS(XS_USE_OMP)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+ELSEIF(xsdnn_USE_OPENMP AND NOT OPENMP_FOUND)
+    MESSAGE(FATAL_ERROR "Can't find OpenMP. Please SET OpenMP_C_FLAGS & "
             "OpenMP_CXX_FLAGS")
-endif()
+ENDIF()
 
-if (xsdnn_USE_SSE)
+IF (xsdnn_USE_SSE)
     # Проверим поддержку sse в компиляторе. Supported only gcc.
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        include(CheckCXXCompilerFlag)
+    IF(CMAKE_COMPILER_IS_GNUCXX)
+        INCLUDE(CheckCXXCompilerFlag)
         check_cxx_compiler_flag("-msse3" COMPILER_HAS_SSE_FLAG)
-        if(xsdnn_USE_SSE AND COMPILER_HAS_SSE_FLAG)
-            add_definitions(-DMM_USE_SSE)
-            set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -msse3")
-            set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -msse3")
-        endif()
-    endif()
+        IF(xsdnn_USE_SSE AND COMPILER_HAS_SSE_FLAG)
+            ADD_DEFINITIONS(-DMM_USE_SSE)
+            SET(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -msse3")
+            SET(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -msse3")
+        ENDIF()
+    ENDIF()
 
-endif()
+ENDIF()
 
 #   ---[Download Deps]
-if (xsdnn_BUILD_XNNPACK_ENGINE)
+IF (xsdnn_BUILD_XNNPACK_ENGINE)
 
-    if(NOT DEFINED XNNPACK_SOURCE_DIR)
-        message(STATUS "Downloading XNNPACK to ${CMAKE_BINARY_DIR}/xnnpack-source (define XNNPACK_SOURCE_DIR to avoid it)")
-        configure_file(cmake/DownloadXNNPACK.cmake "${CMAKE_BINARY_DIR}/xnnpack-download/CMakeLists.txt")
-        execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" cmake
+    IF(NOT DEFINED XNNPACK_SOURCE_DIR)
+        MESSAGE(STATUS "Downloading XNNPACK to ${CMAKE_BINARY_DIR}/xnnpack-source (define XNNPACK_SOURCE_DIR to avoid it)")
+        CONFIGURE_FILE(./cmake/DownloadXNNPACK.cmake "${CMAKE_BINARY_DIR}/xnnpack-download/CMakeLists.txt")
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
                 WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/xnnpack-download")
-        execute_process(COMMAND "${CMAKE_COMMAND}" --build cmake
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
                 WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/xnnpack-download")
-        set(XNNPACK_SOURCE_DIR "${CMAKE_BINARY_DIR}/xnnpack-source" CACHE STRING "xnnpack source directory")
-    endif()
+        SET(XNNPACK_SOURCE_DIR "${CMAKE_BINARY_DIR}/xnnpack-source" CACHE STRING "xnnpack source directory")
+    ENDIF()
+    
+    INCLUDE_DIRECTORIES("${XNNPACK_SOURCE_DIR}/INCLUDE")
+    ADD_COMPILE_DEFINITIONS(XS_USE_XNNPACK)
+ENDIF()
 
-endif()
+# SET flags to build type
+SET(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
+SET(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
+SET(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -fsanitize=leak")
 
-# Set flags to build type
-set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
-set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
-set(EXTRA_C_FLAGS_DEBUG   "${EXTRA_C_FLAGS_DEBUG} -g3 -pg -fsanitize=address -fsanitize=leak")
-
-# Set compiler options
-set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE} -O3 -ffast-math")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_FLAGS_DEBUG} -ffast-math")
-set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG} -O0")
+# SET compiler options
+SET(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS}")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${EXTRA_C_FLAGS_RELEASE} -O3 -ffast-math")
+SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_FLAGS_DEBUG} -ffast-math")
+SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG} -O0")
 
 
-include(cmake/xsdnn_mmpack.cmake)
-include(cmake/xsdnn_common.cmake)
-include(cmake/xsdnn_core.cmake)
-include(cmake/xsdnn_layers.cmake)
-include(cmake/xsdnn_activations.cmake)
-include(cmake/xsdnn_utils.cmake)
-include(cmake/xsdnn_serializer.cmake)
-include(cmake/xsdnn_session.cmake)
+INCLUDE(cmake/xsdnn_mmpack.cmake)
+INCLUDE(cmake/xsdnn_common.cmake)
+INCLUDE(cmake/xsdnn_core.cmake)
+INCLUDE(cmake/xsdnn_layers.cmake)
+INCLUDE(cmake/xsdnn_activations.cmake)
+INCLUDE(cmake/xsdnn_utils.cmake)
+INCLUDE(cmake/xsdnn_serializer.cmake)
+INCLUDE(cmake/xsdnn_session.cmake)
 
-add_library(xsdnn
+ADD_LIBRARY(xsdnn
         ${mmpack_common_src}
         ${xsdnn_common_src}
         ${xsdnn_core_common_src}
@@ -104,18 +106,18 @@ add_library(xsdnn
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})
 
-set_target_properties(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
+SET_TARGET_PROPERTIES(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
 
-install(TARGETS xsdnn
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_LIBDIR}/include)
+IF(NOT TARGET XNNPACK)
+    SET(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
+    ADD_SUBDIRECTORY(
+            "${XNNPACK_SOURCE_DIR}"
+            "${CMAKE_BINARY_DIR}/deps/xnnpack")
+ENDIF()
 
-install(DIRECTORY ${XSROOT}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xsdnn)
+IF (xsdnn_BUILD_TEST)
+    INCLUDE(cmake/xsdnn_unittest.cmake)
+ENDIF (xsdnn_BUILD_TEST)
 
-if (xsdnn_BUILD_TEST)
-    include(cmake/xsdnn_unittest.cmake)
-endif (xsdnn_BUILD_TEST)
-
-include(cmake/summary.cmake)
+INCLUDE(cmake/summary.cmake)
 xsdnn_print_configuration_summary()

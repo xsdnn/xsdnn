@@ -11,4 +11,4 @@ else
     exit 1
 fi
 
-python3 $DIR/tools/ci_build/build.py --build_dir $DIR/build/$DIR_OS "$@"
+python3 $DIR/build.py --build_dir $DIR/build/$DIR_OS "$@"

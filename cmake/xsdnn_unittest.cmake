@@ -1,5 +1,3 @@
-add_subdirectory(${XSROOT}/cmake/external/googletest EXCLUDE_FROM_ALL)
-
 enable_testing()
 
 set(XSDNN_TEST_ROOT ${XSROOT}/test)

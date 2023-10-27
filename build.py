@@ -44,21 +44,9 @@ def parse_arguments():
     )
 
     parser.add_argument(
-            "--skip_submodule_sync",
-            action='store_true',
-            help="Don't do a 'git submodule update'. Makes the Update phase faster."
-    )
-
-    parser.add_argument(
         "--build_shared_lib",
         action='store_true',
         help="Set to build shared lib"
-    )
-
-    parser.add_argument(
-        "--install",
-        action='store_true',
-        help="Set to install xsdnn into 'CMAKE_INSTALL_LIBDIR'"
     )
 
     parser.add_argument(
@@ -92,15 +80,15 @@ def parse_arguments():
     )
 
     parser.add_argument(
-            "--use_double_type",
-            action='store_true',
-            help="Turn ON to use double type instead of float"
-    )
-
-    parser.add_argument(
             "--use_determenistic_gen",
             action='store_true',
             help="Turn ON to use random gen with fixed seed"
+    )
+
+    parser.add_argument(
+        "--use_xnnpack_engine",
+        action='store_true',
+        help="Turn ON to build XNNPACK for backend inference engine"
     )
 
     return parser.parse_args()
@@ -111,14 +99,14 @@ def update_submodules(source_dir):
 
 def generate_build_tree(cmake_path, source_dir, build_dir, args):
     cmake_args = [
-        cmake_path, "-S", "./cmake", "-B", build_dir,
+        cmake_path, "-S", ".", "-B", build_dir,
         "-DCMAKE_BUILD_TYPE=" + args.config,
         "-DBUILD_SHARED_LIBS=" + ("ON" if args.build_shared_lib else "OFF"),
         "-Dxsdnn_BUILD_TEST=" + ("OFF" if args.skip_build_test else "ON"),
-        "-Dxsdnn_USE_DOUBLE=" + ("ON" if args.use_double_type else "OFF"),
         "-Dxsdnn_USE_DETERMENISTIC_GEN=" + ("ON" if args.use_determenistic_gen else "OFF"),
         "-Dxsdnn_USE_SSE=" + ("ON"),
         "-Dxsdnn_USE_OPENMP=" + ("ON" if args.use_openmp else "OFF"),
+        "-Dxsdnn_BUILD_XNNPACK_ENGINE=" + ("ON" if args.use_xnnpack_engine else "OFF"),
         ]
 
     return cmake_args
@@ -234,32 +222,29 @@ def install(source_dir, build_dir, script_dir, args):
 def main():
     args = parse_arguments()
     script_dir = os.path.realpath(os.path.dirname(__file__))
-    source_dir = os.path.normpath(os.path.join(script_dir, "..", ".."))
+    source_dir = os.path.normpath(os.path.join(script_dir))
     
     if args.config in ['Debug', 'Release', 'RelWithDebInfo']:
         build_dir = args.build_dir + "/" + args.config
     else:
         raise UsageError("Unsupported type of config")
     
-    if not args.skip_submodule_sync:
-        update_submodules(source_dir)
-    
     cmake_path = resolve_executable_path(args.cmake_path)
-    print(cmake_path)
     cmake_args = generate_build_tree(cmake_path, source_dir, build_dir, args)
+
     try_create_dir(build_dir)
 
-    if shutil.which("protoc") is None:
-        build_protobuf(source_dir, args)
+    # if shutil.which("protoc") is None:
+    #     build_protobuf(source_dir, args)
 
-    compile_xs(args.protoc_path, source_dir)
+    # compile_xs(args.protoc_path, source_dir)
     run_build(cmake_args, source_dir, script_dir)
 
-    make(source_dir, build_dir, script_dir, args)
-    if args.install:
-        install(source_dir, build_dir, script_dir, args)
-        if args.build_shared_lib:
-            update_dynamic_libs()
+    # make(source_dir, build_dir, script_dir, args)
+    # if args.install:
+    #     install(source_dir, build_dir, script_dir, args)
+    #     if args.build_shared_lib:
+    #         update_dynamic_libs()
 
 
 if __name__ == '__main__':
