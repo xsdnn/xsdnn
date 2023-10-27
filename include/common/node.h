@@ -68,16 +68,13 @@ protected:
 */
 class edge {
 public:
-    edge(node* prev, const shape3d& shape, tensor_type ttype)
+    edge(node* prev, const shape3d& shape, tensor_type ttype, size_t dtype_sizeof)
         :   shape_(shape), ttype_(ttype),
-            data_({ mat_t(shape.size()) }),
+            data_({ mat_t(shape.size() * dtype_sizeof) }),
             prev_(prev) {}
 
     tensor_t* get_data();
     const tensor_t* get_data() const;
-
-    tensor_t* get_gradient();
-    const tensor_t* get_gradient() const;
 
     tensor_type ttype() const;
     const shape3d& shape() const;

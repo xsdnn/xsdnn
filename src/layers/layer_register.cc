@@ -13,9 +13,6 @@
 XS_LAYER_SAVE_INTERNAL_REGISTER(fully_connected)                \
 XS_LAYER_SAVE_INTERNAL_REGISTER(Input)                          \
 XS_LAYER_SAVE_INTERNAL_REGISTER(Output)                         \
-XS_LAYER_SAVE_INTERNAL_REGISTER(add)                            \
-XS_LAYER_SAVE_INTERNAL_REGISTER(abs)                            \
-XS_LAYER_SAVE_INTERNAL_REGISTER(acos)                           \
 XS_LAYER_SAVE_INTERNAL_REGISTER(flatten)                        \
 XS_LAYER_SAVE_INTERNAL_REGISTER(relu)                           \
 XS_LAYER_SAVE_INTERNAL_REGISTER(max_pooling)                    \
@@ -34,9 +31,6 @@ cerial c;                                                       \
 XS_LAYER_LOAD_INTERNAL_REGISTER(fully_connected)                \
 XS_LAYER_LOAD_INTERNAL_REGISTER(Input)                          \
 XS_LAYER_LOAD_INTERNAL_REGISTER(Output)                         \
-XS_LAYER_LOAD_INTERNAL_REGISTER(add)                            \
-XS_LAYER_LOAD_INTERNAL_REGISTER(abs)                            \
-XS_LAYER_LOAD_INTERNAL_REGISTER(acos)                           \
 XS_LAYER_LOAD_INTERNAL_REGISTER(flatten)                        \
 XS_LAYER_LOAD_INTERNAL_REGISTER(relu)                           \
 XS_LAYER_LOAD_INTERNAL_REGISTER(max_pooling)                    \

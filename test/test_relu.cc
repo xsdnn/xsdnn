@@ -5,52 +5,31 @@
 
 #include "xsdnn.h"
 #include <gtest/gtest.h>
-#include "../include/utils/grad_checker.h"
 #include "test_utils.h"
 using namespace xsdnn;
 
-TEST(relu, forward) {
+TEST(relu, forward_fp32) {
     relu rl(5);
-    mat_t in = {-1, -0.5, 0.0, 0.5, 1};
+    mat_t in;
+    AllocateMat_t(&in, 5, kXsFloat32);
+    utils::initializer_list_init_fp32(in, {-1, -0.5, 0.0, 0.5, 1});
+
     rl.setup(false);
     rl.set_parallelize(false);
-    rl.set_in_data({{in}});
+    rl.set_in_data({{ in }});
     rl.forward();
+
     mat_t out = rl.output()[0][0];
-    mat_t e = {0.0f, 0.0f, 0.0f, 0.5, 1.0f};
+    gsl::span<const float> OutSpan = GetDataAsSpan<const float>(&out);
+
+    mat_t e;
+    AllocateMat_t(&e, 5, kXsFloat32);
+    utils::initializer_list_init_fp32(e, {0.0f, 0.0f, 0.0f, 0.5, 1.0f});
+    gsl::span<const float> ExpectedSpan = GetDataAsSpan<const float>(&e);
+
     for (size_t i = 0; i < 5; i++) {
-        ASSERT_EQ(out[i], e[i]);
+        utils::xsAssert_eq(OutSpan[i], ExpectedSpan[i], kXsFloat32);
     }
-}
-
-TEST(relu, backward) {
-    relu rl(784);
-    rl.set_parallelize(false);
-    GradChecker checker(&rl, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
-}
-
-TEST(relu, forward_paralell) {
-    relu rl(5);
-    mat_t in = {-1, -0.5, 0.0, 0.5, 1};
-    rl.setup(false);
-    rl.set_num_threads(std::thread::hardware_concurrency());
-    rl.set_in_data({{in}});
-    rl.forward();
-    mat_t out = rl.output()[0][0];
-    mat_t e = {0.0f, 0.0f, 0.0f, 0.5, 1.0f};
-    for (size_t i = 0; i < 5; i++) {
-        ASSERT_EQ(out[i], e[i]);
-    }
-}
-
-TEST(relu, backward_parallel) {
-    relu rl(784);
-    rl.set_num_threads(std::thread::hardware_concurrency());
-    GradChecker checker(&rl, GradChecker::mode::random);
-    GradChecker::status STATUS = checker.run();
-    ASSERT_EQ(STATUS, GradChecker::status::ok);
 }
 
 TEST(relu, cerial) {

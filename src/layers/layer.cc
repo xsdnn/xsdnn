@@ -209,7 +209,8 @@ namespace xsdnn {
             if (!next_[i]) {
                 next_[i] = std::make_shared<edge>(this,
                                                   out_shape()[i],
-                                                  out_type_[i]);
+                                                  out_type_[i],
+                                                  dtype2sizeof(this->dtype_));
             }
         }
 
@@ -243,23 +244,21 @@ namespace xsdnn {
             if (!is_trainable_concept(in_type_[i])) {
                 resize(ith_in_node(i)->get_data());
             }
-            resize(ith_in_node(i)->get_gradient());
         }
 
         for (size_t i = 0; i < out_concept_; ++i) {
             if (!is_trainable_concept(out_type_[i])) {
                 resize(ith_out_node(i)->get_data());
             }
-            resize(ith_out_node(i)->get_gradient());
         }
     }
 
     void layer::alloc_input(size_t i) const {
-        prev_[i] = std::make_shared<edge>(nullptr, in_shape()[i], in_type_[i]);
+        prev_[i] = std::make_shared<edge>(nullptr, in_shape()[i], in_type_[i], dtype2sizeof(this->dtype_));
     }
 
     void layer::alloc_output(size_t i) const {
-        next_[i] = std::make_shared<edge>((layer*) this, out_shape()[i], out_type_[i]);
+        next_[i] = std::make_shared<edge>((layer*) this, out_shape()[i], out_type_[i], dtype2sizeof(this->dtype_));
     }
 
     edgeptr_t layer::ith_in_node(size_t i) {

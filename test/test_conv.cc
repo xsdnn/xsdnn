@@ -44,8 +44,13 @@ TEST(conv, _2D_params_check_1) {
     ASSERT_EQ(P._.TemproraryBufferSize, 16384);
 }
 
-TEST(conv, simple_forward) {
-    const mat_t Input = {
+TEST(conv, simple_forward_fp32) {
+    shape3d in_shape(3, 4, 4);
+    shape3d out_shape(3, 3, 3); // for internal usage
+    mat_t Input(in_shape.size() * dtype2sizeof(kXsFloat32));
+    mat_t Output(out_shape.size() * dtype2sizeof(kXsFloat32));
+
+    utils::initializer_list_init_fp32(Input, {
             -1.8776015043258667,
             -0.2049034833908081,
             -0.13616761565208435,
@@ -94,8 +99,9 @@ TEST(conv, simple_forward) {
             -0.8656331896781921,
             -0.8146375417709351,
             -0.9757303595542908
-    };
-    const mat_t Output = {
+    });
+
+    utils::initializer_list_init_fp32(Output, {
             0.8995431065559387,
             0.38253235816955566,
             0.2557677626609802,
@@ -123,15 +129,15 @@ TEST(conv, simple_forward) {
             0.0075158062390983105,
             0.20843656361103058,
             0.011137520894408226
-    };
-    shape3d in(3, 4, 4);
+    });
 
-    conv c(in, 3, {2, 2}, 3, true);
+
+    conv c(in_shape, 3, {2, 2}, 3, true);
 
     c.set_parallelize(false);
     c.setup(false);
 
-    c.prev()[1]->get_data()->at(0) = {
+    utils::initializer_list_init_fp32(c.prev()[1]->get_data()->at(0), {
             -0.4036754369735718,
             0.12995994091033936,
             0.0194014310836792,
@@ -144,10 +150,11 @@ TEST(conv, simple_forward) {
             -0.3790665864944458,
             0.2879072427749634,
             -0.14387822151184082
-    };
-    c.prev()[2]->get_data()->at(0) = {
+    });
+
+    utils::initializer_list_init_fp32(c.prev()[2]->get_data()->at(0), {
             0.1293, -0.0422, -0.2675
-    };
+    });
 
     c.set_in_data({{ Input }});
     c.forward();
@@ -155,13 +162,22 @@ TEST(conv, simple_forward) {
     mat_t out = c.output()[0][0];
 
     ASSERT_EQ(out.size(), Output.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-        EXPECT_NEAR(out[i], Output[i], 1e-3);
+    gsl::span<const float> OutSpan = GetDataAsSpan<const float>(&out);
+    gsl::span<const float> OutputSpan = GetDataAsSpan<const float>(&Output);
+
+    for (size_t i = 0; i < out.size() / sizeof(float); ++i) {
+        EXPECT_NEAR(OutSpan[i], OutputSpan[i], 1e-3);
     }
 }
 
-TEST(conv, simple_forward_without_bias) {
-    const mat_t Input = {
+TEST(conv, simple_forward_without_bias_fp32) {
+    shape3d in_shape(3, 4, 4);
+    shape3d out_shape(3, 3, 3);
+
+    mat_t Input(in_shape.size() * dtype2sizeof(kXsFloat32));
+    mat_t Output(out_shape.size() * dtype2sizeof(kXsFloat32));
+
+    utils::initializer_list_init_fp32(Input, {
             -0.8597232699394226,
             -0.016536127775907516,
             -1.067084789276123,
@@ -210,9 +226,9 @@ TEST(conv, simple_forward_without_bias) {
             -1.0781022310256958,
             0.36826708912849426,
             -0.6138019561767578,
-    };
+    });
 
-    std::vector<float> Output = {
+    utils::initializer_list_init_fp32(Output, {
             -0.4404990077018738,
             0.12277835607528687,
             -0.21373416483402252,
@@ -240,16 +256,15 @@ TEST(conv, simple_forward_without_bias) {
             1.07393217086792,
             0.6412769556045532,
             -0.2617749273777008,
-    };
+    });
 
-    shape3d in(3, 4, 4);
 
-    conv c(in, 3, {2, 2}, 3, false);
+    conv c(in_shape, 3, {2, 2}, 3, false);
 
     c.set_parallelize(false);
     c.setup(false);
 
-    c.prev()[1]->get_data()->at(0) = {
+    utils::initializer_list_init_fp32(c.prev()[1]->get_data()->at(0), {
             0.2444877028465271,
             0.09724676609039307,
             -0.0643761157989502,
@@ -262,7 +277,7 @@ TEST(conv, simple_forward_without_bias) {
             -0.4501446485519409,
             -0.4511941075325012,
             -0.44954395294189453
-    };
+    });
 
     c.set_in_data({{ Input }});
     c.forward();
@@ -270,8 +285,10 @@ TEST(conv, simple_forward_without_bias) {
     mat_t out = c.output()[0][0];
 
     ASSERT_EQ(out.size(), Output.size());
-    for (size_t i = 0; i < out.size(); ++i) {
-        EXPECT_NEAR(out[i], Output[i], 1e-5);
+    gsl::span<const float> OutSpan = GetDataAsSpan<const float>(&out);
+    gsl::span<const float> OutputSpan = GetDataAsSpan<const float>(&Output);
+    for (size_t i = 0; i < out.size() / sizeof(float); ++i) {
+        EXPECT_NEAR(OutSpan[i], OutputSpan[i], 1e-5);
     }
 }
 

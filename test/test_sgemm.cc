@@ -5,7 +5,6 @@
 
 #include "xsdnn.h"
 #include "test_utils.h"
-#include <gtest/gtest.h>
 #include <iostream>
 using namespace mmpack;
 
@@ -14,24 +13,27 @@ using namespace mmpack;
 #define K 4
 
 TEST(sgemm, NoTrans_NoTrans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    xsdnn::mat_t A(M * K * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t B(K * N * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t C(M * N * dtype2sizeof(xsdnn::kXsFloat32));
 
-    utils::init(A.data(), M, K);
-    utils::init(B.data(), K, N);
+    utils::sequantial_init_fp32(A, M, K);
+    utils::sequantial_init_fp32(B, K, N);
 
+    gsl::span<const float> ASpan = GetDataAsSpan<const float>(&A);
+    gsl::span<const float> BSpan = GetDataAsSpan<const float>(&B);
+    gsl::span<float> CSpan = GetMutableDataAsSpan<float>(&C);
 
     MmGemm(
             CBLAS_TRANSPOSE::CblasNoTrans,
             CBLAS_TRANSPOSE::CblasNoTrans,
             M, N, K, 1.0,
-            A.data(), K,
-            B.data(), N,
+            ASpan.data(), K,
+            BSpan.data(), N,
             0.0,
-            C.data(), N);
+            CSpan.data(), N);
 
-    mm_scalar ExpectedArr[] {84, 90, 96, 102, 108, 114,
+    float ExpectedArr[] {84, 90, 96, 102, 108, 114,
                              228, 250, 272, 294, 316, 338,
                              372,  410,  448,  486,  524,  562,
                              516,  570,  624,  678,  732,  786,
@@ -39,27 +41,31 @@ TEST(sgemm, NoTrans_NoTrans) {
 
     for (size_t i = 0; i < M; ++i) {
         for (size_t j = 0; j < N; ++j) {
-            ASSERT_EQ(C[i * N + j], ExpectedArr[i * N + j]);
+            utils::xsAssert_eq(CSpan[i * N + j], ExpectedArr[i * N + j], kXsFloat32);
         }
     }
 }
 
 TEST(sgemm, NoTrans_Trans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    xsdnn::mat_t A(M * K * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t B(K * N * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t C(M * N * dtype2sizeof(xsdnn::kXsFloat32));
 
-    utils::init(A.data(), M, K);
-    utils::init(B.data(), N, K);
+    utils::sequantial_init_fp32(A, M, K);
+    utils::sequantial_init_fp32(B, N, K);
+
+    gsl::span<const float> ASpan = GetDataAsSpan<const float>(&A);
+    gsl::span<const float> BSpan = GetDataAsSpan<const float>(&B);
+    gsl::span<float> CSpan = GetMutableDataAsSpan<float>(&C);
 
     MmGemm(
             CBLAS_TRANSPOSE::CblasNoTrans,
             CBLAS_TRANSPOSE::CblasTrans,
             M, N, K, 1.0,
-            A.data(), K,
-            B.data(), K,
+            ASpan.data(), K,
+            BSpan.data(), K,
             0.0,
-            C.data(), N);
+            CSpan.data(), N);
 
     mm_scalar ExpectedArr[] {14, 38, 62, 86, 110, 134,
                              38, 126,  214,  302,  390,  478,
@@ -69,28 +75,31 @@ TEST(sgemm, NoTrans_Trans) {
 
     for (size_t i = 0; i < M; ++i) {
         for (size_t j = 0; j < N; ++j) {
-            ASSERT_EQ(C[i * N + j], ExpectedArr[i * N + j]);
+            utils::xsAssert_eq(CSpan[i * N + j], ExpectedArr[i * N + j], kXsFloat32);
         }
     }
 }
 
 TEST(sgemm, Trans_NoTrans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    xsdnn::mat_t A(M * K * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t B(K * N * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t C(M * N * dtype2sizeof(xsdnn::kXsFloat32));
 
-    utils::init(A.data(), K, M);
-    utils::init(B.data(), K, N);
+    utils::sequantial_init_fp32(A, K, M);
+    utils::sequantial_init_fp32(B, K, N);
 
+    gsl::span<const float> ASpan = GetDataAsSpan<const float>(&A);
+    gsl::span<const float> BSpan = GetDataAsSpan<const float>(&B);
+    gsl::span<float> CSpan = GetMutableDataAsSpan<float>(&C);
 
     MmGemm(
             CBLAS_TRANSPOSE::CblasTrans,
             CBLAS_TRANSPOSE::CblasNoTrans,
             M, N, K, 1.0,
-            A.data(), M,
-            B.data(), N,
+            ASpan.data(), M,
+            BSpan.data(), N,
             0.0,
-            C.data(), N);
+            CSpan.data(), N);
 
     mm_scalar ExpectedArr[] {420, 450, 480, 510, 540, 570,
                              456, 490, 524, 558, 592, 626,
@@ -100,27 +109,31 @@ TEST(sgemm, Trans_NoTrans) {
 
     for (size_t i = 0; i < M; ++i) {
         for (size_t j = 0; j < N; ++j) {
-            ASSERT_EQ(C[i * N + j], ExpectedArr[i * N + j]);
+            utils::xsAssert_eq(CSpan[i * N + j], ExpectedArr[i * N + j], kXsFloat32);
         }
     }
 }
 
 TEST(sgemm, Trans_Trans) {
-    xsdnn::mat_t A; A.reserve(M * K);
-    xsdnn::mat_t B; B.reserve(K * N);
-    xsdnn::mat_t C; C.reserve(M * N);
+    xsdnn::mat_t A(M * K * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t B(K * N * dtype2sizeof(xsdnn::kXsFloat32));
+    xsdnn::mat_t C(M * N * dtype2sizeof(xsdnn::kXsFloat32));
 
-    utils::init(A.data(), K, M);
-    utils::init(B.data(), N, K);
+    utils::sequantial_init_fp32(A, K, M);
+    utils::sequantial_init_fp32(B, N, K);
+
+    gsl::span<const float> ASpan = GetDataAsSpan<const float>(&A);
+    gsl::span<const float> BSpan = GetDataAsSpan<const float>(&B);
+    gsl::span<float> CSpan = GetMutableDataAsSpan<float>(&C);
 
     MmGemm(
             CBLAS_TRANSPOSE::CblasTrans,
             CBLAS_TRANSPOSE::CblasTrans,
             M, N, K, 1.0,
-            A.data(), M,
-            B.data(), K,
+            ASpan.data(), M,
+            BSpan.data(), K,
             0.0,
-            C.data(), N);
+            CSpan.data(), N);
 
     mm_scalar ExpectedArr[] {70, 190, 310, 430, 550, 670,
                              76, 212, 348, 484, 620, 756,
@@ -130,7 +143,7 @@ TEST(sgemm, Trans_Trans) {
 
     for (size_t i = 0; i < M; ++i) {
         for (size_t j = 0; j < N; ++j) {
-            ASSERT_EQ(C[i * N + j], ExpectedArr[i * N + j]);
+            utils::xsAssert_eq(CSpan[i * N + j], ExpectedArr[i * N + j], kXsFloat32);
         }
     }
 }

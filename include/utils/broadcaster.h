@@ -56,7 +56,7 @@ public:
 
 class input_broadcaster {
 public:
-    explicit input_broadcaster(shape3d& s1, mat_t& tensor1,
+    explicit input_broadcaster(xsDtype dtype, shape3d& s1, mat_t& tensor1,
                                shape3d* s2 = nullptr, mat_t* tensor2 = nullptr);
 
 public:
@@ -94,11 +94,12 @@ public:
     }
 
 private:
+    xsDtype dtype_;
     const mat_t& input0_tensor_;
     const shape3d& input0_shape_;
     const mat_t* input1_tensor_;
     const shape3d& input1_shape_;
-    const size_t input_element_size_{sizeof(mm_scalar)};
+    const size_t input_element_size_{dtype2sizeof(dtype_)};
     const void* input0_bytes_{input0_tensor_.data()};
     const void* input1_bytes_{input1_tensor_ ? input1_tensor_->data(): nullptr};
 
@@ -108,26 +109,27 @@ private:
 
 class output_broadcaster {
 public:
-    explicit output_broadcaster(size_t span_size, mat_t& tensor, shape3d shape,
+    explicit output_broadcaster(xsDtype dtype, size_t span_size, mat_t& tensor, shape3d shape,
                                 ptrdiff_t start_offset = 0, ptrdiff_t end_offset = 0);
 
 public:
     size_t get_output_num_elements() const;
-    size_t get_output_elements_size() const;
+    size_t get_output_element_size() const;
     operator bool() const;
     void next();
 
     template<typename T>
     gsl::span<T> GetSpanOutput(size_t offset, size_t num_elements) {
-        assert(offset < span_size_ && (offset + num_elements) <= span_size_);
+        assert(offset < span_size_ * element_size_ && (offset + num_elements) <= span_size_ * element_size_);
         return gsl::span<T>(reinterpret_cast<T*>(output_bytes_) + offset, num_elements);
     }
 
 
 private:
+    xsDtype dtype_;
     const size_t span_size_;
     size_t output_elements_;
-    const size_t element_size_{sizeof(mm_scalar)};
+    const size_t element_size_{dtype2sizeof(dtype_)};
     uint8_t* output_bytes_;
     const void* output_end_;
 };
@@ -167,11 +169,11 @@ private:
     output_broadcaster outputBroadcaster;
 
     size_t input0_offset_{0};
-    size_t input0_num_elements_{inputBroadcaster.get_span_size()};
+    size_t input0_num_elements_{inputBroadcaster.get_span_size() * inputBroadcaster.get_input_element_size()};
     size_t input1_offset_{0};
-    size_t input1_num_elements_{inputBroadcaster.get_span_size()};
+    size_t input1_num_elements_{inputBroadcaster.get_span_size() * inputBroadcaster.get_input_element_size()};
     size_t output_offset_{0};
-    size_t output_num_elements_{inputBroadcaster.get_span_size()};
+    size_t output_num_elements_{inputBroadcaster.get_span_size() * outputBroadcaster.get_output_element_size()};
 };
 
 using broadcast_func = void (*)(broadcast&);

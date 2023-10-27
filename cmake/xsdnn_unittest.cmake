@@ -15,10 +15,10 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_sgemm.cc
 )
 
-AddTest(
-        mmpack_gemm_perfomance_test
-        ${XSDNN_TEST_ROOT}/test_sgemm_perfomance.cc
-)
+#AddTest(
+#        mmpack_gemm_perfomance_test
+#        ${XSDNN_TEST_ROOT}/test_sgemm_perfomance.cc
+#)
 
 AddTest(
         mmpack_dot_test
@@ -26,13 +26,13 @@ AddTest(
 )
 
 AddTest(
-        mmpack_add_test
-        ${XSDNN_TEST_ROOT}/test_madd.cc
+        mmpack_muladd_test
+        ${XSDNN_TEST_ROOT}/test_muladd.cc
 )
 
 AddTest(
-        mmpack_muladd_test
-        ${XSDNN_TEST_ROOT}/test_muladd.cc
+        mmpack_madd_test
+        ${XSDNN_TEST_ROOT}/test_madd.cc
 )
 
 AddTest(
@@ -50,34 +50,10 @@ AddTest(
         ${XSDNN_TEST_ROOT}/test_network_serialization.cc
 )
 
-AddTest(
-        xsdnn_batch_norm_test
-        ${XSDNN_TEST_ROOT}/test_batch_norm.cc
-)
 
 AddTest(
         xsdnn_input_test
         ${XSDNN_TEST_ROOT}/test_input.cc
-)
-
-AddTest(
-        xsdnn_abs_test
-        ${XSDNN_TEST_ROOT}/test_abs.cc
-)
-
-AddTest(
-        xsdnn_acos_test
-        ${XSDNN_TEST_ROOT}/test_acos.cc
-)
-
-AddTest(
-        xsdnn_add_test
-        ${XSDNN_TEST_ROOT}/test_add.cc
-)
-
-AddTest(
-        xsdnn_and_test
-        ${XSDNN_TEST_ROOT}/test_and.cc
 )
 
 AddTest(

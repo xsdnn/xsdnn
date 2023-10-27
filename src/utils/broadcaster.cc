@@ -189,14 +189,15 @@ broadcaster::broadcaster(xsdnn::shape3d s1, xsdnn::shape3d s2) {
 }
 
 size_t broadcaster::get_span_size() const {
-    return std::min(it1_.get_counts_front(), it2_.get_counts_front());
+    return std::min(it1_.get_counts_front(), it2_.get_counts_front()); // FIXME: прокинуть dtype
 }
 
-input_broadcaster::input_broadcaster(xsdnn::shape3d &s1,
+input_broadcaster::input_broadcaster(xsDtype dtype,
+                                     xsdnn::shape3d &s1,
                                      xsdnn::mat_t &tensor1,
                                      xsdnn::shape3d *s2,
                                      xsdnn::mat_t *tensor2)
-    : input0_tensor_(tensor1), input0_shape_(s1), input1_tensor_(tensor2), input1_shape_(*s2) {}
+    : dtype_(dtype), input0_tensor_(tensor1), input0_shape_(s1), input1_tensor_(tensor2), input1_shape_(*s2) {}
 
 void input_broadcaster::advance_by(size_t offset) {
     if (offset % span_size_) {
@@ -234,9 +235,9 @@ void input_broadcaster::next() {
     advance_by(span_size_);
 }
 
-output_broadcaster::output_broadcaster(size_t span_size, xsdnn::mat_t &tensor, xsdnn::shape3d shape,
+output_broadcaster::output_broadcaster(xsDtype dtype, size_t span_size, xsdnn::mat_t &tensor, xsdnn::shape3d shape,
                                        ptrdiff_t start_offset, ptrdiff_t end_offset)
-    : span_size_(span_size) {
+    : dtype_(dtype), span_size_(span_size) {
     ptrdiff_t len = shape.size();
     ptrdiff_t real_end = (end_offset <= 0) ? len : end_offset;
     if (start_offset != 0 || end_offset != 0) {  // Keep original semantic
@@ -247,7 +248,7 @@ output_broadcaster::output_broadcaster(size_t span_size, xsdnn::mat_t &tensor, x
     output_end_ = output_bytes_ + ((real_end - start_offset) * element_size_);
 }
 
-size_t output_broadcaster::get_output_elements_size() const {
+size_t output_broadcaster::get_output_element_size() const {
     return element_size_;
 }
 

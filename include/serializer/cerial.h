@@ -108,34 +108,6 @@ struct cerial {
         W->set_i(layer->shape_.W);
     }
 
-    /*
-     * Add
-     */
-    inline
-    static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const add* layer) {
-        node->set_name("add");
-        xs::AttributeInfo* n_input = node->add_attribute();
-        xs::AttributeInfo* C = node->add_attribute();
-        xs::AttributeInfo* H = node->add_attribute();
-        xs::AttributeInfo* W = node->add_attribute();
-
-        n_input->set_name("n_input");
-        n_input->set_type(xs::AttributeInfo_AttributeType_INT);
-        n_input->set_i(layer->n_input_);
-
-        C->set_name("channel");
-        C->set_type(xs::AttributeInfo_AttributeType_INT);
-        C->set_i(layer->shape_.C);
-
-        H->set_name("height");
-        H->set_type(xs::AttributeInfo_AttributeType_INT);
-        H->set_i(layer->shape_.H);
-
-        W->set_name("width");
-        W->set_type(xs::AttributeInfo_AttributeType_INT);
-        W->set_i(layer->shape_.W);
-    }
 
     /*
      * Relu
@@ -165,23 +137,6 @@ struct cerial {
         beta->set_f(layer->beta_);
     }
 
-    /*
-    * Abs
-    */
-    inline
-    static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::abs* layer) {
-        node->set_name("abs");
-    }
-
-    /*
-    * Acos
-    */
-    inline
-    static
-    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::acos* layer) {
-        node->set_name("acos");
-    }
 
     /*
     * Flatten
@@ -434,17 +389,6 @@ struct cerial {
         return l;
     }
 
-    template<>
-    inline
-    std::shared_ptr<add> cerial::deserialize(const xs::NodeInfo* node,
-                                               const xs::TensorInfo* tensor) {
-        size_t n_input = node->attribute(0).i();
-        size_t C = node->attribute(1).i();
-        size_t H = node->attribute(2).i();
-        size_t W = node->attribute(3).i();
-        std::shared_ptr<add> l = std::make_shared<add>(n_input, shape3d(C, H, W));
-        return l;
-    }
 
     template<>
     inline
@@ -462,22 +406,6 @@ struct cerial {
         float beta = node->attribute(1).f();
 
         std::shared_ptr<hard_sigmoid> l = std::make_shared<hard_sigmoid>(alpha, beta);
-        return l;
-    }
-
-    template<>
-    inline
-    std::shared_ptr<xsdnn::abs> cerial::deserialize(const xs::NodeInfo* node,
-                                              const xs::TensorInfo* tensor) {
-        std::shared_ptr<xsdnn::abs> l = std::make_shared<xsdnn::abs>();
-        return l;
-    }
-
-    template<>
-    inline
-    std::shared_ptr<xsdnn::acos> cerial::deserialize(const xs::NodeInfo* node,
-                                                    const xs::TensorInfo* tensor) {
-        std::shared_ptr<xsdnn::acos> l = std::make_shared<xsdnn::acos>();
         return l;
     }
 

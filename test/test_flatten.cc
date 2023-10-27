@@ -8,12 +8,12 @@
 #include "test_utils.h"
 using namespace xsdnn;
 
-TEST(flatten, forward) {
+TEST(flatten, forward_fp32) {
     shape3d in_shape(3, 128, 224);
     flatten fl(in_shape);
 
-    mat_t in_data(in_shape.size());
-    utils::random_init(in_data.data(), in_data.size());
+    mat_t in_data(in_shape.size() * dtype2sizeof(kXsFloat32));
+    utils::random_init_fp32(in_data);
 
     fl.set_in_data({{ in_data }});
     fl.set_parallelize(false);

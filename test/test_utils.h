@@ -10,9 +10,18 @@
 #include <fstream>
 #include <filesystem>
 #include <sys/mman.h>
+#include <gtest/gtest.h>
 namespace fs = std::filesystem;
 using namespace mmpack;
 using namespace xsdnn;
+
+#define MAKE_MUTABLE_CONTAINER_SPAN_FP32(CONTAINER_NAME, CONTAINER_SPAN_NAME, SIZE) \
+mat_t CONTAINER_NAME(SIZE * dtype2sizeof(xsdnn::kXsFloat32)); \
+gsl::span<float> CONTAINER_SPAN_NAME = GetMutableDataAsSpan<float>(&CONTAINER_NAME);
+
+#define MAKE_CONTAINER_SPAN_FP32(CONTAINER_NAME, CONTAINER_SPAN_NAME, SIZE) \
+mat_t CONTAINER_NAME(SIZE * dtype2sizeof(xsdnn::kXsFloat32)); \
+gsl::span<const float> CONTAINER_SPAN_NAME = GetDataAsSpan<const float>(&CONTAINER_NAME);
 
 #if !defined(_countof)
 #define _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
@@ -25,7 +34,7 @@ void create_directory(const std::string &directory_name) {
     fs::create_directory(directory_name);
 }
 
-void init(mm_scalar* ptr, size_t rows, size_t cols) {
+void sequantial_init_fp32(float* ptr, size_t rows, size_t cols) {
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
             *ptr = i * cols + j;
@@ -34,31 +43,57 @@ void init(mm_scalar* ptr, size_t rows, size_t cols) {
     }
 }
 
-void value_init(mm_scalar* ptr, mm_scalar value, size_t size) {
+void sequantial_init_fp32(mat_t& X, size_t rows, size_t cols)  {
+    gsl::span<float> XSpan = GetMutableDataAsSpan<float>(&X);
+    float* XSpanPtr = XSpan.data();
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            *XSpanPtr = i * cols + j;
+            XSpanPtr += 1;
+        }
+    }
+}
+
+void value_init_fp32(float* ptr, mm_scalar value, size_t size) {
     for (size_t i = 0; i < size; ++i) {
         *ptr = value;
         ptr += 1;
     }
 }
 
-void random_init(mm_scalar* ptr, size_t size) {
+void value_init_fp32(mat_t&X, float Value) {
+    gsl::span<float> XSpan = GetMutableDataAsSpan<float>(&X);
+    for (size_t i = 0; i < XSpan.size() / sizeof(float); ++i) {
+        XSpan[i] = Value;
+    }
+}
+
+void random_init_fp32(float* ptr, size_t size) {
     for (size_t i = 0; i < size; ++i) {
-        mm_scalar value = static_cast <mm_scalar> (rand()) / static_cast <mm_scalar> (RAND_MAX);
+        float value = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         *ptr = value;
         ptr += 1;
     }
 }
 
-std::vector<tensor_t> generate_fwd_data(const size_t num_concept,
-                                               const std::vector<size_t> sizes) {
-    std::vector<tensor_t> data;
-    data.resize(num_concept);
-    for (size_t i = 0; i < num_concept; ++i) {
-        data[i].resize(1);
-        data[i][0].resize(sizes[i]);
-        uniform_rand(&data[i][0][0], sizes[i], -10.0f, 10.0f);
+void random_init_fp32(mat_t& X) {
+    gsl::span<float> XSpan = GetMutableDataAsSpan<float>(&X);
+    for (size_t i = 0; i < XSpan.size() / sizeof(float); ++i) {
+        XSpan[i] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     }
-    return data;
+}
+
+void initializer_list_init_fp32(mat_t& X, std::initializer_list<float> Value) {
+    gsl::span<float> XSpan = GetMutableDataAsSpan<float>(&X);
+    assert(XSpan.size() / sizeof(float) == Value.size());
+    std::copy(Value.begin(), Value.end(), XSpan.begin());
+}
+
+template<typename T>
+void xsAssert_eq(T lhs, T rhs, xsDtype type) {
+    if (type == kXsFloat32) {
+        ASSERT_FLOAT_EQ(lhs, rhs);
+    } else throw xs_error("[xsAssert_eq] Unsupported dtype");
 }
 
 template<typename T>

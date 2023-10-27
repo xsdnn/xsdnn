@@ -17,10 +17,4 @@
 #include "layers/activations/activation_layer.h"
 #include "layers/layers.h"
 
-#include "loss/loss_base.h"
-#include "loss/mse_loss.h"
-
-#include "optimizers/optimizer_base.h"
-#include "optimizers/sgd.h"
-
 #endif //XSDNN_XSDNN_H

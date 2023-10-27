@@ -84,4 +84,4 @@ namespace mmpack {
 
 } // mmpack
 
-template class mmpack::aligned_allocator<mmpack::mm_scalar, 64>;
+template class mmpack::aligned_allocator<char, 64>;

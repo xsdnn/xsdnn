@@ -9,7 +9,7 @@ using namespace mmpack;
 #define TEMPLATE_ACTIVATION_PREPARATION                                     \
 gsl::span<const float> XSpan = GetDataAsSpan<const float>(&X[sample]);      \
 gsl::span<float> YSpan = GetMutableDataAsSpan<float>(&Y[sample]);           \
-std::copy(XSpan.begin(), XSpan.end(), YSpan.begin());
+std::copy(X[sample].begin(), X[sample].end(), Y[sample].begin());
 
 namespace xsdnn {
     namespace core {
@@ -25,7 +25,7 @@ void ComputeReluKernelFP32(const tensor_t& X,
                                 [&](size_t sample) {
         TEMPLATE_ACTIVATION_PREPARATION
         size_t spatial_size = params.shape.size();
-        MmActivationKernel<Relu>(&params.params, YSpan.data(), 1, spatial_size, spatial_size);
+        MmActivation(&params.params, YSpan.data(), 1, spatial_size, spatial_size);
     });
 }
 
@@ -40,7 +40,7 @@ void ComputeHardSigmoidKernelFP32(const tensor_t& X,
                                 [&](size_t sample) {
         TEMPLATE_ACTIVATION_PREPARATION
         size_t spatial_size = params.shape.size();
-        MmActivationKernel<HardSigmoid>(&params.params, YSpan.data(), 1, spatial_size, spatial_size);
+        MmActivation(&params.params, YSpan.data(), 1, spatial_size, spatial_size);
     });
 }
 

@@ -41,10 +41,10 @@ void activation_layer::set_in_shape(const xsdnn::shape3d in_shape) {
 }
 
 void activation_layer::init_backend() {
+    this->set_backend(core::backend_t::xs);
     fwd_kernel_.reset(new core::ActivationFwdKernel);
 }
 
-// TODO: сделать проход вперед через ctx, для передачи типа данных
 void
 activation_layer::forward_propagation(const std::vector<tensor_t *> &in_data,
                                       std::vector<tensor_t *> &out_data) {
