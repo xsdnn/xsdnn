@@ -7,13 +7,12 @@ option(xsdnn_USE_DOUBLE OFF)
 option(xsdnn_USE_DETERMENISTIC_GEN OFF)
 option(xsdnn_USE_SSE OFF)
 option(xsdnn_USE_OPENMP OFF)
+option(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 
-set(XSROOT ${PROJECT_SOURCE_DIR}/..)
+set(XSROOT .)
 set(XSROOT_SRC ${XSROOT}/src)
 set(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
 set(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
-
-# TODO: добавить submodule proto + собирать его с -fPIC
 
 include_directories(
         ${XSROOT}/include/
@@ -57,6 +56,21 @@ if (xsdnn_USE_SSE)
 
 endif()
 
+#   ---[Download Deps]
+if (xsdnn_BUILD_XNNPACK_ENGINE)
+
+    if(NOT DEFINED XNNPACK_SOURCE_DIR)
+        message(STATUS "Downloading XNNPACK to ${CMAKE_BINARY_DIR}/xnnpack-source (define XNNPACK_SOURCE_DIR to avoid it)")
+        configure_file(cmake/DownloadXNNPACK.cmake "${CMAKE_BINARY_DIR}/xnnpack-download/CMakeLists.txt")
+        execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" cmake
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/xnnpack-download")
+        execute_process(COMMAND "${CMAKE_COMMAND}" --build cmake
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/xnnpack-download")
+        set(XNNPACK_SOURCE_DIR "${CMAKE_BINARY_DIR}/xnnpack-source" CACHE STRING "xnnpack source directory")
+    endif()
+
+endif()
+
 # Set flags to build type
 set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 set(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
@@ -69,14 +83,14 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${EXTRA_C_
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${EXTRA_C_FLAGS_DEBUG} -O0")
 
 
-include(xsdnn_mmpack.cmake)
-include(xsdnn_common.cmake)
-include(xsdnn_core.cmake)
-include(xsdnn_layers.cmake)
-include(xsdnn_activations.cmake)
-include(xsdnn_utils.cmake)
-include(xsdnn_serializer.cmake)
-include(xsdnn_session.cmake)
+include(cmake/xsdnn_mmpack.cmake)
+include(cmake/xsdnn_common.cmake)
+include(cmake/xsdnn_core.cmake)
+include(cmake/xsdnn_layers.cmake)
+include(cmake/xsdnn_activations.cmake)
+include(cmake/xsdnn_utils.cmake)
+include(cmake/xsdnn_serializer.cmake)
+include(cmake/xsdnn_session.cmake)
 
 add_library(xsdnn
         ${mmpack_common_src}
@@ -100,8 +114,8 @@ install(DIRECTORY ${XSROOT}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xsdnn)
 
 if (xsdnn_BUILD_TEST)
-    include(xsdnn_unittest.cmake)
+    include(cmake/xsdnn_unittest.cmake)
 endif (xsdnn_BUILD_TEST)
 
-include(summary.cmake)
+include(cmake/summary.cmake)
 xsdnn_print_configuration_summary()
