@@ -120,6 +120,12 @@ namespace xsdnn {
         }
     }
 
+    bool nodes::have_engine_xnnpack() {
+        for (const auto* l : nodes_) {
+            if (l->engine() == core::backend_t::xnnpack) return true;
+        } return false;
+    }
+
     void nodes::reorder_input(const std::vector<tensor_t> &input,
                               std::vector<tensor_t> &output) {
         size_t sample_count  = input.size();
@@ -203,6 +209,13 @@ namespace xsdnn {
     graph::~graph() {}
 
     std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
+        if (have_engine_xnnpack()) {
+#ifdef XS_USE_XNNPACK
+            core::XNNCompiler::getInstance().initialize();
+#else
+      throw xs_error("This xsdnn build doesn't support XNNPACK backend engine. Recompile with xsdnn_BUILD_XNNPACK_ENGINE=ON");
+#endif
+        }
         size_t input_data_concept_count = start[0].size();
 
         if (input_data_concept_count != input_layers_.size()) {

@@ -14,8 +14,8 @@ SET(XSROOT_SRC ${XSROOT}/src)
 SET(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
 SET(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
 
-INCLUDE_directories(
-        ${XSROOT}/INCLUDE/
+INCLUDE_DIRECTORIES(
+        ${XSROOT}/include/
 )
 
 IF (xsdnn_USE_DOUBLE)
@@ -68,9 +68,37 @@ IF (xsdnn_BUILD_XNNPACK_ENGINE)
                 WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/xnnpack-download")
         SET(XNNPACK_SOURCE_DIR "${CMAKE_BINARY_DIR}/xnnpack-source" CACHE STRING "xnnpack source directory")
     ENDIF()
-    
-    INCLUDE_DIRECTORIES("${XNNPACK_SOURCE_DIR}/INCLUDE")
+    INCLUDE_DIRECTORIES("${XNNPACK_SOURCE_DIR}/include")
+    INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/pthreadpool-source/include")
     ADD_COMPILE_DEFINITIONS(XS_USE_XNNPACK)
+
+    IF(NOT TARGET xnnpack)
+        ADD_SUBDIRECTORY(
+                "${XNNPACK_SOURCE_DIR}"
+                "${CMAKE_BINARY_DIR}/deps/xnnpack" EXCLUDE_FROM_ALL)
+    ENDIF()
+
+ENDIF()
+
+IF (xsdnn_BUILD_TEST)
+
+    IF(NOT DEFINED GOOGLETEST_SOURCE_DIR)
+        MESSAGE(STATUS "Downloading GTest to ${CMAKE_BINARY_DIR}/googletest-source (define GOOGLETEST_SOURCE_DIR to avoid it)")
+        CONFIGURE_FILE(./cmake/DownloadGoogleTest.cmake "${CMAKE_BINARY_DIR}/googletest-download/CMakeLists.txt")
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download")
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download")
+        SET(GOOGLETEST_SOURCE_DIR "${CMAKE_BINARY_DIR}/googletest-source" CACHE STRING "googletest source directory")
+    ENDIF()
+    INCLUDE_DIRECTORIES("${GOOGLETEST_SOURCE_DIR}/googletest/include")
+
+    IF(NOT TARGET gtest)
+        ADD_SUBDIRECTORY(
+                "${GOOGLETEST_SOURCE_DIR}"
+                "${CMAKE_BINARY_DIR}/deps/googletest" EXCLUDE_FROM_ALL)
+    ENDIF()
+
 ENDIF()
 
 # SET flags to build type
@@ -94,6 +122,7 @@ INCLUDE(cmake/xsdnn_utils.cmake)
 INCLUDE(cmake/xsdnn_serializer.cmake)
 INCLUDE(cmake/xsdnn_session.cmake)
 
+
 ADD_LIBRARY(xsdnn
         ${mmpack_common_src}
         ${xsdnn_common_src}
@@ -106,14 +135,8 @@ ADD_LIBRARY(xsdnn
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})
 
-SET_TARGET_PROPERTIES(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
 
-IF(NOT TARGET XNNPACK)
-    SET(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
-    ADD_SUBDIRECTORY(
-            "${XNNPACK_SOURCE_DIR}"
-            "${CMAKE_BINARY_DIR}/deps/xnnpack")
-ENDIF()
+SET_TARGET_PROPERTIES(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
 
 IF (xsdnn_BUILD_TEST)
     INCLUDE(cmake/xsdnn_unittest.cmake)

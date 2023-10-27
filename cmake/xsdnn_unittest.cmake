@@ -4,7 +4,11 @@ set(XSDNN_TEST_ROOT ${XSROOT}/test)
 
 macro(AddTest TARGET SOURCES)
     add_executable(${TARGET} ${SOURCES} )
-    target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op)
+    IF(xsdnn_BUILD_XNNPACK_ENGINE)
+        target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op XNNPACK)
+    ELSE()
+        target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op)
+    ENDIF()
     add_test(${TARGET} ${TARGET})
 endmacro()
 

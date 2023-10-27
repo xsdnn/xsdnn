@@ -35,6 +35,8 @@ public:
     void save_model(const std::string& filename, const std::string& network_name_);
     void load_model(const std::string& filename);
 
+    bool have_engine_xnnpack();
+
     size_t size() const;
     iterator begin();
     iterator end();
