@@ -11,7 +11,7 @@ macro(AddTest TARGET SOURCES)
     ENDIF()
 
     IF(xsdnn_BUILD_XNNPACK_ENGINE)
-        target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op XNNPACK)
+        target_link_libraries(${TARGET} XNNPACK)
     ENDIF()
 
     add_test(${TARGET} ${TARGET})
