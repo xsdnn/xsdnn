@@ -9,6 +9,8 @@ OPTION(xsdnn_USE_SSE OFF)
 OPTION(xsdnn_USE_OPENMP OFF)
 OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 
+# TODO: добавить возможность билдить без protobuf
+
 SET(XSROOT .)
 SET(XSROOT_SRC ${XSROOT}/src)
 SET(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
@@ -100,6 +102,10 @@ IF (xsdnn_BUILD_TEST)
     ENDIF()
 
 ENDIF()
+
+# ---[Protobuf Build]
+EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
+
 
 # SET flags to build type
 SET(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
