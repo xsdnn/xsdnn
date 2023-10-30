@@ -32,6 +32,9 @@ public:
     void
     setup(bool reset_weight);
 
+    void
+    set_num_threads();
+
     void save_model(const std::string& filename, const std::string& network_name_);
     void load_model(const std::string& filename);
 
@@ -48,7 +51,7 @@ public:
     size_t out_data_size() const;
 
 public:
-    size_t user_num_threads_ = 0;
+    size_t user_num_threads_ = 1;
 
 protected:
     void reorder_input(const std::vector<tensor_t> &input,

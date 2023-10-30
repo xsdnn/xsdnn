@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <serializer/cerial.h>
 #include <fstream>
+#include <thread>
 
 namespace xsdnn {
 
@@ -19,6 +20,12 @@ namespace xsdnn {
     void nodes::setup(bool reset_weight) {
         for (auto l : nodes_) {
             l->setup(reset_weight);
+        }
+    }
+
+    void nodes::set_num_threads() {
+        for (auto* l : nodes_) {
+            l->set_num_threads(user_num_threads_ != 0 ? user_num_threads_ : std::thread::hardware_concurrency() / 2);
         }
     }
 
@@ -216,6 +223,8 @@ namespace xsdnn {
       throw xs_error("This xsdnn build doesn't support XNNPACK backend engine. Recompile with xsdnn_BUILD_XNNPACK_ENGINE=ON");
 #endif
         }
+        this->set_num_threads();
+
         size_t input_data_concept_count = start[0].size();
 
         if (input_data_concept_count != input_layers_.size()) {

@@ -292,6 +292,28 @@ TEST(conv, simple_forward_without_bias_fp32) {
     }
 }
 
+TEST(conv, xnnpack_backend_engine_fp32) {
+    conv Conv2d_0(/*in_shape=*/shape3d(3, 300, 300), /*out_channel=*/24, /*kernel_shape=*/{3, 3},
+            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{2, 2}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 1, 1}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    conv Conv2d_1_Depthwise(/*in_shape=*/Conv2d_0.out_shape()[0], /*out_channel=*/24, /*kernel_shape=*/{3, 3},
+            /*group_count=*/24, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{1, 1, 1, 1}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    network<graph> NN;
+    connect_subgraph(Conv2d_1_Depthwise, Conv2d_0);
+    construct_graph(NN, {&Conv2d_0}, {&Conv2d_1_Depthwise});
+    NN.set_num_threads(1);
+
+    mat_t X(shape3d(3, 300, 300).size() * dtype2sizeof(kXsFloat32));
+    utils::random_init_fp32(X);
+
+    NN.predict(X);
+}
+
 TEST(conv, cerial) {
     shape3d in(12, 255, 255);
     conv c(in, /*out_channel=*/ 6, /*kernel_shape=*/ {3, 3},

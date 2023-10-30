@@ -11,6 +11,11 @@
 
 namespace xsdnn {
 
+#define START_MSG                                       \
+"\nFrom: " + std::string(__FILE__) + ";\n" +            \
+"Function: " + std::string(__FUNCTION__) + ";\n" +      \
+"Message: "
+
 class xs_error : public std::exception {
 public:
     xs_error(const std::string& msg) : msg_(msg) {}
