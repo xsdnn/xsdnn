@@ -52,6 +52,7 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
                                   params::conv& p,
                                   bool parallelize,
                                   size_t nthreads) {
+#ifdef XS_USE_XNNPACK
     if (X.size() != 1) throw xs_error(START_MSG + "Support only batch == 1 at XNNPACK backend engine");
     if (nthreads != 1) throw xs_error(START_MSG + "Support only nthreads == 1 at XNNPACK backend engine");
     const size_t padding_top = p._.Padding[0];
@@ -89,8 +90,10 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
                                                kernel.data(), bias.data(),
                                                -std::numeric_limits<float>::infinity(), +std::numeric_limits<float>::infinity(),
                                                0 /* flags */, nullptr, nullptr, &ConvolutionOp);
-
-    // TODO: Try make it for ARM?
+#else
+    throw xs_error(START_MSG + "This build doesn't support XNN Backend Engine. "
+                               "Rebuild with -Dxsdnn_BUILD_XNNPACK_ENGINE=ON");
+#endif
 }
 
 void ConvFwdKernel::Compute(core::OpContext &ctx, params::conv &p) {
