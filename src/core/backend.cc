@@ -13,6 +13,7 @@ backend_t default_backend_engine() {
     return backend_t::xs;
 }
 
+#ifdef XS_USE_XNNPACK
 XNNCompiler &XNNCompiler::getInstance() {
     static XNNCompiler instance;
     return instance;
@@ -29,6 +30,7 @@ void XNNCompiler::initialize() {
 
     initialized_ = true;
 }
+#endif // XS_USE_XNNPACK
 
     } // core
 } // xsdnn
