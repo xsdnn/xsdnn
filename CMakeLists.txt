@@ -8,6 +8,7 @@ OPTION(xsdnn_USE_DETERMENISTIC_GEN OFF)
 OPTION(xsdnn_USE_SSE OFF)
 OPTION(xsdnn_USE_OPENMP OFF)
 OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
+OPTION(xsdnn_WITH_SERIALIZATION OFF)
 
 # TODO: добавить возможность билдить без protobuf
 
@@ -103,9 +104,29 @@ IF (xsdnn_BUILD_TEST)
 
 ENDIF()
 
-# ---[Protobuf Build]
-EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
+IF(xsdnn_WITH_SERIALIZATION)
 
+    IF(NOT DEFINED PROTOBUF_SOURCE_DIR)
+        MESSAGE(STATUS "Downloading Protobuf to ${CMAKE_BINARY_DIR}/protobuf-source (define PROTOBUF_SOURCE_DIR to avoid it)")
+        CONFIGURE_FILE(./cmake/DownloadGoogleProtobuf.cmake "${CMAKE_BINARY_DIR}/protobuf-download/CMakeLists.txt")
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/protobuf-download")
+        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/protobuf-download")
+        SET(PROTOBUF_SOURCE_DIR "${CMAKE_BINARY_DIR}/protobuf-source" CACHE STRING "protobuf source directory")
+    ENDIF()
+
+    INCLUDE_DIRECTORIES("${PROTOBUF_SOURCE_DIR}/src")
+    IF(NOT TARGET protobuf)
+        ADD_SUBDIRECTORY(
+                "${PROTOBUF_SOURCE_DIR}"
+                "${CMAKE_BINARY_DIR}/deps/protobuf" EXCLUDE_FROM_ALL)
+    ENDIF()
+
+    # ---[Protobuf Build]
+    EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
+
+ENDIF()
 
 # SET flags to build type
 SET(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
