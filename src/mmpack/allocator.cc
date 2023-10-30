@@ -4,6 +4,7 @@
 //
 
 #include "mmpack_.h"
+#include <cstdlib>
 
 namespace mmpack {
 
