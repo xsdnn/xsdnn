@@ -18,12 +18,6 @@
 
 // defined SSE support
 
-#if defined (_M_AMD64) || defined (__x86_64)
-#define MM_TARGET_AMD64
-#else
-#error Unsupported system
-#endif
-
 #ifndef SSE_INSTR_SET
 #if defined ( __AVX2__ )
 #define SSE_INSTR_SET 8
