@@ -8,9 +8,10 @@
 #include "test_utils.h"
 using namespace xsdnn;
 
-
+#ifdef XS_USE_SERIALIZATION
 TEST(reshape, cerial) {
     shape3d shape_ = shape3d(3, 224, 224);
     reshape res(shape_);
     ASSERT_TRUE(utils::cerial_testing(res));
 }
+#endif

@@ -31,8 +31,9 @@ TEST(relu, forward_fp32) {
         utils::xsAssert_eq(OutSpan[i], ExpectedSpan[i], kXsFloat32);
     }
 }
-
+#ifdef XS_USE_SERIALIZATION
 TEST(relu, cerial) {
     relu rl(784);
     ASSERT_TRUE(utils::cerial_testing(rl));
 }
+#endif

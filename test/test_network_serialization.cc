@@ -6,7 +6,7 @@
 #include "xsdnn.h"
 #include <gtest/gtest.h>
 using namespace xsdnn;
-
+#ifdef XS_USE_SERIALIZATION
 TEST(network_cerial, seq) {
     network<sequential> net("seq_net_test");
 
@@ -26,3 +26,4 @@ TEST(network_cerial, seq) {
 TEST(network_cerial, graph) {
     //TODO: дописать, когда будут слои с параметрами
 }
+#endif

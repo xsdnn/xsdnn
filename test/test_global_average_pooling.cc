@@ -56,8 +56,10 @@ TEST(global_average_pooling, forward_two_channels_fp32) {
     utils::xsAssert_eq(OutSpan[1], 3.1875f, kXsFloat32);
 }
 
+#ifdef XS_USE_SERIALIZATION
 TEST(global_average_pooling, cerial) {
     shape3d in_shape(3, 224, 224);
     global_average_pooling pool(in_shape);
     ASSERT_TRUE(utils::cerial_testing(pool));
 }
+#endif

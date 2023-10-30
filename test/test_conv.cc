@@ -313,7 +313,7 @@ TEST(conv, xnnpack_backend_engine_fp32) {
 
     NN.predict(X);
 }
-
+#ifdef XS_USE_SERIALIZATION
 TEST(conv, cerial) {
     shape3d in(12, 255, 255);
     conv c(in, /*out_channel=*/ 6, /*kernel_shape=*/ {3, 3},
@@ -322,6 +322,7 @@ TEST(conv, cerial) {
             /*pad_type=*/padding_mode::notset, /*pads=*/ {1, 1, 1, 1});
     ASSERT_TRUE(utils::cerial_testing(c));
 }
+#endif
 
 class SConvTester {
 public:

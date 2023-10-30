@@ -22,9 +22,10 @@ TEST(flatten, forward_fp32) {
     fl.forward();
     ASSERT_TRUE(fl.out_shape()[0] == shape3d(1, 1, in_shape.size()));
 }
-
+#ifdef XS_USE_SERIALIZATION
 TEST(flatten, cerial) {
     shape3d in_shape(128, 224, 3);
     flatten fl(in_shape);
     ASSERT_TRUE(utils::cerial_testing(fl));
 }
+#endif

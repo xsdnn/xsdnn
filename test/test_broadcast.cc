@@ -7,6 +7,7 @@
 #include "../include/xsdnn.h"
 #include "../include/utils/broadcaster.h"
 #include "test_utils.h"
+#include <cstring>
 using namespace xsdnn;
 
 TEST(broadcast, simple_1D_input0scalar_fp32) {

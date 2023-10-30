@@ -57,7 +57,9 @@ TEST(fc, forward_nobias_fp32) {
     }
 }
 
+#ifdef XS_USE_SERIALIZATION
 TEST(fc, cerial) {
     fully_connected fc(50, 100);
     ASSERT_TRUE(utils::cerial_testing(fc));
 }
+#endif

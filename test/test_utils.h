@@ -96,6 +96,7 @@ void xsAssert_eq(T lhs, T rhs, xsDtype type) {
     } else throw xs_error("[xsAssert_eq] Unsupported dtype");
 }
 
+#ifdef XS_USE_SERIALIZATION
 template<typename T>
 bool cerial_testing(T& layer) {
     create_directory("layer_cerial_tmp_directory");
@@ -111,6 +112,7 @@ bool cerial_testing(T& layer) {
 
     return net_saver == net_loader;
 }
+#endif
 
 template <typename T>
 class MatrixGuardBuffer {

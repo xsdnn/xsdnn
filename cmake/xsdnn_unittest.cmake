@@ -4,11 +4,16 @@ set(XSDNN_TEST_ROOT ${XSROOT}/test)
 
 macro(AddTest TARGET SOURCES)
     add_executable(${TARGET} ${SOURCES} )
+    TARGET_LINK_LIBRARIES(${TARGET} GTest::gtest_main xsdnn)
+
+    IF(xsdnn_WITH_SERIALIZATION)
+        target_link_libraries(${TARGET} protobuf absl_log_internal_message absl_log_internal_check_op)
+    ENDIF()
+
     IF(xsdnn_BUILD_XNNPACK_ENGINE)
         target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op XNNPACK)
-    ELSE()
-        target_link_libraries(${TARGET} GTest::gtest_main xsdnn protobuf absl_log_internal_message absl_log_internal_check_op)
     ENDIF()
+
     add_test(${TARGET} ${TARGET})
 endmacro()
 
@@ -96,9 +101,4 @@ AddTest(
 AddTest(
         mmpack_hard_sigmoid_test
         ${XSDNN_TEST_ROOT}/test_hard_sigmoid.cc
-)
-
-AddTest(
-        simple_test
-        ${XSDNN_TEST_ROOT}/simple_test.cc
 )

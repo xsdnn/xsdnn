@@ -31,9 +31,10 @@ TEST(input, forward_fp32) {
         }
     }
 }
-
+#ifdef XS_USE_SERIALIZATION
 TEST(input, cerial) {
     shape3d shape_ = shape3d(3, 224, 224);
     Input in(shape_);
     ASSERT_TRUE(utils::cerial_testing(in));
 }
+#endif
