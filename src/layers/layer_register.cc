@@ -3,6 +3,7 @@
 // Copyright (c) 2021-2023 xsdnn. All rights reserved.
 //
 
+#ifdef XS_USE_SERIALIZATION
 #include <serializer/cerial.h>
 
 
@@ -54,3 +55,6 @@ void serializer::load(const xs::NodeInfo *node, const xs::TensorInfo *tensor,
 }
 
 }
+
+#endif
+

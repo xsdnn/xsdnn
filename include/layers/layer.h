@@ -10,8 +10,10 @@
 #include "../utils/weight_init.h"
 #include "../core/backend.h"
 #include "../utils/tensor_shape.h"
-#include "../serializer/xs.proto3.pb.h"
 #include <sstream>
+#ifdef XS_USE_SERIALIZATION
+#include "../serializer/xs.proto3.pb.h"
+#endif
 
 namespace xsdnn {
 
@@ -57,6 +59,7 @@ public:
     std::vector<edgeptr_t> outputs();
     std::vector<edgeptr_t> outputs() const;
 
+#ifdef XS_USE_SERIALIZATION
     virtual
     void save(xs::TensorInfo* dst) const {
         const auto all_w = weights();
@@ -92,6 +95,7 @@ public:
         }
         initialized_ = true;
     }
+#endif
 
     void set_in_data(const std::vector<tensor_t>& data);
     void set_trainable(bool trainable);

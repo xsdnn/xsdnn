@@ -72,8 +72,10 @@ public:
 
     void check_connectivity();
 
+#ifdef XS_USE_SERIALIZATION
     void save_connections(xs::GraphInfo* Graph);
     void load_connections(xs::GraphInfo* Graph);
+#endif
 
 protected:
     void reorder_output(const std::vector<tensor_t>& input,
@@ -99,8 +101,10 @@ public:
     void construct(const std::vector<layer*>& input,
                  const std::vector<layer*>& output);
 
+#ifdef XS_USE_SERIALIZATION
     void save_connections(xs::GraphInfo* Graph);
     void load_connections(xs::GraphInfo* Graph);
+#endif
 
 protected:
     void reorder_output(std::vector<tensor_t>& output);

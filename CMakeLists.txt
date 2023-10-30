@@ -10,8 +10,6 @@ OPTION(xsdnn_USE_OPENMP OFF)
 OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 OPTION(xsdnn_WITH_SERIALIZATION OFF)
 
-# TODO: добавить возможность билдить без protobuf
-
 SET(XSROOT .)
 SET(XSROOT_SRC ${XSROOT}/src)
 SET(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
@@ -61,7 +59,6 @@ ENDIF()
 
 #   ---[Download Deps]
 IF (xsdnn_BUILD_XNNPACK_ENGINE)
-
     IF(NOT DEFINED XNNPACK_SOURCE_DIR)
         MESSAGE(STATUS "Downloading XNNPACK to ${CMAKE_BINARY_DIR}/xnnpack-source (define XNNPACK_SOURCE_DIR to avoid it)")
         CONFIGURE_FILE(./cmake/DownloadXNNPACK.cmake "${CMAKE_BINARY_DIR}/xnnpack-download/CMakeLists.txt")
@@ -80,11 +77,9 @@ IF (xsdnn_BUILD_XNNPACK_ENGINE)
                 "${XNNPACK_SOURCE_DIR}"
                 "${CMAKE_BINARY_DIR}/deps/xnnpack" EXCLUDE_FROM_ALL)
     ENDIF()
-
 ENDIF()
 
 IF (xsdnn_BUILD_TEST)
-
     IF(NOT DEFINED GOOGLETEST_SOURCE_DIR)
         MESSAGE(STATUS "Downloading GTest to ${CMAKE_BINARY_DIR}/googletest-source (define GOOGLETEST_SOURCE_DIR to avoid it)")
         CONFIGURE_FILE(./cmake/DownloadGoogleTest.cmake "${CMAKE_BINARY_DIR}/googletest-download/CMakeLists.txt")
@@ -101,11 +96,9 @@ IF (xsdnn_BUILD_TEST)
                 "${GOOGLETEST_SOURCE_DIR}"
                 "${CMAKE_BINARY_DIR}/deps/googletest" EXCLUDE_FROM_ALL)
     ENDIF()
-
 ENDIF()
 
 IF(xsdnn_WITH_SERIALIZATION)
-
     IF(NOT DEFINED PROTOBUF_SOURCE_DIR)
         MESSAGE(STATUS "Downloading Protobuf to ${CMAKE_BINARY_DIR}/protobuf-source (define PROTOBUF_SOURCE_DIR to avoid it)")
         CONFIGURE_FILE(./cmake/DownloadGoogleProtobuf.cmake "${CMAKE_BINARY_DIR}/protobuf-download/CMakeLists.txt")
@@ -125,7 +118,7 @@ IF(xsdnn_WITH_SERIALIZATION)
 
     # ---[Protobuf Build]
     EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
-
+    ADD_COMPILE_DEFINITIONS(XS_USE_SERIALIZATION)
 ENDIF()
 
 # SET flags to build type
@@ -149,6 +142,11 @@ INCLUDE(cmake/xsdnn_utils.cmake)
 INCLUDE(cmake/xsdnn_serializer.cmake)
 INCLUDE(cmake/xsdnn_session.cmake)
 
+IF(xsdnn_WITH_SERIALIZATION)
+    INCLUDE(cmake/xsdnn_serializer.cmake)
+ELSE()
+    SET(xsdnn_serializer_src "")
+ENDIF()
 
 ADD_LIBRARY(xsdnn
         ${mmpack_common_src}

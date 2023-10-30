@@ -67,6 +67,7 @@ namespace xsdnn {
 
     void nodes::save_model(const std::string& filename,
                            const std::string& network_name_) {
+#ifdef XS_USE_SERIALIZATION
         layer_register();
 
         xs::GraphInfo* Graph = new xs::GraphInfo;
@@ -92,9 +93,14 @@ namespace xsdnn {
 
         std::ofstream ofs(filename, std::ios_base::out | std::ios_base::binary);
         model.SerializeToOstream(&ofs);
+#else
+        throw xs_error(START_MSG + "This build doesn't support serialization. "
+                                   "Rebuild with -Dxsdnn_WITH_SERIALIZATION=ON");
+#endif
     }
 
     void nodes::load_model(const std::string& filename) {
+#ifdef XS_USE_SERIALIZATION
         layer_register();
         std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
         if (!ifs.is_open()) {
@@ -125,6 +131,10 @@ namespace xsdnn {
         } else {
             dynamic_cast<graph *>(this)->load_connections(&model_graph);
         }
+#else
+        throw xs_error(START_MSG + "This build doesn't support serialization. "
+                                   "Rebuild with -Dxsdnn_WITH_SERIALIZATION=ON");
+#endif
     }
 
     bool nodes::have_engine_xnnpack() {
@@ -201,6 +211,7 @@ namespace xsdnn {
         }
     }
 
+#ifdef XS_USE_SERIALIZATION
     void sequential::load_connections(xs::GraphInfo* Graph) {
         for(size_t i = 0; i < nodes_.size() - 1; ++i) {
             auto last_node = nodes_[i];
@@ -211,6 +222,7 @@ namespace xsdnn {
     }
 
     void sequential::save_connections(xs::GraphInfo* Graph) {}
+#endif
 
     graph::graph() {}
     graph::~graph() {}
@@ -316,6 +328,7 @@ namespace xsdnn {
         }
     }
 
+#ifdef XS_USE_SERIALIZATION
     void graph::save_connections(xs::GraphInfo *Graph) {
         std::unordered_map<node*, size_t> nd_idx;
         size_t idx = 0;
@@ -368,5 +381,5 @@ namespace xsdnn {
             output_layers_.push_back(nodes_[Graph->outputs(i)]);
         }
     }
-
+#endif
 } // xsdnn
