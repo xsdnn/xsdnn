@@ -143,8 +143,7 @@ MmActivationKernel(
         size_t n = N;
 
         while (n > 0) {
-            ActivationFunc.Activate(*buffer);
-            buffer += 1;
+            *buffer++ = ActivationFunc.Activate(*buffer);
             n -= 1;
         }
         C += ldc;

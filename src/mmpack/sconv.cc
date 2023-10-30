@@ -320,6 +320,7 @@ MmConv(
         Output += SpatialOutputGroupSize;
     }
 #else
+    // TODO: добавить Reference Conv2D
 #warning DONT USE CONVOLUTION_2D AT XS BACKEND ENGINE. BECAUSE YOURE BUILD DOESNT SUPPORT CPU SSE INSTRUCTION
 #endif
 }
