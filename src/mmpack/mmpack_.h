@@ -43,9 +43,7 @@ MmGemm(
         size_t ldc
 );
 
-#if defined(MM_USE_SSE)
-
-#if !defined(MM_USE_DOUBLE)
+#ifdef MM_TARGET_AMD64
 typedef __m128 Mm_Float32x4;
 
 template<typename align>
@@ -208,13 +206,8 @@ MmMinimumFloat32x4(const Mm_Float32x4& Vector1, const Mm_Float32x4& Vector2) {
     return _mm_min_ps(Vector1, Vector2);
 }
 
-#else
-#error SSE for double type NotImplementedYet
-#endif
+#endif // MM_TARGET_AMD64
 
-#elif defined(MM_USE_AVX)
-#error AVX Wrappers NotImplementedYet
-#endif
 
 } // mmpack
 

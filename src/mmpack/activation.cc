@@ -13,6 +13,7 @@ struct MmActivationMain;
 
 template<>
 struct MmActivationMain<Relu> {
+#ifdef MM_TARGET_AMD64
     Mm_Float32x4 ZeroFloat = MmSetZeroFloat32x4();
 
     MmActivationMain(const MmActivationHolder* ActivationHolder) {
@@ -30,10 +31,21 @@ struct MmActivationMain<Relu> {
         return std::max(Scalar, 0.0f);
 #endif // MM_USE_SSE
     }
+#else
+    MmActivationMain(const MmActivationHolder* ActivationHolder) {
+        MM_UNUSED_PARAMETER(ActivationHolder);
+    }
+
+    float Activate(float Scalar) {
+        return std::max(Scalar, 0.0f);
+    }
+#endif
+
 };
 
 template<>
 struct MmActivationMain<HardSigmoid> {
+#ifdef MM_TARGET_AMD64
     Mm_Float32x4 Alpha;
     Mm_Float32x4 Beta;
     Mm_Float32x4 Minimum;
@@ -63,6 +75,26 @@ struct MmActivationMain<HardSigmoid> {
         return Scalar;
 #endif
     }
+#else
+    float Alpha;
+    float Beta;
+    float Minimum;
+    float Maximum;
+
+    MmActivationMain(const MmActivationHolder* ActivationHolder) {
+        Alpha =ActivationHolder->Parameters.HardSigmoid.alpha;
+        Beta = ActivationHolder->Parameters.HardSigmoid.beta;
+        Minimum = 0.0f;
+        Maximum = 1.0f;
+    }
+
+    float Activate(float Scalar) { // FIXME: убедиться, что здесь корректно
+        Scalar = Alpha * Scalar + Beta;
+        Scalar = std::min(Scalar, Maximum);
+        Scalar = std::max(Scalar, Minimum);
+        return Scalar;
+    }
+#endif
 };
 
 template<MmActivationType ActivationType>
@@ -74,6 +106,7 @@ MmActivationKernel(
     size_t N,
     size_t ldc
 ) {
+#ifdef MM_TARGET_AMD64
     MmActivationMain<ActivationType> ActivationFunc(Activation);
     bool CIsAligned;
     // Iterate over M rows
@@ -103,6 +136,20 @@ MmActivationKernel(
         C += ldc;
         M -= 1;
     }
+#else
+    MmActivationMain<ActivationType> ActivationFunc(Activation);
+    while (M > 0) {
+        float* buffer = C;
+        size_t n = N;
+
+        while (n > 0) {
+            ActivationFunc.Activate(*buffer);
+            n -= 1;
+        }
+        C += ldc;
+        M -= 1;
+    }
+#endif
 }
 
 void

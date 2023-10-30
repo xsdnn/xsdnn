@@ -7,6 +7,7 @@
 
 namespace mmpack {
 
+#ifdef MM_TARGET_AMD64
 void
 MmConvAddBias(
     const float* Bias,
@@ -275,6 +276,7 @@ MmConvOp(
         }
     }
 }
+#endif
 
 void
 MmConv(
@@ -285,37 +287,41 @@ MmConv(
         float* TemporaryBuffer,
         float* Output
 ) {
-        const size_t FilterCount = Parameters->FilterCount;
-        const size_t OutputSize = Parameters->OutSize;
-        const size_t K = Parameters->K;
+#ifdef MM_TARGET_AMD64
+    const size_t FilterCount = Parameters->FilterCount;
+    const size_t OutputSize = Parameters->OutSize;
+    const size_t K = Parameters->K;
 
-        const size_t SpatialInputGroupSize = Parameters->InChannel * Parameters->InSize;
-        const size_t SpatialOutputGroupSize = OutputSize * FilterCount;
-        const size_t FilterGroupSize = FilterCount * K;
+    const size_t SpatialInputGroupSize = Parameters->InChannel * Parameters->InSize;
+    const size_t SpatialOutputGroupSize = OutputSize * FilterCount;
+    const size_t FilterGroupSize = FilterCount * K;
 
-        const size_t GroupCount = Parameters->GroupCount;
+    const size_t GroupCount = Parameters->GroupCount;
 
-        const float* filter = Weight;
-        const float* bias = Bias;
+    const float* filter = Weight;
+    const float* bias = Bias;
 
-        for (size_t group = 0; group < GroupCount; ++group) {
-            switch (Parameters->Algorithm) {
-                case(MM_CONV_PARAMS::Im2ColThenGemm) : {
+    for (size_t group = 0; group < GroupCount; ++group) {
+        switch (Parameters->Algorithm) {
+            case(MM_CONV_PARAMS::Im2ColThenGemm) : {
 
-                    MmConvOp(Parameters, Input, filter, bias, TemporaryBuffer, Output, 0, OutputSize);
+                MmConvOp(Parameters, Input, filter, bias, TemporaryBuffer, Output, 0, OutputSize);
 
-                    break;
-                }
+                break;
             }
-
-            if (bias != nullptr) {
-                bias += FilterCount;
-            }
-
-            filter += FilterGroupSize;
-            Input += SpatialInputGroupSize;
-            Output += SpatialOutputGroupSize;
         }
+
+        if (bias != nullptr) {
+            bias += FilterCount;
+        }
+
+        filter += FilterGroupSize;
+        Input += SpatialInputGroupSize;
+        Output += SpatialOutputGroupSize;
+    }
+#else
+#warning DONT USE CONVOLUTION_2D AT XS BACKEND ENGINE. BECAUSE YOURE BUILD DOESNT SUPPORT CPU SSE INSTRUCTION
+#endif
 }
 
 }

@@ -8,8 +8,6 @@
 
 namespace mmpack {
 
-#if !defined(MM_USE_SSE)
-
 float
 ReferenceDot(
         const float* A,
@@ -25,7 +23,7 @@ ReferenceDot(
     return sum;
 }
 
-#else
+#ifdef MM_TARGET_AMD64
 
 template<typename A_aligned, typename B_aligned>
 MM_STRONG_INLINE
@@ -89,10 +87,8 @@ MmDot(
         const float* B,
         size_t size
 ) {
-#if defined(MM_USE_SSE)
+#if defined(MM_TARGET_AMD64)
     return MmDotOp(A, B, size);
-#elif defined(MM_USE_AVX)
-#error NotImplementedYet
 #else
     return ReferenceDot(A, B, size);
 #endif

@@ -7,7 +7,7 @@
 
 namespace mmpack {
 
-#if !defined(MM_USE_SSE)
+
 void ReferenceGemm(
     CBLAS_TRANSPOSE TransA,
     CBLAS_TRANSPOSE TransB,
@@ -98,7 +98,7 @@ void ReferenceGemm(
     }
 }
 
-#else
+#ifdef MM_TARGET_AMD64
 
 MM_STRONG_INLINE
 void
@@ -1338,7 +1338,7 @@ MmGemm(
     float* C,
     size_t ldc
 ) {
-#if defined(MM_USE_SSE)
+#if defined(MM_TARGET_AMD64)
     MmGemmOp(TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
 #else
     ReferenceGemm(TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);

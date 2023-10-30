@@ -19,6 +19,7 @@ MmReferenceAdd(
     }
 }
 
+#ifdef MM_TARGET_AMD64
 void
 MmAddKernelSse(
         const float alpha,
@@ -127,14 +128,14 @@ MmAddKernelSse(
         } while (Count > 0);
     }
 }
-
+#endif
 void
 MmAdd(
         const float alpha,
         float* C,
         const size_t size
 ) {
-#if defined(MM_USE_SSE)
+#if defined(MM_TARGET_AMD64)
     MmAddKernelSse(alpha, C, size);
 #else
     MmReferenceAdd(alpha, C, size);

@@ -18,6 +18,12 @@
 
 // defined SSE support
 
+#if defined (_M_AMD64) || defined (__x86_64)
+#define MM_TARGET_AMD64
+#else
+#warning Unsupported processor. XS Backend Engine will be use reference kernel implementaion.
+#endif
+
 #ifndef SSE_INSTR_SET
 #if defined ( __AVX2__ )
 #define SSE_INSTR_SET 8
@@ -150,7 +156,6 @@ struct MM_CONV_PARAMS {
     TemprorayBufferSize - размер временного буфера для упаковки результатов Im2Col.
 --*/
 
-#if !defined(MM_USE_DOUBLE)
 float
 MmDot(
         const float* A,
@@ -182,11 +187,7 @@ Return Value:
     float Значения скалярного произведения.
 
 --*/
-#else
-#error Not Implemented Yet
-#endif
 
-#if !defined(MM_USE_DOUBLE)
 void
 MmGemm(
         CBLAS_TRANSPOSE TransA,
@@ -242,11 +243,7 @@ Return Value:
     None.
 
 --*/
-#else
-#error NotImplementedYet
-#endif
 
-#if !defined(MM_USE_DOUBLE)
 void
 MmAdd(
     const float alpha,
@@ -272,11 +269,8 @@ Return Value:
     None.
 
 --*/
-#else
-#error NotImplementedYet
-#endif
 
-#if !defined(MM_USE_DOUBLE)
+
 void
 MmMulAdd(
         const float* A,
@@ -284,9 +278,6 @@ MmMulAdd(
         float* C,
         size_t size
 );
-#else
-#error NotImplementedYet
-#endif
 
 /*
  * Convolution routines

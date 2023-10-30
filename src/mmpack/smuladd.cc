@@ -7,7 +7,7 @@
 
 namespace mmpack {
 
-#if !defined(MM_USE_SSE)
+
 MM_STRONG_INLINE
 void
 ReferenceMulAdd(
@@ -25,7 +25,8 @@ ReferenceMulAdd(
         C += 1;
     }
 }
-#else
+
+#ifdef MM_TARGET_AMD64
 
 MM_STRONG_INLINE
 void
@@ -390,7 +391,7 @@ MmMulAdd(
         float* C,
         size_t size
 ) {
-#if defined(MM_USE_SSE)
+#if defined(MM_TARGET_AMD64)
     MmMulAddOp(A, B, C, size);
 #else
     ReferenceMulAdd(A, B, C, size);
