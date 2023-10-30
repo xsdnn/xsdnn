@@ -14,8 +14,7 @@ MmReferenceAdd(
         const size_t size
 ) {
     for (size_t i = 0; i < size; ++i) {
-        *C = (*C) * alpha;
-        C += 1;
+        *C++ = (*C) * alpha;
     }
 }
 
