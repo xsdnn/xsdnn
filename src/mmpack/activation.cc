@@ -144,6 +144,7 @@ MmActivationKernel(
 
         while (n > 0) {
             ActivationFunc.Activate(*buffer);
+            buffer += 1;
             n -= 1;
         }
         C += ldc;
