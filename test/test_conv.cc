@@ -303,14 +303,38 @@ TEST(conv, xnnpack_backend_engine_fp32) {
             /*pad_type=*/padding_mode::notset, /*pads=*/{1, 1, 1, 1}, /*activation_type=*/mmpack::Relu,
             /*engine=*/core::backend_t::xnnpack);
 
-    network<graph> NN;
+    conv Conv2d_1_Pointwise(/*in_shape=*/Conv2d_1_Depthwise.out_shape()[0], /*out_channel=*/48, /*kernel_shape=*/{1, 1},
+            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    conv Conv2d_2_Depthwise(/*in_shape=*/Conv2d_1_Pointwise.out_shape()[0], /*out_channel=*/48, /*kernel_shape=*/{3, 3},
+            /*group_count=*/48, /*has_bias=*/true, /*stride_shape=*/{2, 2}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 1, 1}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    conv Conv2d_2_Pointwise(/*in_shape=*/Conv2d_2_Depthwise.out_shape()[0], /*out_channel=*/96, /*kernel_shape=*/{1, 1},
+            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    conv Conv2d_3_Depthwise(/*in_shape=*/Conv2d_2_Pointwise.out_shape()[0], /*out_channel=*/96, /*kernel_shape=*/{3, 3},
+            /*group_count=*/96, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::notset, /*pads=*/{1, 1, 1, 1}, /*activation_type=*/mmpack::Relu,
+            /*engine=*/core::backend_t::xnnpack);
+
+    network NN;
     connect_subgraph(Conv2d_1_Depthwise, Conv2d_0);
-    construct_graph(NN, {&Conv2d_0}, {&Conv2d_1_Depthwise});
+    connect_subgraph(Conv2d_1_Pointwise, Conv2d_1_Depthwise);
+    connect_subgraph(Conv2d_2_Depthwise, Conv2d_1_Pointwise);
+    connect_subgraph(Conv2d_2_Pointwise, Conv2d_2_Depthwise);
+    connect_subgraph(Conv2d_3_Depthwise, Conv2d_2_Pointwise);
+    construct_graph(NN, {&Conv2d_0}, {&Conv2d_3_Depthwise});
     NN.set_num_threads(1);
 
     mat_t X(shape3d(3, 300, 300).size() * dtype2sizeof(kXsFloat32));
     utils::random_init_fp32(X);
-
+    NN.configure();
     NN.predict(X);
 }
 #ifdef XS_USE_SERIALIZATION

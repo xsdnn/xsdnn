@@ -4,6 +4,7 @@
 //
 
 #include <layers/convolution.h>
+#include <utils/transpose.h>
 
 namespace xsdnn {
 
@@ -42,13 +43,13 @@ std::vector<shape3d> conv::in_shape() const {
         if (params_._.Bias) {
             return {
                     shape3d(in_channel, in_height, in_width),
-                    shape3d(out_channel * f_count, params_._.KernelShape[0], params_._.KernelShape[1]),
+                    shape3d(out_channel * params_._.InChannel, params_._.KernelShape[0], params_._.KernelShape[1]),
                     shape3d(out_channel, 1, 1)
             };
         } else {
             return {
                     shape3d(in_channel, in_height, in_width),
-                    shape3d(out_channel * f_count, params_._.KernelShape[0], params_._.KernelShape[1]),
+                    shape3d(out_channel * params_._.InChannel, params_._.KernelShape[0], params_._.KernelShape[1]),
             };
         }
     } else {
@@ -83,6 +84,34 @@ void conv::forward_propagation(const std::vector<tensor_t *> &in_data,
     fwd_ctx_.set_dtype(layer::dtype());
 
     fwd_kernel_->Compute(fwd_ctx_, params_);
+}
+
+void conv::pre_pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {
+    if (from == to) return;
+    if (from == xsMemoryFormat::chw & to == xsMemoryFormat::hwc) {
+        if (params_._.Dimensions != 2) throw xs_error(START_MSG + "Pre packing weights not implemented for 1D Conv");
+        size_t out_channel = params_._.FilterCount * params_._.GroupCount;
+
+        std::vector<size_t> WShapeSpan = {out_channel, params_._.InChannel, params_._.KernelShape[0], params_._.KernelShape[1]};
+
+        mat_t* Weights = this->get_weight_data(1);
+        mat_t PackedWeights(Weights->size());
+
+        xs_single_axis_transpose(Weights, WShapeSpan,
+                                 &PackedWeights, this->dtype(), 1, 3);
+        *Weights = PackedWeights;
+
+        is_packed_ = true;
+    } else {
+        throw xs_error(START_MSG + "Pre packing weights for different from chw->hwc computation not implemented yet");
+    }
+}
+
+void conv::pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {
+    if (from == to) return;
+    if (from == xsMemoryFormat::hwc && to == xsMemoryFormat::chw) {
+        // todo: impl this
+    }
 }
 
 } // xsdnn

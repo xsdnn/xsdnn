@@ -227,14 +227,15 @@ namespace xsdnn {
     graph::graph() {}
     graph::~graph() {}
 
-    std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
-        if (have_engine_xnnpack()) {
-#ifdef XS_USE_XNNPACK
-            core::XNNCompiler::getInstance().initialize();
-#else
-      throw xs_error("This xsdnn build doesn't support XNNPACK backend engine. Recompile with xsdnn_BUILD_XNNPACK_ENGINE=ON");
-#endif
+    size_t graph::get_num_xnnpack_backend_engine() const noexcept {
+        size_t num{0};
+        for (size_t i = 0; i < nodes_.size(); ++i) {
+            if (nodes_[i]->engine() == core::backend_t::xnnpack) num++;
         }
+        return num;
+    }
+
+    std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
         this->set_num_threads();
 
         size_t input_data_concept_count = start[0].size();
@@ -250,7 +251,7 @@ namespace xsdnn {
         for (size_t channel_index = 0; channel_index < input_data_concept_count; channel_index++) {
             input_layers_[channel_index]->set_in_data({ reordered_data[channel_index] });
         }
-
+        // TODO: решить задачу запуска сети на нескольких Backend Engine
         for (auto l : nodes_) {
             l->forward();
         }

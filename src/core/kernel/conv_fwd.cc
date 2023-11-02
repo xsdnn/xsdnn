@@ -67,7 +67,7 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
     const size_t dilation_w = p._.DilationShape[1];
     const size_t groups = p._.GroupCount;
     const size_t group_input_channels = p._.InChannel;
-    const size_t group_output_channels = p._.FilterCount; // FIXME: неуверен
+    const size_t group_output_channels = p._.FilterCount;
 
     const size_t output_pixel_stride = groups * group_output_channels;
     const size_t input_pixel_stride = groups * group_input_channels;
@@ -81,7 +81,7 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
     xnn_operator_t ConvolutionOp;
     xnn_status status;
 
-    status = xnn_create_convolution2d_nchw_f32(padding_top, padding_right, padding_bottom, padding_left,
+    status = xnn_create_convolution2d_nhwc_f32(padding_top, padding_right, padding_bottom, padding_left,
                                                kernel_h, kernel_w,
                                                stride_h, stride_w,
                                                dilation_h, dilation_w,
@@ -90,6 +90,42 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
                                                kernel.data(), bias.data(),
                                                -std::numeric_limits<float>::infinity(), +std::numeric_limits<float>::infinity(),
                                                0 /* flags */, nullptr, nullptr, &ConvolutionOp);
+    if (status != xnn_status_success) {
+        throw xs_error(START_MSG + "Error when creating XNNPACK convolution2d_nhwc_fp32 kernel.");
+    }
+
+    const size_t Ih = p._.InShape[0];
+    const size_t Iw = p._.InShape[1];
+
+    size_t max_workspace_size = 0;
+    size_t workspace_size = 0;
+    size_t workspace_alignment = 0;
+    status = xnn_reshape_convolution2d_nhwc_f32(
+            ConvolutionOp,
+            X.size(), Ih, Iw,
+            &workspace_size, &workspace_alignment,
+            /*output_height_out=*/nullptr, /*output_width_out=*/nullptr,
+            /*threadpool=*/nullptr);
+
+    if (status != xnn_status_success) {
+        throw xs_error(START_MSG + "Failed to reshape FP32 XNNPACK Convolution operator");
+    }
+
+    max_workspace_size = std::max(max_workspace_size, workspace_size);
+    std::vector<char> workspace(max_workspace_size);
+
+    gsl::span<const float> XSpan = GetDataAsSpan<const float>(&X[0]);
+    gsl::span<float> YSpan = GetMutableDataAsSpan<float>(&Y[0]);
+
+    status = xnn_setup_convolution2d_nhwc_f32(ConvolutionOp, workspace.data(), XSpan.data(), YSpan.data());
+    if (status != xnn_status_success) {
+        throw xs_error(START_MSG + "Failed to setup FP32 XNNPACK Convolution operator");
+    }
+
+    status = xnn_run_operator(ConvolutionOp, /*threadpool=*/nullptr);
+    if (status != xnn_status_success) {
+        throw xs_error(START_MSG + "Failed to run FP32 XNNPACK Convolution operator");
+    }
 #else
     throw xs_error(START_MSG + "This build doesn't support XNN Backend Engine. "
                                "Rebuild with -Dxsdnn_BUILD_XNNPACK_ENGINE=ON");

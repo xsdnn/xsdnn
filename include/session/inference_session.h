@@ -21,7 +21,7 @@ public:
 public:
     void Load(std::string model_path);
     void Run(const std::vector<tensor_t>& input, std::vector<tensor_t>& output);
-    network<graph> GetModel();
+    network GetModel();
 
 private:
     template<typename T>
@@ -34,7 +34,7 @@ private:
 
 private:
     InfOptions opt_;
-    std::shared_ptr<network<graph>> net_;
+    std::shared_ptr<network> net_;
 };
 
 } // xsdnn

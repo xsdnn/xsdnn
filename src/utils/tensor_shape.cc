@@ -21,6 +21,10 @@ void shape3d::reshape(size_t channel, size_t height, size_t width) {
     W = width;
 }
 
+std::vector<size_t> shape3d::get_dims() const noexcept {
+    return {C, H, W};
+}
+
 size_t shape3d::operator()(size_t channel, size_t y, size_t x) {
     assert(y >= 0 && y < H);
     assert(x >= 0 && x < W);

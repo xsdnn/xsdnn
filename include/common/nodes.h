@@ -80,7 +80,7 @@ public:
 protected:
     void reorder_output(const std::vector<tensor_t>& input,
                         std::vector<tensor_t>& output);
-    template<typename Net>
+
     friend class network;
 
     void connection_mismatch(shape3d lhs, shape3d rhs);
@@ -111,12 +111,16 @@ protected:
 
     size_t find_index(const std::vector<node *> &nodes, layer *target);
 
-    template<typename Net>
     friend class network;
+
+private:
+    // Возвращает число нод на движке xnnpack
+    size_t get_num_xnnpack_backend_engine() const noexcept;
 
 private:
     std::vector<layer*> input_layers_;
     std::vector<layer*> output_layers_;
+    std::vector<xsMemoryFormat> mtypes_;
     friend class InfSession;
 };
 

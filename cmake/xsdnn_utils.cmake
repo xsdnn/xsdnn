@@ -9,4 +9,5 @@ set(
         "${XSROOT_SRC}/utils/xs_error.cc"
         "${XSROOT_SRC}/utils/tensor.cc"
         "${XSROOT_SRC}/utils/broadcaster.cc"
+        "${XSROOT_SRC}/utils/transpose.cc"
 )

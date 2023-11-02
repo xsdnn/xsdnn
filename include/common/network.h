@@ -14,7 +14,6 @@
 
 namespace xsdnn {
 
-template<typename Net>
 class network {
 public:
     typedef std::vector<layer*>::iterator iterator;
@@ -26,21 +25,6 @@ public:
     network& operator=(const network&) = default;
     ~network() = default;
 
-    template<typename L>
-    network& operator<<(L &&layer) {
-        net_.owner_nodes_.push_back(std::make_shared<typename std::remove_reference<L>::type>(layer));
-        net_.nodes_.push_back(net_.owner_nodes_.back().get());
-
-        if (net_.nodes_.size() > 1) {
-            auto last_node = net_.nodes_[net_.nodes_.size() - 2];
-            auto next_node = net_.nodes_[net_.nodes_.size() - 1];
-            auto data_idx = find_data_idx(last_node->out_types(), next_node->in_types());
-            connect(last_node, next_node, data_idx.first, data_idx.second);
-        }
-        net_.check_connectivity();
-        return *this;
-    }
-
     const layer *operator[](size_t index) const { return net_[index]; }
     layer *operator[](size_t index) { return net_[index]; }
 
@@ -48,6 +32,8 @@ public:
     void init_weight();
     void set_num_threads(size_t num_threads) noexcept;
     bool empty() const;
+
+    void configure();
 
     mat_t predict(const mat_t& in);
     tensor_t predict(const tensor_t& in);
@@ -57,7 +43,7 @@ public:
     void load(const std::string filename);
 
 protected:
-    friend bool operator == (network<Net>& lhs, network<Net>& rhs) {
+    friend bool operator == (network& lhs, network& rhs) {
         /*
          * Check topological sorted vector
          */
@@ -97,7 +83,7 @@ protected:
         return true;
     }
 
-    friend void construct_graph(network<graph>& net,
+    friend void construct_graph(network& net,
                                 const std::vector<layer*>& input,
                                 const std::vector<layer*>& out);
 
@@ -107,12 +93,13 @@ protected:
     std::vector<tensor_t> fprop(const std::vector<tensor_t>& in);
 
 private:
-    Net net_;
+    graph net_;
     std::string network_name_;
+    bool configured_{false};
     friend class InfSession;
 };
 
-    void construct_graph(network<graph>& net,
+    void construct_graph(network& net,
                          const std::vector<layer*>& input,
                          const std::vector<layer*>& out);
 

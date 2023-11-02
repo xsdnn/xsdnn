@@ -46,6 +46,7 @@ public:
     size_t in_concept() const;
     size_t out_concept() const;
     bool trainable() const;
+    bool is_packed() const;
 
     size_t in_data_size() const;
     size_t out_data_size() const;
@@ -156,6 +157,30 @@ public:
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data) = 0;
 
+    /*
+     * Переупаковка концептов из одного формата данных в другой.
+     * Функция вызывается на моменте конфигурирования графа,
+     * и должна выполнять преобразования только над концептами weights \ bias.
+     *
+     * Пример:
+     *      call pre_pack(chw, hwc) -> перепакует данные из формата chw в формат hwc.
+     */
+    virtual
+    void
+    pre_pack(xsMemoryFormat from, xsMemoryFormat to);
+
+    /*
+     * Переупаковка концептов из одного формата данных в другой.
+     * Функция вызывается в момент исполнения графа, и должна выполнять
+     * преобразования только над концептами data.
+     *
+     * Пример:
+     *      call pack(hwc, chw) -> перепакует данные из формата hwc в формат chw.
+     */
+    virtual
+    void
+    pack(xsMemoryFormat from, xsMemoryFormat to);
+
     void forward();
 
     void setup(bool reset_weight);
@@ -169,7 +194,7 @@ public:
     friend void connection_mismatch(const layer& from,
                                     const layer& to);
 
-private:
+protected:
     void alloc_input(size_t i) const;
     void alloc_output(size_t i) const;
     edgeptr_t ith_in_node(size_t i);
@@ -180,6 +205,7 @@ private:
 protected:
     bool initialized_;
     bool parallelize_;
+    bool is_packed_{false};
     size_t num_threads_;
     size_t in_concept_;
     size_t out_concept_;

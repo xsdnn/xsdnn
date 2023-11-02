@@ -102,3 +102,8 @@ AddTest(
         mmpack_hard_sigmoid_test
         ${XSDNN_TEST_ROOT}/test_hard_sigmoid.cc
 )
+
+AddTest(
+        xsdnn_transpose_test
+        ${XSDNN_TEST_ROOT}/test_transpose.cc
+)

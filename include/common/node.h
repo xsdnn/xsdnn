@@ -20,6 +20,11 @@ class edge;
 using edgeptr_t = std::shared_ptr<edge>;
 class layer;
 
+enum class xsMemoryFormat {
+    chw = 0,
+    hwc = 1
+};
+
 /*
 * Containing edge container before layer operation and after
 */

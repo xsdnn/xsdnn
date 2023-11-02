@@ -22,6 +22,7 @@ public:
     bool operator != (const shape3d& rhs);
 
     void reshape(size_t channel, size_t width, size_t height);
+    std::vector<size_t> get_dims() const noexcept;
 
     size_t area() const;
     size_t size() const;

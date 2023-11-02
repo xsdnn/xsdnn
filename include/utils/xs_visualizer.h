@@ -24,8 +24,7 @@ public:
                            const std::string &graph_name = "graph")
             : root_(root_node), name_(graph_name) {}
 
-    template<typename N>
-    explicit xs_visualizer(network<N> &network,
+    explicit xs_visualizer(network& network,
                            const std::string &graph_name = "graph")
             : root_(network[0]), name_(graph_name) {}
 

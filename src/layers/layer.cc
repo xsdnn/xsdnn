@@ -56,6 +56,10 @@ namespace xsdnn {
         return out_concept_;
     }
 
+    bool layer::is_packed() const {
+        return is_packed_;
+    }
+
     size_t layer::in_data_size() const {
         size_t result_size = 0;
         for (size_t i = 0; i < in_concept_; ++i) {
@@ -284,6 +288,9 @@ namespace xsdnn {
     std::pair<mm_scalar, mm_scalar> layer::out_value_range() const {
         return { mm_scalar(0.0f), mm_scalar(1.0f) };
     }
+
+    void layer::pre_pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}
+    void layer::pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}
 
     void connect(layer* last_node,
                         layer* next_node,

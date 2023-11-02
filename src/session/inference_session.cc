@@ -10,7 +10,7 @@ namespace xsdnn {
     InfSession::InfSession(const xsdnn::InfOptions &opt) : opt_(opt) {}
 
     void InfSession::Load(std::string model_path) {
-        net_.reset(new network<graph>);
+        net_.reset(new network);
         net_->load(model_path); // TODO: Verify this
     }
 
@@ -21,7 +21,7 @@ namespace xsdnn {
         output = net_->predict(input);
     }
 
-    network<graph> InfSession::GetModel() {
+    network InfSession::GetModel() {
         return *net_.get();
     }
 
