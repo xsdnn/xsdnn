@@ -9,7 +9,7 @@ ENDIF()
 
 INCLUDE(ExternalProject)
 ExternalProject_Add(xnnpack
-        URL https://github.com/google/XNNPACK/archive/refs/heads/test_574297947.zip
+        URL https://github.com/google/XNNPACK/archive/refs/heads/master.zip
         SOURCE_DIR "${CMAKE_BINARY_DIR}/xnnpack-source"
         BINARY_DIR "${CMAKE_BINARY_DIR}/xnnpack"
         CONFIGURE_COMMAND ""
