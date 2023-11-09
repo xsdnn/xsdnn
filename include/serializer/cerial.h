@@ -496,7 +496,7 @@ std::shared_ptr<xsdnn::conv> cerial::deserialize(const xs::NodeInfo *node,
     return l;
 }
 #endif // XS_USE_SERIALIZATION
-};
+
 
 class serializer {
 #ifdef XS_USE_SERIALIZATION

@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <sys/mman.h>
 #include <gtest/gtest.h>
+#include <cstring>
 namespace fs = std::filesystem;
 using namespace mmpack;
 using namespace xsdnn;
@@ -102,12 +103,16 @@ bool cerial_testing(T& layer) {
     create_directory("layer_cerial_tmp_directory");
     std::string path = "./layer_cerial_tmp_directory/" + layer.layer_type();
 
-    network<sequential> net_saver;
-    net_saver << layer;
+    network net_saver;
+    Output out;
+
+    connect_subgraph(out, layer);
+    construct_graph(net_saver, {&layer}, {&out});
+
     net_saver.init_weight();
     net_saver.save(path);
 
-    network<sequential> net_loader;
+    network net_loader;
     net_loader.load(path);
 
     return net_saver == net_loader;
@@ -214,6 +219,70 @@ private:
     size_t _BaseBufferSize;
     T* _GuardAddress;
 };
+
+void
+ComputeReferenceConv2D_HWC_FP32(
+        size_t GroupCount,
+        size_t InputChannels,
+        size_t InputHeight,
+        size_t InputWidth,
+        size_t FilterCount,
+        size_t KernelHeight,
+        size_t KernelWidth,
+        size_t PaddingLeftHeight,
+        size_t PaddingLeftWidth,
+        size_t PaddingRightHeight,
+        size_t PaddingRightWidth,
+        size_t DilationHeight,
+        size_t DilationWidth,
+        size_t StrideHeight,
+        size_t StrideWidth,
+        size_t OutputHeight,
+        size_t OutputWidth,
+        const float* X,
+        const float* W,
+        const float* B,
+        float* Y
+) {
+    if (B != nullptr) {
+        for (size_t oy = 0; oy < OutputHeight; oy++) {
+            for (size_t ox = 0; ox < OutputWidth; ox++) {
+                for (size_t g = 0; g < GroupCount; g++) {
+                    for (size_t oc = 0; oc < FilterCount; oc++) {
+                        Y[((oy * OutputWidth + ox) * GroupCount + g) * FilterCount + oc] =
+                                B[g * FilterCount + oc];
+                    }
+                }
+            }
+        }
+    } else {
+        throw xs_error("Not Impl");
+    }
+
+    for (size_t oy = 0; oy < OutputHeight; oy++) {
+        for (size_t ox = 0; ox < OutputWidth; ox++) {
+            for (size_t ky = 0; ky < KernelHeight; ky++) {
+                const size_t iy = oy * StrideHeight + ky * StrideHeight - PaddingLeftHeight;
+                if (iy < InputHeight) {
+                    for (size_t kx = 0; kx < KernelWidth; kx++) {
+                        const size_t ix = ox * StrideWidth + kx * DilationWidth - PaddingLeftWidth;
+                        if (ix < InputWidth) {
+                            for (size_t g = 0; g < GroupCount; g++) {
+                                for (size_t oc = 0; oc < FilterCount; oc++) {
+                                    for (size_t ic = 0; ic < InputChannels; ic++) {
+                                        Y[((oy * OutputWidth + ox) * GroupCount + g) * FilterCount + oc] +=
+                                                X[(iy * InputWidth + ix) * GroupCount * InputChannels + g * InputChannels + ic] *
+                                                W[(((g * FilterCount + oc) * KernelHeight + ky) * KernelWidth + kx) * InputChannels + ic];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 } // utils
 

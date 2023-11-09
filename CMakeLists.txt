@@ -98,26 +98,15 @@ IF (xsdnn_BUILD_TEST)
 ENDIF()
 
 IF(xsdnn_WITH_SERIALIZATION)
-    IF(NOT DEFINED PROTOBUF_SOURCE_DIR)
-        MESSAGE(STATUS "Downloading Protobuf to ${CMAKE_BINARY_DIR}/protobuf-source (define PROTOBUF_SOURCE_DIR to avoid it)")
-        CONFIGURE_FILE(./cmake/DownloadGoogleProtobuf.cmake "${CMAKE_BINARY_DIR}/protobuf-download/CMakeLists.txt")
-        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/protobuf-download")
-        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
-                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/protobuf-download")
-        SET(PROTOBUF_SOURCE_DIR "${CMAKE_BINARY_DIR}/protobuf-source" CACHE STRING "protobuf source directory")
-    ENDIF()
+    EXECUTE_PROCESS(COMMAND which protoc OUTPUT_VARIABLE PROTOC_INSTALLED)
 
-    INCLUDE_DIRECTORIES("${PROTOBUF_SOURCE_DIR}/src")
-    IF(NOT TARGET protobuf)
-        ADD_SUBDIRECTORY(
-                "${PROTOBUF_SOURCE_DIR}"
-                "${CMAKE_BINARY_DIR}/deps/protobuf" EXCLUDE_FROM_ALL)
+    IF (PROTOC_INSTALLED MATCHES "protoc")
+        # ---[Compile model format]
+        EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
+        ADD_COMPILE_DEFINITIONS(XS_USE_SERIALIZATION)
+    ELSE()
+        MESSAGE(FATAL_ERROR "Install Protobuf Compiler C++ at System to make serialization available")
     ENDIF()
-
-    # ---[Protobuf Build]
-    EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
-    ADD_COMPILE_DEFINITIONS(XS_USE_SERIALIZATION)
 ENDIF()
 
 # SET flags to build type

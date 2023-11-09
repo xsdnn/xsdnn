@@ -75,7 +75,7 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
     gsl::span<const float> kernel = GetDataAsSpan<const float>(&W);
     gsl::span<const float> bias;
     if (B != nullptr) {
-        bias = GetDataAsSpan<const float>(&W);
+        bias = GetDataAsSpan<const float>(B);
     }
 
     xnn_operator_t ConvolutionOp;

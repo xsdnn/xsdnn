@@ -293,49 +293,63 @@ TEST(conv, simple_forward_without_bias_fp32) {
 }
 
 TEST(conv, xnnpack_backend_engine_fp32) {
-    conv Conv2d_0(/*in_shape=*/shape3d(3, 300, 300), /*out_channel=*/24, /*kernel_shape=*/{3, 3},
-            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{2, 2}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 1, 1}, /*activation_type=*/mmpack::Relu,
-            /*engine=*/core::backend_t::xnnpack);
+    // Need to initialize because doesn't use graph
+    core::XNNCompiler::getInstance().initialize();
 
-    conv Conv2d_1_Depthwise(/*in_shape=*/Conv2d_0.out_shape()[0], /*out_channel=*/24, /*kernel_shape=*/{3, 3},
-            /*group_count=*/24, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{1, 1, 1, 1}, /*activation_type=*/mmpack::Relu,
-            /*engine=*/core::backend_t::xnnpack);
-
-    conv Conv2d_1_Pointwise(/*in_shape=*/Conv2d_1_Depthwise.out_shape()[0], /*out_channel=*/48, /*kernel_shape=*/{1, 1},
+    // Create ConvOp
+    conv Convolution(/*in_shape=*/shape3d(3, 4, 4), /*out_channel=*/2, /*kernel_shape=*/{2, 2},
             /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::Relu,
+            /*pad_type=*/padding_mode::valid, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::NotSet,
             /*engine=*/core::backend_t::xnnpack);
 
-    conv Conv2d_2_Depthwise(/*in_shape=*/Conv2d_1_Pointwise.out_shape()[0], /*out_channel=*/48, /*kernel_shape=*/{3, 3},
-            /*group_count=*/48, /*has_bias=*/true, /*stride_shape=*/{2, 2}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 1, 1}, /*activation_type=*/mmpack::Relu,
-            /*engine=*/core::backend_t::xnnpack);
+    // Data Initialization
+    mat_t X(shape3d(3, 4, 4).size() * dtype2sizeof(kXsFloat32));
+    utils::initializer_list_init_fp32(X, {
+            -0.15666954,  0.4649103 ,  0.43525794,  1.2795222 ,  0.63187927,
+            -0.8584855 , -2.0991411 ,  0.8061577 ,  0.28974494,  1.5438182 ,
+            1.1982348 , -1.0154213 ,  0.11037201,  0.7425654 , -0.66757053,
+            1.6946123 , -0.5189821 , -0.01697704, -1.043478  ,  0.03993398,
+            0.30583587,  0.6102251 , -0.77249736,  0.06424319,  0.14975254,
+            -0.88653773, -0.6263327 ,  0.15063018, -0.42044613,  0.9514438 ,
+            0.12347706,  0.68320626, -0.09514921,  1.3250204 ,  0.95044756,
+            -0.25940952,  0.85934514, -0.9636811 , -0.16223331,  0.1568621 ,
+            -0.28554395,  1.4897873 , -0.02431266,  1.6434864 ,  0.32997105,
+            1.9085008 ,  1.9060385 , -0.7231964
+    });
+    mat_t YExpected(Convolution.out_shape()[0].size() * dtype2sizeof(kXsFloat32));
+    utils::initializer_list_init_fp32(YExpected, {
+            0.09728152, -0.32703215,  0.00129948,  0.42039755,  1.0947368 ,
+            -0.7284087 ,  0.64862067,  0.4069993 ,  0.43317354,  0.08638071,
+            0.23874292,  0.0813068 , -0.4945718 ,  0.7890384 ,  1.157916  ,
+            -0.73973846,  1.1653588 , -0.284475
+    });
 
-    conv Conv2d_2_Pointwise(/*in_shape=*/Conv2d_2_Depthwise.out_shape()[0], /*out_channel=*/96, /*kernel_shape=*/{1, 1},
-            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::Relu,
-            /*engine=*/core::backend_t::xnnpack);
+    Convolution.set_parallelize(false);
+    Convolution.set_num_threads(1);
+    Convolution.setup(false);
 
-    conv Conv2d_3_Depthwise(/*in_shape=*/Conv2d_2_Pointwise.out_shape()[0], /*out_channel=*/96, /*kernel_shape=*/{3, 3},
-            /*group_count=*/96, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
-            /*pad_type=*/padding_mode::notset, /*pads=*/{1, 1, 1, 1}, /*activation_type=*/mmpack::Relu,
-            /*engine=*/core::backend_t::xnnpack);
+    // Weight initialization
+    utils::initializer_list_init_fp32(Convolution.prev()[1]->get_data()->at(0), {
+            -0.02950907,  0.02537364,  0.460217  ,  0.09017426, -0.24229261,
+            -0.2702533 ,  0.09679925, -0.00191963,  0.06519675, -0.16411251,
+            -0.44544366,  0.5301136 , -0.137728  ,  0.13114548, -0.54464674,
+            -0.02447009,  0.43778747, -0.00748998,  0.22086596,  0.1316663 ,
+            0.43581885, -0.1705558 , -0.02882934, -0.05639854
+    });
 
-    network NN;
-    connect_subgraph(Conv2d_1_Depthwise, Conv2d_0);
-    connect_subgraph(Conv2d_1_Pointwise, Conv2d_1_Depthwise);
-    connect_subgraph(Conv2d_2_Depthwise, Conv2d_1_Pointwise);
-    connect_subgraph(Conv2d_2_Pointwise, Conv2d_2_Depthwise);
-    connect_subgraph(Conv2d_3_Depthwise, Conv2d_2_Pointwise);
-    construct_graph(NN, {&Conv2d_0}, {&Conv2d_3_Depthwise});
-    NN.set_num_threads(1);
+    // Bias initialiation
+    utils::initializer_list_init_fp32(Convolution.prev()[2]->get_data()->at(0), {
+            0.0f, 0.0f
+    });
 
-    mat_t X(shape3d(3, 300, 300).size() * dtype2sizeof(kXsFloat32));
-    utils::random_init_fp32(X);
-    NN.configure();
-    NN.predict(X);
+    Convolution.set_in_data({{X}});
+
+    // Run ConvOp
+    Convolution.forward();
+
+    mat_t Y = Convolution.output()[0][0];
+    gsl::span<const float> YSpan = GetDataAsSpan<const float>(&Y);
+    gsl::span<const float> YExpectedSpan = GetDataAsSpan<const float>(&YExpected);
 }
 #ifdef XS_USE_SERIALIZATION
 TEST(conv, cerial) {
@@ -347,6 +361,86 @@ TEST(conv, cerial) {
     ASSERT_TRUE(utils::cerial_testing(c));
 }
 #endif
+
+TEST(conv, simple_ref) {
+    // Create ConvOp
+    conv Convolution(/*in_shape=*/shape3d(3, 4, 4), /*out_channel=*/2, /*kernel_shape=*/{2, 2},
+            /*group_count=*/1, /*has_bias=*/true, /*stride_shape=*/{1, 1}, /*dilation_shape=*/{1, 1},
+            /*pad_type=*/padding_mode::valid, /*pads=*/{0, 0, 0, 0}, /*activation_type=*/mmpack::NotSet,
+            /*engine=*/core::backend_t::xnnpack);
+
+    // Data Initialization
+    mat_t X(shape3d(3, 4, 4).size() * dtype2sizeof(kXsFloat32));
+    utils::initializer_list_init_fp32(X, {
+            -0.15666954,  0.4649103 ,  0.43525794,  1.2795222 ,  0.63187927,
+            -0.8584855 , -2.0991411 ,  0.8061577 ,  0.28974494,  1.5438182 ,
+            1.1982348 , -1.0154213 ,  0.11037201,  0.7425654 , -0.66757053,
+            1.6946123 , -0.5189821 , -0.01697704, -1.043478  ,  0.03993398,
+            0.30583587,  0.6102251 , -0.77249736,  0.06424319,  0.14975254,
+            -0.88653773, -0.6263327 ,  0.15063018, -0.42044613,  0.9514438 ,
+            0.12347706,  0.68320626, -0.09514921,  1.3250204 ,  0.95044756,
+            -0.25940952,  0.85934514, -0.9636811 , -0.16223331,  0.1568621 ,
+            -0.28554395,  1.4897873 , -0.02431266,  1.6434864 ,  0.32997105,
+            1.9085008 ,  1.9060385 , -0.7231964
+    });
+    mat_t YExpected(Convolution.out_shape()[0].size() * dtype2sizeof(kXsFloat32));
+    utils::initializer_list_init_fp32(YExpected, {
+            0.09728152, -0.32703215,  0.00129948,  0.42039755,  1.0947368 ,
+            -0.7284087 ,  0.64862067,  0.4069993 ,  0.43317354,  0.08638071,
+            0.23874292,  0.0813068 , -0.4945718 ,  0.7890384 ,  1.157916  ,
+            -0.73973846,  1.1653588 , -0.284475
+    });
+    gsl::span<const float> YExpectedSpan = GetDataAsSpan<const float>(&YExpected);
+
+    mat_t Y(Convolution.out_shape()[0].size() * dtype2sizeof(kXsFloat32));
+
+    Convolution.set_parallelize(false);
+    Convolution.set_num_threads(1);
+    Convolution.setup(false);
+
+    // Weight initialization
+    utils::initializer_list_init_fp32(Convolution.prev()[1]->get_data()->at(0), {
+            -0.02950907,  0.02537364,  0.460217  ,  0.09017426, -0.24229261,
+            -0.2702533 ,  0.09679925, -0.00191963,  0.06519675, -0.16411251,
+            -0.44544366,  0.5301136 , -0.137728  ,  0.13114548, -0.54464674,
+            -0.02447009,  0.43778747, -0.00748998,  0.22086596,  0.1316663 ,
+            0.43581885, -0.1705558 , -0.02882934, -0.05639854
+    });
+
+    // Bias initialiation
+    utils::initializer_list_init_fp32(Convolution.prev()[2]->get_data()->at(0), {
+            0.0f, 0.0f
+    });
+
+    gsl::span<const float> XSpan = GetDataAsSpan<const float>(&X);
+    gsl::span<const float> WSpan = GetDataAsSpan<const float>(&Convolution.prev()[1]->get_data()->at(0));
+    gsl::span<const float> BSpan = GetDataAsSpan<const float>(&Convolution.prev()[2]->get_data()->at(0));
+    gsl::span<float> YSpan = GetMutableDataAsSpan<float>(&Y);
+
+    auto Params = Convolution.get_params()._;
+    utils::ComputeReferenceConv2D_HWC_FP32(
+            Params.GroupCount,
+            Params.InChannel,
+            Params.InShape[0],
+            Params.InShape[1],
+            Params.FilterCount,
+            Params.KernelShape[0],
+            Params.KernelShape[1],
+            Params.Padding[0],
+            Params.Padding[1],
+            Params.Padding[2],
+            Params.Padding[3],
+            Params.DilationShape[0],
+            Params.DilationShape[1],
+            Params.StrideShape[0],
+            Params.StrideShape[1],
+            Params.OutShape[0],
+            Params.OutShape[1],
+            XSpan.data(),
+            WSpan.data(),
+            BSpan.data(),
+            YSpan.data());
+}
 
 class SConvTester {
 public:
