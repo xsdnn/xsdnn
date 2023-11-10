@@ -119,6 +119,11 @@ inline
 static
 void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const relu* layer) {
     node->set_name("relu");
+    xs::AttributeInfo* W = node->add_attribute();
+
+    W->set_name("width");
+    W->set_type(xs::AttributeInfo_AttributeType_INT);
+    W->set_i(layer->out_shape()[0].W);
 }
 
 /*
@@ -397,7 +402,8 @@ template<>
 inline
 std::shared_ptr<relu> cerial::deserialize(const xs::NodeInfo* node,
                                          const xs::TensorInfo* tensor) {
-    std::shared_ptr<relu> l = std::make_shared<relu>();
+    size_t W = node->attribute(0).i();
+    std::shared_ptr<relu> l = std::make_shared<relu>(W);
     return l;
 }
 
