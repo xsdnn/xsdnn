@@ -289,6 +289,17 @@ namespace xsdnn {
         return { mm_scalar(0.0f), mm_scalar(1.0f) };
     }
 
+    xs::TensorInfo::TensorType layer::get_xsDtype_from_NodeDtype() const {
+        switch (this->dtype_) {
+            case kXsFloat32:
+                return xs::TensorInfo_TensorType_FLOAT;
+                break;
+            case kXsFloat16:
+                return xs::TensorInfo_TensorType_UINT16;
+                break;
+        }
+    }
+
     void layer::pre_pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}
     void layer::pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}
 

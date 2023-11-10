@@ -63,12 +63,52 @@ public:
 #ifdef XS_USE_SERIALIZATION
     virtual
     void save(xs::TensorInfo* dst) const {
+        std::vector<const mat_t*> Weights = weights();
+        size_t WBSizeWithDtype = 1;
+        for (const mat_t* weight : Weights)
+            WBSizeWithDtype *= weight->size();
 
+        std::string TmpBuffer;
+        TmpBuffer.reserve(WBSizeWithDtype);
+        for (const mat_t* weight : Weights) {
+            size_t TensorSizeWithDtype = weight->size();
+            std::string_view TensorMutableData = std::string_view(weight->data(), TensorSizeWithDtype);
+            TmpBuffer += TensorMutableData;
+        }
+
+        std::string* MutableRawData  = dst->mutable_raw_data();
+        MutableRawData->assign(TmpBuffer.data(), WBSizeWithDtype);
+
+        for (const mat_t* weight : Weights) {
+            dst->add_dims(weight->size() / dtype2sizeof(this->dtype_));
+        }
+
+        dst->set_type(get_xsDtype_from_NodeDtype());
     }
 
     virtual
     void load(const xs::TensorInfo* src) {
+        std::vector<mat_t*> Weights = weights();
+        assert(src->dims_size() == Weights.size());
+        size_t src_size = 0, weights_size = 0;
+        for (size_t d = 0; d < src->dims_size(); ++d) {
+            src_size += src->dims(d);
+            weights_size += Weights[d]->size() / dtype2sizeof(this->dtype_);
+        }
+        assert(src_size == weights_size);
 
+        const std::string& DataRaw = src->raw_data();
+        size_t PrevTensorSizeWithDtype = 0;
+        for (mat_t* weight : Weights) {
+            size_t TensorSizeWithDtype = weight->size();
+
+            auto DataRawStartPos = DataRaw.begin() + PrevTensorSizeWithDtype;
+            auto DataRawStopPos = DataRawStartPos + TensorSizeWithDtype;
+            std::copy(DataRawStartPos, DataRawStopPos, weight->data());
+            PrevTensorSizeWithDtype += TensorSizeWithDtype;
+        }
+
+        initialized_ = true;
     }
 #endif
 
@@ -175,6 +215,7 @@ protected:
     edgeptr_t ith_out_node(size_t i);
     mat_t* get_weight_data(size_t i);
     const mat_t* get_weight_data(size_t i) const;
+    xs::TensorInfo::TensorType get_xsDtype_from_NodeDtype() const;
 
 protected:
     bool initialized_;
