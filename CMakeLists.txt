@@ -108,7 +108,7 @@ IF(xsdnn_WITH_SERIALIZATION)
         EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer/ --cpp_out=${XSROOT}/include/serializer/ xs.proto3)
         ADD_COMPILE_DEFINITIONS(XS_USE_SERIALIZATION)
     ELSE()
-        MESSAGE(FATAL_ERROR "Install Protobuf Compiler C++ at System to make serialization available")
+        MESSAGE(FATAL_ERROR "Install Protobuf Compiler C++ v3.20.3 at System to make serialization available")
     ENDIF()
 ENDIF()
 
