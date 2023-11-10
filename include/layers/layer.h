@@ -63,38 +63,12 @@ public:
 #ifdef XS_USE_SERIALIZATION
     virtual
     void save(xs::TensorInfo* dst) const {
-        const auto all_w = weights();
-        for (auto& weight : all_w) {
-            for (auto& w : *weight) {
-                dst->add_float_data(w);
-            }
-            dst->add_dims(weight->size());
-        }
+
     }
 
     virtual
     void load(const xs::TensorInfo* src) {
-        auto all_w = weights();
 
-        /*
-         * Проверим, что размеры входного тензора равны размерам весов.
-         */
-        assert(src->dims_size() == static_cast<int>(all_w.size()));
-        size_t src_size = 0;
-        size_t all_w_size = 0;
-        for (size_t d = 0; d < static_cast<size_t>(src->dims_size()); ++d) {
-            src_size += src->dims(d);
-            all_w_size += all_w[d]->size();
-        }
-        assert(src_size == all_w_size);
-
-        size_t idx = 0;
-        for (size_t i = 0; i < all_w.size(); ++i) {
-            for (size_t j = 0; j < all_w[i]->size(); ++j) {
-                (*all_w[i])[j] = src->float_data(idx++); // FIXME: а если будет не float?
-            }
-        }
-        initialized_ = true;
     }
 #endif
 

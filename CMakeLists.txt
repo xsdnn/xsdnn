@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.27.0)
 SET(CMAKE_CXX_STANDARD 17)
 PROJECT(xsdnn VERSION 1.0.0 LANGUAGES C CXX)
 
@@ -9,7 +9,7 @@ OPTION(xsdnn_USE_OPENMP OFF)
 OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 OPTION(xsdnn_WITH_SERIALIZATION OFF)
 
-SET(XSROOT .)
+SET(XSROOT ${PROJECT_SOURCE_DIR})
 SET(XSROOT_SRC ${XSROOT}/src)
 SET(MMPACK_ROOT ${XSROOT_SRC}/mmpack)
 SET(THIRD_PARTY_ROOT ${XSROOT}/cmake/external)
@@ -98,11 +98,14 @@ IF (xsdnn_BUILD_TEST)
 ENDIF()
 
 IF(xsdnn_WITH_SERIALIZATION)
-    EXECUTE_PROCESS(COMMAND which protoc OUTPUT_VARIABLE PROTOC_INSTALLED)
-
+    EXECUTE_PROCESS(COMMAND which protoc OUTPUT_VARIABLE PROTOC_INSTALLED OUTPUT_STRIP_TRAILING_WHITESPACE)
     IF (PROTOC_INSTALLED MATCHES "protoc")
+        SET(Protobuf_PROTOC_EXECUTABLE ${PROTOC_INSTALLED})
+        SET(Protobuf_INCLUDE_DIR /usr/local/include)
+        FIND_PACKAGE(Protobuf REQUIRED)
+        INCLUDE_DIRECTORIES(${Protobuf_INCLUDE_DIRS})
         # ---[Compile model format]
-        EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer --cpp_out=${XSROOT}/include/serializer xs.proto3)
+        EXECUTE_PROCESS(COMMAND protoc -I ${XSROOT}/include/serializer/ --cpp_out=${XSROOT}/include/serializer/ xs.proto3)
         ADD_COMPILE_DEFINITIONS(XS_USE_SERIALIZATION)
     ELSE()
         MESSAGE(FATAL_ERROR "Install Protobuf Compiler C++ at System to make serialization available")

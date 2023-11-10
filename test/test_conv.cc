@@ -292,6 +292,7 @@ TEST(conv, simple_forward_without_bias_fp32) {
     }
 }
 
+#ifdef XS_USE_XNNPACK
 TEST(conv, xnnpack_backend_engine_fp32) {
     // Need to initialize because doesn't use graph
     core::XNNCompiler::getInstance().initialize();
@@ -351,6 +352,8 @@ TEST(conv, xnnpack_backend_engine_fp32) {
     gsl::span<const float> YSpan = GetDataAsSpan<const float>(&Y);
     gsl::span<const float> YExpectedSpan = GetDataAsSpan<const float>(&YExpected);
 }
+#endif // XS_USE_XNNPACK
+
 #ifdef XS_USE_SERIALIZATION
 TEST(conv, cerial) {
     shape3d in(12, 255, 255);

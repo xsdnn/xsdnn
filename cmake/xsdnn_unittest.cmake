@@ -7,7 +7,7 @@ macro(AddTest TARGET SOURCES)
     TARGET_LINK_LIBRARIES(${TARGET} GTest::gtest_main xsdnn)
 
     IF(xsdnn_WITH_SERIALIZATION)
-        target_link_libraries(${TARGET} protobuf absl_log_internal_message absl_log_internal_check_op)
+        target_link_libraries(${TARGET} ${Protobuf_LIBRARIES})
     ENDIF()
 
     IF(xsdnn_BUILD_XNNPACK_ENGINE)

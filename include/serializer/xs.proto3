@@ -6,12 +6,17 @@ message TensorInfo {
     enum TensorType {
         UNDEFINED = 0;
         FLOAT = 1;
+        INT16 = 2;
+        UINT16 = 3;
+        INT8 = 4;
+        UINT8 = 5;
     }
 
     string name = 1;
-    TensorType type = 2;
-    repeated float float_data = 3;
-    repeated int64 dims = 4;
+    repeated int64 dims = 2;
+    TensorType type = 3;
+
+    bytes raw_data = 5;
 }
 
 message AttributeInfo {
