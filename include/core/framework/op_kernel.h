@@ -8,6 +8,9 @@
 
 #include "op_context.h"
 #include "params.h"
+#ifdef XS_USE_PROFILING_TOOLS
+#include <easy/profiler.h>
+#endif
 
 namespace xsdnn {
     namespace core {
@@ -19,11 +22,28 @@ public:
     OpKernel& operator=(const OpKernel&) = delete;
     virtual ~OpKernel() {}
 
+#ifdef XS_USE_XNNPACK
 public:
+    virtual void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::fully& p) {}
+    virtual void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::max_pool& p) {}
+    virtual void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::conv& p) {}
+    virtual void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::activation& p) {}
+#endif
+
+public:
+    /*
+     * Runtime methods
+     */
     virtual void Compute(core::OpContext& ctx, params::fully& p) {}
     virtual void Compute(core::OpContext& ctx, params::max_pool& p) {}
     virtual void Compute(core::OpContext& ctx, params::conv& p) {}
     virtual void Compute(core::OpContext& ctx, params::activation& p) {}
+
+#ifdef XS_USE_XNNPACK
+protected:
+    xnn_operator_t op_;
+    pthreadpool_t  threadpool_;
+#endif
 };
 
     } // core

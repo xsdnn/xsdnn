@@ -30,6 +30,14 @@ void conv::set_params(size_t in_channel, size_t in_height, size_t in_width, size
 
 void conv::init_backend(core::backend_t engine) {
     fwd_kernel_.reset(new core::ConvFwdKernel);
+    if (engine == core::backend_t::xnnpack) {
+#ifdef XS_USE_XNNPACK
+        fwd_kernel_->CreateAndReshapeXNNKernel(this->dtype(), weights(), params_);
+#else
+        throw xs_error(START_MSG + "This build doesn't support XNN Backend Engine. "
+                                   "Rebuild with -Dxsdnn_BUILD_XNNPACK_ENGINE=ON");
+#endif
+    }
     set_backend(engine);
 }
 

@@ -199,7 +199,6 @@ namespace xsdnn {
         for (size_t i = 0; i < out_concept_; ++i) {
             fwd_out_data.emplace_back(ith_out_node(i)->get_data());
         }
-
         forward_propagation(fwd_in_data, fwd_out_data);
     }
 
@@ -288,7 +287,7 @@ namespace xsdnn {
     std::pair<mm_scalar, mm_scalar> layer::out_value_range() const {
         return { mm_scalar(0.0f), mm_scalar(1.0f) };
     }
-
+#ifdef XS_USE_SERIALIZATION
     xs::TensorInfo::TensorType layer::get_xsDtype_from_NodeDtype() const {
         switch (this->dtype_) {
             case kXsFloat32:
@@ -299,6 +298,7 @@ namespace xsdnn {
                 break;
         }
     }
+#endif
 
     void layer::pre_pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}
     void layer::pack(xsdnn::xsMemoryFormat from, xsdnn::xsMemoryFormat to) {}

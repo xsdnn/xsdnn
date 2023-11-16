@@ -38,6 +38,8 @@ void ComputeFullyConnectedKernelFP32(const tensor_t& in,
             memcpy(out_ptr, BSpan.data(), sizeof(float) * out_size);
         }
 
+
+
         mmpack::MmGemm(mmpack::CblasNoTrans,
                        mmpack::CblasNoTrans,
                        1, out_size, in_size,

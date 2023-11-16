@@ -215,7 +215,10 @@ protected:
     edgeptr_t ith_out_node(size_t i);
     mat_t* get_weight_data(size_t i);
     const mat_t* get_weight_data(size_t i) const;
+
+#ifdef XS_USE_SERIALIZATION
     xs::TensorInfo::TensorType get_xsDtype_from_NodeDtype() const;
+#endif
 
 protected:
     bool initialized_;

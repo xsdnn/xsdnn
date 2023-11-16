@@ -43,7 +43,6 @@ size_t fully_connected::fan_out_size() const {
 void fully_connected::forward_propagation(
         const std::vector<tensor_t *> &in_data,
         std::vector<tensor_t *> &out_data) {
-
     fwd_ctx_.set_in_out(in_data, out_data);
     fwd_ctx_.set_engine(layer::engine());
     fwd_ctx_.set_parallelize(layer::parallelize());

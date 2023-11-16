@@ -7,12 +7,16 @@ macro(AddTest TARGET SOURCES)
     TARGET_LINK_LIBRARIES(${TARGET} GTest::gtest_main xsdnn)
 
     IF(xsdnn_WITH_SERIALIZATION)
-        target_link_libraries(${TARGET} ${Protobuf_LIBRARIES})
+        TARGET_LINK_LIBRARIES(${TARGET} ${Protobuf_LIBRARIES})
     ENDIF()
 
     IF(xsdnn_BUILD_XNNPACK_ENGINE)
-        target_link_libraries(${TARGET} XNNPACK)
+        TARGET_LINK_LIBRARIES(${TARGET} XNNPACK)
     ENDIF()
+
+#    IF(xsdnn_BUILD_PROFILING_TOOLS)
+#        TARGET_LINK_LIBRARIES(${TARGET} easy_profiler)
+#    ENDIF()
 
     add_test(${TARGET} ${TARGET})
 endmacro()
@@ -107,3 +111,8 @@ AddTest(
         xsdnn_transpose_test
         ${XSDNN_TEST_ROOT}/test_transpose.cc
 )
+
+#AddTest(
+#        xsdnn_profiler_test
+#        ${XSDNN_TEST_ROOT}/test_profiler.cc
+#)

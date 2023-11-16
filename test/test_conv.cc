@@ -365,6 +365,7 @@ TEST(conv, cerial) {
 }
 #endif
 
+#ifdef XS_USE_XNNPACK
 TEST(conv, simple_ref) {
     // Create ConvOp
     conv Convolution(/*in_shape=*/shape3d(3, 4, 4), /*out_channel=*/2, /*kernel_shape=*/{2, 2},
@@ -444,6 +445,7 @@ TEST(conv, simple_ref) {
             BSpan.data(),
             YSpan.data());
 }
+#endif
 
 class SConvTester {
 public:

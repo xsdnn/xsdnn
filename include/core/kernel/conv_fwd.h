@@ -13,7 +13,19 @@ namespace xsdnn {
 
         class ConvFwdKernel : public OpKernel {
         public:
-            void Compute(OpContext& ctx, params::conv& p);
+            void Compute(OpContext& ctx, params::conv& p) override;
+#ifdef XS_USE_XNNPACK
+            void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::conv& p) override;
+
+        private:
+            std::vector<char> workspace;
+
+            size_t max_workspace_size{0};
+            size_t workspace_size{0};
+            size_t workspace_alignment{0};
+#endif
+
+
         };
 
     } // core

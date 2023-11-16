@@ -8,6 +8,7 @@ OPTION(xsdnn_USE_SSE OFF)
 OPTION(xsdnn_USE_OPENMP OFF)
 OPTION(xsdnn_BUILD_XNNPACK_ENGINE OFF)
 OPTION(xsdnn_WITH_SERIALIZATION OFF)
+#OPTION(xsdnn_BUILD_PROFILING_TOOLS OFF)
 
 SET(XSROOT ${PROJECT_SOURCE_DIR})
 SET(XSROOT_SRC ${XSROOT}/src)
@@ -112,6 +113,24 @@ IF(xsdnn_WITH_SERIALIZATION)
     ENDIF()
 ENDIF()
 
+#IF(xsdnn_BUILD_PROFILING_TOOLS)
+#    IF(NOT DEFINED PROFILER_SOURCE_DIR)
+#        MESSAGE(STATUS "Downloading Profiler to ${CMAKE_BINARY_DIR}/profiler-source (define PROFILER_SOURCE_DIR to avoid it)")
+#        CONFIGURE_FILE(./cmake/DownloadProfiler.cmake "${CMAKE_BINARY_DIR}/profiler-download/CMakeLists.txt")
+#        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+#                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/profiler-download")
+#        EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
+#                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/profiler-download")
+#        SET(PROFILER_SOURCE_DIR "${CMAKE_BINARY_DIR}/profiler-source" CACHE STRING "profiler source directory")
+#    ENDIF()
+#    SET(EASY_PROFILER_NO_GUI ON)
+#    ADD_SUBDIRECTORY(
+#            "${PROFILER_SOURCE_DIR}"
+#            "${CMAKE_BINARY_DIR}/deps/profiler" EXCLUDE_FROM_ALL)
+#    ADD_COMPILE_DEFINITIONS(XS_USE_PROFILING_TOOLS)
+#    INCLUDE_DIRECTORIES(${PROFILER_SOURCE_DIR}/easy_profiler_core/include)
+#ENDIF()
+
 # SET flags to build type
 SET(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Wall -Wpedantic -Wno-narrowing")
 SET(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}")
@@ -151,7 +170,7 @@ ADD_LIBRARY(xsdnn
         ${xsdnn_serializer_src}
         ${xsdnn_session_src})
 
-
+#TARGET_LINK_LIBRARIES(xsdnn easy_profiler)
 SET_TARGET_PROPERTIES(xsdnn PROPERTIES VERSION ${PROJECT_VERSION})
 
 INSTALL(TARGETS xsdnn
