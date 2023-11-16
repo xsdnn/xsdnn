@@ -4,6 +4,7 @@
 //
 
 #include <common/network.h>
+#include <core/framework/threading.h>
 #include <fstream>
 
 namespace xsdnn {
@@ -21,30 +22,26 @@ bool network::empty() const {
 }
 
 mat_t network::predict(const mat_t &in) {
-    return fprop(in);
+    fprop(in);
+    assert(net_.output_layers_.size() == 1);
+    return {};
 }
 
 tensor_t network::predict(const tensor_t &in) {
-    return fprop(in);
-}
-
-std::vector<tensor_t> network::predict(const std::vector<tensor_t> &in) {
-    return fprop(in);
+    fprop(in);
 }
 
 
-mat_t network::fprop(const mat_t &in) {
-    return fprop(tensor_t{in})[0];
-}
-
-tensor_t network::fprop(const tensor_t &in) {
-    return fprop(std::vector<tensor_t>{ in })[0];
-}
-
-std::vector<tensor_t> network::fprop(const std::vector<tensor_t> &in) {
+void network::fprop(const mat_t &in) {
     if (!configured_) throw xs_error(START_MSG + "Network not configured. Run network().configure()");
-    return net_.forward(in);
+    net_.forward(in);
 }
+
+void network::fprop(const tensor_t &in) {
+    if (!configured_) throw xs_error(START_MSG + "Network not configured. Run network().configure()");
+    net_.forward(in);
+}
+
 
 void network::save(const std::string filename) {
     net_.save_model(filename, network_name_);
@@ -69,6 +66,7 @@ void network::configure() {
     if (net_.have_engine_xnnpack()) {
 #ifdef XS_USE_XNNPACK
         core::XNNCompiler::getInstance().initialize();
+        concurrency::threadpool::getInstance().create(net_.user_num_threads_);
         if (net_.get_num_xnnpack_backend_engine() != net_.nodes_.size()) {
             throw xs_error(START_MSG + "Attention! This graph is executed on different Backend Engines.\n"
                                    "It is recommended to use only one Backend Engine for all types of nodes"

@@ -15,6 +15,10 @@
 #include <omp.h>
 #endif
 
+#ifdef XS_USE_XNNPACK
+#include <pthreadpool.h>
+#endif
+
 namespace xsdnn {
 namespace detail {
 
@@ -117,7 +121,28 @@ void TryParallelFor(bool parallel, size_t num_threads, T end, Func f) {
 
 }
 
-} // concurrency
+#ifdef XS_USE_XNNPACK
+class threadpool {
+public:
+    threadpool() = default;
+    threadpool(const threadpool&) = delete;
+    threadpool(const threadpool&&) = delete;
+    threadpool& operator=(const threadpool&) = delete;
+    threadpool& operator=(threadpool&&) = delete;
+
+public:
+    static threadpool& getInstance();
+    void create(size_t num_threads);
+
+public:
+    pthreadpool_t threadpool_;
+
+private:
+    bool initialized{false};
+};
+#endif
+
+}; // concurrency
 } // xsdnn
 
 #endif //XSDNN_THREADING_H

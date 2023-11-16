@@ -37,7 +37,6 @@ public:
 
     mat_t predict(const mat_t& in);
     tensor_t predict(const tensor_t& in);
-    std::vector<tensor_t> predict(const std::vector<tensor_t>& in);
 
     void save(const std::string filename);
     void load(const std::string filename);
@@ -88,11 +87,10 @@ protected:
                                 const std::vector<layer*>& out);
 
 protected:
-    mat_t fprop(const mat_t& in);
-    std::vector<mat_t> fprop(const std::vector<mat_t>& in);
-    std::vector<tensor_t> fprop(const std::vector<tensor_t>& in);
+    void fprop(const mat_t& in);
+    void fprop(const std::vector<mat_t>& in);
 
-private:
+public:
     graph net_;
     std::string network_name_;
     bool configured_{false};

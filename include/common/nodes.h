@@ -25,8 +25,12 @@ public:
     typedef std::vector<layer*>::const_iterator const_iterator;
 
     virtual
-    std::vector<tensor_t>
-    forward(const std::vector<tensor_t>& start) = 0;
+    void
+    forward(const mat_t& start) = 0;
+
+    virtual
+    void
+    forward(const tensor_t& start) = 0;
 
     virtual
     void
@@ -57,34 +61,11 @@ protected:
     void reorder_input(const std::vector<tensor_t> &input,
                        std::vector<tensor_t> &output);
 
-protected:
+public:
     std::vector<std::shared_ptr<layer>> owner_nodes_; // for r-value impl
     std::vector<layer*> nodes_;
 };
 
-class sequential : public nodes {
-public:
-    sequential();
-    virtual ~sequential();
-
-public:
-    virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
-
-    void check_connectivity();
-
-#ifdef XS_USE_SERIALIZATION
-    void save_connections(xs::GraphInfo* Graph);
-    void load_connections(xs::GraphInfo* Graph);
-#endif
-
-protected:
-    void reorder_output(const std::vector<tensor_t>& input,
-                        std::vector<tensor_t>& output);
-
-    friend class network;
-
-    void connection_mismatch(shape3d lhs, shape3d rhs);
-};
 
 class graph : public nodes {
 public:
@@ -92,7 +73,8 @@ public:
     virtual ~graph();
 
 public:
-    virtual std::vector<tensor_t> forward(const std::vector<tensor_t>& start);
+    virtual void forward(const mat_t& start);
+    virtual void forward(const tensor_t& start);
 
     /*
      * Задача метода построить последовательность отсортированных нод
@@ -117,7 +99,7 @@ private:
     // Возвращает число нод на движке xnnpack
     size_t get_num_xnnpack_backend_engine() const noexcept;
 
-private:
+public:
     std::vector<layer*> input_layers_;
     std::vector<layer*> output_layers_;
     std::vector<xsMemoryFormat> mtypes_;

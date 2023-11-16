@@ -42,7 +42,6 @@ public:
 #ifdef XS_USE_XNNPACK
 protected:
     xnn_operator_t op_;
-    pthreadpool_t  threadpool_;
 #endif
 };
 

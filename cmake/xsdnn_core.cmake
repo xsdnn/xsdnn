@@ -8,6 +8,7 @@ set(
         "${XSROOT_SRC}/core/framework/op_context.cc"
         "${XSROOT_SRC}/core/framework/op_kernel.cc"
         "${XSROOT_SRC}/core/framework/params.cc"
+        "${XSROOT_SRC}/core/framework/threading.cc"
 )
 
 set(

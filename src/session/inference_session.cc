@@ -18,7 +18,7 @@ namespace xsdnn {
                          std::vector<tensor_t> &output) {
         assert(input.size() == net_->net_.input_layers_.size());
         assert(output.size() == net_->net_.output_layers_.size());
-        output = net_->predict(input);
+//        output = net_->predict(input);
     }
 
     network InfSession::GetModel() {

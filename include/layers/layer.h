@@ -113,6 +113,7 @@ public:
 #endif
 
     void set_in_data(const std::vector<tensor_t>& data);
+    void set_mat_in_data(const mat_t& data); // TODO: полноценно интегрировать
     void set_trainable(bool trainable);
 
     std::vector<tensor_t> output() const;

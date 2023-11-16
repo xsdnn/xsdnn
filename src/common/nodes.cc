@@ -81,11 +81,7 @@ namespace xsdnn {
             serializer::get_instance().save(node, tensor, nodes_[i]);
         }
 
-        if (typeid(*this) == typeid(sequential)) {
-            dynamic_cast<sequential *>(this)->save_connections(Graph);
-        } else {
-            dynamic_cast<graph *>(this)->save_connections(Graph);
-        }
+        dynamic_cast<graph *>(this)->save_connections(Graph);
 
         xs::ModelInfo model;
         model.set_name(network_name_);
@@ -126,11 +122,8 @@ namespace xsdnn {
         for (auto &n : owner_nodes_) {
             nodes_.push_back(&*n);
         }
-        if (typeid(*this) == typeid(sequential)) {
-            dynamic_cast<sequential *>(this)->load_connections(&model_graph);
-        } else {
-            dynamic_cast<graph *>(this)->load_connections(&model_graph);
-        }
+        dynamic_cast<graph *>(this)->load_connections(&model_graph);
+
 #else
         throw xs_error(START_MSG + "This build doesn't support serialization. "
                                    "Rebuild with -Dxsdnn_WITH_SERIALIZATION=ON");
@@ -161,69 +154,6 @@ namespace xsdnn {
         }
     }
 
-    sequential::sequential() {}
-    sequential::~sequential() {}
-
-    std::vector<tensor_t> sequential::forward(const std::vector<tensor_t> &start) {
-        std::vector<tensor_t> reorder_data;
-        reorder_input(start, reorder_data);
-        nodes_.front()->set_in_data(reorder_data);
-
-        for (auto l = nodes_.begin(); l != nodes_.end(); ++l) {
-            (*l)->forward();
-        }
-
-        std::vector<tensor_t> output;
-        reorder_output(nodes_.back()->output(), output);
-        return output;
-    }
-
-    void sequential::check_connectivity() {
-        for (size_t i = 0; i < nodes_.size() - 1; ++i) {
-            auto data_idx = find_data_idx(nodes_[i]->out_types(), nodes_[i]->in_types());
-            auto prev = nodes_[i]->out_shape();
-            auto next = nodes_[i+1]->in_shape();
-
-            if (prev[data_idx.first] != next[data_idx.second]) {
-                connection_mismatch(prev[data_idx.first], next[data_idx.second]);
-            }
-        }
-    }
-
-    void sequential::connection_mismatch(xsdnn::shape3d lhs, xsdnn::shape3d rhs) {
-        std::ostringstream io;
-        io << "\x1B[31m" << "Critical Error! Shape mismatch!" << std::endl;
-
-        io << "\x1B[33m" << "out shape:\t" << lhs << std::endl;
-
-        io << "\x1B[33m" << "in  shape:\t" << rhs << std::endl;
-
-        std::string message = io.str();
-        throw xs_error(message.c_str());
-    }
-
-    void sequential::reorder_output(const std::vector<tensor_t> &input, std::vector<tensor_t> &output) {
-        const size_t sample_count = input[0].size();
-        output.resize(sample_count, tensor_t(1));
-
-        for (size_t sample = 0; sample < sample_count; ++sample) {
-            output[sample][0] = (input[0])[sample];
-        }
-    }
-
-#ifdef XS_USE_SERIALIZATION
-    void sequential::load_connections(xs::GraphInfo* Graph) {
-        for(size_t i = 0; i < nodes_.size() - 1; ++i) {
-            auto last_node = nodes_[i];
-            auto next_node = nodes_[i + 1];
-            auto data_idx = find_data_idx(last_node->out_types(), next_node->in_types());
-            connect(last_node, next_node, data_idx.first, data_idx.second);
-        }
-    }
-
-    void sequential::save_connections(xs::GraphInfo* Graph) {}
-#endif
-
     graph::graph() {}
     graph::~graph() {}
 
@@ -235,29 +165,30 @@ namespace xsdnn {
         return num;
     }
 
-    std::vector<tensor_t> graph::forward(const std::vector<tensor_t> &start) {
+    void graph::forward(const xsdnn::mat_t &start) {
+        assert(input_layers_.size() == 1);
         this->set_num_threads();
+        input_layers_[0]->set_mat_in_data(start);
+        for (auto l : nodes_) {
+            l->forward();
+        }
+    }
 
-        size_t input_data_concept_count = start[0].size();
+    void graph::forward(const tensor_t &start) {
+        this->set_num_threads();
+        size_t input_data_concept_count = start.size();
 
         if (input_data_concept_count != input_layers_.size()) {
             throw xs_error("input size mismatch");
         }
 
-        std::vector<tensor_t> reordered_data;
-        reorder_input(start, reordered_data);
-        assert(reordered_data.size() == input_data_concept_count);
-
         for (size_t channel_index = 0; channel_index < input_data_concept_count; channel_index++) {
-            input_layers_[channel_index]->set_in_data({ reordered_data[channel_index] });
+            input_layers_[channel_index]->set_mat_in_data(start[channel_index]);
         }
         // TODO: решить задачу запуска сети на нескольких Backend Engine
         for (auto l : nodes_) {
             l->forward();
         }
-        std::vector<tensor_t> out;
-        reorder_output(out);
-        return out;
     }
 
     void graph::construct(const std::vector<layer *> &input,

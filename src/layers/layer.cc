@@ -157,6 +157,13 @@ namespace xsdnn {
         }
     }
 
+    void layer::set_mat_in_data(const xsdnn::mat_t &data) {
+        for (size_t i = 0; i < in_concept_; ++i) {
+            if (in_type_[i] != tensor_type::data) continue;
+            std::memcpy(ith_in_node(i)->get_data()->at(0).data(), data.data(), data.size());
+        }
+    }
+
     std::vector<tensor_t> layer::output() const {
         std::vector<tensor_t> out;
         for (size_t i = 0; i < out_concept_; ++i) {

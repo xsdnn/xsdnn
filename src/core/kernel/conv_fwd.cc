@@ -57,9 +57,6 @@ void XNNPACKComputeConvKernelFP32(const tensor_t& X,
                                   std::vector<char>& workspace,
                                   pthreadpool_t threadpool) {
     if (X.size() != 1) throw xs_error(START_MSG + "Support only batch == 1 at XNNPACK backend engine");
-    if (nthreads != std::thread::hardware_concurrency())
-        xs_warning(START_MSG + "Support only nthreads == max_threads_size at XNNPACK backend engine\n" +
-                                "Will be used NUM_THREADS: " + std::to_string(std::thread::hardware_concurrency()));
     xnn_status status;
 
     gsl::span<const float> XSpan = GetDataAsSpan<const float>(&X[0]);
@@ -102,7 +99,6 @@ void ConvFwdKernel::CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*>
         bias = GetDataAsSpan<const float>(WB[1]);
     }
     xnn_status status;
-    threadpool_ = pthreadpool_create(std::thread::hardware_concurrency());
     if (dtype == kXsFloat32) {
         status = xnn_create_convolution2d_nhwc_f32(padding_top, padding_right, padding_bottom, padding_left,
                                                    kernel_h, kernel_w,
@@ -114,7 +110,7 @@ void ConvFwdKernel::CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*>
                                                    -std::numeric_limits<float>::infinity(), +std::numeric_limits<float>::infinity(),
                                                    0 /* flags */, nullptr, nullptr, &op_);
         if (status != xnn_status_success) {
-            throw xs_error(START_MSG + "Error when creating XNNPACK convolution2d_nhwc_fp32 kernel.");
+            throw xs_error(START_MSG + "Error when creating XNNPACK convolution2d_nhwc_fp32 kernel. Code: " + std::to_string(status));
         }
 
         const size_t Ih = p._.InShape[0];
@@ -128,7 +124,7 @@ void ConvFwdKernel::CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*>
                 1, Ih, Iw,
                 &workspace_size, &workspace_alignment,
                 /*output_height_out=*/nullptr, /*output_width_out=*/nullptr,
-                /*threadpool=*/threadpool_);
+                /*threadpool=*/concurrency::threadpool::getInstance().threadpool_);
 
         if (status != xnn_status_success) {
             throw xs_error(START_MSG + "Failed to reshape FP32 XNNPACK Convolution operator");
@@ -160,7 +156,7 @@ void ConvFwdKernel::Compute(core::OpContext &ctx, params::conv &p) {
 #ifdef XS_USE_XNNPACK
         if (dtype == kXsFloat32) XNNPACKComputeConvKernelFP32(X, W[0], B, Y, p,
                                                               ctx.parallelize(), ctx.num_threads(),
-                                                              op_, workspace, threadpool_);
+                                                              op_, workspace, concurrency::threadpool::getInstance().threadpool_);
         else throw xs_error(START_MSG + "unsupported dtype for xnnpack engine");
 #else
         throw xs_error(START_MSG + "This build doesn't support XNN Backend Engine. "
