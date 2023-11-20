@@ -26,343 +26,344 @@ namespace xsdnn {
 
 struct cerial {
 #ifdef XS_USE_SERIALIZATION
-template<typename T>
-inline
-std::shared_ptr<T> deserialize(const xs::NodeInfo* node,
-                                 const xs::TensorInfo* tensor);
-/*
- * Fully Connected
- */
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const fully_connected* layer) {
-    node->set_name("fully_connected");
-    xs::AttributeInfo* in_size = node->add_attribute();
-    xs::AttributeInfo* out_size = node->add_attribute();
-    xs::AttributeInfo* has_bias = node->add_attribute();
+    template<typename T>
+    inline
+    std::shared_ptr<T> deserialize(const xs::NodeInfo* node,
+                                     const xs::TensorInfo* tensor);
+    /*
+     * Fully Connected
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const fully_connected* layer) {
+        node->set_name("fully_connected");
+        xs::AttributeInfo* in_size = node->add_attribute();
+        xs::AttributeInfo* out_size = node->add_attribute();
+        xs::AttributeInfo* has_bias = node->add_attribute();
 
-    in_size->set_name("in_size");
-    in_size->set_type(xs::AttributeInfo_AttributeType_INT);
-    in_size->set_i(layer->params_.in_size_);
+        in_size->set_name("in_size");
+        in_size->set_type(xs::AttributeInfo_AttributeType_INT);
+        in_size->set_i(layer->params_.in_size_);
 
-    out_size->set_name("out_size");
-    out_size->set_type(xs::AttributeInfo_AttributeType_INT);
-    out_size->set_i(layer->params_.out_size_);
+        out_size->set_name("out_size");
+        out_size->set_type(xs::AttributeInfo_AttributeType_INT);
+        out_size->set_i(layer->params_.out_size_);
 
-    has_bias->set_name("has_bias");
-    has_bias->set_type(xs::AttributeInfo_AttributeType_INT);
-    has_bias->set_i(layer->params_.has_bias_);
-
-    std::vector<const mat_t*> wb = layer->weights();
-    tensor->set_name("w&b fully_connected");
-#ifdef XS_USE_DOUBLE
-#error NotImplementedYet
-#else
-    tensor->set_type(xs::TensorInfo_TensorType_FLOAT);
-#endif
-    layer->save(tensor);
-}
-
-/*
- * Input
- */
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Input* layer) {
-    node->set_name("Input");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-
-    C->set_name("channel");
-    C->set_type(xs::AttributeInfo_AttributeType_INT);
-    C->set_i(layer->shape_.C);
-
-    H->set_name("height");
-    H->set_type(xs::AttributeInfo_AttributeType_INT);
-    H->set_i(layer->shape_.H);
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->shape_.W);
-}
-
-/*
- * Output
- */
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Output* layer) {
-    node->set_name("Output");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-
-    C->set_name("channel");
-    C->set_type(xs::AttributeInfo_AttributeType_INT);
-    C->set_i(layer->shape_.C);
-
-    H->set_name("height");
-    H->set_type(xs::AttributeInfo_AttributeType_INT);
-    H->set_i(layer->shape_.H);
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->shape_.W);
-}
-
-
-/*
- * Relu
- */
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const relu* layer) {
-    node->set_name("relu");
-    xs::AttributeInfo* W = node->add_attribute();
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->out_shape()[0].W);
-}
-
-/*
- * Hard Sigmoid
- */
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const hard_sigmoid* layer) {
-    node->set_name("hard_sigmoid");
-    xs::AttributeInfo* alpha = node->add_attribute();
-    xs::AttributeInfo* beta = node->add_attribute();
-
-    alpha->set_name("alpha");
-    alpha->set_type(xs::AttributeInfo_AttributeType_FLOAT);
-    alpha->set_f(layer->alpha_);
-
-    beta->set_name("beta");
-    beta->set_type(xs::AttributeInfo_AttributeType_FLOAT);
-    beta->set_f(layer->beta_);
-}
-
-
-/*
-* Flatten
-*/
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::flatten* layer) {
-    node->set_name("flatten");
-}
-
-/*
-* Max Pooling
-*/
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::max_pooling* layer) {
-    node->set_name("max_pooling");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-    xs::AttributeInfo* kernel_x = node->add_attribute();
-    xs::AttributeInfo* kernel_y = node->add_attribute();
-    xs::AttributeInfo* stride_x = node->add_attribute();
-    xs::AttributeInfo* stride_y = node->add_attribute();
-    xs::AttributeInfo* pad_type = node->add_attribute();
-
-    C->set_name("channel");
-    C->set_type(xs::AttributeInfo_AttributeType_INT);
-    C->set_i(layer->params_.in_shape_.C);
-
-    H->set_name("height");
-    H->set_type(xs::AttributeInfo_AttributeType_INT);
-    H->set_i(layer->params_.in_shape_.H);
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->params_.in_shape_.W);
-
-    kernel_x->set_name("kernel_x");
-    kernel_x->set_type(xs::AttributeInfo_AttributeType_INT);
-    kernel_x->set_i(layer->params_.kernel_x_);
-
-    kernel_y->set_name("kernel_y");
-    kernel_y->set_type(xs::AttributeInfo_AttributeType_INT);
-    kernel_y->set_i(layer->params_.kernel_y_);
-
-    stride_x->set_name("stride_x");
-    stride_x->set_type(xs::AttributeInfo_AttributeType_INT);
-    stride_x->set_i(layer->params_.stride_x_);
-
-    stride_y->set_name("stride_y");
-    stride_y->set_type(xs::AttributeInfo_AttributeType_INT);
-    stride_y->set_i(layer->params_.stride_y_);
-
-    pad_type->set_name("pad_type");
-    pad_type->set_type(xs::AttributeInfo_AttributeType_STRING);
-    pad_type->set_name((layer->params_.pad_type_ == padding_mode::same) ? "same" : "valid");
-}
-
-/*
-* Global Average Pooling
-*/
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::global_average_pooling* layer) {
-    node->set_name("global_average_pooling");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-
-    C->set_name("channel");
-    C->set_type(xs::AttributeInfo_AttributeType_INT);
-    C->set_i(layer->params_.in_shape_.C);
-
-    H->set_name("height");
-    H->set_type(xs::AttributeInfo_AttributeType_INT);
-    H->set_i(layer->params_.in_shape_.H);
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->params_.in_shape_.W);
-}
-
-/*
-* Reshape
-*/
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::reshape* layer) {
-    node->set_name("reshape");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-
-    C->set_name("channel");
-    C->set_type(xs::AttributeInfo_AttributeType_INT);
-    C->set_i(layer->out_shape_.C);
-
-    H->set_name("height");
-    H->set_type(xs::AttributeInfo_AttributeType_INT);
-    H->set_i(layer->out_shape_.H);
-
-    W->set_name("width");
-    W->set_type(xs::AttributeInfo_AttributeType_INT);
-    W->set_i(layer->out_shape_.W);
-}
-
-/*
-* Conv
-*/
-inline
-static
-void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::conv* layer) {
-    node->set_name("conv");
-    xs::AttributeInfo* C = node->add_attribute();
-    xs::AttributeInfo* H = node->add_attribute();
-    xs::AttributeInfo* W = node->add_attribute();
-    xs::AttributeInfo* OutChannel = node->add_attribute();
-    xs::AttributeInfo* Kernel_H = node->add_attribute();
-    xs::AttributeInfo* Kernel_W = node->add_attribute();
-    xs::AttributeInfo* GroupCount = node->add_attribute();
-    xs::AttributeInfo* Bias = node->add_attribute();
-    xs::AttributeInfo* Stride_H = node->add_attribute();
-    xs::AttributeInfo* Stride_W = node->add_attribute();
-    xs::AttributeInfo* Dilation_H = node->add_attribute();
-    xs::AttributeInfo* Dilation_W = node->add_attribute();
-    xs::AttributeInfo* PadType = node->add_attribute();
-    xs::AttributeInfo* PadLeftHeight = node->add_attribute();
-    xs::AttributeInfo* PadLeftWidth = node->add_attribute();
-    xs::AttributeInfo* PadRightHeight = node->add_attribute();
-    xs::AttributeInfo* PadRightWidth = node->add_attribute();
-
-    mmpack::MM_CONV_PARAMS Parameters = layer->get_params()._;
-
-    if (Parameters.Dimensions == 2) {
-        C->set_name("channel");
-        C->set_type(xs::AttributeInfo_AttributeType_INT);
-        C->set_i(Parameters.InChannel * Parameters.GroupCount);
-
-        H->set_name("height");
-        H->set_type(xs::AttributeInfo_AttributeType_INT);
-        H->set_i(Parameters.InShape[0]);
-
-        W->set_name("width");
-        W->set_type(xs::AttributeInfo_AttributeType_INT);
-        W->set_i(Parameters.InShape[1]);
-
-        OutChannel->set_name("out_channel");
-        OutChannel->set_type(xs::AttributeInfo_AttributeType_INT);
-        OutChannel->set_i(Parameters.FilterCount * Parameters.GroupCount);
-
-        Kernel_H->set_name("kernel_h");
-        Kernel_H->set_type(xs::AttributeInfo_AttributeType_INT);
-        Kernel_H->set_i(Parameters.KernelShape[0]);
-
-        Kernel_W->set_name("kernel_w");
-        Kernel_W->set_type(xs::AttributeInfo_AttributeType_INT);
-        Kernel_W->set_i(Parameters.KernelShape[1]);
-
-        GroupCount->set_name("group_count");
-        GroupCount->set_type(xs::AttributeInfo_AttributeType_INT);
-        GroupCount->set_i(Parameters.GroupCount);
-
-        Bias->set_name("bias");
-        Bias->set_type(xs::AttributeInfo_AttributeType_INT);
-        Bias->set_i(Parameters.Bias);
-
-        Stride_H->set_name("stride_h");
-        Stride_H->set_type(xs::AttributeInfo_AttributeType_INT);
-        Stride_H->set_i(Parameters.StrideShape[0]);
-
-        Stride_W->set_name("stride_w");
-        Stride_W->set_type(xs::AttributeInfo_AttributeType_INT);
-        Stride_W->set_i(Parameters.StrideShape[1]);
-
-        Dilation_H->set_name("dilation_h");
-        Dilation_H->set_type(xs::AttributeInfo_AttributeType_INT);
-        Dilation_H->set_i(Parameters.DilationShape[0]);
-
-        Dilation_W->set_name("dilation_w");
-        Dilation_W->set_type(xs::AttributeInfo_AttributeType_INT);
-        Dilation_W->set_i(Parameters.DilationShape[1]);
-
-        PadType->set_name("pad_type");
-        PadType->set_type(xs::AttributeInfo_AttributeType_STRING);
-        PadType->set_s(convert_pad_to_string(layer->params_.pad_type_));
-
-        PadLeftHeight->set_name("PadLeftHeight");
-        PadLeftHeight->set_type(xs::AttributeInfo_AttributeType_INT);
-        PadLeftHeight->set_i(Parameters.Padding[0]);
-
-        PadLeftWidth->set_name("PadLeftWidth");
-        PadLeftWidth->set_type(xs::AttributeInfo_AttributeType_INT);
-        PadLeftWidth->set_i(Parameters.Padding[1]);
-
-        PadRightHeight->set_name("PadRightHeight");
-        PadRightHeight->set_type(xs::AttributeInfo_AttributeType_INT);
-        PadRightHeight->set_i(Parameters.Padding[2]);
-
-        PadRightWidth->set_name("PadRightWidth");
-        PadRightWidth->set_type(xs::AttributeInfo_AttributeType_INT);
-        PadRightWidth->set_i(Parameters.Padding[3]);
+        has_bias->set_name("has_bias");
+        has_bias->set_type(xs::AttributeInfo_AttributeType_INT);
+        has_bias->set_i(layer->params_.has_bias_);
 
         std::vector<const mat_t*> wb = layer->weights();
-        tensor->set_name("w&b conv");
+        tensor->set_name("w&b fully_connected");
 #ifdef XS_USE_DOUBLE
 #error NotImplementedYet
 #else
         tensor->set_type(xs::TensorInfo_TensorType_FLOAT);
 #endif
         layer->save(tensor);
-    } else {
-        throw xs_error("[conv serialization] Unsupported dimensions");
     }
-}
 
+    /*
+     * Input
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Input* layer) {
+        node->set_name("Input");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->shape_.W);
+    }
+
+    /*
+     * Output
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const Output* layer) {
+        node->set_name("Output");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->shape_.W);
+    }
+
+
+    /*
+     * Relu
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const relu* layer) {
+        node->set_name("relu");
+        xs::AttributeInfo* W = node->add_attribute();
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->out_shape()[0].W);
+    }
+
+    /*
+     * Hard Sigmoid
+     */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const hard_sigmoid* layer) {
+        node->set_name("hard_sigmoid");
+        xs::AttributeInfo* alpha = node->add_attribute();
+        xs::AttributeInfo* beta = node->add_attribute();
+
+        alpha->set_name("alpha");
+        alpha->set_type(xs::AttributeInfo_AttributeType_FLOAT);
+        alpha->set_f(layer->alpha_);
+
+        beta->set_name("beta");
+        beta->set_type(xs::AttributeInfo_AttributeType_FLOAT);
+        beta->set_f(layer->beta_);
+    }
+
+
+    /*
+    * Flatten
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::flatten* layer) {
+        node->set_name("flatten");
+    }
+
+    /*
+    * Max Pooling
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::max_pooling* layer) {
+        node->set_name("max_pooling");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* kernel_x = node->add_attribute();
+        xs::AttributeInfo* kernel_y = node->add_attribute();
+        xs::AttributeInfo* stride_x = node->add_attribute();
+        xs::AttributeInfo* stride_y = node->add_attribute();
+        xs::AttributeInfo* pad_type = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->params_.in_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->params_.in_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->params_.in_shape_.W);
+
+        kernel_x->set_name("kernel_x");
+        kernel_x->set_type(xs::AttributeInfo_AttributeType_INT);
+        kernel_x->set_i(layer->params_.kernel_x_);
+
+        kernel_y->set_name("kernel_y");
+        kernel_y->set_type(xs::AttributeInfo_AttributeType_INT);
+        kernel_y->set_i(layer->params_.kernel_y_);
+
+        stride_x->set_name("stride_x");
+        stride_x->set_type(xs::AttributeInfo_AttributeType_INT);
+        stride_x->set_i(layer->params_.stride_x_);
+
+        stride_y->set_name("stride_y");
+        stride_y->set_type(xs::AttributeInfo_AttributeType_INT);
+        stride_y->set_i(layer->params_.stride_y_);
+
+        pad_type->set_name("pad_type");
+        pad_type->set_type(xs::AttributeInfo_AttributeType_STRING);
+        pad_type->set_name((layer->params_.pad_type_ == padding_mode::same) ? "same" : "valid");
+    }
+
+    /*
+    * Global Average Pooling
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::global_average_pooling* layer) {
+        node->set_name("global_average_pooling");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->params_.in_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->params_.in_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->params_.in_shape_.W);
+    }
+
+    /*
+    * Reshape
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::reshape* layer) {
+        node->set_name("reshape");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+
+        C->set_name("channel");
+        C->set_type(xs::AttributeInfo_AttributeType_INT);
+        C->set_i(layer->out_shape_.C);
+
+        H->set_name("height");
+        H->set_type(xs::AttributeInfo_AttributeType_INT);
+        H->set_i(layer->out_shape_.H);
+
+        W->set_name("width");
+        W->set_type(xs::AttributeInfo_AttributeType_INT);
+        W->set_i(layer->out_shape_.W);
+    }
+
+    /*
+    * Conv
+    */
+    inline
+    static
+    void serialize(xs::NodeInfo* node, xs::TensorInfo* tensor, const xsdnn::conv* layer) {
+        node->set_name("conv");
+        xs::AttributeInfo* C = node->add_attribute();
+        xs::AttributeInfo* H = node->add_attribute();
+        xs::AttributeInfo* W = node->add_attribute();
+        xs::AttributeInfo* OutChannel = node->add_attribute();
+        xs::AttributeInfo* Kernel_H = node->add_attribute();
+        xs::AttributeInfo* Kernel_W = node->add_attribute();
+        xs::AttributeInfo* GroupCount = node->add_attribute();
+        xs::AttributeInfo* Bias = node->add_attribute();
+        xs::AttributeInfo* Stride_H = node->add_attribute();
+        xs::AttributeInfo* Stride_W = node->add_attribute();
+        xs::AttributeInfo* Dilation_H = node->add_attribute();
+        xs::AttributeInfo* Dilation_W = node->add_attribute();
+        xs::AttributeInfo* PadType = node->add_attribute();
+        xs::AttributeInfo* PadLeftHeight = node->add_attribute();
+        xs::AttributeInfo* PadLeftWidth = node->add_attribute();
+        xs::AttributeInfo* PadRightHeight = node->add_attribute();
+        xs::AttributeInfo* PadRightWidth = node->add_attribute();
+
+        mmpack::MM_CONV_PARAMS Parameters = layer->get_params()._;
+
+        if (Parameters.Dimensions == 2) {
+            C->set_name("channel");
+            C->set_type(xs::AttributeInfo_AttributeType_INT);
+            C->set_i(Parameters.InChannel * Parameters.GroupCount);
+
+            H->set_name("height");
+            H->set_type(xs::AttributeInfo_AttributeType_INT);
+            H->set_i(Parameters.InShape[0]);
+
+            W->set_name("width");
+            W->set_type(xs::AttributeInfo_AttributeType_INT);
+            W->set_i(Parameters.InShape[1]);
+
+            OutChannel->set_name("out_channel");
+            OutChannel->set_type(xs::AttributeInfo_AttributeType_INT);
+            OutChannel->set_i(Parameters.FilterCount * Parameters.GroupCount);
+
+            Kernel_H->set_name("kernel_h");
+            Kernel_H->set_type(xs::AttributeInfo_AttributeType_INT);
+            Kernel_H->set_i(Parameters.KernelShape[0]);
+
+            Kernel_W->set_name("kernel_w");
+            Kernel_W->set_type(xs::AttributeInfo_AttributeType_INT);
+            Kernel_W->set_i(Parameters.KernelShape[1]);
+
+            GroupCount->set_name("group_count");
+            GroupCount->set_type(xs::AttributeInfo_AttributeType_INT);
+            GroupCount->set_i(Parameters.GroupCount);
+
+            Bias->set_name("bias");
+            Bias->set_type(xs::AttributeInfo_AttributeType_INT);
+            Bias->set_i(Parameters.Bias);
+
+            Stride_H->set_name("stride_h");
+            Stride_H->set_type(xs::AttributeInfo_AttributeType_INT);
+            Stride_H->set_i(Parameters.StrideShape[0]);
+
+            Stride_W->set_name("stride_w");
+            Stride_W->set_type(xs::AttributeInfo_AttributeType_INT);
+            Stride_W->set_i(Parameters.StrideShape[1]);
+
+            Dilation_H->set_name("dilation_h");
+            Dilation_H->set_type(xs::AttributeInfo_AttributeType_INT);
+            Dilation_H->set_i(Parameters.DilationShape[0]);
+
+            Dilation_W->set_name("dilation_w");
+            Dilation_W->set_type(xs::AttributeInfo_AttributeType_INT);
+            Dilation_W->set_i(Parameters.DilationShape[1]);
+
+            PadType->set_name("pad_type");
+            PadType->set_type(xs::AttributeInfo_AttributeType_STRING);
+            PadType->set_s(convert_pad_to_string(layer->params_.pad_type_));
+
+            PadLeftHeight->set_name("PadLeftHeight");
+            PadLeftHeight->set_type(xs::AttributeInfo_AttributeType_INT);
+            PadLeftHeight->set_i(Parameters.Padding[0]);
+
+            PadLeftWidth->set_name("PadLeftWidth");
+            PadLeftWidth->set_type(xs::AttributeInfo_AttributeType_INT);
+            PadLeftWidth->set_i(Parameters.Padding[1]);
+
+            PadRightHeight->set_name("PadRightHeight");
+            PadRightHeight->set_type(xs::AttributeInfo_AttributeType_INT);
+            PadRightHeight->set_i(Parameters.Padding[2]);
+
+            PadRightWidth->set_name("PadRightWidth");
+            PadRightWidth->set_type(xs::AttributeInfo_AttributeType_INT);
+            PadRightWidth->set_i(Parameters.Padding[3]);
+
+            std::vector<const mat_t*> wb = layer->weights();
+            tensor->set_name("w&b conv");
+#ifdef XS_USE_DOUBLE
+#error NotImplementedYet
+#else
+            tensor->set_type(xs::TensorInfo_TensorType_FLOAT);
+#endif
+            layer->save(tensor);
+        } else {
+            throw xs_error("[conv serialization] Unsupported dimensions");
+        }
+    }
+#endif // XS_USE_SERIALIZATION
 };
 
+#ifdef XS_USE_SERIALIZATION
 template<>
 inline
 std::shared_ptr<fully_connected> cerial::deserialize(const xs::NodeInfo* node,
