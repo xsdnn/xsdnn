@@ -5,7 +5,7 @@
 
 #include <layers/layer.h>
 #include <utils/macro.h>
-#include <string>
+#include <cstring>
 
 namespace xsdnn {
 
