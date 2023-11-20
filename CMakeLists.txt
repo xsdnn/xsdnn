@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27.0)
+cmake_minimum_required(VERSION 3.0.0)
 SET(CMAKE_CXX_STANDARD 17)
 PROJECT(xsdnn VERSION 1.0.0 LANGUAGES C CXX)
 
