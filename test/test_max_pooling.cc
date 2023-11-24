@@ -22,6 +22,8 @@ TEST(max_pool, forward_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{ in_data }});
     pool.forward();
 
@@ -49,6 +51,8 @@ TEST(max_pool, forward_stride_x_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -77,6 +81,8 @@ TEST(max_pool, forward_stride_y_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -105,6 +111,8 @@ TEST(max_pool, forward_stride_xy_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -132,6 +140,8 @@ TEST(max_pool, forward_kernel_x_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -160,6 +170,8 @@ TEST(max_pool, forward_kernel_x2_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -188,6 +200,8 @@ TEST(max_pool, forward_kernel_x3_padding_same_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -216,6 +230,8 @@ TEST(max_pool, forward_kernel_y_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -244,6 +260,8 @@ TEST(max_pool, forward_kernel_y2_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 
@@ -272,6 +290,8 @@ TEST(max_pool, forward_kernel_y3_padding_same_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
+
     pool.set_in_data({{in_data}});
     pool.forward();
 

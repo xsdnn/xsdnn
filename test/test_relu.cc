@@ -16,6 +16,8 @@ TEST(relu, forward_fp32) {
 
     rl.setup(false);
     rl.set_parallelize(false);
+    rl.prepare();
+
     rl.set_in_data({{ in }});
     rl.forward();
 

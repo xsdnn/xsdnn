@@ -20,6 +20,7 @@ TEST(fc, forward_fp32) {
 
     fc.set_parallelize(false);
     fc.setup(false);
+    fc.prepare();
     fc.set_in_data({{ in }});
     fc.forward();
     mat_t o = fc.output()[0][0];
@@ -44,6 +45,7 @@ TEST(fc, forward_nobias_fp32) {
 
     fc.set_parallelize(false);
     fc.setup(false);
+    fc.prepare();
     fc.set_in_data({{ in }});
     fc.forward();
     mat_t o = fc.output()[0][0];

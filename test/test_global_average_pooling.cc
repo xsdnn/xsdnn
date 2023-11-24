@@ -22,6 +22,7 @@ TEST(global_average_pooling, forward_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
     pool.set_in_data({{ in_data }});
     pool.forward();
 
@@ -47,6 +48,7 @@ TEST(global_average_pooling, forward_two_channels_fp32) {
 
     pool.setup(false);
     pool.set_parallelize(false);
+    pool.prepare();
     pool.set_in_data({{ in_data }});
     pool.forward();
 

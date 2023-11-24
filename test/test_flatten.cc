@@ -18,6 +18,7 @@ TEST(flatten, forward_fp32) {
     fl.set_in_data({{ in_data }});
     fl.set_parallelize(false);
     fl.setup(false);
+    fl.prepare();
 
     fl.forward();
     ASSERT_TRUE(fl.out_shape()[0] == shape3d(1, 1, in_shape.size()));

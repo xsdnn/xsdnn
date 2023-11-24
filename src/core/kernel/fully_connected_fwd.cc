@@ -75,6 +75,7 @@ void XNNPACKComputeFullyConnectedKernelFP32(const tensor_t& X,
 }
 #endif
 
+#ifdef XS_USE_XNNPACK
 void FullyConnectedFwdKernel::CreateAndReshapeXNNKernel(xsdnn::xsDtype dtype, std::vector<mat_t *> WB, params::fully &p) {
     assert(p.has_bias_ ? WB.size() == 2 : WB.size() == 1);
     size_t Cin = p.in_size_;
@@ -108,6 +109,7 @@ void FullyConnectedFwdKernel::CreateAndReshapeXNNKernel(xsdnn::xsDtype dtype, st
     }
 
 }
+#endif
 
 void FullyConnectedFwdKernel::Compute(xsdnn::core::OpContext &ctx, params::fully &p) {
     const tensor_t& X = ctx.input_data(0);

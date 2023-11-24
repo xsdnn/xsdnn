@@ -155,7 +155,7 @@ TEST(conv, simple_forward_fp32) {
     utils::initializer_list_init_fp32(c.prev()[2]->get_data()->at(0), {
             0.1293, -0.0422, -0.2675
     });
-
+    c.prepare();
     c.set_in_data({{ Input }});
     c.forward();
 
@@ -278,7 +278,7 @@ TEST(conv, simple_forward_without_bias_fp32) {
             -0.4511941075325012,
             -0.44954395294189453
     });
-
+    c.prepare();
     c.set_in_data({{ Input }});
     c.forward();
 
@@ -342,7 +342,7 @@ TEST(conv, xnnpack_backend_engine_fp32) {
     utils::initializer_list_init_fp32(Convolution.prev()[2]->get_data()->at(0), {
             0.0f, 0.0f
     });
-
+    Convolution.prepare();
     Convolution.set_in_data({{X}});
 
     // Run ConvOp

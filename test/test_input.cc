@@ -17,6 +17,7 @@ TEST(input, forward_fp32) {
     in.set_in_data({{ in_data }});
     in.set_parallelize(false);
     in.setup(false);
+    in.prepare();
 
     in.forward();
     mat_t out = in.output()[0][0];
