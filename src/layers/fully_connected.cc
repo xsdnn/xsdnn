@@ -52,6 +52,16 @@ void fully_connected::forward_propagation(
     fwd_kernel_->Compute(fwd_ctx_, params_);
 }
 
+void fully_connected::configure(core::backend_t engine) {
+    if (engine == core::backend_t::xnnpack)
+#ifdef XS_USE_XNNPACK
+        fwd_kernel_->CreateAndReshapeXNNKernel(this->dtype(), weights(), params_);
+#else
+        throw xs_error(START_MSG + "This build doesn't support XNN Backend Engine. "
+                                   "Rebuild with -Dxsdnn_BUILD_XNNPACK_ENGINE=ON");
+#endif
+}
+
 void fully_connected::set_params(size_t in_size,
                                  size_t out_size,
                                  bool has_bias) {

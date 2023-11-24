@@ -37,6 +37,8 @@ public:
     forward_propagation(const std::vector<tensor_t*>& in_data,
                         std::vector<tensor_t*>& out_data);
 
+    void configure(core::backend_t engine);
+
 
 private:
     void set_params(size_t in_size, size_t out_size, bool has_bias);

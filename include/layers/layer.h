@@ -200,6 +200,12 @@ public:
 
     void setup(bool reset_weight);
 
+    void prepare();
+
+    virtual
+    void
+    configure(core::backend_t engine);
+
     void init_weight();
 
     virtual
@@ -225,6 +231,7 @@ protected:
     bool initialized_;
     bool parallelize_;
     bool is_packed_{false};
+    bool configured_{false};
     size_t num_threads_;
     size_t in_concept_;
     size_t out_concept_;

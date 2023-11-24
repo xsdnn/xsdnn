@@ -185,6 +185,8 @@ namespace xsdnn {
     }
 
     void layer::forward() {
+        if (!configured_) throw xs_error(START_MSG + this->layer_type() + " not configured.");
+
         fwd_in_data.reserve(in_concept_);
         fwd_out_data.reserve(out_concept_);
 
@@ -229,6 +231,16 @@ namespace xsdnn {
             init_weight();
         }
     }
+
+    void layer::prepare() {
+        if (!initialized_)
+            throw xs_error(START_MSG + this->layer_type() + " not initialized. Can't configure.");
+
+        configure(this->engine_);
+        this->configured_ = true;
+    }
+
+    void layer::configure(core::backend_t engine) {}
 
     void layer::init_weight() {
         for (size_t i = 0; i < in_concept_; ++i) {

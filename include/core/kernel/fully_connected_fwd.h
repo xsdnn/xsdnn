@@ -14,6 +14,9 @@ namespace xsdnn {
         class FullyConnectedFwdKernel : public OpKernel {
         public:
             virtual void Compute(OpContext& ctx, params::fully& p);
+#ifdef XS_USE_XNNPACK
+            void CreateAndReshapeXNNKernel(xsDtype dtype, std::vector<mat_t*> WB, params::fully& p) override;
+#endif
         };
 
     } // core

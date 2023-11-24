@@ -75,14 +75,19 @@ void network::configure() {
         xs_warning(START_MSG + "This Graph has XNNPACK Backend Engine node's."
                                "\nMake sure that the input data is in the NHWC memory format.");
 
-        for (size_t i = 0; i < net_.nodes_.size(); ++i) {
-            if (net_.nodes_[i]->engine() == core::backend_t::xnnpack) {
-                net_.mtypes_[i] = xsMemoryFormat::hwc;
-                if (!net_.nodes_[i]->is_packed())
-                    // from -> to
-                    net_.nodes_[i]->pre_pack(xsMemoryFormat::chw, xsMemoryFormat::hwc);
-            }
-        }
+        /*
+         * Build XNNPACK Kernel after all weight initialization
+         */
+        for (auto l : net_)
+            l->prepare();
+//        for (size_t i = 0; i < net_.nodes_.size(); ++i) {
+//            if (net_.nodes_[i]->engine() == core::backend_t::xnnpack) {
+//                net_.mtypes_[i] = xsMemoryFormat::hwc;
+//                if (!net_.nodes_[i]->is_packed())
+//                    // from -> to
+//                    net_.nodes_[i]->pre_pack(xsMemoryFormat::chw, xsMemoryFormat::hwc);
+//            }
+//        }
 #else
         throw xs_error("This xsdnn build doesn't support XNNPACK backend engine. Recompile with xsdnn_BUILD_XNNPACK_ENGINE=ON");
 #endif

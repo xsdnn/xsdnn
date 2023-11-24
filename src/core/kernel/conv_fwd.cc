@@ -47,12 +47,8 @@ void ComputeConvKernelFP32(const tensor_t& X,
 
 #ifdef XS_USE_XNNPACK
 void XNNPACKComputeConvKernelFP32(const tensor_t& X,
-                                  const mat_t& W,
-                                  const mat_t* B,
                                   tensor_t& Y,
                                   params::conv& p,
-                                  bool parallelize,
-                                  size_t nthreads,
                                   xnn_operator_t ConvolutionOp,
                                   std::vector<char>& workspace,
                                   pthreadpool_t threadpool) {
@@ -154,8 +150,7 @@ void ConvFwdKernel::Compute(core::OpContext &ctx, params::conv &p) {
         else throw xs_error(START_MSG + "unsupported dtype for xs engine");
     } else if (engine == backend_t::xnnpack) {
 #ifdef XS_USE_XNNPACK
-        if (dtype == kXsFloat32) XNNPACKComputeConvKernelFP32(X, W[0], B, Y, p,
-                                                              ctx.parallelize(), ctx.num_threads(),
+        if (dtype == kXsFloat32) XNNPACKComputeConvKernelFP32(X, Y, p,
                                                               op_, workspace, concurrency::threadpool::getInstance().threadpool_);
         else throw xs_error(START_MSG + "unsupported dtype for xnnpack engine");
 #else
