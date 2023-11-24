@@ -64,6 +64,7 @@ public:
     params::conv get_params() const;
     void pre_pack(xsMemoryFormat from, xsMemoryFormat to);
     void pack(xsMemoryFormat from, xsMemoryFormat to);
+    void configure(core::backend_t engine);
 
 private:
     void set_params(size_t in_channel, size_t in_height, size_t in_width,
